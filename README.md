@@ -29,12 +29,10 @@ Desenvolver um sistema capaz de integrar e analisar dados relacionados à precip
 
 ## Área de abrangência
 
-O desenvolvimento seguirá uma abordagem incremental, partindo de uma região piloto e evoluindo para uma cobertura mais ampla à medida que a metodologia for validada:
 
 | Fase | Abrangência | Descrição |
 |------|-------------|-----------|
-| **Fase 1 — Piloto** | Alto Vale do Itajaí (SC) | Validação da metodologia, das fontes de dados e da classificação de risco em uma região de referência, com histórico bem documentado de deslizamentos. |
-| **Fase 2 — Expansão nacional** | Brasil | Generalização do modelo de classificação para outras regiões suscetíveis do país (ex: Serra do Mar/SP-RJ, Região Serrana do RJ, Zona da Mata mineira), condicionada à disponibilidade de dados geográficos e meteorológicos compatíveis em cada região. |
+| **Piloto** | Alto Vale do Itajaí (SC) | Validação da metodologia, das fontes de dados e da classificação de risco em uma região de referência, com histórico bem documentado de deslizamentos. Escopo direcionado para a região de Presidente Getúlio|
 
 A arquitetura modular do sistema é pensada desde o início para suportar essa expansão, isolando as regras específicas de cada região (limites geográficos, fontes de dados locais, thresholds de risco) dos componentes centrais de coleta, processamento e visualização.
 
