@@ -85,6 +85,21 @@ Estações automáticas do INMET na região, geradas uma vez por script e versio
 | `ibge` | string | Município onde fica |
 | `lat`, `lon` | número | Coordenadas em graus decimais |
 
+## `frontend/public/data/contatos.json`
+
+Contatos da Defesa Civil de cada município, levantados com as prefeituras e versionados. O site só exibe os itens com `verificado: true`. A raiz é uma lista de objetos:
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `ibge` | string | Município |
+| `nome` | string | Nome do município |
+| `verificado` | booleano | Se o contato foi confirmado com a prefeitura |
+| `responsavel` | string ou nulo | Coordenador(a) municipal de Defesa Civil |
+| `telefone` | string ou nulo | Telefone de exibição, ex.: "(47) 98838-5645" |
+| `email` | string ou nulo | E-mail |
+| `endereco` | string ou nulo | Endereço completo, usado no "Como chegar" |
+| `site` | string ou nulo | Site da prefeitura, exibido quando não há telefone |
+
 ## Publicação
 
 - Caminho: `frontend/public/data/indices.json`, no branch `main`.

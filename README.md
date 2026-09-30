@@ -382,7 +382,7 @@ vigia-deslizamentos/
 │   │   ├── pages/           # Páginas do site
 │   │   └── data/            # GeoJSON dos municípios e camadas estáticas
 │   └── public/
-│       └── data/            # indices.json (gerado), ocorrencias.json e estacoes.json
+│       └── data/            # indices.json (gerado), ocorrencias.json, estacoes.json e contatos.json
 └── docs/                    # Contratos de dados, diagramas e decisões de projeto
 ```
 
