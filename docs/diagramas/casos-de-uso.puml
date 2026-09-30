@@ -16,14 +16,18 @@ skinparam rectangle {
 }
 
 actor "População" as POP
+actor "Inscrito" as INS
 actor "Defesa Civil\nmunicipal" as DC
 actor "Agendador" as AG
+
+INS -|> POP
 
 rectangle "VIGIA Deslizamentos" {
   usecase "UC01\nConsultar o risco\ndo município" as UC1
   usecase "UC02\nConsultar a previsão" as UC2
   usecase "UC03\nSimular uma chuva" as UC3
-  usecase "UC04\nAssinar os alertas" as UC4
+  usecase "UC07\nConsultar informações\nde apoio" as UC7
+  usecase "UC04\nGerenciar os alertas\nno Telegram" as UC4
   usecase "UC05\nReceber aviso de alerta" as UC5
   usecase "UC06\nAtualizar os índices" as UC6
 }
@@ -33,11 +37,13 @@ actor "Telegram" as TG
 POP -- UC1
 POP -- UC2
 POP -- UC3
+POP -- UC7
 POP -- UC4
-POP -- UC5
+INS -- UC5
 DC -- UC1
 DC -- UC2
 DC -- UC3
+DC -- UC7
 AG -- UC6
 
 UC2 .> UC1 : <<extend>>

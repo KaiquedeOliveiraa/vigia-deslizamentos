@@ -62,7 +62,7 @@ O limiar crítico é o valor mínimo de chuva acumulada que, quando superado, in
 
 Para municípios não monitorados pelo Cemaden ou sem áreas suscetíveis mapeadas, o GeoRisk adota um limiar hipotético padrão de **250 mm**, e recomenda usar apenas os resultados de análise regional.
 
-No VIGIA, o limiar é um **parâmetro de configuração por município**, versionado no repositório e documentado com a respectiva fonte. Os valores dos seis municípios ainda serão definidos.
+No VIGIA, o limiar é um **parâmetro de configuração por município**, versionado no repositório e documentado com a respectiva fonte. Os valores dos seis municípios ainda serão definidos; até lá, usa-se o limiar hipotético de **250 mm** do GeoRisk, registrado com a fonte em `config/municipios.json`.
 
 ### Chuva efetiva antecedente
 
@@ -102,7 +102,9 @@ No GeoRisk, os pesos `W` dependem de três fatores: distância temporal da rodad
 | Moderado | 1,00 – 1,80 |
 | Alto | 1,80 – 2,60 |
 | Muito alto | 2,60 – 3,40 |
-| Extremamente alto | > 3,40 |
+| Extremamente alto | ≥ 3,40 |
+
+Cada faixa inclui o limite inferior e exclui o superior (1,00 é moderado). A classificação usa o valor sem arredondamento; a tela exibe duas casas decimais.
 
 > **Atenção:** o manual técnico apresenta sobreposição entre as classes "moderado" (1,00–1,80) e "alto" (1,60–2,60). O VIGIA adota o corte único em **1,80**, que coincide com o limiar de 1,8 das probabilidades de deslizamentos esparsos.
 
@@ -126,7 +128,8 @@ Conforme o manual, essas probabilidades são **informação secundária** — o 
 
 | Aspecto | GeoRisk | VIGIA |
 |---------|---------|-------|
-| Grade de cálculo | Grade de 5 km × 5 km sobre todo o território nacional | Pontos representativos por município (centróide e pontos adicionais conforme a extensão territorial) |
+| Grade de cálculo | Grade de 5 km × 5 km sobre todo o território nacional | Pontos por município definidos em `config/municipios.json` (no mínimo o centróide) |
+| Chuva antecedente | Dados observados, completados com previsão numérica | Chuva modelada do Open-Meteo (histórico de previsões) |
 | Modelos de previsão | 15 a 25 rodadas de GEFS, GFS, WRF, Eta e ECMWF, obtidas direto da fonte | Modelos e ensembles disponibilizados via API pública (a definir na integração) |
 | Pesos do ensemble | Recalibrados periodicamente por matriz de confusão contra ocorrências reais | Pesos fixos por recência e horário de assimilação, **sem calibração** |
 | Limiar crítico | Calibrado por município pelo Cemaden | Parâmetro de configuração, com fonte documentada |
@@ -140,7 +143,7 @@ Conforme o manual, essas probabilidades são **informação secundária** — o 
 - **A metodologia é de escala regional.** O GeoRisk explicitamente não se propõe a prever a localização exata de deslizamentos em nível de encosta.
 - **A resolução da previsão meteorológica é maior que os municípios.** Os modelos globais operam em grades de aproximadamente 25 km — maior que a área de vários dos municípios atendidos. A previsão de chuva praticamente não varia dentro de um mesmo município, o que impede diferenciação intramunicipal a partir de dados de chuva.
 - **O sistema tem melhor desempenho para deslizamentos do tipo translacional raso**, conforme o manual.
-- **Horários em UTC.** O conceito de "dia-alvo" da metodologia é ancorado em UTC; a conversão para o horário de Brasília (UTC-3) precisa ser tratada explicitamente no cálculo e na exibição.
+- **Dia-alvo em UTC.** Como no GeoRisk, o dia-alvo é o dia civil em UTC, e o D0 é o dia UTC da execução. A chuva efetiva de cada dia-alvo usa as 168 horas anteriores a ele, com dados de previsão para as horas que ainda não ocorreram. Datas e horários são exibidos no horário de Brasília.
 
 ## Funcionamento
 
@@ -148,7 +151,7 @@ O sistema segue o fluxo:
 
 **Coleta → Tratamento → Cálculo → Classificação → Visualização e notificação**
 
-1. **Coleta:** ingestão de precipitação observada (168 h anteriores) e previsão de precipitação para os dias-alvo, por ponto de cálculo de cada município;
+1. **Coleta:** ingestão da precipitação das 168 h anteriores e previsão de precipitação para os dias-alvo, por ponto de cálculo de cada município;
 2. **Tratamento:** padronização das séries horárias, preenchimento de lacunas com previsão numérica e associação dos pontos aos municípios;
 3. **Cálculo:** chuva efetiva antecedente, subíndices por rodada e índice de risco ponderado;
 4. **Classificação:** enquadramento do índice nas classes de risco e cálculo das probabilidades complementares;
@@ -162,8 +165,8 @@ O pipeline é executado de forma agendada, **a cada 6 horas**, após a disponibi
 
 | Fonte | Tipo de dado | Papel no sistema |
 |-------|--------------|------------------|
-| **[Open-Meteo](https://open-meteo.com/)** | Previsão de precipitação e histórico horário | Fonte principal de previsão (`Rtotal`) e de chuva observada para compor a chuva efetiva antecedente. API REST gratuita, sem chave para uso não comercial. |
-| **[INMET](https://portal.inmet.gov.br/)** — API de estações | Precipitação horária e diária por estação automática | Fonte de observação para comparação e validação da chuva antecedente na região. |
+| **[Open-Meteo](https://open-meteo.com/)** | Previsão de precipitação e histórico horário | Fonte principal de previsão (`Rtotal`) e da chuva das 168 h anteriores. A chuva antecedente é **modelada** (histórico de previsões), não medida em pluviômetro. API REST gratuita, sem chave para uso não comercial. |
+| **[INMET](https://portal.inmet.gov.br/)** — API de estações | Precipitação horária e diária por estação automática | Chuva medida, usada para comparar com a chuva modelada e para localizar as estações na tela Estações. Não altera o índice. |
 | **[IBGE — Localidades e Malhas](https://servicodados.ibge.gov.br/api/docs/localidades)** | Código, limites municipais e hierarquia geográfica | Identificação dos municípios e polígonos em GeoJSON para o mapa. Consumido uma vez e versionado no repositório. |
 
 ### Fontes usadas como dado estático
@@ -223,7 +226,7 @@ A RADIAN divide um sistema de apoio à decisão para desastres naturais em duas 
 | Sistemas de Gerenciamento de Dados e Conhecimento | Banco SQLite (índices calculados e inscritos do bot), malhas IBGE e estações |
 | Sistemas de Suporte | Privacidade (LGPD): o site não coleta dados pessoais; o bot guarda só o chat e os municípios escolhidos |
 | Sistemas de Infraestrutura Computacional | Coleta (Open-Meteo, INMET), cálculo e integração com IBGE, Defesa Civil SC (iframe) e Telegram |
-| Ecossistema | Open-Meteo, INMET, Epagri/Ciram, IBGE, Cemaden (referência metodológica), Defesa Civil SC, Telegram, OpenStreetMap, Google Maps (links "como chegar") |
+| Ecossistema | Open-Meteo, INMET, IBGE, Cemaden (referência metodológica), Defesa Civil SC, Telegram, OpenStreetMap, Google Maps (links "como chegar") |
 
 Não se aplicam ao projeto o módulo Planejamento da Execução (abrigos, doações, resgates) e as macrofuncionalidades de decisão multicritério, plataforma colaborativa, governança/auditoria e atuação sobre sistemas físicos.
 
@@ -231,7 +234,7 @@ Não se aplicam ao projeto o módulo Planejamento da Execução (abrigos, doaç�
 
 | Componente | Responsabilidade |
 |------------|------------------|
-| Coletor | Consumo das APIs de precipitação observada e prevista |
+| Coletor | Consumo das APIs de precipitação antecedente e prevista |
 | Processador | Cálculo da chuva efetiva antecedente, subíndices e índice de risco |
 | Classificador | Enquadramento nas classes e cálculo das probabilidades complementares |
 | Persistência | Banco SQLite com os índices calculados, os inscritos do bot e o controle de notificações |
@@ -241,7 +244,7 @@ Não se aplicam ao projeto o módulo Planejamento da Execução (abrigos, doaç�
 
 ### Fluxo de dados
 
-O backend roda o pipeline de forma agendada, grava os resultados no SQLite e publica um arquivo `indices.json` junto do frontend no GitHub Pages. O site lê esse arquivo em vez de consultar o backend a cada visita; assim, se o backend ficar fora do ar, o site continua exibindo o último índice publicado, com data e hora. A publicação é feita por commit automático do arquivo no repositório, pela API do GitHub, com um token restrito a este repositório.
+O backend roda o pipeline de forma agendada, grava os resultados no SQLite e publica um arquivo `indices.json` junto do frontend no GitHub Pages. O site lê esse arquivo em vez de consultar o backend a cada visita; assim, se o backend ficar fora do ar, o site continua exibindo o último índice publicado, com data e hora. A publicação é feita por commit automático em `frontend/public/data/indices.json`, pela API do GitHub, com um token restrito a este repositório; o commit dispara o deploy do site. Se a publicação falhar, o erro é registrado e os avisos do bot seguem normalmente. O formato do arquivo está em [Contratos de dados](docs/contratos-de-dados.md).
 
 ### Banco de dados
 
@@ -272,9 +275,10 @@ O VIGIA atende a **população** dos seis municípios e as **coordenadorias muni
 | **UC01** Consultar o risco do município | População, Defesa Civil | Abre o site, vê o mapa e o total de municípios em alerta, seleciona o município (clique ou busca) e lê índice, classe e situação de alerta no painel | Dados desatualizados: exibe o último índice com data e hora |
 | **UC02** Consultar a previsão | População, Defesa Civil | Estende o UC01: no mapa, escolhe +1, +2 ou +3 dias, e mapa e painel mostram os valores estimados | — |
 | **UC03** Simular uma chuva | População, Defesa Civil | Abre a simulação (menu ou painel), informa município, período e chuva e compara a situação atual com a simulada | Valor fora da faixa: o campo limita a chuva entre 0 e 400 mm |
-| **UC04** Assinar os alertas | População | Toca em "Alertas no Telegram", abre o bot, envia `/start` e escolhe os municípios; `/parar` cancela | Telegram não instalado: o link abre a página do bot no navegador |
-| **UC05** Receber aviso de alerta | Inscrito, via Telegram | Após uma atualização, o município chega a índice ≥ 1,00 ou sobe de classe, e o bot envia o aviso com índice, classe e link do site | Mesma classe da última notificação: o aviso não é repetido |
-| **UC06** Atualizar os índices | Agendador (sistema) | Coleta chuva e previsão, calcula índice e classe, grava no banco, publica o JSON; se algum município mudar de classe com índice ≥ 1,00, é estendido pelo UC05 | Falha na coleta: mantém o último JSON publicado e registra o erro |
+| **UC04** Gerenciar os alertas no Telegram | População | Toca em "Alertas no Telegram", abre o bot, envia `/start` e escolhe os municípios; `/status` mostra a situação atual e `/parar` cancela | Telegram não instalado: o link abre a página do bot no navegador |
+| **UC05** Receber aviso de alerta | Inscrito | Após uma atualização, a regra de aviso (RN08) é atendida para um município inscrito, e o bot envia o aviso com índice, classe e link do site | Classe igual ou menor que a última notificada: o aviso não é enviado |
+| **UC06** Atualizar os índices | Agendador (sistema) | Coleta chuva e previsão, calcula índice e classe, grava no banco, publica o JSON; quando a regra de aviso (RN08) é atendida, é estendido pelo UC05 | Falha em um município: publica os demais e marca esse como sem dados. Falha geral: mantém o último JSON publicado e registra o erro |
+| **UC07** Consultar informações de apoio | População, Defesa Civil | Abre Dados da análise, Estações, Monitoramento SC, Cartilha ou Contatos pelo menu | Mapa oficial de SC bloqueado: mostra só o link |
 
 ### Telas
 
@@ -301,25 +305,25 @@ Em todas as telas: menu, seletor PT/ES, acessibilidade e "Alertas no Telegram".
 **Simulação e análise**
 - **RF05** — Simular o índice a partir de município, período (24/48/72 h) e chuva em mm, para um município ou para toda a região, comparando a situação atual com a simulada.
 - **RF06** — Exibir a evolução do índice, a chuva acumulada (24–96 h) comparada ao limiar e uma tabela com a tendência de cada município.
-- **RF07** — Exibir probabilidades complementares, fontes e dados brutos com data da coleta, histórico de ocorrências e, se viável, a camada de suscetibilidade do CPRM (ainda sem tela no protótipo).
+- **RF07** — Exibir probabilidades complementares, os valores usados em cada cálculo com a data da execução, o histórico de ocorrências (`ocorrencias.json`) e, se viável, a camada de suscetibilidade do CPRM (ainda sem tela no protótipo).
 
 **Informação à população**
 - **RF08** — Incorporar o mapa oficial da Defesa Civil de SC; se o site bloquear, mostrar só o link.
-- **RF09** — Mostrar a localização das estações de monitoramento, com tipo, município e fonte.
+- **RF09** — Mostrar a localização das estações automáticas do INMET na região, com município e coordenadas.
 - **RF10** — Apresentar a cartilha de autoproteção e os contatos de emergência e das Defesas Civis municipais.
 
 **Alertas e preferências**
-- **RF11** — Levar o usuário ao bot do Telegram, onde ele escolhe os municípios (`/start`), consulta a situação (`/status`) e cancela (`/parar`).
-- **RF12** — Enviar aviso aos inscritos quando um município atingir índice ≥ 1,00.
+- **RF11** — Levar o usuário ao bot do Telegram, onde ele escolhe os municípios (`/start`), consulta a situação (`/status`) e cancela (`/parar`). O bot responde em português.
+- **RF12** — Enviar aviso aos inscritos conforme a regra RN08.
 - **RF13** — Oferecer português e espanhol, tema automático/claro/escuro/alto contraste e paleta de cores para daltonismo, lembrando a escolha do usuário.
 
 ### Requisitos não funcionais
 
 - **RNF01 — Acessibilidade:** WCAG 2.1 AA, com uso completo por teclado e leitor de tela.
 - **RNF02 — Responsividade:** funcionar de 320 px até desktop sem rolagem lateral.
-- **RNF03 — Desempenho:** página principal carregada em até 2,5 s em conexão 4G; simulação e troca de dia em até 500 ms.
+- **RNF03 — Desempenho:** página principal com LCP de até 2,5 s no Lighthouse (celular, 4G simulado); simulação e troca de dia em até 500 ms.
 - **RNF04 — Disponibilidade:** se a atualização falhar, exibir o último índice válido com data e hora.
-- **RNF05 — Privacidade (LGPD):** o site não coleta dados pessoais; o bot guarda só o identificador do chat e os municípios escolhidos, apagados com `/parar` ou quando o usuário bloqueia o bot.
+- **RNF05 — Privacidade (LGPD):** o site não coleta dados pessoais; o bot guarda só o identificador do chat e os municípios escolhidos, apagados com `/parar` ou quando o usuário bloqueia o bot (detectado no envio seguinte).
 - **RNF06 — Segurança:** acesso somente por HTTPS e nenhum token ou chave exposto no frontend.
 - **RNF07 — Manutenibilidade:** parâmetros de cada município em configuração, para incluir municípios sem alterar o código.
 
@@ -331,11 +335,12 @@ Em todas as telas: menu, seletor PT/ES, acessibilidade e "Alertas no Telegram".
 - **RN04** — Todo texto de risco é condicional ("poderá entrar em alerta"), e toda tela com índice informa que o VIGIA não emite alerta oficial.
 - **RN05** — Números usam vírgula decimal.
 - **RN06** — Previsões (D1–D3) aparecem sempre marcadas como valores estimados.
-- **RN07** — A simulação usa a mesma equação do subíndice, trocando a chuva prevista pela chuva informada: (EfR + chuva) ÷ limiar. Ela não altera dados reais e não dispara alertas (o protótipo ainda usa uma fórmula ilustrativa).
-- **RN08** — O aviso do bot não se repete enquanto o município permanecer na mesma classe.
+- **RN07** — A simulação usa a equação do subíndice com a chuva informada, que é o total do período: (EfR × 0,5^((h − 24) ÷ MV) + chuva) ÷ limiar, em que h é o período escolhido (24, 48 ou 72 h). A chuva informada vai de 0 a 400 mm. A simulação não altera dados reais e não dispara alertas (o protótipo ainda usa uma fórmula ilustrativa).
+- **RN08** — O bot avisa quando a classe do D0 de um município inscrito é moderado ou acima e maior que a última classe notificada. Quando o índice volta abaixo de 1,00, o controle é reiniciado. Previsões D1–D3 não geram aviso.
 - **RN09** — Só vão ao ar contatos verificados com a prefeitura.
 - **RN10** — O mapa oficial de SC só é incorporado com autorização, mantendo o crédito da fonte.
 - **RN11** — Dia-alvo e horário da última atualização ficam sempre visíveis.
+- **RN12** — Dados com mais de 12 horas exibem aviso de desatualizados; município sem dados na última execução aparece como "sem dados".
 
 ## Tecnologias
 
@@ -343,13 +348,12 @@ Em todas as telas: menu, seletor PT/ES, acessibilidade e "Alertas no Telegram".
 - **Mapas:** Leaflet + OpenStreetMap
 - **Dados geográficos:** GeoJSON (malhas municipais do IBGE)
 - **Backend:** Python
-- **API:** FastAPI (opcional; o site lê o JSON exportado)
 - **Cálculo:** pandas / NumPy
 - **Agendamento:** APScheduler (ou cron no host), a cada 6 horas
 - **Bot:** python-telegram-bot, em long polling (dispensa domínio e certificado HTTPS próprios)
 - **Banco de dados:** SQLite (PostgreSQL se a hospedagem exigir)
 - **Hospedagem do frontend:** GitHub Pages
-- **Hospedagem do backend:** *a definir*
+- **Hospedagem do backend:** *a definir*; requisitos: disco persistente para o SQLite e uma única instância, com o bot e o agendador no mesmo processo
 - **Arquitetura de referência:** RADIAN
 - **Idiomas:** Português e Espanhol
 - **Acessibilidade:** verificação com axe-core antes de cada publicação
@@ -378,7 +382,8 @@ vigia-deslizamentos/
 │   │   ├── pages/           # Páginas do site
 │   │   └── data/            # GeoJSON dos municípios e camadas estáticas
 │   └── public/
-└── docs/                    # Metodologia, fontes de dados e decisões de projeto
+│       └── data/            # indices.json (gerado), ocorrencias.json e estacoes.json
+└── docs/                    # Contratos de dados, diagramas e decisões de projeto
 ```
 
 > Estrutura sujeita a ajustes conforme o projeto evolui.
