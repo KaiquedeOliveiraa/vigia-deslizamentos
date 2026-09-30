@@ -11,6 +11,15 @@
 
 **Regra de trabalho:** toda lógica fica em `src/lib/`, com teste antes do código. Os componentes reproduzem o protótipo e só chamam funções de `src/lib/`. Commit ao fim de cada tarefa.
 
+**Convenções**
+- Funções puras: recebem os dados e o relógio (`agora: Date`) por parâmetro; nada de `Date.now()` nem `fetch` dentro de `src/lib/`.
+- Números decimais nos testes com `toBeCloseTo`; fronteiras de classe com igualdade exata.
+- Nomes de campos iguais aos do contrato (`dia_alvo`, `indice`, `efr_mm`…).
+- Tipos em `src/lib/tipos.ts`, escritos a partir de `docs/indices.schema.json`; um teste valida os JSON de exemplo contra o schema (Ajv, só em desenvolvimento), para os tipos não se afastarem do contrato.
+- Componentes compartilhados (`Mapa`, `Legenda`, `SeloClasse`, `Dialogo`) são os mesmos em todas as telas; nenhuma tela reimplementa mapa ou legenda.
+
+**Dependência:** a Tarefa 2 usa `docs/indices.schema.json`, criado na Tarefa 1 do plano de backend.
+
 ---
 
 ## Tarefa 1 — Projeto, deploy e design system
@@ -22,7 +31,7 @@
 - [ ] Converter `design-system/tokens.json` do protótipo em CSS custom properties com os mesmos nomes (`--nav-900`, `--accent`, `--on-accent`, `--accent-ink`, `--risk-1…7`, `--risk-icon-1…7`, `--acc-1…7`, `--acc-icon-1…7`, `--rain`, `--rain-track`, `--alert-bg`, `--danger-bg`…). Temas por `[data-theme="dark" | "contraste"]`; sem atributo, segue `prefers-color-scheme`. `--risk-7` = `#713371`.
 - [ ] Paleta do mapa por classe no contêiner (`pal-geo` / `pal-acc`), com os componentes usando `var(--c1)…var(--c7)`.
 - [ ] Criar `src/fixtures/indices.exemplo.json`, `ocorrencias.exemplo.json`, `estacoes.exemplo.json` e `contatos.exemplo.json` seguindo o contrato. O site lê as URLs de `PUBLIC_DADOS_URL` (padrão `data/`); em desenvolvimento, aponta para os exemplos.
-- [ ] Copiar o GeoJSON dos 6 municípios e dos vizinhos (malha IBGE) para `src/data/`.
+- [ ] Gerar `src/data/municipios.geojson` (coordenadas lat/lon, simplificado) com os 6 municípios e os vizinhos, a partir da malha municipal do IBGE (mesma fonte do `scripts/geo.py` do protótipo). **Não** reaproveitar `data/mapa.json` do protótipo: ele tem caminhos SVG já projetados, que o Leaflet não usa. Os códigos IBGE podem ser conferidos nesse arquivo.
 
 ## Tarefa 2 — Leitura e validação dos dados
 
@@ -31,10 +40,10 @@
 - [ ] Testes:
   - JSON válido → objeto tipado;
   - `schema_version` desconhecido → erro de carregamento (não mostra dados parciais);
-  - `gerado_em` há mais de 12 h → `desatualizado = true` (RN12);
+  - `desatualizado(gerado_em, agora)`: 12 h exatas → falso; 12 h e 1 min → verdadeiro (RN12);
   - município em `municipios_sem_dados` → estado "sem dados";
   - `contatos.json`: só itens com `verificado: true` são devolvidos (RN09).
-- [ ] Validar `indices.json` com o mesmo `docs/indices.schema.json` do backend.
+- [ ] Em execução, o site confere só `schema_version` e a presença dos campos usados; a validação completa contra o schema fica nos testes (Convenções).
 
 ## Tarefa 3 — Regras de exibição
 
@@ -45,7 +54,7 @@
   - coordenadas: `formatarCoord(-27.0007, -49.5212) === "27,0007° S, 49,5212° O"`;
   - `classe()` com as fronteiras do backend (0,70 → 3; 0,9999 → 3; 1,00 → 4; 1,80 → 5; 3,40 → 7);
   - `gerado_em` (data-hora) exibido no horário de Brasília; `dia_alvo` (data) sem conversão: `2026-09-29` → "29/09/2026" e, no formato curto, "29/09/26";
-  - tendência = índice − valor do dia anterior; acima de +0,005 "subindo", abaixo de −0,005 "descendo", senão "estável";
+  - tendência = índice − valor do dia anterior; acima de +0,005 "subindo", abaixo de −0,005 "descendo", senão "estável"; sem dia anterior no `historico` → sem tendência;
   - busca: `normalizar("José Boiteux")` = `"jose boiteux"`; `"jose"` encontra José Boiteux;
   - texto de compartilhar: `"Ibirama — moderado (1,34)"`.
 - [ ] `classes.ts`: para cada classe, nome em minúsculas, faixa (`< 0,40`, `0,40 – 0,70`, `0,70 – 1,00`, `1,00 – 1,80`, `1,80 – 2,60`, `2,60 – 3,40`, `≥ 3,40`), cor, cor do ícone e ícone:
@@ -80,9 +89,9 @@
 
 - [ ] Testes:
   - escala do pluviômetro: máximo = maior valor entre 150 mm e limiar × 1,2 (com limiar 120 → 150; com limiar 250 → 300), para a linha do limiar sempre aparecer;
-  - eixo Y do gráfico de evolução: até 2,00, ampliado para o maior índice arredondado para cima em 0,5 quando algum valor passar de 2,00;
+  - eixo Y do gráfico de evolução: até 2,00, ampliado para o maior índice arredondado para cima em 0,5 quando algum valor passar de 2,00 (maior 2,3 → 2,5; maior 3,0 → 3,0);
   - mudança de classe entre dias consecutivos gera a marca "↑ classe" / "↓ classe";
-  - indicadores: monitorados, em alerta (índice ≥ 1,00), chuva efetiva máxima (valor e município) e pico da semana (maior índice do `historico` + D0, com município e data);
+  - indicadores: monitorados, em alerta (índice D0 ≥ 1,00), chuva efetiva máxima (maior `efr_mm` do D0, com município) e pico da semana (maior índice entre os últimos 6 dias do `historico` e o D0, com município e data);
   - etiqueta de chuva: acumulado 24 h > 1 mm → "choveu nas últimas 24h"; senão "sem chuva agora".
 
 ## Tarefa 6 — Estrutura comum
@@ -118,7 +127,7 @@
   - "Aviso quando um município entrar em alerta";
   - "Você escolhe os municípios dentro do bot";
   - "Grátis. Para sair, envie /parar".
-- [ ] Botão "Abrir no Telegram" (`https://t.me/<bot>`, com `?start=<ibge>` quando aberto do painel de um município).
+- [ ] Botão "Abrir no Telegram" (`https://t.me/<bot>`, com `?start=<ibge>` quando aberto do painel de um município). O nome do bot vem de `PUBLIC_TELEGRAM_BOT`.
 - [ ] "Ou procure @<bot> no Telegram", com botão de copiar.
 - [ ] Ao lado, prévia "Como aparece no Telegram": mensagem do bot e teclado com os municípios + "Todos".
 - [ ] Portas de entrada: botão do cabeçalho, botão do painel do município e banner (Cartilha e Contatos).
@@ -146,6 +155,8 @@
 ## Tarefa 7 — Componentes do mapa
 
 **Arquivos:** `src/components/Mapa.tsx`, `SeloClasse.tsx`, `Legenda.tsx`, `Busca.tsx`, `Previsoes.tsx`, `Camadas.tsx`
+
+O `Mapa` recebe `valores` (índice por município), `selecionado` e `onSelecionar`, e é o mesmo em Monitoramento, Simulação e Estações (nesta, com `valores` vazio: municípios em branco).
 
 **Mapa**
 - [ ] react-leaflet com o GeoJSON: municípios preenchidos por `var(--cN)`, hachura por classe e contorno `map-stroke`; vizinhos em cinza com o nome.
@@ -177,7 +188,7 @@
 
 **Previsões**
 - [ ] Cartão com os 4 dias (dd/mm/aa e "hoje", "+1d", "+2d", "+3d") e botões voltar, reproduzir/pausar e avançar.
-- [ ] Reproduzir avança um dia a cada ~1,1 s, em ciclo.
+- [ ] Reproduzir avança um dia a cada ~1,1 s, em ciclo; o timer é limpo ao pausar e ao sair da tela.
 - [ ] Em D1–D3, faixa "Previsão · dd/mm/aa — valores estimados" sobre o mapa (RN06).
 
 **Camadas**
