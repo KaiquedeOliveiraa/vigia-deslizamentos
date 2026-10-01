@@ -3,6 +3,7 @@
   "$id": "https://vigia-deslizamentos.local/schemas/indices.schema.json",
   "title": "indices.json — VIGIA Deslizamentos",
   "description": "Contrato do arquivo publicado em frontend/public/data/indices.json, conforme docs/contratos-de-dados.md.",
+  "$comment": "No vocabulário de formato do draft 2020-12, `format` (usado em `date` e `date-time`) é só anotação: um Validator sem `format_checker` explícito não rejeita uma data-hora malformada. Quem validar este schema (Tarefa 9 inclusive) precisa passar um `jsonschema.FormatChecker()` explicitamente. O checador padrão só cobre `date` nativamente (stdlib); `date-time` não tem checador registrado sem o extra opcional `rfc3339-validator` — backend/tests/test_config.py registra um checador mínimo próprio para `date-time` em vez de adicionar essa dependência.",
   "type": "object",
   "required": [
     "schema_version",
@@ -155,7 +156,8 @@
         "48h": { "type": "number" },
         "72h": { "type": "number" },
         "96h": { "type": "number" }
-      }
+      },
+      "additionalProperties": false
     },
     "prob": {
       "type": "object",

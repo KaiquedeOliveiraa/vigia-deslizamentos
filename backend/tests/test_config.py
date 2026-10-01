@@ -2,6 +2,7 @@
 
 import copy
 import json
+from dataclasses import FrozenInstanceError
 from pathlib import Path
 
 import jsonschema
@@ -44,7 +45,7 @@ def test_carregar_municipios_retorna_todos_os_municipios_configurados():
 def test_municipio_e_imutavel():
     municipios = carregar_municipios(CAMINHO_MUNICIPIOS)
 
-    with pytest.raises(Exception):
+    with pytest.raises(FrozenInstanceError):
         municipios[0].nome = "Outro nome"
 
 
@@ -137,12 +138,12 @@ def test_carregar_env_com_todas_variaveis_retorna_config():
     config = carregar_env(AMBIENTE_VALIDO)
 
     assert isinstance(config, Config)
-    assert config.TELEGRAM_TOKEN == "token-telegram-123"
-    assert config.GITHUB_TOKEN_DADOS == "token-github-456"
-    assert config.GITHUB_REPO == "usuario/repo"
-    assert config.SITE_URL == "https://exemplo.org"
-    assert config.DB_PATH == "/var/dados/vigia.db"
-    assert config.LOG_PATH == "/var/log/vigia.log"
+    assert config.telegram_token == "token-telegram-123"
+    assert config.github_token_dados == "token-github-456"
+    assert config.github_repo == "usuario/repo"
+    assert config.site_url == "https://exemplo.org"
+    assert config.db_path == "/var/dados/vigia.db"
+    assert config.log_path == "/var/log/vigia.log"
 
 
 def test_carregar_env_sem_variavel_obrigatoria_levanta_erro_com_seu_nome_sem_vazar_outro_valor():
@@ -159,10 +160,45 @@ def test_carregar_env_sem_variavel_obrigatoria_levanta_erro_com_seu_nome_sem_vaz
 
 
 # --- docs/indices.schema.json --------------------------------------------------
+#
+# No vocabulário de formato do draft 2020-12, `format` é só anotação:
+# `jsonschema.validate()` sem `format_checker` explícito NÃO rejeita uma
+# data-hora malformada. Quem consumir este schema (a Tarefa 9 inclusive)
+# precisa validar com um `Validator` e um `format_checker` explícitos — ver
+# `_validador_estrito` abaixo e o `$comment` em docs/indices.schema.json.
+#
+# O `FormatChecker` padrão só registra um checador para `date` (stdlib); para
+# `date-time` ele não registra nada sem o pacote opcional `rfc3339-validator`,
+# fora da lista de dependências permitidas. Em vez de acrescentar essa
+# dependência, registramos aqui um checador mínimo próprio com
+# `datetime.fromisoformat` — suficiente para rejeitar um valor obviamente
+# malformado, sem tocar em pyproject.toml.
 
 
 def _carregar_schema():
     return json.loads(CAMINHO_SCHEMA.read_text(encoding="utf-8"))
+
+
+def _format_checker_com_date_time() -> jsonschema.FormatChecker:
+    verificador = jsonschema.FormatChecker()
+
+    @verificador.checks("date-time", raises=ValueError)
+    def _verifica_date_time(valor):
+        if not isinstance(valor, str):
+            return True
+        from datetime import datetime
+
+        datetime.fromisoformat(valor)
+        return True
+
+    return verificador
+
+
+def _validador_estrito(schema: dict) -> jsonschema.Draft202012Validator:
+    """Validator com verificação de formato (`date`, `date-time`) ativa."""
+    return jsonschema.Draft202012Validator(
+        schema, format_checker=_format_checker_com_date_time()
+    )
 
 
 EXEMPLO_MINIMO_VALIDO = {
@@ -198,7 +234,7 @@ EXEMPLO_MINIMO_VALIDO = {
 
 def test_schema_aceita_exemplo_minimo_valido():
     schema = _carregar_schema()
-    jsonschema.validate(instance=EXEMPLO_MINIMO_VALIDO, schema=schema)
+    _validador_estrito(schema).validate(EXEMPLO_MINIMO_VALIDO)
 
 
 def test_schema_rejeita_exemplo_sem_dia_alvo_d0():
@@ -207,7 +243,7 @@ def test_schema_rejeita_exemplo_sem_dia_alvo_d0():
     del exemplo["dia_alvo_d0"]
 
     with pytest.raises(jsonschema.ValidationError):
-        jsonschema.validate(instance=exemplo, schema=schema)
+        _validador_estrito(schema).validate(exemplo)
 
 
 def test_schema_rejeita_schema_version_diferente_de_1():
@@ -216,7 +252,7 @@ def test_schema_rejeita_schema_version_diferente_de_1():
     exemplo["schema_version"] = 2
 
     with pytest.raises(jsonschema.ValidationError):
-        jsonschema.validate(instance=exemplo, schema=schema)
+        _validador_estrito(schema).validate(exemplo)
 
 
 def test_schema_rejeita_classe_fora_da_faixa_de_1_a_7():
@@ -225,7 +261,7 @@ def test_schema_rejeita_classe_fora_da_faixa_de_1_a_7():
     exemplo["municipios"][0]["dias"][0]["classe"] = 8
 
     with pytest.raises(jsonschema.ValidationError):
-        jsonschema.validate(instance=exemplo, schema=schema)
+        _validador_estrito(schema).validate(exemplo)
 
 
 def test_schema_rejeita_probabilidade_fora_da_faixa_de_0_a_1():
@@ -234,7 +270,7 @@ def test_schema_rejeita_probabilidade_fora_da_faixa_de_0_a_1():
     exemplo["municipios"][0]["dias"][0]["prob"]["pontuais"] = 1.5
 
     with pytest.raises(jsonschema.ValidationError):
-        jsonschema.validate(instance=exemplo, schema=schema)
+        _validador_estrito(schema).validate(exemplo)
 
 
 def test_schema_rejeita_chuva_acum_mm_sem_a_chave_96h():
@@ -243,4 +279,22 @@ def test_schema_rejeita_chuva_acum_mm_sem_a_chave_96h():
     del exemplo["municipios"][0]["chuva_acum_mm"]["96h"]
 
     with pytest.raises(jsonschema.ValidationError):
-        jsonschema.validate(instance=exemplo, schema=schema)
+        _validador_estrito(schema).validate(exemplo)
+
+
+def test_schema_rejeita_chuva_acum_mm_com_chave_extra():
+    schema = _carregar_schema()
+    exemplo = copy.deepcopy(EXEMPLO_MINIMO_VALIDO)
+    exemplo["municipios"][0]["chuva_acum_mm"]["120h"] = 999.0
+
+    with pytest.raises(jsonschema.ValidationError):
+        _validador_estrito(schema).validate(exemplo)
+
+
+def test_schema_rejeita_gerado_em_mal_formado():
+    schema = _carregar_schema()
+    exemplo = copy.deepcopy(EXEMPLO_MINIMO_VALIDO)
+    exemplo["gerado_em"] = "isso-nao-e-data-hora"
+
+    with pytest.raises(jsonschema.ValidationError):
+        _validador_estrito(schema).validate(exemplo)

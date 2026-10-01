@@ -14,14 +14,17 @@ from pathlib import Path
 CAMPOS_MUNICIPIO = ("ibge", "nome", "limiar_mm", "fonte_limiar", "mv_h", "pontos")
 CAMPOS_PONTO = ("lat", "lon")
 
-VARIAVEIS_OBRIGATORIAS = (
-    "TELEGRAM_TOKEN",
-    "GITHUB_TOKEN_DADOS",
-    "GITHUB_REPO",
-    "SITE_URL",
-    "DB_PATH",
-    "LOG_PATH",
-)
+#: Nome da variável de ambiente -> nome do atributo correspondente em `Config`.
+ATRIBUTO_POR_VARIAVEL = {
+    "TELEGRAM_TOKEN": "telegram_token",
+    "GITHUB_TOKEN_DADOS": "github_token_dados",
+    "GITHUB_REPO": "github_repo",
+    "SITE_URL": "site_url",
+    "DB_PATH": "db_path",
+    "LOG_PATH": "log_path",
+}
+
+VARIAVEIS_OBRIGATORIAS = tuple(ATRIBUTO_POR_VARIAVEL)
 
 
 class ConfiguracaoInvalidaError(Exception):
@@ -52,12 +55,12 @@ class Municipio:
 class Config:
     """Variáveis de ambiente obrigatórias para rodar o backend."""
 
-    TELEGRAM_TOKEN: str
-    GITHUB_TOKEN_DADOS: str
-    GITHUB_REPO: str
-    SITE_URL: str
-    DB_PATH: str
-    LOG_PATH: str
+    telegram_token: str
+    github_token_dados: str
+    github_repo: str
+    site_url: str
+    db_path: str
+    log_path: str
 
 
 def _identificador(item: dict, indice: int) -> str:
@@ -149,11 +152,11 @@ def carregar_env(ambiente: Mapping[str, str]) -> Config:
     com o valor de outra variável.
     """
     valores = {}
-    for nome_variavel in VARIAVEIS_OBRIGATORIAS:
+    for nome_variavel, atributo in ATRIBUTO_POR_VARIAVEL.items():
         if nome_variavel not in ambiente:
             raise ConfiguracaoInvalidaError(
                 f"variável de ambiente obrigatória ausente: '{nome_variavel}'"
             )
-        valores[nome_variavel] = ambiente[nome_variavel]
+        valores[atributo] = ambiente[nome_variavel]
 
     return Config(**valores)
