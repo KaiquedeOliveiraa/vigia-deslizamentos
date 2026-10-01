@@ -1,0 +1,19 @@
+[project]
+name = "vigia-deslizamentos-backend"
+version = "0.1.0"
+description = "Backend do VIGIA Deslizamentos: coleta, cálculo do índice de risco GeoRisk, persistência, exportação e bot do Telegram."
+requires-python = ">=3.12"
+dependencies = [
+    "requests",
+    "python-telegram-bot>=21",
+    "APScheduler>=3.10,<4",
+    "tzdata",
+    "jsonschema",
+    "pytest",
+]
+
+[tool.pytest.ini_options]
+markers = [
+    "rede: teste que acessa a rede de verdade (fora da suíte padrão)",
+]
+addopts = "-m 'not rede'"
