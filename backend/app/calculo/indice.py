@@ -10,8 +10,20 @@ class IndicePonderadoInvalidoError(Exception):
     """Lista de subíndices/pesos vazia, de tamanhos diferentes ou com soma de pesos zero."""
 
 
+class SubindiceInvalidoError(Exception):
+    """Limiar não positivo, que tornaria o subíndice indefinido ou sem sentido."""
+
+
 def subindice(efr: float, rtotal: float, limiar: float) -> float:
-    """Calcula `SubIR = (EfR + Rtotal) / Limiar` para uma rodada de previsão."""
+    """Calcula `SubIR = (EfR + Rtotal) / Limiar` para uma rodada de previsão.
+
+    Levanta `SubindiceInvalidoError` se `limiar` não for maior que zero —
+    mesma invariante já exigida de `limiar_mm` na configuração do município.
+    """
+    if limiar <= 0:
+        raise SubindiceInvalidoError(
+            f"subindice: limiar deve ser maior que zero, recebido limiar={limiar!r}"
+        )
     return (efr + rtotal) / limiar
 
 

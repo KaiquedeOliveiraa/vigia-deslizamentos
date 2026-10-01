@@ -2,7 +2,12 @@
 
 import pytest
 
-from app.calculo.indice import IndicePonderadoInvalidoError, indice_ponderado, subindice
+from app.calculo.indice import (
+    IndicePonderadoInvalidoError,
+    SubindiceInvalidoError,
+    indice_ponderado,
+    subindice,
+)
 
 
 # --- subindice ----------------------------------------------------------------
@@ -10,6 +15,16 @@ from app.calculo.indice import IndicePonderadoInvalidoError, indice_ponderado, s
 
 def test_subindice_calcula_razao_entre_chuva_e_limiar():
     assert subindice(efr=100, rtotal=20, limiar=120) == pytest.approx(1.0)
+
+
+def test_subindice_com_limiar_zero_levanta_erro_identificando_o_limiar():
+    with pytest.raises(SubindiceInvalidoError, match="subindice.*limiar=0"):
+        subindice(efr=100, rtotal=20, limiar=0)
+
+
+def test_subindice_com_limiar_negativo_levanta_erro_identificando_o_limiar():
+    with pytest.raises(SubindiceInvalidoError, match="subindice.*limiar=-10"):
+        subindice(efr=100, rtotal=20, limiar=-10)
 
 
 # --- indice_ponderado -----------------------------------------------------------

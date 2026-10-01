@@ -2,7 +2,11 @@
 
 import pytest
 
-from app.classificacao.probabilidades import Probabilidades, probabilidades
+from app.classificacao.probabilidades import (
+    Probabilidades,
+    ProbabilidadesInvalidasError,
+    probabilidades,
+)
 
 
 def test_probabilidades_com_pesos_iguais():
@@ -35,3 +39,21 @@ def test_probabilidades_ponderadas_pelo_peso_e_nao_por_cabeca():
     resultado = probabilidades(subs, pesos)
 
     assert resultado.pontuais == pytest.approx(0.25)
+
+
+# --- erros identificáveis -------------------------------------------------------
+
+
+def test_probabilidades_com_lista_vazia_levanta_erro_identificando_a_funcao():
+    with pytest.raises(ProbabilidadesInvalidasError, match="probabilidades.*vazia"):
+        probabilidades([], [])
+
+
+def test_probabilidades_com_tamanhos_diferentes_levanta_erro_citando_os_tamanhos():
+    with pytest.raises(ProbabilidadesInvalidasError, match=r"probabilidades.*\(2\).*\(1\)"):
+        probabilidades([1.0, 2.0], [1])
+
+
+def test_probabilidades_com_soma_de_pesos_zero_levanta_erro_identificando_a_funcao():
+    with pytest.raises(ProbabilidadesInvalidasError, match="probabilidades.*soma dos pesos"):
+        probabilidades([1.0, 2.0], [0, 0])
