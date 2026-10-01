@@ -64,51 +64,116 @@ Evidência: `evidencia-tarefa-0/previous_runs_gfs.json`,
 
 ## 2. Convenção do rótulo horário da precipitação
 
-**O rótulo `T` representa a chuva acumulada no intervalo `[T, T+1h)` — ou
-seja, o rótulo marca o *início* da hora, não o fim.** A documentação textual
-da Open-Meteo diz "sum of the preceding hour", o que sugeriria o oposto; a
-chamada real contradiz o texto, e a chamada real é o que vale.
+> **Correção (rodada de revisão 1):** a versão anterior deste documento dizia
+> que o rótulo marca o *início* da hora. Está **errado** — o rótulo marca o
+> **fim** da hora (`backwards_sum`). A revisão independente mostrou que o
+> teste usado para "confirmar" a versão anterior era circular (ver abaixo por
+> quê), e a correção foi verificada por dois caminhos que não dependem desse
+> teste: o código-fonte da Open-Meteo e um evento astronômico independente
+> (nascer/pôr do sol).
 
-**Evidência (`evidencia-tarefa-0/forecast_hourly_vs_daily.json`):** chamada
-com `hourly=precipitation` e `daily=precipitation_sum` no mesmo intervalo,
-`timezone=UTC`. Comparando a soma das 24 horas rotuladas com a data `D`
-(`D T00:00` a `D T23:00`) contra `precipitation_sum` de `D`:
+**O rótulo `T` representa a chuva acumulada no intervalo `[T−1h, T)` — ou
+seja, o rótulo marca o *fim* da hora.** Isso é consistente com o texto da
+documentação ("sum of the preceding hour"), que a versão anterior deste
+documento tinha lido ao contrário.
 
-| Data (D) | Soma dos 24 rótulos `D*` | `precipitation_sum` de D |
-|---|---|---|
-| 2026-09-25 | 0,3 | 0,3 |
-| 2026-09-28 | 18,4 | 18,4 |
-| 2026-09-29 | 9,4 | 9,4 |
-| 2026-09-30 | 34,0 | 34,0 |
-| 2026-10-01 | 13,0 | 13,0 |
+### Por que o teste anterior não decidia a direção (e por que isso importa)
 
-Bateu exatamente (não por arredondamento). A hipótese alternativa (rótulo =
-fim do intervalo, exigindo deslocar a soma em uma hora) foi testada no mesmo
-script e **não bateu** (18,7 / 9,1 / 34,1 / 12,9 — divergência real, não só
-arredondamento). Logo: rótulo = início do intervalo.
+O teste anterior comparava a soma dos 24 rótulos com data-texto `D`
+(`D T00:00` a `D T23:00`) contra o campo `daily.precipitation_sum` de `D`, e
+batia exatamente. Isso **não** prova que o rótulo `D T00:00` cobre fisicamente
+o início do dia `D`: prova só que a Open-Meteo **agrupa esse conjunto de
+rótulos sob o texto da data `D`** ao calcular o total diário — o que é
+verdade qualquer que seja a direção física do intervalo que cada rótulo
+representa. Um teste que mede o agrupamento textual não pode decidir uma
+pergunta sobre a física do intervalo; ele bate "sim" nas duas hipóteses
+dependendo de como a soma é reagrupada, e eu só testei um reagrupamento
+alternativo (não o conjunto de rótulos correto para a hipótese errada), o que
+mascarou o problema.
+
+### Evidência que de fato decide a direção
+
+**1. Código-fonte da Open-Meteo** (open-meteo/open-meteo no GitHub, branch
+`main`), que processa e serve os dados:
+
+- `Sources/App/Gfs/GfsVariable.swift`, linha 153:
+  `case .precipitation, .showers, .snowfall_water_equivalent: return .init(..., interpolation: .backwards_sum, ...)`
+- `Sources/App/Ecmwf/EcmwfVariable.swift`, linha 798:
+  `case .precipitation, .showers, .snowfall_water_equivalent, .runoff: return .backwards_sum`
+
+`backwards_sum` soma os minutos/horas anteriores ao rótulo, terminando nele.
+Evidência salva (arquivos baixados diretamente do GitHub, não resumidos):
+`evidencia-tarefa-0/github_gfs_variable.swift`,
+`evidencia-tarefa-0/github_ecmwf_variable.swift`.
+
+**2. Cruzamento com um evento físico independente — nascer e pôr do sol.**
+Esse teste **pode falhar** de verdade (ao contrário do teste de agrupamento):
+se o rótulo marcasse o início do intervalo, o primeiro valor de radiação
+não-nulo apareceria na hora cujo rótulo é igual ao horário do nascer do sol;
+se marca o fim, o primeiro valor não-nulo aparece uma hora **depois**.
+Chamada: `hourly=shortwave_radiation`, `daily=sunrise,sunset`,
+`timezone=UTC`, para -27,05/-49,52 em 2026-10-01 (nascer do sol: `08:57Z`,
+calculado pela própria Open-Meteo a partir de posição solar, independente de
+qualquer convenção de acumulação de chuva):
+
+| Rótulo | Radiação (W/m²) |
+|---|---|
+| 2026-10-01T08:00 | 0,0 |
+| 2026-10-01T09:00 | 0,0 |
+| 2026-10-01T10:00 | 10,0 |
+| 2026-10-01T11:00 | 39,0 |
+
+O nascer do sol (08:57Z) cai dentro do intervalo `[08:00,09:00)`. Com rótulo
+= fim do intervalo, esse intervalo é rotulado `09:00` — e é exatamente onde
+o valor ainda aparece como `0,0` (só 3 min de luz rasante, abaixo do limiar
+de medição), virando `10,0` no rótulo seguinte (`10:00`, que cobre
+`[09:00,10:00)`, a primeira hora inteira após o nascer do sol). Com rótulo =
+início do intervalo, o rótulo `09:00` cobriria `[09:00,10:00)` — já a
+primeira hora inteira de sol — e deveria ser o primeiro a subir, o que não
+acontece. O mesmo padrão se repete no pôr do sol (21:18Z): rótulo `21:00`
+ainda alto (59,0, intervalo `[20:00,21:00)`, todo antes do pôr do sol),
+rótulo `22:00` caindo para quase zero (1,0, intervalo `[21:00,22:00)`,
+a maior parte já escura), rótulo `23:00` em `0,0`. Evidência:
+`evidencia-tarefa-0/radiation_sunrise_test.json`.
+
+Os dois caminhos (código-fonte e evento astronômico) apontam na mesma
+direção e não dependem um do outro nem do teste de agrupamento original, que
+fica mantido acima só como registro do erro, não como evidência da convenção.
 
 ### Quais 169 rótulos formam a janela do EfR de um dia-alvo D
 
 O brief da Tarefa 6 fixa o limite: "t=0 é a hora que **termina** na meia-noite
-UTC de D". Com rótulo = início do intervalo, a hora que termina em `D 00:00Z`
-tem rótulo `(D−1) 23:00Z`. Daí:
+UTC de D". Com rótulo = fim do intervalo, a hora que termina em `D 00:00Z`
+é, ela mesma, o rótulo `D T00:00Z`. Daí:
 
 ```
-rotulo(t) = meia_noite_utc(D) − (t + 1) horas,   para t = 0, 1, ..., 168
+rotulo(t) = meia_noite_utc(D) − t horas,   para t = 0, 1, ..., 168
 ```
 
-- `t=0` → rótulo `(D−1)T23:00Z` (peso 1, sem decaimento).
-- `t=168` → rótulo `(D−8)T23:00Z` (peso mínimo, `0,5^(168/24) = 0,5^7 ≈ 0,0078`).
+- `t=0` → rótulo `D T00:00Z` (peso 1, sem decaimento) — cobre fisicamente
+  `[(D−1)T23:00Z, D T00:00Z)`.
+- `t=168` → rótulo `(D−7)T00:00Z` (peso mínimo, `0,5^(168/24) = 0,5^7 ≈ 0,0078`).
 
-Em termos de calendário, os 169 rótulos são: os **168 rótulos horários
-completos dos 7 dias `D−7` a `D−1`** (cada um contribuindo com suas 24 horas,
-`T00:00` a `T23:00` — é exatamente esse agrupamento que bateu com
-`precipitation_sum` acima) **mais um rótulo extra**, `(D−8)T23:00Z` (a última
-hora do dia `D−8`, o termo `t=168`, de peso desprezível).
+Os 169 rótulos vão de `(D−7)T00:00Z` até `D T00:00Z`, inclusive, hora a hora.
 
-`rtotal` do dia-alvo (Tarefa 6) usa a convenção simétrica e mais simples: soma
-dos 24 rótulos `D T00:00` a `D T23:00` — o mesmo agrupamento que já bateu
-exatamente com o total diário da API.
+**`rtotal` do dia-alvo (Tarefa 6):** soma dos 24 rótulos `D T01:00Z` até
+`(D+1)T00:00Z` — cada um desses rótulos cobre uma hora cujo intervalo físico
+está inteiramente dentro do dia civil `D` (`[D 00:00, D 01:00)` até
+`[D 23:00, (D+1) 00:00)`).
+
+**As duas janelas encaixam sem sobra nem buraco:** o EfR termina no rótulo
+`D T00:00` (cobre até o instante físico `D 00:00`); o `Rtotal` começa no
+rótulo `D T01:00` (cobre a partir do instante físico `D 00:00`). Nenhuma hora
+física é contada duas vezes, nenhuma fica de fora.
+
+**Atenção para quem implementar a Tarefa 6:** o `Rtotal` **não pode** ser
+obtido do campo `daily.precipitation_sum` da API. Esse campo agrupa pelo
+texto da data do rótulo (`D T00:00` a `D T23:00`), mas, como acabamos de
+estabelecer, o rótulo `D T00:00` cobre fisicamente a última hora de `D−1`
+(`[(D−1)23:00, D 00:00)`) — ou seja, o "dia" do campo diário está deslocado
+uma hora para trás em relação ao dia civil UTC real. `Rtotal` tem de somar
+os 24 rótulos corretos (`D T01:00` a `(D+1)T00:00`) a partir da série
+horária, não usar o total diário pronto.
 
 ## 3. Modelos escolhidos
 
@@ -116,17 +181,28 @@ exatamente com o total diário da API.
 |---|---|---|---|---|---|---|
 | GFS (NCEP) | `gfs_global` | 0,11–0,13° (~13 km) | Global; testado em -27,05/-49,52 com retorno numérico válido | a cada 6 h (00/06/12/18 UTC) | 16 dias | **~5,6–5,8 h** |
 | ECMWF IFS | `ecmwf_ifs025` | 9 km nativo / 0,25° de saída | Global; testado na mesma coordenada | a cada 6 h | 15 dias (horário até ~90 h, depois 3 h/3 h) | **~8,0 h** |
-| ICON Global (DWD) | `icon_global` | 0,1° (~11 km) | Global — **testado empiricamente e confirmado para o Brasil**, apesar de a documentação textual da Open-Meteo não destacar a América do Sul como região prioritária | a cada 6 h | 7,5 dias (180 h) | **~3,6 h** |
+| ICON Global (DWD) | `icon_global` | 0,1° (~11 km) | Global — **testado empiricamente e confirmado para o Brasil**, apesar de a documentação textual da Open-Meteo não destacar a América do Sul como região prioritária | a cada 6 h | **~168 h (medido, ver abaixo)** | **~3,6 h** |
 
 **ICON-EU e ICON-D2 foram descartados**: cobrem só Europa/Alemanha-Suíça-Áustria
 (confirmado na documentação), não alcançam SC.
+
+**Correção (rodada de revisão 1):** a versão anterior citava 180 h (7,5 dias)
+de horizonte para o ICON Global a partir do texto da documentação, sem
+chamada real que confirmasse — e a página de documentação do ICON nem chega
+a mencionar explicitamente um horizonte separado para a variante "Global"
+(ela mistura números do ICON-EU/D2). Medido agora com `forecast_days=16`
+(`models=icon_global`, mesma coordenada): o último rótulo com valor
+não-nulo é `2026-10-08T00:00`, índice 168 da série (hora 168 a partir do
+início da chamada, em 2026-10-01T00:00) — ou seja, horizonte real de
+**~168 h**, não 180 h. A partir do índice 169 todos os valores vêm `None`.
+Evidência: `evidencia-tarefa-0/icon_global_horizon_check.json`.
 
 **Cobertura do horizonte (atraso máximo de 36 h → fim do D3):** o pior caso é
 uma rodada com 36 h de atraso, chamada no instante inicial de D0, que precisa
 alcançar o fim de D3 — até 36 h (atraso) + 96 h (D0 a fim de D3) = **132 h**
 de horizonte a partir da inicialização da rodada. Os três modelos (384 h, 360 h
-e 180 h) cobrem essa exigência com folga; mesmo o ICON (o mais curto, 180 h)
-sobra quase 50 h de margem.
+e ~168 h) cobrem essa exigência; o ICON, o mais curto, sobra **~36 h** de
+margem (não ~50 h, como a versão anterior dizia).
 
 **Limitação observada:** para o ECMWF, a partir de ~90 h de horizonte a API
 devolve valores repetidos em blocos de 3 horas (evidência:
@@ -141,7 +217,8 @@ Evidência: `evidencia-tarefa-0/icon_global_test.json`,
 `evidencia-tarefa-0/meta_ncep_gfs013.json`,
 `evidencia-tarefa-0/meta_ncep_gfs025.json`,
 `evidencia-tarefa-0/meta_dwd_icon.json`,
-`evidencia-tarefa-0/ecmwf_horizon_check.json`.
+`evidencia-tarefa-0/ecmwf_horizon_check.json`,
+`evidencia-tarefa-0/icon_global_horizon_check.json`.
 
 ## 4. Granularidade real do *time-lagged ensemble* — contradição com o brief
 
@@ -221,7 +298,18 @@ marcos pedidos no brief):
 | 24 h | 0,333 | 0,267 | **Sim** (`previous_day1`) |
 | 30 h | 0,167 | 0,133 | Não |
 | 36 h | 0,000 | 0,000 | Não (atraso exatamente no corte) |
-| > 36 h | 0 (membro descartado) | 0 (membro descartado) | — |
+| > 36 h | — (membro descartado) | — (membro descartado) | — |
+
+**Regra explícita para a Tarefa 6, sem ambiguidade:** todo membro cujo
+`peso(rodada, agora_utc)` dê `0` (atraso ≥ 36 h, inclusive exatamente 36 h)
+é **removido do cálculo por completo** — não entra no somatório ponderado do
+numerador (onde não faria diferença, por ter peso 0) **nem na contagem de
+`n_membros`** usada para comparar com `n_min`. Em outras palavras,
+`n_membros` conta só membros com peso `> 0`; um membro de peso 0 é
+equivalente a um membro ausente, não a um membro presente que não influencia
+a média. Isso evita que uma rodada já irrelevante (atraso ≥ 36 h) infle
+artificialmente `n_membros` e esconda que, na prática, poucos membros úteis
+contribuíram para aquele dia-alvo.
 
 ## 6. `n_min`
 
@@ -311,27 +399,34 @@ soma `misfire_grace_time=3600` (1 h) de folga adicional sobre esses horários.
 
 ### Achado adicional: nenhuma estação fica dentro dos seis municípios
 
-Filtrando as 23 estações de SC por proximidade do centro aproximado da
-microrregião (lat -26,8 / lon -49,55):
+**Correção (rodada de revisão 1):** as distâncias da versão anterior vinham
+de uma aproximação equiretangular ingênua (`hypot(Δlat, Δlon) × 111 km`), que
+não corrige a longitude pelo cosseno da latitude — a ~27° de latitude sul
+essa correção vale `cos(27°) ≈ 0,89`, e o erro acumulado chegava a ~10%.
+Recalculado com haversine de verdade (`R=6371 km`), a partir do mesmo arquivo
+`inmet_estacoes_T.json` e do mesmo ponto de referência (lat -26,8 / lon
+-49,55):
 
-| Estação | Situação | Distância aprox. |
+| Estação | Situação | Distância (haversine) |
 |---|---|---|
-| A817 Indaial | **Pane** | ~34 km |
-| A862 Rio Negrinho | Pane | ~61 km |
-| A861 Rio do Campo | Operante | ~68 km |
-| A863 Ituporanga | Operante | ~69 km |
+| A817 Indaial | **Pane** | 30,7 km |
+| A861 Rio do Campo | Operante | 61,0 km |
+| A862 Rio Negrinho | **Pane** | 61,4 km |
+| A863 Ituporanga | Operante | 69,4 km |
 
-A estação mais próxima (Indaial) está fora de operação; as duas mais próximas
-operantes ficam a ~68–69 km. Nenhuma das seis estações cai dentro de Dona
-Emma, Ibirama, José Boiteux, Presidente Getúlio, Vitor Meireles ou Witmarsum.
-Isso é compatível com o papel regional que o README já atribui ao INMET
-("comparação e validação... na região", não por município), mas significa, na
-prática, que a condicional "quando houver estação no município" da Tarefa 12
-dificilmente será satisfeita de forma literal — recomenda-se um raio de corte
-generoso (ex.: 80–100 km) ou aceitar que a comparação fica desabilitada para
-os seis municípios até que a rede de estações mude. Evidência:
-`evidencia-tarefa-0/inmet_estacoes_T.json` (mesmo arquivo, filtrado por
-`SG_ESTADO == "SC"`).
+A conclusão qualitativa não muda: a estação mais próxima (Indaial) está fora
+de operação, e as duas mais próximas **operantes** ficam a ~61–69 km — mas
+Rio do Campo (61,0 km) e Rio Negrinho (61,4 km, em pane) ficam praticamente
+empatadas, o que a aproximação anterior não mostrava. Nenhuma das seis
+estações cai dentro de Dona Emma, Ibirama, José Boiteux, Presidente Getúlio,
+Vitor Meireles ou Witmarsum. Isso é compatível com o papel regional que o
+README já atribui ao INMET ("comparação e validação... na região", não por
+município), mas significa, na prática, que a condicional "quando houver
+estação no município" da Tarefa 12 dificilmente será satisfeita de forma
+literal — recomenda-se um raio de corte generoso (ex.: 80–100 km) ou aceitar
+que a comparação fica desabilitada para os seis municípios até que a rede de
+estações mude. Evidência: `evidencia-tarefa-0/inmet_estacoes_T.json` (mesmo
+arquivo, filtrado por `SG_ESTADO == "SC"`, com haversine correto).
 
 ## 9. Limite de chamadas × volume previsto
 
