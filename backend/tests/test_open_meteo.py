@@ -17,14 +17,26 @@ import pytest
 import requests
 
 from app.config import Municipio, Ponto
-from app.coleta.open_meteo import URL_FORECAST, URL_PREVIOUS_RUNS, ColetaError, coletar
+from app.coleta.open_meteo import (
+    MODELO_PARA_CAMINHO_META,
+    URL_FORECAST,
+    URL_META,
+    URL_PREVIOUS_RUNS,
+    ColetaError,
+    coletar,
+)
 from app.modelos.tipos import DadosMunicipio, Membro
 
 RAIZ_FIXTURES = Path(__file__).resolve().parent / "fixtures"
 
 AGORA_UTC = datetime(2026, 10, 1, 21, 0, tzinfo=timezone.utc)
-RODADA_ATUAL_ESPERADA = datetime(2026, 10, 1, 18, 0, tzinfo=timezone.utc)
-RODADA_ANTERIOR_ESPERADA = datetime(2026, 9, 30, 18, 0, tzinfo=timezone.utc)
+
+# Rodada "forçada" nos testes de uso geral: o `meta.json` programado para
+# todos os modelos tem `last_run_initialisation_time` ajustado para este
+# instante, independente do conteúdo bruto da fixture (que reflete a rodada
+# real no momento em que foi gravada). Mantém os testes determinísticos.
+RODADA_ATUAL_ESPERADA = datetime(2026, 10, 1, 12, 0, tzinfo=timezone.utc)
+RODADA_ANTERIOR_ESPERADA = datetime(2026, 9, 30, 12, 0, tzinfo=timezone.utc)
 
 MODELOS = ("gfs_global", "ecmwf_ifs025", "icon_global")
 
@@ -44,6 +56,16 @@ def _municipio(pontos):
     )
 
 
+def _url_meta(modelo: str) -> str:
+    return URL_META.format(caminho=MODELO_PARA_CAMINHO_META[modelo])
+
+
+def _meta_com_rodada(rodada: datetime) -> dict:
+    meta = _carregar_fixture("open_meteo_meta.json")
+    meta["last_run_initialisation_time"] = int(rodada.timestamp())
+    return meta
+
+
 class RespostaFalsa:
     """Dublê de `requests.Response`: só o necessário para o coletor."""
 
@@ -60,7 +82,12 @@ class RespostaFalsa:
 
 
 class HttpFalso:
-    """Roteia por (url, modelo) uma fila de respostas/exceções programadas."""
+    """Roteia por (url, modelo) uma fila de respostas/exceções programadas.
+
+    As chamadas de `meta.json` já têm URL própria por modelo (o caminho
+    interno vai embutido na URL), então a chave (url, None) já as distingue
+    sem precisar do parâmetro `models`.
+    """
 
     def __init__(self):
         self.chamadas: list[tuple[str, dict]] = []
@@ -97,6 +124,11 @@ class HttpComFalhasIniciais:
         return self._http.get(*args, **kwargs)
 
 
+def _programar_meta_para_todos_os_modelos(http: HttpFalso, rodada: datetime = RODADA_ATUAL_ESPERADA) -> None:
+    for modelo in MODELOS:
+        http.programar(_url_meta(modelo), None, RespostaFalsa(_meta_com_rodada(rodada)))
+
+
 def _http_completo_programado(municipio: Municipio) -> HttpFalso:
     """Monta um HttpFalso que atende a todas as chamadas de `coletar` com sucesso."""
     antecedente = _carregar_fixture("open_meteo_antecedente.json")
@@ -108,6 +140,7 @@ def _http_completo_programado(municipio: Municipio) -> HttpFalso:
         None,
         *(RespostaFalsa(copy.deepcopy(antecedente)) for _ in municipio.pontos),
     )
+    _programar_meta_para_todos_os_modelos(http)
     for modelo in MODELOS:
         http.programar(
             URL_PREVIOUS_RUNS,
@@ -200,6 +233,109 @@ def test_series_por_ponto_seguem_a_mesma_ordem_dos_pontos_da_configuracao():
     assert len(membro_gfs_atual.chuva) == 2
 
 
+# --- rodada: vem do meta.json, não de agora_utc -----------------------------
+#
+# Rodada de correção 1. A versão anterior calculava `rodada` como a maior
+# hora sinótica <= agora_utc, uma fórmula pura de agora_utc. Isso está errado
+# porque o atraso de disponibilização (até ~8h, ECMWF — ensemble.md §7) faz
+# com que, em boa parte do tempo, a rodada sinótica "mais recente <= agora"
+# ainda não esteja disponível: a rodada de fato servida pela API é uma mais
+# antiga. O teste abaixo reproduz exatamente o cenário do cron da Tarefa 11
+# (chamada às 03:00 UTC, rodada real disponível é a de 18 UTC do dia
+# anterior) e teria falhado com a fórmula antiga, que devolveria 00:00 UTC do
+# dia corrente — 6h adiantada e com atraso computado como 3h em vez de 9h.
+
+
+def test_rodada_vem_do_last_run_initialisation_time_do_meta_json():
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+    agora_utc = datetime(2026, 10, 2, 3, 0, tzinfo=timezone.utc)
+    rodada_real_disponivel = datetime(2026, 10, 1, 18, 0, tzinfo=timezone.utc)
+    rodada_que_a_formula_antiga_produziria = datetime(2026, 10, 2, 0, 0, tzinfo=timezone.utc)
+
+    antecedente = _carregar_fixture("open_meteo_antecedente.json")
+    previous_runs = _carregar_fixture("open_meteo_previous_runs.json")
+
+    http = HttpFalso()
+    http.programar(URL_FORECAST, None, RespostaFalsa(antecedente))
+    for modelo in MODELOS:
+        http.programar(
+            _url_meta(modelo), None, RespostaFalsa(_meta_com_rodada(rodada_real_disponivel))
+        )
+        http.programar(URL_PREVIOUS_RUNS, modelo, RespostaFalsa(copy.deepcopy(previous_runs)))
+
+    dados = coletar(municipio, agora_utc, http)
+
+    for modelo in MODELOS:
+        membro_atual = next(
+            m for m in dados.membros if m.modelo == modelo and m.rodada == rodada_real_disponivel
+        )
+        assert membro_atual.rodada == rodada_real_disponivel
+
+    assert not any(
+        m.rodada == rodada_que_a_formula_antiga_produziria for m in dados.membros
+    )
+
+
+def test_rodada_anterior_e_24h_antes_da_rodada_atual_do_meta_json():
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+    rodada_real = datetime(2026, 10, 1, 6, 0, tzinfo=timezone.utc)
+
+    antecedente = _carregar_fixture("open_meteo_antecedente.json")
+
+    http = HttpFalso()
+    http.programar(URL_FORECAST, None, RespostaFalsa(antecedente))
+    _programar_meta_para_todos_os_modelos(http, rodada=rodada_real)
+    for modelo in MODELOS:
+        http.programar(
+            URL_PREVIOUS_RUNS, modelo, RespostaFalsa(_carregar_fixture("open_meteo_previous_runs.json"))
+        )
+
+    dados = coletar(municipio, AGORA_UTC, http)
+
+    membro_anterior = next(
+        m for m in dados.membros
+        if m.modelo == "gfs_global" and m.rodada == rodada_real - timedelta(hours=24)
+    )
+    assert membro_anterior.rodada == datetime(2026, 9, 30, 6, 0, tzinfo=timezone.utc)
+
+
+def test_meta_json_indisponivel_degrada_para_piso_sinotico_menos_8h():
+    """Se o `meta.json` falhar após as tentativas, a rodada cai para a
+    derivação documentada em `ensemble.md` §7 (gargalo do ECMWF, ~8h de
+    atraso de disponibilização) — nunca para uma fórmula baseada só em
+    `agora_utc` sem margem nenhuma (o erro da rodada de correção 1)."""
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+    agora_utc = datetime(2026, 10, 1, 21, 0, tzinfo=timezone.utc)
+    # piso_sinotico(21:00 - 8h) = piso_sinotico(13:00) = 12:00 UTC
+    rodada_degradada_esperada = datetime(2026, 10, 1, 12, 0, tzinfo=timezone.utc)
+
+    antecedente = _carregar_fixture("open_meteo_antecedente.json")
+    previous_runs = _carregar_fixture("open_meteo_previous_runs.json")
+
+    http = HttpFalso()
+    http.programar(URL_FORECAST, None, RespostaFalsa(antecedente))
+    http.programar(
+        _url_meta("gfs_global"),
+        None,
+        requests.exceptions.ConnectionError("falha simulada"),
+        requests.exceptions.ConnectionError("falha simulada"),
+        requests.exceptions.ConnectionError("falha simulada"),
+    )
+    http.programar(URL_PREVIOUS_RUNS, "gfs_global", RespostaFalsa(previous_runs))
+    for modelo in ("ecmwf_ifs025", "icon_global"):
+        http.programar(_url_meta(modelo), None, RespostaFalsa(_meta_com_rodada(RODADA_ATUAL_ESPERADA)))
+        http.programar(URL_PREVIOUS_RUNS, modelo, RespostaFalsa(_carregar_fixture("open_meteo_previous_runs.json")))
+
+    espera, chamadas_espera = _espera_registrada()
+    dados = coletar(municipio, agora_utc, http, espera=espera)
+
+    membro_gfs_atual = next(
+        m for m in dados.membros if m.modelo == "gfs_global" and m.rodada == rodada_degradada_esperada
+    )
+    assert membro_gfs_atual.rodada == rodada_degradada_esperada
+    assert len(chamadas_espera) >= 2  # as 2 pausas entre as 3 tentativas do meta.json
+
+
 # --- lacuna na série antecedente ---------------------------------------------
 
 
@@ -230,6 +366,7 @@ def test_lacuna_num_membro_descarta_so_esse_membro():
 
     http = HttpFalso()
     http.programar(URL_FORECAST, None, RespostaFalsa(antecedente))
+    _programar_meta_para_todos_os_modelos(http)
     http.programar(URL_PREVIOUS_RUNS, "gfs_global", RespostaFalsa(previous_runs_ok))
     http.programar(URL_PREVIOUS_RUNS, "ecmwf_ifs025", RespostaFalsa(copy.deepcopy(previous_runs_ok)))
     # icon_global: rodada atual com lacuna -> descartada; rodada anterior intacta -> mantida
@@ -256,6 +393,7 @@ def test_rodada_ausente_num_membro_descarta_so_esse_membro():
 
     http = HttpFalso()
     http.programar(URL_FORECAST, None, RespostaFalsa(antecedente))
+    _programar_meta_para_todos_os_modelos(http)
     http.programar(URL_PREVIOUS_RUNS, "gfs_global", RespostaFalsa(previous_runs_ok))
     # ecmwf_ifs025: rodada anterior ausente no payload -> descartada; rodada atual mantida
     http.programar(URL_PREVIOUS_RUNS, "ecmwf_ifs025", RespostaFalsa(previous_runs_sem_rodada_anterior))
@@ -272,7 +410,44 @@ def test_rodada_ausente_num_membro_descarta_so_esse_membro():
     )
 
 
-# --- retentativas -------------------------------------------------------------
+# --- falha de transporte ao buscar um membro: descarta só esse membro -------
+#
+# Rodada de correção 1, decisão 2. n_min = 3 e há até 6 membros possíveis (3
+# modelos x 2 rodadas); perder a rede de um modelo inteiro ainda deixa 4
+# membros, de sobra — abortar o município inteiro jogaria fora um resultado
+# utilizável. Só a série antecedente, que não admite lacuna nenhuma, aborta o
+# município quando a rede se esgota.
+
+
+def test_falha_de_transporte_ao_buscar_membro_descarta_so_aquele_modelo():
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+
+    antecedente = _carregar_fixture("open_meteo_antecedente.json")
+    previous_runs = _carregar_fixture("open_meteo_previous_runs.json")
+
+    http = HttpFalso()
+    http.programar(URL_FORECAST, None, RespostaFalsa(antecedente))
+    _programar_meta_para_todos_os_modelos(http)
+    http.programar(
+        URL_PREVIOUS_RUNS,
+        "icon_global",
+        requests.exceptions.ConnectionError("falha simulada"),
+        requests.exceptions.ConnectionError("falha simulada"),
+        requests.exceptions.ConnectionError("falha simulada"),
+    )
+    http.programar(URL_PREVIOUS_RUNS, "gfs_global", RespostaFalsa(previous_runs))
+    http.programar(URL_PREVIOUS_RUNS, "ecmwf_ifs025", RespostaFalsa(copy.deepcopy(previous_runs)))
+
+    espera, _ = _espera_registrada()
+    dados = coletar(municipio, AGORA_UTC, http, espera=espera)
+
+    assert len(dados.membros) == 4  # 2 modelos restantes x 2 rodadas
+    assert not any(m.modelo == "icon_global" for m in dados.membros)
+    assert any(m.modelo == "gfs_global" and m.rodada == RODADA_ATUAL_ESPERADA for m in dados.membros)
+    assert any(m.modelo == "ecmwf_ifs025" and m.rodada == RODADA_ATUAL_ESPERADA for m in dados.membros)
+
+
+# --- retentativas (série antecedente) ------------------------------------------
 
 
 def test_erro_transitorio_na_primeira_tentativa_sucesso_na_segunda_devolve_dados():
@@ -289,7 +464,7 @@ def test_erro_transitorio_na_primeira_tentativa_sucesso_na_segunda_devolve_dados
     assert len(chamadas_espera) == 1  # uma pausa entre a 1ª tentativa (falha) e a 2ª (sucesso)
 
 
-def test_tres_falhas_levanta_erro_identificando_municipio():
+def test_tres_falhas_na_antecedente_levanta_erro_identificando_municipio():
     municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
 
     class HttpSempreFalha:
@@ -344,4 +519,5 @@ def test_coleta_real_para_um_ponto():
     assert len(dados.membros) >= 1
     for membro in dados.membros:
         assert membro.rodada.tzinfo is not None
+        assert membro.rodada.hour in (0, 6, 12, 18)
         assert len(membro.chuva) == 1
