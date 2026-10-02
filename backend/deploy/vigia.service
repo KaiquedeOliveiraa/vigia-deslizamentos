@@ -1,0 +1,51 @@
+[Unit]
+Description=VIGIA Deslizamentos — bot do Telegram e pipeline do índice de risco
+Documentation=https://github.com/KaiquedeOliveiraa/vigia-deslizamentos
+# O serviço só fala com APIs externas; sem rede ele sobe, falha a coleta e
+# registra o erro — por isso `After`, e não `Requires`.
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=vigia
+Group=vigia
+
+WorkingDirectory=/opt/vigia/backend
+# O `.env` guarda o token do bot e o do GitHub: permissão 600 e dono `vigia`.
+#   sudo install -o vigia -g vigia -m 600 .env /etc/vigia/vigia.env
+EnvironmentFile=/etc/vigia/vigia.env
+ExecStart=/opt/vigia/backend/.venv/bin/python -m app.main
+
+# Reinicia sempre: o processo é um long polling que deve viver indefinidamente.
+# `RestartSec` evita laço apertado quando a falha é na subida (token inválido,
+# banco sem permissão).
+Restart=always
+RestartSec=10s
+
+# `DB_PATH` e `LOG_PATH` do `.env` têm de apontar para dentro deste diretório,
+# que é persistente e gravável pelo usuário do serviço:
+#   sudo install -d -o vigia -g vigia -m 750 /var/lib/vigia
+ReadWritePaths=/var/lib/vigia
+
+# O log do processo também vai para o journal, além do arquivo de LOG_PATH.
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=vigia
+
+# Endurecimento: o serviço só precisa ler o código, escrever no banco e no log,
+# e falar HTTPS.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target
