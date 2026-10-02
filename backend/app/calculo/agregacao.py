@@ -68,6 +68,13 @@ class RodadaInvalidaError(Exception):
     """Rodada fora dos horários sinóticos (0/6/12/18 UTC) ou posterior a `agora_utc`."""
 
 
+#: Falhas de domínio que `calcular` converte em "município sem dados", em vez
+#: de deixar abortar a execução inteira: elas dizem respeito aos dados de **um**
+#: município, e a Tarefa 11 exige que os outros sigam. É um conjunto nomeado de
+#: propósito — `except Exception` esconderia defeito de programação.
+ERROS_DE_DOMINIO = (AgregacaoInvalidaError, RodadaInvalidaError, HoraAusenteError)
+
+
 def _exigir_fuso(nome: str, momento: datetime) -> None:
     if momento.tzinfo is None or momento.utcoffset() is None:
         raise ValueError(
@@ -356,9 +363,17 @@ def acumulados(
 
 @dataclass(frozen=True)
 class ResultadoMunicipio:
-    """Resultado de um município: os quatro dias-alvo e a chuva acumulada."""
+    """Resultado de um município: os quatro dias-alvo e a chuva acumulada.
+
+    `limiar_mm` é o limiar que este cálculo usou. Viaja com o resultado porque
+    a persistência (Tarefa 7) recebe só o `Resultado` e grava a coluna
+    `indices.limiar_mm`, e porque é o valor que o `indices.json` precisa expor
+    — tomar o limiar da configuração na hora de gravar permitiria registrar um
+    limiar diferente do que entrou na conta.
+    """
 
     ibge: str
+    limiar_mm: float
     dias: tuple[ResultadoDia, ...]
     chuva_acum_mm: dict[str, float]
 
@@ -405,8 +420,10 @@ def calcular(
     README) e D1–D3 são os dias seguintes.
 
     Um município vai para `municipios_sem_dados` quando não há dados dele
-    nesta execução ou quando algum dos quatro dias-alvo fica com menos de
-    `N_MIN` membros. As duas listas preservam a ordem da configuração.
+    nesta execução, quando algum dos quatro dias-alvo fica com menos de
+    `N_MIN` membros, ou quando o cálculo dele levanta uma das
+    `ERROS_DE_DOMINIO` — a falha de um município não derruba os outros. As
+    duas listas preservam a ordem da configuração.
 
     Função pura: `agora_utc` entra por parâmetro, nada é lido de rede, banco,
     relógio, ambiente ou arquivo.
@@ -425,16 +442,22 @@ def calcular(
             sem_dados.append(municipio.ibge)
             continue
 
-        dias = _dias_do_municipio(municipio, dados_do_municipio, dias_alvo, agora)
-        if dias is None:
+        try:
+            dias = _dias_do_municipio(municipio, dados_do_municipio, dias_alvo, agora)
+            if dias is None:
+                sem_dados.append(municipio.ibge)
+                continue
+            chuva_acum_mm = acumulados(dados_do_municipio.antecedente, agora)
+        except ERROS_DE_DOMINIO:
             sem_dados.append(municipio.ibge)
             continue
 
         com_dados.append(
             ResultadoMunicipio(
                 ibge=municipio.ibge,
+                limiar_mm=municipio.limiar_mm,
                 dias=dias,
-                chuva_acum_mm=acumulados(dados_do_municipio.antecedente, agora),
+                chuva_acum_mm=chuva_acum_mm,
             )
         )
 

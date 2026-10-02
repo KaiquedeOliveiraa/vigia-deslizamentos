@@ -756,3 +756,94 @@ def test_resultado_e_resultado_municipio_sao_imutaveis():
         resultado.dia_alvo_d0 = date(2026, 1, 1)
     with pytest.raises(FrozenInstanceError):
         resultado.municipios[0].ibge = "0000000"
+
+
+# --- isolamento de falhas por município ---------------------------------------
+
+
+def test_resultado_municipio_carrega_o_limiar_usado_no_calculo():
+    # O `limiar_mm` é coluna da tabela `indices` (Tarefa 7) e campo do
+    # `indices.json` (Tarefa 9): precisa viajar com o resultado, porque quem
+    # grava recebe só o `Resultado`, não a configuração.
+    municipio = municipio_de_teste(quantidade_de_pontos=1, limiar_mm=250.0)
+
+    resultado = calcular([municipio], {municipio.ibge: dados_com_tres_membros()}, AGORA)
+
+    assert resultado.municipios[0].limiar_mm == 250.0
+
+
+def test_rodada_fora_do_horario_sinotico_isola_so_aquele_municipio():
+    # Uma rodada inválida num município não pode derrubar a execução dos
+    # outros cinco: a Tarefa 11 exige que falha de cálculo mande o município
+    # para `municipios_sem_dados` e os demais sigam.
+    bom = municipio_de_teste(quantidade_de_pontos=1, ibge="4204202")
+    ruim = municipio_de_teste(quantidade_de_pontos=1, ibge="4206900")
+    dados_ruins = DadosMunicipio(
+        ibge=ruim.ibge,
+        antecedente=[antecedente_de_teste()],
+        membros=[
+            Membro(
+                modelo="gfs_global",
+                rodada=datetime(2026, 10, 1, 3, 0, tzinfo=UTC),  # 03 UTC não é sinótico
+                chuva=[previsao_de_quatro_dias((120.0, 0.0, 0.0, 0.0))],
+            )
+        ],
+    )
+
+    resultado = calcular(
+        [bom, ruim],
+        {
+            bom.ibge: dados_com_tres_membros(ibge=bom.ibge),
+            ruim.ibge: dados_ruins,
+        },
+        AGORA,
+    )
+
+    assert [item.ibge for item in resultado.municipios] == [bom.ibge]
+    assert resultado.municipios_sem_dados == [ruim.ibge]
+
+
+def test_serie_antecedente_incompleta_deixa_o_municipio_sem_dados():
+    # Toda hora da janela de acumulado também pertence a alguma janela de EfR
+    # (D0..D3 cobrem 2026-09-24T00:00Z..2026-10-04T00:00Z), então uma lacuna
+    # no antecedente descarta todos os membros antes de `acumulados()` ser
+    # alcançado: o município sai por `n_membros = 0`, não por exceção. O teste
+    # fixa esse caminho; a exceção isolada é a dos dois testes vizinhos.
+    bom = municipio_de_teste(quantidade_de_pontos=1, ibge="4204202")
+    ruim = municipio_de_teste(quantidade_de_pontos=1, ibge="4206900")
+    antecedente_curto = antecedente_de_teste()
+    del antecedente_curto[datetime(2026, 9, 28, 5, 0, tzinfo=UTC)]
+    dados_ruins = DadosMunicipio(
+        ibge=ruim.ibge,
+        antecedente=[antecedente_curto],
+        membros=dados_com_tres_membros(ibge=ruim.ibge).membros,
+    )
+
+    resultado = calcular(
+        [bom, ruim],
+        {
+            bom.ibge: dados_com_tres_membros(ibge=bom.ibge),
+            ruim.ibge: dados_ruins,
+        },
+        AGORA,
+    )
+
+    assert [item.ibge for item in resultado.municipios] == [bom.ibge]
+    assert resultado.municipios_sem_dados == [ruim.ibge]
+
+
+def test_series_em_quantidade_errada_isolam_so_aquele_municipio():
+    bom = municipio_de_teste(quantidade_de_pontos=1, ibge="4204202")
+    ruim = municipio_de_teste(quantidade_de_pontos=2, ibge="4206900")
+
+    resultado = calcular(
+        [bom, ruim],
+        {
+            bom.ibge: dados_com_tres_membros(ibge=bom.ibge),
+            ruim.ibge: dados_com_tres_membros(ibge=ruim.ibge),  # só 1 série, 2 pontos
+        },
+        AGORA,
+    )
+
+    assert [item.ibge for item in resultado.municipios] == [bom.ibge]
+    assert resultado.municipios_sem_dados == [ruim.ibge]
