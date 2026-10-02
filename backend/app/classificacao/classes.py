@@ -38,3 +38,28 @@ def em_alerta(indice: float) -> bool:
     ou superior), isto é, índice maior ou igual a 1,00 (RN02).
     """
     return indice >= LIMIAR_ALERTA
+
+
+#: Nome de cada classe, da tabela "Classes de risco" do README. Em minúsculas,
+#: para encaixar em frase ("risco moderado") sem ganhar maiúscula no meio do
+#: texto; quem precisar de capitular faz isso na apresentação.
+#: Vive aqui, e não no bot, porque o nome é parte da classificação: a RN03 diz
+#: que o risco nunca é indicado só por cor, então nome e número andam juntos.
+_NOME_POR_CLASSE = {
+    1: "extremamente baixo",
+    2: "muito baixo",
+    3: "baixo",
+    4: "moderado",
+    5: "alto",
+    6: "muito alto",
+    7: "extremamente alto",
+}
+
+
+def nome_classe(numero_classe: int) -> str:
+    """Nome da classe de risco (1 a 7). Levanta `ValueError` fora dessa faixa."""
+    if numero_classe not in _NOME_POR_CLASSE:
+        raise ValueError(
+            f"classe precisa estar entre 1 e 7; recebido: {numero_classe!r}"
+        )
+    return _NOME_POR_CLASSE[numero_classe]

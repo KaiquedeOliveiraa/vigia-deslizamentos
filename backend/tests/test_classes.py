@@ -5,7 +5,9 @@ Fronteiras são faixas semiabertas `[a, b)`: usar literais exatos, nunca
 verificam.
 """
 
-from app.classificacao.classes import classe, em_alerta
+import pytest
+
+from app.classificacao.classes import classe, em_alerta, nome_classe
 
 
 def test_abaixo_de_0_40_e_classe_1_extremamente_baixo():
@@ -54,3 +56,25 @@ def test_em_alerta_e_falso_logo_abaixo_de_1_00():
 
 def test_em_alerta_e_verdadeiro_a_partir_de_1_00():
     assert em_alerta(1.00) is True
+
+
+# --- nome da classe (RN03: risco nunca só por cor) ----------------------------
+
+
+def test_nome_de_cada_uma_das_sete_classes_segue_a_tabela_do_readme():
+    assert [nome_classe(numero) for numero in range(1, 8)] == [
+        "extremamente baixo",
+        "muito baixo",
+        "baixo",
+        "moderado",
+        "alto",
+        "muito alto",
+        "extremamente alto",
+    ]
+
+
+def test_nome_de_classe_fora_de_1_a_7_levanta_erro():
+    with pytest.raises(ValueError, match="classe"):
+        nome_classe(0)
+    with pytest.raises(ValueError, match="classe"):
+        nome_classe(8)
