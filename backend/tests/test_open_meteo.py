@@ -82,30 +82,51 @@ class RespostaFalsa:
 
 
 class HttpFalso:
-    """Roteia por (url, modelo) uma fila de respostas/exceções programadas.
+    """Roteia por (url, modelo, lat, lon) uma fila de respostas/exceções programadas.
 
-    As chamadas de `meta.json` já têm URL própria por modelo (o caminho
-    interno vai embutido na URL), então a chave (url, None) já as distingue
-    sem precisar do parâmetro `models`.
+    Rotear por ponto (não só por url/modelo) importa para provar que a
+    coleta associa a série certa ao ponto certo, na ordem certa — ver
+    `test_series_por_ponto_seguem_a_mesma_ordem_dos_pontos_da_configuracao`.
+    Quando o teste não precisa distinguir pontos (a maioria), `programar` é
+    chamado sem `lat`/`lon` (ficam `None`), e `get` cai de volta para essa
+    chave "sem ponto" — cobre também `meta.json`, que não tem lat/lon.
+
+    Um item programado pode ser: uma exceção (é levantada), uma
+    `RespostaFalsa` (é devolvida como está) ou uma função `params -> objeto
+    com .json()/.raise_for_status()` (chamada com os parâmetros reais da
+    requisição) — usado para simular, por exemplo, o truncamento real que a
+    API faria conforme o `forecast_days` enviado.
     """
 
     def __init__(self):
         self.chamadas: list[tuple[str, dict]] = []
-        self._filas: dict[tuple[str, str | None], list] = {}
+        self._filas: dict[tuple[str, str | None, float | None, float | None], list] = {}
 
-    def programar(self, url: str, modelo: str | None, *itens) -> None:
-        self._filas[(url, modelo)] = list(itens)
+    def programar(
+        self,
+        url: str,
+        modelo: str | None,
+        *itens,
+        lat: float | None = None,
+        lon: float | None = None,
+    ) -> None:
+        self._filas[(url, modelo, lat, lon)] = list(itens)
 
     def get(self, url: str, params: dict | None = None, timeout: float | None = None):
         params = params or {}
         self.chamadas.append((url, dict(params)))
-        chave = (url, params.get("models"))
+        chave = (url, params.get("models"), params.get("latitude"), params.get("longitude"))
         fila = self._filas.get(chave)
+        if fila is None:
+            chave = (url, params.get("models"), None, None)
+            fila = self._filas.get(chave)
         if not fila:
             raise AssertionError(f"chamada inesperada (sem item programado): {chave}")
         item = fila.pop(0)
         if isinstance(item, Exception):
             raise item
+        if callable(item):
+            return item(params)
         return item
 
 
@@ -157,6 +178,37 @@ def _espera_registrada():
         chamadas.append(segundos)
 
     return espera, chamadas
+
+
+def _deslocar_precipitacao(fixture: dict, campos: list[str], deslocamento: float) -> dict:
+    """Copia a fixture somando `deslocamento` a cada valor não nulo dos
+    `campos` indicados — usado para dar a cada ponto um valor numericamente
+    distinto e provável de detectar inversão de ordem."""
+    copia = copy.deepcopy(fixture)
+    for campo in campos:
+        copia["hourly"][campo] = [
+            (valor + deslocamento) if valor is not None else None
+            for valor in copia["hourly"][campo]
+        ]
+    return copia
+
+
+def _resposta_previous_runs_truncada_pelo_forecast_days(fixture_completa: dict):
+    """Responder dinâmico: trunca a fixture completa (120 rótulos, gravada
+    com `forecast_days=5`) para `forecast_days * 24` rótulos, simulando o que
+    a API realmente devolveria para o valor de `forecast_days` que a
+    implementação de fato enviar. Detecta a regressão de verdade — não
+    confere o parâmetro enviado, confere a consequência de enviá-lo."""
+
+    def responder(params: dict):
+        dias = params.get("forecast_days", 4)
+        n_horas = dias * 24
+        truncada = copy.deepcopy(fixture_completa)
+        for campo in ("time", "precipitation", "precipitation_previous_day1"):
+            truncada["hourly"][campo] = truncada["hourly"][campo][:n_horas]
+        return RespostaFalsa(truncada)
+
+    return responder
 
 
 # --- tipos: dataclasses imutáveis -------------------------------------------
@@ -219,18 +271,101 @@ def test_membros_tem_horas_utc_com_fuso_valor_certo_e_rodada_correta():
 
 
 def test_series_por_ponto_seguem_a_mesma_ordem_dos_pontos_da_configuracao():
-    municipio = _municipio(
-        [Ponto(lat=-27.0181, lon=-49.5286), Ponto(lat=-26.90, lon=-49.60)]
-    )
-    http = _http_completo_programado(municipio)
+    """Não basta len(...) == 2 (cardinalidade): a Tarefa 6 usa "primeiro
+    ponto da configuração" como critério de desempate, então a *identidade*
+    de qual série pertence a qual ponto importa. Cada ponto recebe aqui um
+    deslocamento numérico distinto (+0 mm e +10 mm) para que a asserção
+    dependa de qual ponto gerou qual série — um teste que só conferisse o
+    tamanho das listas passaria mesmo com a ordem invertida."""
+    pontos = (Ponto(lat=-27.0181, lon=-49.5286), Ponto(lat=-26.90, lon=-49.60))
+    municipio = _municipio(pontos)
+
+    antecedente_base = _carregar_fixture("open_meteo_antecedente.json")
+    previous_runs_base = _carregar_fixture("open_meteo_previous_runs.json")
+
+    http = HttpFalso()
+    for indice, ponto in enumerate(pontos):
+        deslocamento = 10.0 * indice  # ponto 0: +0 mm; ponto 1: +10 mm
+        http.programar(
+            URL_FORECAST,
+            None,
+            RespostaFalsa(_deslocar_precipitacao(antecedente_base, ["precipitation"], deslocamento)),
+            lat=ponto.lat,
+            lon=ponto.lon,
+        )
+    _programar_meta_para_todos_os_modelos(http)
+    for modelo in MODELOS:
+        for indice, ponto in enumerate(pontos):
+            deslocamento = 10.0 * indice
+            http.programar(
+                URL_PREVIOUS_RUNS,
+                modelo,
+                RespostaFalsa(
+                    _deslocar_precipitacao(
+                        previous_runs_base, ["precipitation", "precipitation_previous_day1"], deslocamento
+                    )
+                ),
+                lat=ponto.lat,
+                lon=ponto.lon,
+            )
 
     dados = coletar(municipio, AGORA_UTC, http)
 
+    hora_antecedente = datetime(2026, 10, 1, 21, 0, tzinfo=timezone.utc)
+    indice_hora_antecedente = antecedente_base["hourly"]["time"].index("2026-10-01T21:00")
+    valor_base_antecedente = antecedente_base["hourly"]["precipitation"][indice_hora_antecedente]
+
     assert len(dados.antecedente) == 2
+    assert dados.antecedente[0][hora_antecedente] == pytest.approx(valor_base_antecedente)
+    assert dados.antecedente[1][hora_antecedente] == pytest.approx(valor_base_antecedente + 10.0)
+
+    hora_membro = datetime(2026, 10, 1, 0, 0, tzinfo=timezone.utc)
+    indice_hora_membro = previous_runs_base["hourly"]["time"].index("2026-10-01T00:00")
+    valor_base_membro = previous_runs_base["hourly"]["precipitation"][indice_hora_membro]
+
     membro_gfs_atual = next(
         m for m in dados.membros if m.modelo == "gfs_global" and m.rodada == RODADA_ATUAL_ESPERADA
     )
     assert len(membro_gfs_atual.chuva) == 2
+    assert membro_gfs_atual.chuva[0][hora_membro] == pytest.approx(valor_base_membro)
+    assert membro_gfs_atual.chuva[1][hora_membro] == pytest.approx(valor_base_membro + 10.0)
+
+
+# --- rtotal de D3: o rótulo que fecha a janela não pode faltar --------------
+#
+# Rodada de correção 2. A janela do Rtotal de um dia-alvo D são os 24
+# rótulos D T01:00Z .. (D+1)T00:00Z — termina na meia-noite do dia seguinte,
+# porque o rótulo marca o fim do intervalo (ensemble.md §2). Para D3
+# (= D0+3), isso exige o rótulo (D3+1)T00:00Z = (D0+4)T00:00Z. Com
+# forecast_days=4 a API para em D3 T23:00 — falta exatamente esse rótulo, e
+# o Rtotal de D3 nunca fecharia (todos os dias-alvo do município cairiam
+# abaixo de n_min, mandando o município inteiro para municipios_sem_dados
+# em toda execução).
+
+
+def test_membro_contem_o_ultimo_rotulo_que_o_rtotal_de_d3_precisa():
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+    # fixture gravada com forecast_days=5 (120 rótulos, D0 T00:00 .. (D0+4)T23:00)
+    previous_runs_completa = _carregar_fixture("open_meteo_previous_runs.json")
+    antecedente = _carregar_fixture("open_meteo_antecedente.json")
+
+    http = HttpFalso()
+    http.programar(URL_FORECAST, None, RespostaFalsa(antecedente))
+    _programar_meta_para_todos_os_modelos(http)
+    for modelo in MODELOS:
+        http.programar(
+            URL_PREVIOUS_RUNS,
+            modelo,
+            _resposta_previous_runs_truncada_pelo_forecast_days(previous_runs_completa),
+        )
+
+    dados = coletar(municipio, AGORA_UTC, http)
+
+    rotulo_que_fecha_rtotal_de_d3 = datetime(2026, 10, 5, 0, 0, tzinfo=timezone.utc)  # (D0+4)T00:00Z
+    membro_gfs_atual = next(
+        m for m in dados.membros if m.modelo == "gfs_global" and m.rodada == RODADA_ATUAL_ESPERADA
+    )
+    assert rotulo_que_fecha_rtotal_de_d3 in membro_gfs_atual.chuva[0]
 
 
 # --- rodada: vem do meta.json, não de agora_utc -----------------------------

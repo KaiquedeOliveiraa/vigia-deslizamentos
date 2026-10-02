@@ -205,7 +205,12 @@ def _coletar_membros_modelo(
             "hourly": "precipitation,precipitation_previous_day1",
             "models": modelo,
             "timezone": "UTC",
-            "forecast_days": 4,
+            # O Rtotal de D3 fecha no rótulo (D3+1)T00:00Z = (D0+4)T00:00Z,
+            # porque o rótulo marca o fim do intervalo (ensemble.md §2).
+            # forecast_days=4 para em D3 T23:00 e não alcança esse rótulo —
+            # 5 cobre D0..D4, garantindo (D0+4)T00:00Z (rodada de correção 2
+            # da Tarefa 5).
+            "forecast_days": 5,
         }
         contexto = f"município '{municipio.ibge}' ({municipio.nome}): ensemble modelo '{modelo}'"
         try:
