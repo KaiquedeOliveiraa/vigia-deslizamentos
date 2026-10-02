@@ -1,0 +1,50 @@
+[
+  {
+    "codigo": "A868",
+    "nome": "ITAJAI",
+    "ibge": "4206900",
+    "lat": -26.95083333,
+    "lon": -48.76194444,
+    "distancia_km": 76.3
+  },
+  {
+    "codigo": "A870",
+    "nome": "RANCHO QUEIMADO",
+    "ibge": "4206900",
+    "lat": -27.6786111,
+    "lon": -49.04194444,
+    "distancia_km": 87.8
+  },
+  {
+    "codigo": "A863",
+    "nome": "ITUPORANGA",
+    "ibge": "4214003",
+    "lat": -27.41833332,
+    "lon": -49.64694444,
+    "distancia_km": 40.1
+  },
+  {
+    "codigo": "A864",
+    "nome": "MAJOR VIEIRA",
+    "ibge": "4219358",
+    "lat": -26.3936111,
+    "lon": -50.36333333,
+    "distancia_km": 70.5
+  },
+  {
+    "codigo": "A861",
+    "nome": "RIO DO CAMPO",
+    "ibge": "4219408",
+    "lat": -26.93749999,
+    "lon": -50.14555555,
+    "distancia_km": 30.1
+  },
+  {
+    "codigo": "A860",
+    "nome": "CURITIBANOS",
+    "ibge": "4219408",
+    "lat": -27.2886111,
+    "lon": -50.60416666,
+    "distancia_km": 85.0
+  }
+]

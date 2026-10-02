@@ -5,6 +5,7 @@ backend/.env
 __pycache__/
 *.pyc
 .pytest_cache/
+*.egg-info/
 
 # Ambientes virtuais
 .venv/
