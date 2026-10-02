@@ -25,6 +25,7 @@ efetivamente servida (rodada de correção 1 da Tarefa 5).
 
 from __future__ import annotations
 
+import json
 import time
 from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
@@ -114,9 +115,32 @@ def _requisitar(
             ultimo_erro = erro
             if tentativa < TENTATIVAS - 1:
                 espera(1.0)
+        except json.JSONDecodeError as erro:
+            # Corpo que não é JSON não melhora em nova tentativa, e precisa
+            # chegar como `ColetaError` identificando o município — do
+            # contrário aborta a execução inteira sem dizer de quem é a falha.
+            raise ColetaError(
+                f"{contexto}: resposta de {url} não é JSON válido: {erro}"
+            ) from erro
     raise ColetaError(
         f"{contexto}: falha ao chamar {url} após {TENTATIVAS} tentativas: {ultimo_erro}"
     ) from ultimo_erro
+
+
+def _exigir_series(dados: dict, campos: tuple[str, ...], contexto: str) -> dict:
+    """Devolve `dados["hourly"]` exigindo as séries pedidas.
+
+    Uma resposta 200 sem `hourly`, ou sem uma das séries, levanta `ColetaError`
+    identificando o município em vez de `KeyError` nua: a mensagem precisa dizer
+    de quem é a falha para o pipeline isolar o município certo.
+    """
+    hourly = dados.get("hourly")
+    if not isinstance(hourly, dict):
+        raise ColetaError(f"{contexto}: resposta sem o bloco 'hourly'")
+    for campo in ("time", *campos):
+        if campo not in hourly:
+            raise ColetaError(f"{contexto}: resposta sem a série '{campo}'")
+    return hourly
 
 
 def _coletar_antecedente_ponto(
@@ -137,7 +161,7 @@ def _coletar_antecedente_ponto(
     contexto = f"município '{municipio.ibge}' ({municipio.nome}): chuva antecedente"
     dados = _requisitar(http, URL_FORECAST, params, espera, contexto)
 
-    hourly = dados["hourly"]
+    hourly = _exigir_series(dados, ("precipitation",), contexto)
     serie_bruta = _montar_serie(hourly["time"], hourly["precipitation"])
     serie = {hora: valor for hora, valor in serie_bruta.items() if hora <= agora_utc}
 
@@ -157,6 +181,7 @@ def _obter_rodada_atual(
     modelo: str,
     agora_utc: datetime,
     espera: Callable[[float], None],
+    cache_rodadas: dict[str, datetime] | None,
 ) -> datetime:
     """Rodada atual (horário real de inicialização) do modelo, via `meta.json`.
 
@@ -173,14 +198,26 @@ def _obter_rodada_atual(
     horário sinótico mais recente a `ATRASO_DEGRADACAO_H` horas de
     `agora_utc` (ver o comentário na constante).
     """
+    if cache_rodadas is not None and modelo in cache_rodadas:
+        return cache_rodadas[modelo]
+
     caminho = MODELO_PARA_CAMINHO_META[modelo]
     url = URL_META.format(caminho=caminho)
     contexto = f"município '{municipio.ibge}' ({municipio.nome}): metadados do modelo '{modelo}'"
     try:
         dados = _requisitar(http, url, {}, espera, contexto)
-    except ColetaError:
-        return _piso_sinotico(agora_utc - timedelta(hours=ATRASO_DEGRADACAO_H))
-    return datetime.fromtimestamp(dados["last_run_initialisation_time"], tz=timezone.utc)
+        rodada = datetime.fromtimestamp(
+            dados["last_run_initialisation_time"], tz=timezone.utc
+        )
+    except (ColetaError, KeyError, TypeError, ValueError, OSError):
+        # Mesma degradação do erro de rede: a rodada é informação auxiliar
+        # (entra no peso do membro), e perder o município por causa dela seria
+        # pior que subponderá-lo.
+        rodada = _piso_sinotico(agora_utc - timedelta(hours=ATRASO_DEGRADACAO_H))
+
+    if cache_rodadas is not None:
+        cache_rodadas[modelo] = rodada
+    return rodada
 
 
 def _coletar_membros_modelo(
@@ -189,8 +226,11 @@ def _coletar_membros_modelo(
     modelo: str,
     agora_utc: datetime,
     espera: Callable[[float], None],
+    cache_rodadas: dict[str, datetime] | None,
 ) -> list[Membro]:
-    rodada_atual = _obter_rodada_atual(http, municipio, modelo, agora_utc, espera)
+    rodada_atual = _obter_rodada_atual(
+        http, municipio, modelo, agora_utc, espera, cache_rodadas
+    )
     rodada_anterior = rodada_atual - timedelta(hours=24)
 
     series_atual: list[dict[datetime, float]] = []
@@ -259,6 +299,7 @@ def coletar(
     agora_utc: datetime,
     http: requests.Session,
     espera: Callable[[float], None] = time.sleep,
+    cache_rodadas: dict[str, datetime] | None = None,
 ) -> DadosMunicipio:
     """Coleta a chuva antecedente e os membros do ensemble para um município.
 
@@ -270,6 +311,13 @@ def coletar(
     esgote as tentativas de rede, é descartado silenciosamente — descarta só
     aquele membro, nunca o município inteiro; cabe à Tarefa 6 decidir se os
     membros restantes bastam (`n_min`).
+
+    `cache_rodadas` é um dicionário `modelo -> rodada` compartilhado por uma
+    execução do pipeline: o horário de inicialização de um modelo é o mesmo para
+    todos os municípios, então consultar o `meta.json` por município gastaria
+    três chamadas a mais em cada um (18 por execução com os seis municípios) para
+    obter o mesmo valor. Sem o parâmetro, cada coleta consulta por conta própria
+    — nenhuma coleta depende de estado global.
     """
     _validar_agora_utc(agora_utc)
 
@@ -280,6 +328,10 @@ def coletar(
 
     membros: list[Membro] = []
     for modelo in MODELOS:
-        membros.extend(_coletar_membros_modelo(http, municipio, modelo, agora_utc, espera))
+        membros.extend(
+            _coletar_membros_modelo(
+                http, municipio, modelo, agora_utc, espera, cache_rodadas
+            )
+        )
 
     return DadosMunicipio(ibge=municipio.ibge, antecedente=antecedente, membros=membros)

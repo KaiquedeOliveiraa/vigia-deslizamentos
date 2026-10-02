@@ -656,3 +656,122 @@ def test_coleta_real_para_um_ponto():
         assert membro.rodada.tzinfo is not None
         assert membro.rodada.hour in (0, 6, 12, 18)
         assert len(membro.chuva) == 1
+
+
+# --- cache da rodada entre municípios (decisão da Tarefa 11) ------------------
+
+
+def test_cache_de_rodadas_evita_repetir_o_meta_json_por_municipio():
+    # Sem cache, `meta.json` é chamado 3 vezes por município (18 por execução
+    # com os seis municípios). Com um cache compartilhado pela execução, cada
+    # modelo é consultado uma vez só — o volume de chamadas da API é limite
+    # real do plano gratuito.
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+    cache: dict[str, datetime] = {}
+    espera, _ = _espera_registrada()
+
+    for _ in range(3):
+        http = _http_completo_programado(municipio)
+        coletar(municipio, AGORA_UTC, http, espera, cache_rodadas=cache)
+        chamadas_meta = [
+            url for url, _ in http.chamadas if url.startswith("https://api.open-meteo.com/data/")
+        ]
+        if len(cache) == len(MODELOS):
+            ultimas_chamadas_meta = chamadas_meta
+
+    # Na terceira coleta, o cache já está completo: nenhuma chamada a meta.json.
+    assert ultimas_chamadas_meta == []
+    assert set(cache) == set(MODELOS)
+
+
+def test_sem_cache_a_rodada_e_consultada_a_cada_coleta():
+    # O parâmetro é opcional: sem ele o comportamento é o anterior, para que
+    # uma coleta isolada (ou um teste) não dependa de estado compartilhado.
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+    espera, _ = _espera_registrada()
+    http = _http_completo_programado(municipio)
+
+    coletar(municipio, AGORA_UTC, http, espera)
+
+    chamadas_meta = [
+        url for url, _ in http.chamadas if url.startswith("https://api.open-meteo.com/data/")
+    ]
+    assert len(chamadas_meta) == len(MODELOS)
+
+
+def test_rodada_do_cache_e_usada_nos_membros():
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+    rodada_no_cache = datetime(2026, 10, 1, 6, 0, tzinfo=timezone.utc)
+    cache = {modelo: rodada_no_cache for modelo in MODELOS}
+    espera, _ = _espera_registrada()
+    http = _http_completo_programado(municipio)
+
+    dados = coletar(municipio, AGORA_UTC, http, espera, cache_rodadas=cache)
+
+    rodadas_atuais = {
+        membro.rodada for membro in dados.membros if membro.rodada == rodada_no_cache
+    }
+    assert rodadas_atuais == {rodada_no_cache}
+
+
+# --- corpo malformado ---------------------------------------------------------
+
+
+def test_json_invalido_na_antecedente_levanta_coleta_error_identificando_municipio():
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+    espera, _ = _espera_registrada()
+
+    class RespostaComJsonInvalido:
+        status_code = 200
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            raise json.JSONDecodeError("corpo truncado", "", 0)
+
+    http = HttpFalso()
+    http.programar(URL_FORECAST, None, RespostaComJsonInvalido())
+
+    with pytest.raises(ColetaError, match="4206900"):
+        coletar(municipio, AGORA_UTC, http, espera)
+
+
+def test_resposta_200_sem_a_chave_hourly_levanta_coleta_error_identificando_municipio():
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+    espera, _ = _espera_registrada()
+
+    http = HttpFalso()
+    http.programar(URL_FORECAST, None, RespostaFalsa({"latitude": -27.0}))
+
+    with pytest.raises(ColetaError, match="4206900"):
+        coletar(municipio, AGORA_UTC, http, espera)
+
+
+def test_antecedente_sem_a_chave_precipitation_levanta_coleta_error():
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+    espera, _ = _espera_registrada()
+
+    http = HttpFalso()
+    http.programar(URL_FORECAST, None, RespostaFalsa({"hourly": {"time": []}}))
+
+    with pytest.raises(ColetaError, match="4206900"):
+        coletar(municipio, AGORA_UTC, http, espera)
+
+
+def test_meta_json_com_corpo_malformado_degrada_em_vez_de_quebrar():
+    # O `meta.json` tem caminho de degradação documentado; corpo inesperado
+    # segue o mesmo caminho do erro de rede, em vez de abortar o município.
+    municipio = _municipio([Ponto(lat=-27.0181, lon=-49.5286)])
+    espera, _ = _espera_registrada()
+    http = _http_completo_programado(municipio)
+    for modelo in MODELOS:
+        http._filas[(_url_meta(modelo), None, None, None)] = [RespostaFalsa({})]
+
+    dados = coletar(municipio, AGORA_UTC, http, espera)
+
+    # Degradação: piso sinótico de agora_utc - 8 h = 2026-10-01T21:00Z - 8 h.
+    assert {membro.rodada for membro in dados.membros} == {
+        datetime(2026, 10, 1, 12, 0, tzinfo=timezone.utc),
+        datetime(2026, 9, 30, 12, 0, tzinfo=timezone.utc),
+    }

@@ -145,16 +145,27 @@ def construir_aplicacao(
     municipios: list[Municipio],
     conexao: sqlite3.Connection,
     relogio: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
+    post_init=None,
+    post_shutdown=None,
 ) -> Application:
     """Monta a `Application` do python-telegram-bot com os três comandos.
 
     `conexao` tem de ser a conexão SQLite **desta** thread: o pipeline agendado
     roda em outra e abre a sua (Tarefa 11). O token vem só de
     `config.telegram_token`; nenhum módulo lê `os.environ`.
+
+    `post_init` e `post_shutdown` são os ganchos que o `run_polling` chama dentro
+    do loop que ele cria — é por eles que `app/main.py` sobe e desce o agendador
+    no mesmo loop do bot.
     """
     silenciar_url_com_token()
 
-    aplicacao = ApplicationBuilder().token(config.telegram_token).build()
+    construtor = ApplicationBuilder().token(config.telegram_token)
+    if post_init is not None:
+        construtor = construtor.post_init(post_init)
+    if post_shutdown is not None:
+        construtor = construtor.post_shutdown(post_shutdown)
+    aplicacao = construtor.build()
     aplicacao.bot_data.update(
         {
             CHAVE_CONFIG: config,
