@@ -490,3 +490,67 @@ def test_ponta_a_ponta_com_banco_em_memoria_e_publicacao_real_simulada():
     assert [(aviso.ibge, aviso.avisar, aviso.nova_classe) for aviso in execucao.avisos] == [
         ("4206900", True, 4)
     ]
+
+
+# --- comparação com o INMET (Tarefa 12) ---------------------------------------
+
+
+def test_comparacao_com_o_inmet_recebe_o_resultado_da_execucao():
+    chamadas: list = []
+
+    def comparar(resultado, agora_utc, http, config):
+        chamadas.append((resultado, agora_utc, config))
+
+    executar_pipeline(
+        AGORA,
+        [IBIRAMA],
+        conexao(),
+        http=object(),
+        config=config_de_teste(),
+        relogio=lambda: FIM_DA_EXECUCAO,
+        coletar=coleta_falsa({"4206900": dados("4206900", 120.0)}),
+        publicar=PublicacaoFalsa(),
+        comparar_com_inmet=comparar,
+    )
+
+    (resultado, agora_utc, config) = chamadas[0]
+    assert [item.ibge for item in resultado.municipios] == ["4206900"]
+    assert agora_utc == AGORA
+    assert config.site_url == "https://vigia.exemplo.org"
+
+
+def test_falha_na_comparacao_com_o_inmet_nao_quebra_a_execucao():
+    def comparar(resultado, agora_utc, http, config):
+        raise RuntimeError("INMET fora do ar")
+
+    execucao = executar_pipeline(
+        AGORA,
+        [IBIRAMA],
+        conexao(),
+        http=object(),
+        config=config_de_teste(),
+        relogio=lambda: FIM_DA_EXECUCAO,
+        coletar=coleta_falsa({"4206900": dados("4206900", 120.0)}),
+        publicar=PublicacaoFalsa(),
+        comparar_com_inmet=comparar,
+    )
+
+    assert execucao.publicado is True
+    assert [aviso.avisar for aviso in execucao.avisos] == [True]
+
+
+def test_sem_municipio_calculado_a_comparacao_nao_e_chamada():
+    def comparar(resultado, agora_utc, http, config):
+        raise AssertionError("não deveria comparar sem resultado")
+
+    executar_pipeline(
+        AGORA,
+        [IBIRAMA],
+        conexao(),
+        http=object(),
+        config=config_de_teste(),
+        relogio=lambda: FIM_DA_EXECUCAO,
+        coletar=coleta_falsa({"4206900": ColetaError("sem rede")}),
+        publicar=PublicacaoFalsa(),
+        comparar_com_inmet=comparar,
+    )

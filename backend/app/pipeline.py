@@ -18,7 +18,8 @@ Ordem e tolerância a falhas:
    última classe notificada de cada município fica intacta;
 4. gravação no banco, numa transação;
 5. exportação e publicação — falha aqui é registrada e **não** impede os avisos;
-6. decisão dos avisos pela RN08.
+6. comparação de conferência com o INMET, que só escreve no log;
+7. decisão dos avisos pela RN08.
 """
 
 from __future__ import annotations
@@ -31,7 +32,7 @@ from datetime import datetime, timezone
 
 from app.bot.regra_aviso import Aviso, decidir
 from app.calculo.agregacao import Resultado, calcular
-from app.coleta import open_meteo
+from app.coleta import inmet, open_meteo
 from app.config import Config, Municipio
 from app.exportacao.exportar import montar_indices, serializar
 from app.exportacao.publicar import publicar as publicar_indices
@@ -156,6 +157,7 @@ def executar_pipeline(
     relogio: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
     coletar: Callable[..., DadosMunicipio] = open_meteo.coletar,
     publicar: Callable[[bytes, Config, object], bool] = publicar_indices,
+    comparar_com_inmet: Callable[..., None] = inmet.registrar_comparacao_24h,
 ) -> Execucao:
     """Roda uma execução completa e devolve o que ela produziu.
 
@@ -184,6 +186,16 @@ def executar_pipeline(
     publicado = _publicar_indices(
         resultado, municipios, conexao, config, http, fim_da_execucao, publicar
     )
+
+    # Conferência: a diferença entre a chuva medida pela estação do INMET e a
+    # calculada vai para o log e não toca no índice. O `try` é redundante com o
+    # tratamento interno da função, e está aqui de propósito: se a comparação
+    # for trocada por outra implementação, o pipeline continua não caindo por
+    # causa dela.
+    try:
+        comparar_com_inmet(resultado, agora_utc, http, config)
+    except Exception:  # noqa: BLE001 — conferência nunca derruba a execução
+        _log.exception("comparação com o INMET falhou; a execução segue")
 
     avisos = _decidir_avisos(conexao, municipios, resultado)
     _log.info(

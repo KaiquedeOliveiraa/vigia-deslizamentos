@@ -26,6 +26,14 @@ ATRIBUTO_POR_VARIAVEL = {
 
 VARIAVEIS_OBRIGATORIAS = tuple(ATRIBUTO_POR_VARIAVEL)
 
+#: Variáveis que podem faltar sem impedir o sistema de rodar. `INMET_TOKEN` é
+#: opcional porque a rota de chuva horária do INMET exige um token obtido por
+#: e-mail (`docs/decisoes/ensemble.md` §8) que pode ainda não ter chegado; sem
+#: ele, só a comparação de conferência da Tarefa 12 é pulada.
+ATRIBUTO_POR_VARIAVEL_OPCIONAL = {
+    "INMET_TOKEN": "inmet_token",
+}
+
 
 class ConfiguracaoInvalidaError(Exception):
     """Configuração de município ou de ambiente mal formada ou incompleta."""
@@ -53,7 +61,7 @@ class Municipio:
 
 @dataclass(frozen=True)
 class Config:
-    """Variáveis de ambiente obrigatórias para rodar o backend."""
+    """Variáveis de ambiente do backend: as obrigatórias e as opcionais."""
 
     telegram_token: str
     github_token_dados: str
@@ -61,6 +69,7 @@ class Config:
     site_url: str
     db_path: str
     log_path: str
+    inmet_token: str | None = None
 
 
 def _identificador(item: dict, indice: int) -> str:
@@ -148,8 +157,11 @@ def carregar_municipios(caminho: str | Path) -> list[Municipio]:
 def carregar_env(ambiente: Mapping[str, str]) -> Config:
     """Monta a `Config` a partir de um mapeamento (nunca lido de `os.environ` aqui).
 
-    Levanta `ConfiguracaoInvalidaError` com o nome da variável ausente, e nunca
-    com o valor de outra variável.
+    Levanta `ConfiguracaoInvalidaError` com o nome da variável **obrigatória**
+    ausente, e nunca com o valor de outra variável. As opcionais
+    (`ATRIBUTO_POR_VARIAVEL_OPCIONAL`) ficam `None` quando não estão no
+    ambiente, ou quando estão vazias — uma variável definida em branco no `.env`
+    é ausência, não um token vazio.
     """
     valores = {}
     for nome_variavel, atributo in ATRIBUTO_POR_VARIAVEL.items():
@@ -158,5 +170,8 @@ def carregar_env(ambiente: Mapping[str, str]) -> Config:
                 f"variável de ambiente obrigatória ausente: '{nome_variavel}'"
             )
         valores[atributo] = ambiente[nome_variavel]
+
+    for nome_variavel, atributo in ATRIBUTO_POR_VARIAVEL_OPCIONAL.items():
+        valores[atributo] = ambiente.get(nome_variavel) or None
 
     return Config(**valores)
