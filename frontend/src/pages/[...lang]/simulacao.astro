@@ -1,10 +1,11 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { caminhosIdioma, idioma, tradutor } from "../../i18n";
+import Simulacao from "../../components/Simulacao";
+import { caminhosIdioma, idioma } from "../../i18n";
 
 export const getStaticPaths = caminhosIdioma;
-const t = tradutor(idioma(Astro.params.lang));
+const lang = idioma(Astro.params.lang);
 ---
 <Base tela="simulacao">
-  <h1 class="title provisorio">{t("E se chover…?")}</h1>
+  <Simulacao client:only="react" lang={lang} />
 </Base>

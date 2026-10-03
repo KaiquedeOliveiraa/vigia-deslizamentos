@@ -26,7 +26,8 @@ export const formatarDataHora = (gerado_em: string): string =>
   `${dataBrasilia.format(new Date(gerado_em))} ${formatarHora(gerado_em)}`;
 
 /** `dia_alvo` é uma data (AAAA-MM-DD), não um instante: só reordena, sem fuso. */
-export function formatarData(dia_alvo: string, formato: "longo" | "curto" = "longo"): string {
+export function formatarData(dia_alvo: string, formato: "longo" | "curto" | "dia" = "longo"): string {
   const [ano, mes, dia] = dia_alvo.split("-");
+  if (formato === "dia") return `${dia}/${mes}`;
   return `${dia}/${mes}/${formato === "curto" ? ano.slice(2) : ano}`;
 }

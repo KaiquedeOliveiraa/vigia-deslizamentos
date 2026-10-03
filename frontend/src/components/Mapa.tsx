@@ -17,6 +17,8 @@ export interface PropsMapa {
   valores: Record<string, number | null>;
   selecionado?: string | null;
   onSelecionar?: (ibge: string) => void;
+  /** Seletor de mapa de fundo no alto à direita (padrão: sim). */
+  camadas?: boolean;
   ref?: Ref<MapaApi>;
 }
 

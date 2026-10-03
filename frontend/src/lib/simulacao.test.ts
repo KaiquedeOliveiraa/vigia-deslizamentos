@@ -1,6 +1,18 @@
 import { describe, expect, it } from "vitest";
-import type { Municipio } from "./tipos";
-import { municipiosEmAlerta, nivelAviso, simular, simularMunicipio } from "./simulacao";
+import exemplo from "../fixtures/indices.exemplo.json";
+import { tradutor } from "../i18n";
+import type { Indices, Municipio } from "./tipos";
+import {
+  avisoRegional,
+  avisoSimulacao,
+  faixasEscala,
+  municipioDaBusca,
+  municipiosEmAlerta,
+  nivelAviso,
+  posicaoEscala,
+  simular,
+  simularMunicipio,
+} from "./simulacao";
 
 const municipio = (ibge: string, nome: string, efr_mm: number, indice = 0.5): Municipio => ({
   ibge,
@@ -80,6 +92,102 @@ describe("municipiosEmAlerta", () => {
     expect(municipiosEmAlerta({ "4200001": 1.0, "4200002": 0.99, "4200003": 2.7 })).toEqual({
       ibges: ["4200001", "4200003"],
       total: 2,
+    });
+  });
+});
+
+describe("municipioDaBusca", () => {
+  const indices = exemplo as Indices;
+
+  it("?municipio=<ibge> de um município com dados", () => {
+    expect(municipioDaBusca(indices, "?municipio=4209151")).toBe("4209151");
+  });
+
+  it("sem parâmetro, desconhecido ou sem dados: o de maior índice no D0", () => {
+    expect(municipioDaBusca(indices, "")).toBe("4214003");
+    expect(municipioDaBusca(indices, "?municipio=123")).toBe("4214003");
+    expect(municipioDaBusca({ ...indices, municipios_sem_dados: ["4209151"] }, "?municipio=4209151")).toBe("4214003");
+  });
+});
+
+describe("escala de 0 a 4", () => {
+  it("posição em % do índice, limitada à escala", () => {
+    expect(posicaoEscala(0)).toBe(0);
+    expect(posicaoEscala(1)).toBe(25);
+    expect(posicaoEscala(2.6)).toBeCloseTo(65);
+    expect(posicaoEscala(5)).toBe(100);
+  });
+
+  it("uma faixa por classe, do início dela ao da seguinte, somando 100 %", () => {
+    const faixas = faixasEscala();
+    expect(faixas.map((f) => f.numero)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+    expect(faixas[0]).toEqual({ numero: 1, largura: 10 });
+    expect(faixas[3].largura).toBeCloseTo(20);
+    expect(faixas[6].largura).toBeCloseTo(15);
+    expect(faixas.reduce((s, f) => s + f.largura, 0)).toBeCloseTo(100);
+  });
+});
+
+describe("avisoSimulacao (RN04: sempre condicional)", () => {
+  const t = tradutor("pt");
+  const base = { nome: "Ibirama", chuva_mm: 60, horas: 48 as const };
+
+  it("crit: risco da classe, alerta máximo e 199", () => {
+    const a = avisoSimulacao(t, { ...base, atual: 0.5, simulado: 2.7 });
+    expect(a.tipo).toBe("crit");
+    expect(a.titulo).toBe("Risco muito alto em Ibirama");
+    expect(a.texto).toContain("poderá entrar em estado de alerta máximo");
+    expect(a.texto).toContain("199");
+  });
+
+  it("entra: poderá entrar em alerta", () => {
+    const a = avisoSimulacao(t, { ...base, atual: 0.8, simulado: 1.2 });
+    expect(a).toEqual({
+      tipo: "warn",
+      titulo: "Ibirama poderá entrar em alerta",
+      texto: "Se essa sua previsão se concretizar, o município poderá entrar em estado de alerta (classe moderado).",
+    });
+  });
+
+  it("continua: subiria ou ficaria", () => {
+    expect(avisoSimulacao(t, { ...base, atual: 1.1, simulado: 1.9 })).toEqual({
+      tipo: "warn",
+      titulo: "Ibirama continuaria em alerta",
+      texto: "Com 60 mm em 48h o índice subiria para 1,90 (classe alto).",
+    });
+    expect(avisoSimulacao(t, { ...base, atual: 1.9, simulado: 1.2 }).texto).toBe("Com 60 mm em 48h o índice ficaria em 1,20 (classe moderado).");
+  });
+
+  it("ok: abaixo do nível de alerta", () => {
+    expect(avisoSimulacao(t, { ...base, atual: 1.5, simulado: 0.66 })).toEqual({
+      tipo: "ok",
+      titulo: "Abaixo do nível de alerta",
+      texto: "Com 60 mm em 48h, Ibirama ficaria na classe muito baixo (0,66).",
+    });
+  });
+
+  it("traduz para o espanhol", () => {
+    expect(avisoSimulacao(tradutor("es"), { ...base, atual: 0.8, simulado: 1.2 }).titulo).toBe("Ibirama podría entrar en alerta");
+  });
+});
+
+describe("avisoRegional", () => {
+  const t = tradutor("pt");
+  const nomes = { "1": "A", "2": "B", "3": "C" };
+
+  it("lista os municípios que passariam de 1,00", () => {
+    expect(avisoRegional(t, { "1": 1.2, "2": 0.4, "3": 3 }, nomes)).toEqual({
+      tipo: "warn",
+      titulo: "Chuva regional: 2 de 3 em alerta",
+      texto: "Municípios que passariam de 1,00: A, C.",
+    });
+  });
+
+  it("nenhum em alerta", () => {
+    expect(avisoRegional(t, { "1": 0.2, "2": 0.4, "3": 0.9 }, nomes)).toEqual({
+      tipo: "ok",
+      titulo: "Chuva regional: 0 de 3 em alerta",
+      texto: "Nenhum município passaria de 1,00.",
     });
   });
 });

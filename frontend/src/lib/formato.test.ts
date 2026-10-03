@@ -25,5 +25,6 @@ describe("datas", () => {
   it("dia_alvo é uma data, sem conversão de fuso", () => {
     expect(formatarData("2026-09-29")).toBe("29/09/2026");
     expect(formatarData("2026-09-29", "curto")).toBe("29/09/26");
+    expect(formatarData("2026-09-29", "dia")).toBe("29/09");
   });
 });

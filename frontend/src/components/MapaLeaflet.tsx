@@ -114,7 +114,7 @@ function Municipio({ t, feicao, valor, selecionado, onSelecionar }: PropsMunicip
   );
 }
 
-export default function MapaLeaflet({ lang, valores, selecionado = null, onSelecionar, ref }: PropsMapa) {
+export default function MapaLeaflet({ lang, valores, selecionado = null, onSelecionar, camadas = true, ref }: PropsMapa) {
   const t = useMemo(() => tradutor(lang), [lang]);
   const [mapa, setMapa] = useState<MapaL | null>(null);
   // Neutro: o fundo claro não compete com as cores das classes (o protótipo abria no Satélite).
@@ -174,7 +174,7 @@ export default function MapaLeaflet({ lang, valores, selecionado = null, onSelec
           −
         </button>
       </div>
-      <Camadas lang={lang} camada={camada} aoMudar={setCamada} />
+      {camadas && <Camadas lang={lang} camada={camada} aoMudar={setCamada} />}
     </>
   );
 }
