@@ -35,8 +35,11 @@ import requests
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
+from telegram.error import InvalidToken
+
 from app.bot.avisos import enviar_avisos
-from app.bot.bot import construir_aplicacao, silenciar_url_com_token
+from app.bot.bot import construir_aplicacao as construir_aplicacao_padrao
+from app.bot.bot import silenciar_url_com_token
 from app.config import (
     Config,
     ConfiguracaoInvalidaError,
@@ -54,6 +57,14 @@ HORAS_DO_CRON = "3,9,15,21"
 #: `coalesce` para que várias perdidas virem uma só. `max_instances=1` impede
 #: duas execuções simultâneas gravando no mesmo banco.
 TOLERANCIA_DE_ATRASO_S = 3600
+
+#: Códigos de saída. `CODIGO_TOKEN_REJEITADO` existe separado porque é falha
+#: permanente: reiniciar não resolve, e o `vigia.service` usa
+#: `RestartPreventExitStatus` para não entrar em laço de 10 s.
+CODIGO_SUCESSO = 0
+CODIGO_FALHA_GERAL = 1
+CODIGO_CONFIGURACAO_INVALIDA = 2
+CODIGO_TOKEN_REJEITADO = 3
 
 CAMINHO_MUNICIPIOS = Path(__file__).resolve().parent.parent / "config" / "municipios.json"
 
@@ -122,7 +133,12 @@ def _executar_na_thread(
 
 
 @asynccontextmanager
-async def bot_temporario(config: Config, municipios: list[Municipio], conexao):
+async def bot_temporario(
+    config: Config,
+    municipios: list[Municipio],
+    conexao,
+    construir_aplicacao=construir_aplicacao_padrao,
+):
     """Um `Bot` inicializado e desmontado no fim, sem abrir long polling.
 
     `async with aplicacao` é o que inicializa o `Bot` — sem isso `send_message`
@@ -134,7 +150,7 @@ async def bot_temporario(config: Config, municipios: list[Municipio], conexao):
         yield aplicacao.bot
 
 
-async def executar_ciclo(
+async def executar_ciclo_padrao(
     config: Config,
     municipios: list[Municipio],
     agora_utc: datetime,
@@ -143,6 +159,7 @@ async def executar_ciclo(
     abrir_bot: Callable[[], object] | None = None,
     conexao_do_bot=None,
     http=None,
+    relogio: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
 ) -> Execucao:
     """Uma execução completa: pipeline numa thread e envio dos avisos no loop.
 
@@ -153,6 +170,10 @@ async def executar_ciclo(
 
     O envio usa a conexão **do loop** (`conexao_do_bot`), nunca a que o pipeline
     usou na thread: o `sqlite3` recusa uma conexão vinda de outra thread.
+
+    `agora_utc` é o instante de referência do cálculo; o `notificado_em` gravado
+    em `notificacoes` sai de `relogio()`, lido depois do envio, porque é quando a
+    notificação de fato aconteceu.
     """
     criou_http = http is None
     http = http or requests.Session()
@@ -170,11 +191,13 @@ async def executar_ciclo(
     conexao = conexao_do_bot if conexao_do_bot is not None else banco.abrir(config.db_path)
     try:
         if bot is not None:
-            await enviar_avisos(bot, conexao, execucao.avisos, agora_utc, config.site_url)
+            await enviar_avisos(
+                bot, conexao, execucao.avisos, relogio(), config.site_url
+            )
         elif abrir_bot is not None:
             async with abrir_bot() as bot_do_envio:
                 await enviar_avisos(
-                    bot_do_envio, conexao, execucao.avisos, agora_utc, config.site_url
+                    bot_do_envio, conexao, execucao.avisos, relogio(), config.site_url
                 )
         else:
             _log.warning(
@@ -207,6 +230,7 @@ async def _uma_execucao_isolada(
     municipios: list[Municipio],
     agora_utc: datetime,
     executar: Callable[..., Coroutine],
+    construir_aplicacao=construir_aplicacao_padrao,
 ) -> Execucao:
     """Roda um ciclo com um bot montado só se houver aviso — modo `--uma-vez`."""
     conexao = banco.abrir(config.db_path)
@@ -215,7 +239,9 @@ async def _uma_execucao_isolada(
             config,
             municipios,
             agora_utc,
-            abrir_bot=lambda: bot_temporario(config, municipios, conexao),
+            abrir_bot=lambda: bot_temporario(
+                config, municipios, conexao, construir_aplicacao
+            ),
             conexao_do_bot=conexao,
         )
     finally:
@@ -227,6 +253,7 @@ def _rodar_para_sempre(
     municipios: list[Municipio],
     executar: Callable[..., Coroutine],
     relogio: Callable[[], datetime],
+    construir_aplicacao=construir_aplicacao_padrao,
 ) -> None:
     """Bot em long polling com o agendador no mesmo loop.
 
@@ -289,36 +316,57 @@ def main(
     *,
     executar_ciclo: Callable[..., Coroutine] | None = None,
     relogio: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
+    construir_aplicacao=construir_aplicacao_padrao,
 ) -> int:
     """Ponto de entrada. Devolve o código de saída do processo.
 
-    `ambiente` e `executar_ciclo` existem para o teste: em produção são
-    `os.environ` e `executar_ciclo`. 0 em sucesso, 1 quando nenhum município foi
-    calculado, 2 quando a configuração está incompleta.
+    `ambiente`, `executar_ciclo` e `construir_aplicacao` existem para o teste: em
+    produção são `os.environ`, `executar_ciclo` e o construtor do bot. Códigos de
+    saída: 0 em sucesso, 1 quando nenhum município foi calculado, 2 quando a
+    configuração está incompleta, 3 quando o Telegram rejeitou o token.
     """
     argumentos = _argumentos(argv)
     ambiente = os.environ if ambiente is None else ambiente
-    executar = executar_ciclo or globals()["executar_ciclo"]
+    ciclo = executar_ciclo or executar_ciclo_padrao
 
     try:
         config, municipios = carregar_dependencias(ambiente)
     except ConfiguracaoInvalidaError as erro:
         print(f"configuração inválida: {erro}", file=sys.stderr)
-        return 2
+        return CODIGO_CONFIGURACAO_INVALIDA
 
     configurar_log(config.log_path)
     try:
-        if argumentos.uma_vez:
-            execucao = asyncio.run(
-                _uma_execucao_isolada(config, municipios, relogio(), executar)
-            )
-            if not execucao.resultado.municipios:
-                _log.error("execução única terminou sem nenhum município calculado")
-                return 1
-            return 0
+        # `InvalidToken` do python-telegram-bot traz **o token** na mensagem
+        # ("The token `...` was rejected by the server"). Deixá-la subir faria o
+        # interpretador imprimir o traceback com a credencial em stderr, que o
+        # systemd manda para o journal — e com `Restart=always` isso se repetiria
+        # a cada 10 s. Capturamos aqui e registramos só o nome da variável
+        # (RNF06). Note que `silenciar_url_com_token()` não cobre este caminho:
+        # ele vem da mensagem da exceção, não do logger do httpx.
+        try:
+            if argumentos.uma_vez:
+                execucao = asyncio.run(
+                    _uma_execucao_isolada(
+                        config, municipios, relogio(), ciclo, construir_aplicacao
+                    )
+                )
+                if not execucao.resultado.municipios:
+                    _log.error("execução única terminou sem nenhum município calculado")
+                    return CODIGO_FALHA_GERAL
+                return CODIGO_SUCESSO
 
-        _rodar_para_sempre(config, municipios, executar, relogio)
-        return 0
+            _rodar_para_sempre(
+                config, municipios, ciclo, relogio, construir_aplicacao
+            )
+            return CODIGO_SUCESSO
+        except InvalidToken:
+            _log.error(
+                "o Telegram rejeitou o token do bot: confira TELEGRAM_TOKEN no "
+                "arquivo de ambiente (a credencial não é registrada aqui de "
+                "propósito)"
+            )
+            return CODIGO_TOKEN_REJEITADO
     finally:
         encerrar_log()
 

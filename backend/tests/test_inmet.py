@@ -133,7 +133,7 @@ def test_associa_cada_estacao_ao_municipio_mais_proximo_e_converte_para_o_contra
 
     por_codigo = {estacao.codigo: estacao for estacao in estacoes}
     assert por_codigo["A861"].nome == "RIO DO CAMPO"
-    assert por_codigo["A861"].ibge == "4209151"  # José Boiteux é o mais próximo
+    assert por_codigo["A861"].ibge_referencia == "4209151"  # o mais próximo
     assert por_codigo["A861"].lat == pytest.approx(-26.9381, abs=0.01)
     assert por_codigo["A861"].lon == pytest.approx(-50.1455, abs=0.01)
 
@@ -191,7 +191,14 @@ def test_estacoes_em_json_tem_exatamente_as_chaves_do_contrato_mais_a_distancia(
 
     item = inmet.estacao_em_json(estacoes[0])
 
-    assert set(item) == {"codigo", "nome", "ibge", "lat", "lon", "distancia_km"}
+    assert set(item) == {
+        "codigo",
+        "nome",
+        "ibge_referencia",
+        "lat",
+        "lon",
+        "distancia_km",
+    }
 
 
 # --- chuva de 24 h ------------------------------------------------------------
@@ -249,8 +256,11 @@ def test_o_token_nao_aparece_em_mensagem_de_log(caplog):
     with caplog.at_level(logging.DEBUG):
         inmet.chuva_24h(http, "A861", AGORA, token)
 
+    # Não-vacuidade: sem registro nenhum, o laço abaixo não verificaria nada.
+    assert caplog.records
     for registro in caplog.records:
         assert token not in registro.getMessage()
+        assert token not in str(registro.args or "")
 
 
 # --- comparação registrada no log ---------------------------------------------
@@ -400,7 +410,7 @@ def test_carregar_estacoes_le_o_arquivo_gerado_pelo_script(tmp_path):
                 {
                     "codigo": "A861",
                     "nome": "RIO DO CAMPO",
-                    "ibge": "4209151",
+                    "ibge_referencia": "4209151",
                     "lat": -26.9381,
                     "lon": -50.1455,
                     "distancia_km": 61.0,
@@ -413,7 +423,7 @@ def test_carregar_estacoes_le_o_arquivo_gerado_pelo_script(tmp_path):
     (estacao,) = inmet.carregar_estacoes(caminho)
 
     assert estacao.codigo == "A861"
-    assert estacao.ibge == "4209151"
+    assert estacao.ibge_referencia == "4209151"
 
 
 # --- script gerador -----------------------------------------------------------
@@ -424,8 +434,13 @@ def test_script_gera_os_itens_do_contrato_ordenados_por_municipio_e_distancia():
 
     itens = gerar(_fixture("inmet_estacoes.json"), MUNICIPIOS, raio_km=100.0)
 
-    assert all(set(item) == {"codigo", "nome", "ibge", "lat", "lon", "distancia_km"} for item in itens)
-    chaves = [(item["ibge"], item["distancia_km"]) for item in itens]
+    assert itens, "a fixture tem estações no raio: a lista não pode vir vazia"
+    assert all(
+        set(item)
+        == {"codigo", "nome", "ibge_referencia", "lat", "lon", "distancia_km"}
+        for item in itens
+    )
+    chaves = [(item["ibge_referencia"], item["distancia_km"]) for item in itens]
     assert chaves == sorted(chaves)
 
 
@@ -449,3 +464,32 @@ def test_script_com_raio_estreito_grava_lista_vazia_em_vez_de_falhar(tmp_path):
     gravar(gerar(_fixture("inmet_estacoes.json"), MUNICIPIOS, raio_km=1.0), caminho)
 
     assert json.loads(caminho.read_text(encoding="utf-8")) == []
+
+
+# --- janela de 24 h alinhada com `acumulados()` -------------------------------
+
+
+def test_chuva_24h_soma_24_rotulos_mesmo_com_agora_fora_da_hora_cheia():
+    # `acumulados()` trunca `agora_utc` para a hora cheia e soma 24 rótulos; em
+    # produção `agora_utc` vem de `datetime.now()` e tem minutos e segundos. Sem
+    # o mesmo truncamento aqui, a borda inferior corta um rótulo e o "medido"
+    # sai ~4% abaixo do calculado em toda execução — viés sistemático que
+    # convidaria à conclusão errada de que o cálculo superestima a chuva.
+    http = HttpFalso(
+        {"apitempo.inmet.gov.br": RespostaFalsa(_fixture("inmet_chuva_horaria.json"))}
+    )
+    agora_com_segundos = datetime(2026, 10, 1, 12, 0, 3, 456000, tzinfo=UTC)
+
+    medida = inmet.chuva_24h(http, "A861", agora_com_segundos, "token-valido")
+
+    assert medida == pytest.approx(24 * 1.5)
+
+
+def test_chuva_24h_na_hora_cheia_e_fora_dela_dao_o_mesmo_valor():
+    def medir(agora):
+        http = HttpFalso(
+            {"apitempo.inmet.gov.br": RespostaFalsa(_fixture("inmet_chuva_horaria.json"))}
+        )
+        return inmet.chuva_24h(http, "A861", agora, "token-valido")
+
+    assert medir(datetime(2026, 10, 1, 12, 59, 59, tzinfo=UTC)) == medir(AGORA)

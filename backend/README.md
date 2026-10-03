@@ -96,7 +96,9 @@ execuções nunca rodam ao mesmo tempo (`max_instances=1`).
 
 Faz uma execução, envia os avisos e sai. Códigos de saída: **0** em sucesso,
 **1** quando nenhum município foi calculado, **2** quando a configuração está
-incompleta.
+incompleta e **3** quando o Telegram rejeitou o token. Os códigos 2 e 3 estão em
+`RestartPreventExitStatus` da unidade systemd: são falhas permanentes, e
+reiniciar a cada 10 s só poluiria o journal.
 
 > **Pare o serviço antes.** Dois processos executando o pipeline gravam no mesmo
 > banco e decidem os avisos a partir do mesmo estado: o resultado são **avisos
@@ -117,11 +119,13 @@ incompleta.
 Roda uma vez, e de novo quando a rede de estações do INMET mudar. O arquivo
 gerado é versionado no repositório.
 
-Atenção ao campo `ibge`: nenhuma estação automática do INMET fica dentro dos
-seis municípios (a mais próxima operante está a ~61 km) e a resposta do INMET
-não traz código IBGE nenhum. O `ibge` é o do município **mais próximo** dentro
-do raio de corte, e `distancia_km` registra a distância real — é uma estação de
-referência regional, não local.
+O campo chama-se `ibge_referencia`, não `ibge`: nenhuma estação automática do
+INMET fica dentro dos seis municípios (a mais próxima operante está a ~30 km) e
+a resposta do INMET não traz código IBGE nenhum. É o município **mais próximo**
+dentro do raio de corte, e `distancia_km` registra a distância real — estação de
+referência regional, não local. O contrato
+([docs/contratos-de-dados.md](../docs/contratos-de-dados.md)) traz a regra de
+leitura para o site.
 
 ## Testes
 
@@ -146,7 +150,8 @@ cd /opt/vigia/backend
 sudo -u vigia python -m venv .venv
 sudo -u vigia .venv/bin/pip install -e .
 
-# dados e log, em disco persistente
+# dados e log, em disco persistente (o `StateDirectory` da unidade também o
+# cria na primeira subida, com dono e permissão certos)
 sudo install -d -o vigia -g vigia -m 750 /var/lib/vigia
 
 # segredos
@@ -189,6 +194,7 @@ ficaram sem, se a publicação deu certo e quantos avisos havia a tratar.
 | Envio a um chat que bloqueou o bot | As inscrições daquele chat são apagadas (RNF05) e o laço segue |
 | Envio falhando por rede em todos os inscritos | A classe notificada não é gravada, e a próxima execução reenvia |
 | INMET fora do ar ou sem token | Só a linha de comparação deixa de ser registrada; o índice não muda |
+| Banco numa versão de schema que o código não conhece | `abrir()` falha na subida com as duas versões na mensagem, em vez de deixar a primeira gravação quebrar a cada 6 h em silêncio |
 
 Uma queda do processo entre o envio de um aviso e a gravação da classe pode
 repetir aquele aviso na execução seguinte. É a troca escolhida: repetir é

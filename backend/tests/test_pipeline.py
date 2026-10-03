@@ -12,6 +12,7 @@ antecedente zerada, o subíndice é `rtotal / 100`.
 from __future__ import annotations
 
 import json
+import logging
 from datetime import date, datetime, timedelta, timezone
 
 import pytest
@@ -554,3 +555,33 @@ def test_sem_municipio_calculado_a_comparacao_nao_e_chamada():
         publicar=PublicacaoFalsa(),
         comparar_com_inmet=comparar,
     )
+
+
+# --- a publicação nunca custa um aviso ----------------------------------------
+
+
+def test_publicacao_que_levanta_excecao_nao_impede_os_avisos(caplog):
+    # `publicar` promete nunca levantar, mas a promessa é de um módulo; aqui a
+    # invariante é do pipeline. Se a publicação levantar, o aviso de um
+    # município em alerta não pode ser perdido em silêncio por 6 h.
+    def publicar_que_explode(conteudo, config, http):
+        raise RuntimeError("corpo inesperado na leitura do sha")
+
+    conn = conexao()
+    with caplog.at_level(logging.ERROR):
+        execucao = executar_pipeline(
+            AGORA,
+            [IBIRAMA],
+            conn,
+            http=object(),
+            config=config_de_teste(),
+            relogio=lambda: FIM_DA_EXECUCAO,
+            coletar=coleta_falsa({"4206900": dados("4206900", 120.0)}),
+            publicar=publicar_que_explode,
+        )
+
+    assert execucao.publicado is False
+    assert [(aviso.ibge, aviso.avisar) for aviso in execucao.avisos] == [("4206900", True)]
+    # E o cálculo ficou gravado: a publicação é o último elo, não o primeiro.
+    assert conn.execute("SELECT COUNT(*) FROM indices").fetchone()[0] == 4
+    assert caplog.records

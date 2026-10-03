@@ -9,13 +9,16 @@ Convenções de exibição:
 - números com **vírgula** decimal e duas casas (RN05);
 - data e hora no fuso de **Brasília** (`America/Sao_Paulo`), porque é o que o
   inscrito lê — o resto do sistema trabalha em UTC;
+- o **dia-alvo** junto do índice (RN11), porque quando o município fica sem
+  dados numa execução o índice exibido é o da execução anterior, e sem o
+  dia-alvo o leitor não tem como saber a que dia ele se refere;
 - todo texto de risco é **condicional** e informa que o VIGIA não emite alerta
   oficial (RN04), com o nome da classe junto do número (RN03).
 """
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
 from app.bot.regra_aviso import Aviso
@@ -38,6 +41,11 @@ def numero_br(valor: float) -> str:
 def data_hora_brasilia(momento: datetime) -> str:
     """`datetime` aware -> `"dd/mm/aaaa HH:MM"` no fuso de Brasília."""
     return momento.astimezone(FUSO_BRASILIA).strftime("%d/%m/%Y %H:%M")
+
+
+def data_br(dia: date) -> str:
+    """`date` -> `"dd/mm/aaaa"`."""
+    return dia.strftime("%d/%m/%Y")
 
 
 def texto_do_aviso(aviso: Aviso, site_url: str) -> str:
@@ -83,7 +91,8 @@ def texto_do_status(
             continue
         linhas.append(
             f"• {nome}: índice {numero_br(atual.indice)} "
-            f"(classe {atual.classe}, {nome_classe(atual.classe)}) — "
+            f"(classe {atual.classe}, {nome_classe(atual.classe)}) "
+            f"para {data_br(atual.dia_alvo)} — "
             f"cálculo de {data_hora_brasilia(atual.calculado_em)}"
         )
 

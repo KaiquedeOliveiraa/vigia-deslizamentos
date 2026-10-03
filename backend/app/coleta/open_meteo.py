@@ -111,17 +111,20 @@ def _requisitar(
             resposta = http.get(url, params=params, timeout=TIMEOUT_S)
             resposta.raise_for_status()
             return resposta.json()
+        except (requests.exceptions.JSONDecodeError, json.JSONDecodeError) as erro:
+            # **Antes** de `RequestException`, de propósito:
+            # `requests.exceptions.JSONDecodeError` herda dela, e deixar a
+            # cláusula genérica na frente faria um corpo malformado ser
+            # retentado três vezes — nova tentativa não conserta corpo inválido
+            # — e sair com a mensagem genérica. `json.JSONDecodeError` fica no
+            # par para o caso de um cliente HTTP dublê levantar a da stdlib.
+            raise ColetaError(
+                f"{contexto}: resposta de {url} não é JSON válido: {erro}"
+            ) from erro
         except requests.exceptions.RequestException as erro:
             ultimo_erro = erro
             if tentativa < TENTATIVAS - 1:
                 espera(1.0)
-        except json.JSONDecodeError as erro:
-            # Corpo que não é JSON não melhora em nova tentativa, e precisa
-            # chegar como `ColetaError` identificando o município — do
-            # contrário aborta a execução inteira sem dizer de quem é a falha.
-            raise ColetaError(
-                f"{contexto}: resposta de {url} não é JSON válido: {erro}"
-            ) from erro
     raise ColetaError(
         f"{contexto}: falha ao chamar {url} após {TENTATIVAS} tentativas: {ultimo_erro}"
     ) from ultimo_erro

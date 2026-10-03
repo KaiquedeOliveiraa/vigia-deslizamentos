@@ -9,14 +9,15 @@ obrigatória quebra.
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 
-from app.bot.mensagens import texto_do_aviso, texto_do_status
+from app.bot.mensagens import RESSALVA_RN04, texto_do_aviso, texto_do_status
 from app.bot.regra_aviso import Aviso
 from app.modelos.banco import IndiceAtual
 
 UTC = timezone.utc
 SITE_URL = "https://vigia.exemplo.org"
+D0 = date(2026, 10, 1)
 
 
 def aviso_de_teste(indice: float = 1.25, classe_do_aviso: int = 4) -> Aviso:
@@ -39,7 +40,7 @@ def test_aviso_tem_municipio_indice_com_virgula_classe_e_link_do_site():
     assert "Ibirama" in texto
     assert "1,25" in texto  # vírgula decimal, duas casas (RN05)
     assert "moderado" in texto
-    assert "4" in texto
+    assert "classe 4" in texto  # o número junto do nome (RN03)
     assert SITE_URL in texto
 
 
@@ -73,8 +74,8 @@ def test_aviso_de_classe_mais_alta_nomeia_a_classe_certa():
 def test_status_lista_cada_municipio_com_indice_classe_e_hora_de_brasilia():
     calculado_em = datetime(2026, 10, 1, 21, 30, tzinfo=UTC)  # 18:30 em Brasília
     situacoes = [
-        ("Ibirama", IndiceAtual(indice=1.25, classe=4, calculado_em=calculado_em)),
-        ("Dona Emma", IndiceAtual(indice=0.33, classe=1, calculado_em=calculado_em)),
+        ("Ibirama", IndiceAtual(indice=1.25, classe=4, dia_alvo=D0, calculado_em=calculado_em)),
+        ("Dona Emma", IndiceAtual(indice=0.33, classe=1, dia_alvo=D0, calculado_em=calculado_em)),
     ]
 
     texto = texto_do_status(situacoes, SITE_URL)
@@ -94,7 +95,9 @@ def test_status_converte_para_brasilia_mesmo_virando_o_dia():
         (
             "Ibirama",
             IndiceAtual(
-                indice=1.25, classe=4,
+                indice=1.25,
+                classe=4,
+                dia_alvo=D0,
                 calculado_em=datetime(2026, 10, 1, 1, 0, tzinfo=UTC),
             ),
         )
@@ -106,7 +109,7 @@ def test_status_converte_para_brasilia_mesmo_virando_o_dia():
 def test_status_aceita_calculado_em_em_qualquer_fuso_e_exibe_em_brasilia():
     calculado_em = datetime(2026, 10, 1, 23, 30, tzinfo=timezone(timedelta(hours=2)))
     situacoes = [
-        ("Ibirama", IndiceAtual(indice=1.25, classe=4, calculado_em=calculado_em))
+        ("Ibirama", IndiceAtual(indice=1.25, classe=4, dia_alvo=D0, calculado_em=calculado_em))
     ]
 
     # 2026-10-01T23:30+02:00 é 2026-10-01T21:30Z, isto é, 18:30 em Brasília.
@@ -132,7 +135,9 @@ def test_status_tambem_diz_que_o_vigia_nao_emite_alerta_oficial():
         (
             "Ibirama",
             IndiceAtual(
-                indice=1.25, classe=4,
+                indice=1.25,
+                classe=4,
+                dia_alvo=D0,
                 calculado_em=datetime(2026, 10, 1, 21, 30, tzinfo=UTC),
             ),
         )
@@ -145,4 +150,27 @@ def test_status_sem_inscricoes_nao_precisa_do_aviso_de_alerta_oficial():
     # Sem índice exibido não há o que ressalvar; o texto fica curto e útil.
     texto = texto_do_status([], SITE_URL)
 
+    assert RESSALVA_RN04 not in texto
     assert "sem dados" not in texto
+
+
+def test_status_mostra_o_dia_alvo_do_indice_exibido():
+    # RN11: o dia-alvo fica visível. Importa quando o município ficou sem dados
+    # na execução corrente — o índice mostrado é o da anterior, e sem o dia-alvo
+    # o leitor acha que se refere a hoje.
+    situacoes = [
+        (
+            "Ibirama",
+            IndiceAtual(
+                indice=1.25,
+                classe=4,
+                dia_alvo=date(2026, 9, 30),
+                calculado_em=datetime(2026, 10, 1, 21, 30, tzinfo=UTC),
+            ),
+        )
+    ]
+
+    texto = texto_do_status(situacoes, SITE_URL)
+
+    assert "30/09/2026" in texto
+    assert "01/10/2026 18:30" in texto

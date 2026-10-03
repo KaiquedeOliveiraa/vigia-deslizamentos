@@ -36,12 +36,12 @@ def config_de_teste() -> Config:
 class RespostaFalsa:
     """Dublê de `requests.Response` com o necessário para a publicação."""
 
-    def __init__(self, status_code: int, corpo: dict | None = None):
+    def __init__(self, status_code: int, corpo=None):
         self.status_code = status_code
         self._corpo = corpo if corpo is not None else {}
         self.text = json.dumps(self._corpo)
 
-    def json(self) -> dict:
+    def json(self):
         return self._corpo
 
 
@@ -190,7 +190,8 @@ def test_erro_de_rede_na_leitura_devolve_false_sem_excecao(caplog):
     with caplog.at_level(logging.ERROR):
         assert publicar(CONTEUDO, config_de_teste(), http) is False
 
-    assert caplog.records != []
+    assert [registro.levelname for registro in caplog.records] == ["ERROR"]
+    assert "transporte" in caplog.records[0].getMessage()
 
 
 def test_erro_de_rede_no_envio_devolve_false_sem_excecao(caplog):
@@ -202,7 +203,8 @@ def test_erro_de_rede_no_envio_devolve_false_sem_excecao(caplog):
     with caplog.at_level(logging.ERROR):
         assert publicar(CONTEUDO, config_de_teste(), http) is False
 
-    assert caplog.records != []
+    assert [registro.levelname for registro in caplog.records] == ["ERROR"]
+    assert "transporte" in caplog.records[0].getMessage()
 
 
 def test_401_devolve_false_sem_excecao(caplog):
@@ -214,7 +216,8 @@ def test_401_devolve_false_sem_excecao(caplog):
     with caplog.at_level(logging.ERROR):
         assert publicar(CONTEUDO, config_de_teste(), http) is False
 
-    assert caplog.records != []
+    assert [registro.levelname for registro in caplog.records] == ["ERROR"]
+    assert "401" in caplog.records[0].getMessage()
 
 
 def test_401_na_leitura_nao_e_tratado_como_arquivo_inexistente(caplog):
@@ -249,6 +252,9 @@ def test_nada_registrado_no_log_contem_o_token(http, caplog):
     with caplog.at_level(logging.DEBUG):
         publicar(CONTEUDO, config_de_teste(), http)
 
+    # Sem esta linha o teste passaria num mundo em que a publicação não registra
+    # nada — e aí ele não protegeria a RNF06, só pareceria proteger.
+    assert caplog.records
     for registro in caplog.records:
         assert TOKEN not in registro.getMessage()
         assert TOKEN not in str(registro.args or "")
@@ -264,3 +270,41 @@ def test_timeout_e_passado_em_todas_as_chamadas():
 
     for _, _, kwargs in http.chamadas:
         assert kwargs["timeout"] == 30
+
+
+# --- corpo anômalo na leitura do sha ------------------------------------------
+
+
+class RespostaComJsonInvalido:
+    """200 cujo corpo não é JSON — proxy corporativo, portal cativo, página de erro."""
+
+    status_code = 200
+    text = "<html>502 Bad Gateway</html>"
+
+    def json(self):
+        raise requests.exceptions.JSONDecodeError("Expecting value", "", 0)
+
+
+def test_corpo_nao_json_na_leitura_devolve_false_sem_excecao(caplog):
+    http = HttpFalso(respostas_get=[RespostaComJsonInvalido()], respostas_put=[])
+
+    with caplog.at_level(logging.ERROR):
+        assert publicar(CONTEUDO, config_de_teste(), http) is False
+
+    assert caplog.records
+    assert _chamadas(http, "PUT") == []
+
+
+def test_corpo_lista_na_leitura_devolve_false_sem_excecao(caplog):
+    # A API de conteúdo do GitHub devolve uma lista quando o caminho é um
+    # diretório; `.get("sha")` numa lista levantaria AttributeError.
+    http = HttpFalso(
+        respostas_get=[RespostaFalsa(200, [{"name": "indices.json"}])],
+        respostas_put=[],
+    )
+
+    with caplog.at_level(logging.ERROR):
+        assert publicar(CONTEUDO, config_de_teste(), http) is False
+
+    assert caplog.records
+    assert _chamadas(http, "PUT") == []

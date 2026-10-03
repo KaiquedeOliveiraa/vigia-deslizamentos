@@ -77,7 +77,25 @@ def _ler_sha(config: Config, http) -> str | None:
         raise _FalhaDePublicacao(
             f"leitura do arquivo atual devolveu status {resposta.status_code}"
         )
-    return resposta.json().get("sha")
+
+    # A desserialização fica dentro da guarda: um proxy, um portal cativo ou uma
+    # página de incidente devolvem 200 com corpo que não é JSON, e a API de
+    # conteúdo devolve uma **lista** quando o caminho é um diretório. Nos dois
+    # casos isto tem de virar `_FalhaDePublicacao`, não exceção crua — a função
+    # promete nunca levantar.
+    try:
+        corpo = resposta.json()
+    except ValueError:
+        raise _FalhaDePublicacao(
+            "leitura do arquivo atual devolveu 200 com corpo que não é JSON"
+        ) from None
+
+    if not isinstance(corpo, dict):
+        raise _FalhaDePublicacao(
+            f"leitura do arquivo atual devolveu {type(corpo).__name__} "
+            "em vez de um objeto (o caminho é um diretório?)"
+        )
+    return corpo.get("sha")
 
 
 def _enviar(conteudo: bytes, config: Config, http, sha: str | None) -> int:

@@ -17,15 +17,31 @@ WorkingDirectory=/opt/vigia/backend
 EnvironmentFile=/etc/vigia/vigia.env
 ExecStart=/opt/vigia/backend/.venv/bin/python -m app.main
 
+# Sem isto, o stdout do Python fica em buffer de bloco quando a saída é um pipe
+# (que é o caso do journal): o `journalctl -u vigia -f` do README sairia
+# atrasado e em blocos.
+Environment=PYTHONUNBUFFERED=1
+
 # Reinicia sempre: o processo é um long polling que deve viver indefinidamente.
-# `RestartSec` evita laço apertado quando a falha é na subida (token inválido,
-# banco sem permissão).
+# `RestartSec` evita laço apertado quando a falha é na subida.
 Restart=always
 RestartSec=10s
 
+# Falha de configuração é permanente, e reiniciar não a conserta. Sem isto, um
+# `.env` incompleto (saída 2) ou um token rejeitado pelo Telegram (saída 3)
+# viram laço perpétuo de 10 s no journal. Com isto o systemd marca a unidade
+# como `failed`, que é o estado honesto e o que um alerta operacional vê.
+RestartPreventExitStatus=2 3
+
+# Rede intermitente na subida pode reiniciar algumas vezes; depois disso o
+# systemd desiste em vez de insistir para sempre.
+StartLimitIntervalSec=300
+StartLimitBurst=10
+
 # `DB_PATH` e `LOG_PATH` do `.env` têm de apontar para dentro deste diretório,
-# que é persistente e gravável pelo usuário do serviço:
-#   sudo install -d -o vigia -g vigia -m 750 /var/lib/vigia
+# que é persistente e gravável pelo usuário do serviço. `StateDirectory` o cria
+# com o dono e a permissão certos na primeira subida, sem `install -d` manual.
+StateDirectory=vigia
 ReadWritePaths=/var/lib/vigia
 
 # O log do processo também vai para o journal, além do arquivo de LOG_PATH.
@@ -42,7 +58,11 @@ ProtectHome=true
 ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true
-RestrictAddressFamilies=AF_INET AF_INET6
+# AF_UNIX junto de propósito: em hosts com `nss-resolve`, a resolução de DNS
+# passa por um socket AF_UNIX, e sem ele o serviço depende do fallback para
+# `nss-dns`. O filtro atinge `socket()`, não `socketpair()`, então o self-pipe
+# do asyncio sobreviveria de todo modo — mas a resolução de nomes não.
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 RestrictNamespaces=true
 LockPersonality=true
 MemoryDenyWriteExecute=true

@@ -16,8 +16,10 @@ módulo:
    está a ~61 km, e a resposta de `/estacoes/T` não traz código IBGE nenhum. A
    associação é, portanto, por **proximidade** do centroide, dentro de um raio de
    corte — a estação é de *referência regional*, não "do município". É por isso
-   que `Estacao` carrega `distancia_km` e que o JSON a publica: sem esse número,
-   uma estação a 61 km passaria por estação local na tela.
+   que o campo se chama `ibge_referencia` (não `ibge`) e que `distancia_km` vai
+   no JSON: sem o nome e sem o número, uma estação a 76 km passaria por estação
+   local na tela — e `ibge` significaria, aqui, algo diferente do que significa
+   em `indices.json`.
 """
 
 from __future__ import annotations
@@ -66,13 +68,17 @@ _log = logging.getLogger(__name__)
 class Estacao:
     """Uma estação automática do INMET e o município que ela serve de referência.
 
-    `ibge` é o município **mais próximo** dentro do raio de corte, não
-    necessariamente aquele onde a estação fica; `distancia_km` diz o quanto.
+    O campo chama-se `ibge_referencia`, e não `ibge`, de propósito: é o município
+    **mais próximo** dentro do raio de corte, não aquele onde a estação fica.
+    Chamá-lo de `ibge` o faria significar, em `estacoes.json`, algo diferente do
+    que significa em `indices.json`, e um consumidor desatento renderizaria
+    "Estação ITAJAI — Ibirama" para uma estação a 76 km. `distancia_km` diz o
+    quanto, e vai no arquivo para que esse número não possa ficar escondido.
     """
 
     codigo: str
     nome: str
-    ibge: str
+    ibge_referencia: str
     lat: float
     lon: float
     distancia_km: float
@@ -143,7 +149,7 @@ def associar_estacoes(
             Estacao(
                 codigo=bruta["CD_ESTACAO"],
                 nome=bruta["DC_NOME"],
-                ibge=mais_proximo.ibge,
+                ibge_referencia=mais_proximo.ibge,
                 lat=lat,
                 lon=lon,
                 distancia_km=round(distancia, 1),
@@ -154,11 +160,11 @@ def associar_estacoes(
 
 
 def estacao_em_json(estacao: Estacao) -> dict[str, Any]:
-    """A estação no formato do `estacoes.json` (contrato + `distancia_km`)."""
+    """A estação no formato do `estacoes.json` (`docs/contratos-de-dados.md`)."""
     return {
         "codigo": estacao.codigo,
         "nome": estacao.nome,
-        "ibge": estacao.ibge,
+        "ibge_referencia": estacao.ibge_referencia,
         "lat": estacao.lat,
         "lon": estacao.lon,
         "distancia_km": estacao.distancia_km,
@@ -183,17 +189,32 @@ def carregar_estacoes(caminho: str | Path = CAMINHO_ESTACOES) -> list[Estacao]:
         _log.warning("não foi possível ler %s: %s", caminho, erro)
         return []
 
-    return [
-        Estacao(
-            codigo=item["codigo"],
-            nome=item["nome"],
-            ibge=item["ibge"],
-            lat=item["lat"],
-            lon=item["lon"],
-            distancia_km=item.get("distancia_km", float("nan")),
-        )
-        for item in itens
-    ]
+    estacoes: list[Estacao] = []
+    for item in itens:
+        try:
+            estacoes.append(
+                Estacao(
+                    codigo=item["codigo"],
+                    nome=item["nome"],
+                    ibge_referencia=item["ibge_referencia"],
+                    lat=item["lat"],
+                    lon=item["lon"],
+                    distancia_km=float(item["distancia_km"]),
+                )
+            )
+        except (KeyError, TypeError, ValueError):
+            # Item fora do formato (arquivo de uma versão anterior do script,
+            # por exemplo) é descartado com o motivo no log. Não vale completar
+            # com valor de enchimento: `distancia_km` participa da escolha da
+            # estação mais próxima, e um `NaN` ali tornaria toda comparação
+            # falsa, trocando "a mais próxima" por "a primeira da lista" sem que
+            # nada aparecesse.
+            _log.warning(
+                "estação %r em %s está fora do formato esperado: descartada",
+                item.get("codigo") if isinstance(item, dict) else item,
+                caminho,
+            )
+    return estacoes
 
 
 def buscar_estacoes_automaticas(http) -> list[dict[str, Any]]:
@@ -223,15 +244,27 @@ def _somar_chuva(registros: list[dict[str, Any]]) -> float | None:
 
 
 def chuva_24h(http, codigo: str, fim_utc: datetime, token: str) -> float | None:
-    """Chuva medida pela estação nas 24 h que terminam em `fim_utc`.
+    """Chuva medida pela estação nas 24 h que terminam na última hora cheia.
+
+    A janela é a mesma de `acumulados()` — 24 rótulos horários terminando na
+    última hora cheia `≤ fim_utc` — para que medido e calculado cubram o mesmo
+    intervalo físico. É o que torna a diferença registrada no log interpretável.
 
     Devolve `None` em qualquer situação em que não haja número confiável: 204 sem
     corpo (o que a API devolveu em toda combinação testada na Tarefa 0), corpo
     que não é lista (`"CHAVE INVÁLIDA!"`), nenhum registro com valor, ou falha de
     rede. Nunca levanta, e o token nunca entra em mensagem de log.
     """
-    inicio = (fim_utc - timedelta(hours=24)).date().isoformat()
-    fim = fim_utc.date().isoformat()
+    # Mesma janela de `acumulados()` (Tarefa 6): 24 rótulos terminando na última
+    # hora cheia. Sem truncar, os minutos e segundos de `datetime.now()` cortam
+    # o rótulo da borda inferior e a soma vem com 23 horas — viés sistemático de
+    # ~4% para baixo em toda execução de produção, invisível num teste que use
+    # hora cheia.
+    ultima_hora_cheia = fim_utc.astimezone(timezone.utc).replace(
+        minute=0, second=0, microsecond=0
+    )
+    inicio = (ultima_hora_cheia - timedelta(hours=24)).date().isoformat()
+    fim = ultima_hora_cheia.date().isoformat()
     url = URL_CHUVA_COM_TOKEN.format(
         inicio=inicio, fim=fim, codigo=codigo, token=token
     )
@@ -261,12 +294,12 @@ def chuva_24h(http, codigo: str, fim_utc: datetime, token: str) -> float | None:
         )
         return None
 
-    inicio_da_janela = fim_utc - timedelta(hours=23)
+    inicio_da_janela = ultima_hora_cheia - timedelta(hours=23)
     na_janela = [
         registro
         for registro in corpo
         if (momento := _momento_do_registro(registro)) is not None
-        and inicio_da_janela <= momento <= fim_utc
+        and inicio_da_janela <= momento <= ultima_hora_cheia
     ]
     return _somar_chuva(na_janela)
 
@@ -316,9 +349,9 @@ def registrar_comparacao_24h(
 
         por_ibge: dict[str, Estacao] = {}
         for estacao in estacoes:
-            atual = por_ibge.get(estacao.ibge)
+            atual = por_ibge.get(estacao.ibge_referencia)
             if atual is None or estacao.distancia_km < atual.distancia_km:
-                por_ibge[estacao.ibge] = estacao
+                por_ibge[estacao.ibge_referencia] = estacao
 
         for item in resultado.municipios:
             estacao = por_ibge.get(item.ibge)
@@ -326,6 +359,19 @@ def registrar_comparacao_24h(
                 continue
 
             calculado = item.chuva_acum_mm.get("24h")
+            if calculado is None:
+                # `acumulados()` sempre devolve as quatro chaves, então isto não
+                # é alcançável hoje. Fica porque a alternativa é um `TypeError`
+                # no `%.1f` abaixo, dentro do `except Exception` desta função —
+                # e aí os municípios seguintes perderiam a comparação por causa
+                # de um dado ausente num deles.
+                _log.info(
+                    "comparação INMET do município '%s': a execução não trouxe "
+                    "chuva acumulada de 24 h",
+                    item.ibge,
+                )
+                continue
+
             medido = chuva_24h(http, estacao.codigo, agora_utc, config.inmet_token)
             if medido is None:
                 _log.info(
@@ -333,7 +379,7 @@ def registrar_comparacao_24h(
                     "na janela de 24 h (calculado: %.1f mm)",
                     item.ibge,
                     estacao.codigo,
-                    calculado if calculado is not None else float("nan"),
+                    calculado,
                 )
                 continue
 

@@ -17,7 +17,8 @@ Ordem e tolerância a falhas:
    publica e não avisa. O último `indices.json` continua no ar (UC06/RNF04) e a
    última classe notificada de cada município fica intacta;
 4. gravação no banco, numa transação;
-5. exportação e publicação — falha aqui é registrada e **não** impede os avisos;
+5. exportação e publicação — falha aqui é registrada e **não** impede os avisos,
+   inclusive se vier como exceção em vez de `False`;
 6. comparação de conferência com o INMET, que só escreve no log;
 7. decisão dos avisos pela RN08.
 """
@@ -63,10 +64,14 @@ def _coletar_todos(
     manda para `municipios_sem_dados` por não ter dados — não há duas listas
     para manter em sincronia.
 
-    `except Exception` aqui é deliberado, e é o único do backend: a coleta fala
-    com a rede e com corpos de resposta de terceiros, e uma exceção inesperada
-    num município não pode custar a execução dos outros cinco. O erro vai para o
-    log com o município identificado.
+    `except Exception` aqui é deliberado: a coleta fala com a rede e com corpos
+    de resposta de terceiros, e uma exceção inesperada num município não pode
+    custar a execução dos outros cinco. O erro vai para o log com o município
+    identificado. Os outros quatro do backend têm a mesma forma — absorver uma
+    falha cuja alternativa seria perder um aviso ou uma execução inteira — e
+    estão em `executar_pipeline` (publicação), `app.bot.avisos.enviar_avisos`
+    (por município), `app.coleta.inmet.registrar_comparacao_24h` (conferência) e
+    `app.main` (o job agendado).
 
     `cache_rodadas` é criado aqui, uma vez por execução: o horário de
     inicialização de cada modelo é o mesmo para todos os municípios.
@@ -183,9 +188,17 @@ def executar_pipeline(
     fim_da_execucao = relogio()
     banco.gravar_resultado(conexao, resultado, fim_da_execucao)
 
-    publicado = _publicar_indices(
-        resultado, municipios, conexao, config, http, fim_da_execucao, publicar
-    )
+    # `publicar` promete nunca levantar, mas essa promessa é de um módulo e a
+    # invariante é daqui: entre a gravação e a decisão dos avisos, uma exceção
+    # custaria o aviso de um município em alerta pelas próximas 6 h, em
+    # silêncio. A guarda torna a invariante estrutural.
+    try:
+        publicado = _publicar_indices(
+            resultado, municipios, conexao, config, http, fim_da_execucao, publicar
+        )
+    except Exception:  # noqa: BLE001 — publicação nunca impede os avisos
+        _log.exception("publicação falhou com exceção; a execução segue sem publicar")
+        publicado = False
 
     # Conferência: a diferença entre a chuva medida pela estação do INMET e a
     # calculada vai para o log e não toca no índice. O `try` é redundante com o

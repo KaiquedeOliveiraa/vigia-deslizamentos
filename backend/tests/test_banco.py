@@ -11,8 +11,6 @@ entrada.
 from __future__ import annotations
 
 import sqlite3
-import threading
-from dataclasses import FrozenInstanceError
 from datetime import date, datetime, timezone
 
 import pytest
@@ -293,7 +291,10 @@ def test_indice_atual_devolve_o_d0_do_calculo_mais_recente():
     atual = banco.indice_atual(conexao, "4202404")
 
     assert atual == banco.IndiceAtual(
-        indice=1.8, classe=5, calculado_em=datetime(2026, 10, 1, 6, 0, tzinfo=UTC)
+        indice=1.8,
+        classe=5,
+        dia_alvo=date(2026, 10, 2),
+        calculado_em=datetime(2026, 10, 1, 6, 0, tzinfo=UTC),
     )
 
 
@@ -442,3 +443,74 @@ def test_uma_conexao_grava_enquanto_outra_le_sem_bloquear(tmp_path):
         ).fetchall() == [(111,)]
     finally:
         conexao_conferencia.close()
+
+
+# --- versão do schema ---------------------------------------------------------
+
+
+def test_abrir_marca_a_versao_do_schema_num_banco_novo(tmp_path):
+    caminho = str(tmp_path / "vigia.sqlite3")
+
+    conexao = banco.abrir(caminho)
+
+    assert conexao.execute("PRAGMA user_version").fetchone()[0] == banco.VERSAO_SCHEMA
+
+
+def test_abrir_num_banco_de_versao_mais_nova_levanta_em_vez_de_gravar_errado(tmp_path):
+    # Sem esta checagem, `CREATE TABLE IF NOT EXISTS` passa batido num banco
+    # fora de versão e a falha só aparece na primeira gravação — dentro do
+    # `except Exception` do job agendado, isto é, o pipeline pararia de gravar e
+    # de avisar a cada 6 h com nada no log além de um traceback genérico.
+    caminho = str(tmp_path / "vigia.sqlite3")
+    conexao = banco.abrir(caminho)
+    conexao.execute(f"PRAGMA user_version = {banco.VERSAO_SCHEMA + 1}")
+    conexao.commit()
+    conexao.close()
+
+    with pytest.raises(banco.SchemaIncompativelError, match="versão"):
+        banco.abrir(caminho)
+
+
+def test_versao_zero_e_aceita_como_banco_novo_ou_anterior_ao_versionamento():
+    # `PRAGMA user_version` nasce em 0; um banco criado antes desta checagem
+    # também está em 0 e tem o schema corrente, então 0 não é incompatível.
+    assert banco.versao_compativel(0) is True
+
+
+def test_a_versao_corrente_e_aceita():
+    assert banco.versao_compativel(banco.VERSAO_SCHEMA) is True
+
+
+def test_versao_diferente_da_corrente_nao_e_compativel():
+    # Serve para os dois lados: banco mais novo que o código (downgrade) e, a
+    # partir da próxima versão do schema, banco mais antigo sem migração.
+    assert banco.versao_compativel(banco.VERSAO_SCHEMA + 1) is False
+    assert banco.versao_compativel(99) is False
+
+
+def test_mensagem_do_schema_incompativel_nomeia_as_duas_versoes(tmp_path):
+    caminho = str(tmp_path / "vigia.sqlite3")
+    conexao = banco.abrir(caminho)
+    conexao.execute(f"PRAGMA user_version = {banco.VERSAO_SCHEMA + 1}")
+    conexao.commit()
+    conexao.close()
+
+    with pytest.raises(banco.SchemaIncompativelError) as erro:
+        banco.abrir(caminho)
+
+    mensagem = str(erro.value)
+    assert str(banco.VERSAO_SCHEMA + 1) in mensagem
+    assert str(banco.VERSAO_SCHEMA) in mensagem
+
+
+def test_indice_atual_traz_o_dia_alvo_do_d0():
+    # O `/status` exibe o dia-alvo junto do índice (RN11): quando o município
+    # fica sem dados numa execução, o índice mostrado é o da execução anterior,
+    # e sem o dia-alvo o leitor não sabe a que dia ele se refere.
+    conexao = _conexao()
+    _inserir_calculo(conexao, "4206900", "2026-10-01", "2026-10-01T06:00:00Z", 1.25, 4)
+    _inserir_calculo(conexao, "4206900", "2026-10-02", "2026-10-01T06:00:00Z", 0.5, 2)
+
+    atual = banco.indice_atual(conexao, "4206900")
+
+    assert atual.dia_alvo == date(2026, 10, 1)

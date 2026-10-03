@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import sqlite3
 from datetime import datetime, timezone
 
 import pytest
@@ -285,3 +286,73 @@ def test_agora_sem_fuso_levanta_erro():
 
     with pytest.raises(ValueError):
         executar(bot, conn, [aviso()], agora=datetime(2026, 10, 1, 21, 0))
+
+
+# --- nenhum município derruba o seguinte --------------------------------------
+
+
+def test_erro_inesperado_num_municipio_nao_impede_o_proximo(caplog):
+    # Não é a janela de "queda do processo" que o plano aceita: é exceção
+    # tratável (p. ex. `sqlite3.OperationalError` com o timeout esgotado, já que
+    # a thread do pipeline e o loop do bot escrevem no mesmo arquivo). Se ela
+    # escapar depois de o primeiro município ter recebido a mensagem, os
+    # inscritos dele recebem o aviso de novo na execução seguinte e os
+    # municípios restantes ficam sem gravar a classe.
+    conn = conexao()
+    banco.inscrever(conn, 1, "4206900", AGORA)
+    banco.inscrever(conn, 2, "4205100", AGORA)
+
+    class BotQueExplodeNoPrimeiro(BotFalso):
+        async def send_message(self, chat_id, text, **kwargs):
+            if chat_id == 1:
+                raise RuntimeError("defeito inesperado")
+            return await BotFalso.send_message(self, chat_id, text, **kwargs)
+
+    bot = BotQueExplodeNoPrimeiro()
+
+    with caplog.at_level(logging.ERROR):
+        executar(
+            bot,
+            conn,
+            [
+                aviso(),
+                aviso(ibge="4205100", nome="Dona Emma", classe_do_aviso=5, nova_classe=5),
+            ],
+        )
+
+    assert [chat for chat, _ in bot.enviados] == [2]
+    assert banco.ultima_classe_notificada(conn, "4205100") == 5
+    assert caplog.records
+
+
+def test_erro_inesperado_na_gravacao_da_classe_nao_impede_o_proximo(caplog):
+    conn = conexao()
+    banco.inscrever(conn, 1, "4206900", AGORA)
+    banco.inscrever(conn, 2, "4205100", AGORA)
+    bot = BotFalso()
+
+    original = banco.atualizar_ultima_classe_notificada
+    chamadas = {"n": 0}
+
+    def gravar_com_falha_na_primeira(conexao, ibge, classe, notificado_em):
+        chamadas["n"] += 1
+        if chamadas["n"] == 1:
+            raise sqlite3.OperationalError("database is locked")
+        return original(conexao, ibge, classe, notificado_em)
+
+    banco.atualizar_ultima_classe_notificada = gravar_com_falha_na_primeira
+    try:
+        with caplog.at_level(logging.ERROR):
+            executar(
+                bot,
+                conn,
+                [
+                    aviso(),
+                    aviso(ibge="4205100", nome="Dona Emma", classe_do_aviso=5, nova_classe=5),
+                ],
+            )
+    finally:
+        banco.atualizar_ultima_classe_notificada = original
+
+    assert banco.ultima_classe_notificada(conn, "4205100") == 5
+    assert caplog.records

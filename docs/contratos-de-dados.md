@@ -76,14 +76,19 @@ Histórico de ocorrências, levantado manualmente (Defesa Civil e S2iD) e versio
 
 ## `frontend/public/data/estacoes.json`
 
-Estações automáticas do INMET na região, geradas uma vez por script e versionadas. A raiz é uma lista de objetos:
+Estações automáticas do INMET na região, geradas uma vez por script (`backend/scripts/gerar_estacoes.py`) e versionadas. A raiz é uma lista de objetos:
 
 | Campo | Tipo | Descrição |
 |---|---|---|
 | `codigo` | string | Código da estação no INMET |
 | `nome` | string | Nome da estação |
-| `ibge` | string | Município onde fica |
+| `ibge_referencia` | string | Município de **referência**: o mais próximo da estação dentro do raio de corte — **não** o município onde a estação fica |
+| `distancia_km` | número | Distância entre a estação e o centroide desse município |
 | `lat`, `lon` | número | Coordenadas em graus decimais |
+
+**Por que `ibge_referencia` e não `ibge`.** Nenhuma estação automática do INMET fica dentro dos seis municípios: a mais próxima operante está a ~30 km, e a resposta do INMET não traz código IBGE nenhum, só nome livre e coordenadas. A associação é por proximidade do centroide. O campo tem nome próprio para não significar, aqui, algo diferente do que `ibge` significa em `indices.json` e em `municipios.json` — e `distancia_km` existe para que a distância real não possa ficar escondida.
+
+**Regra de leitura no site:** a estação é regional, então o texto não pode afirmar que ela fica no município. Exibir a distância junto do nome (ex.: "ITAJAI, a 76 km de Ibirama") e usar `distancia_km` para filtrar o que vale mostrar. Essa é também a razão pela qual o raio de corte do script é generoso (100 km por padrão): o arquivo entrega o dado e a tela decide.
 
 ## `frontend/public/data/contatos.json`
 

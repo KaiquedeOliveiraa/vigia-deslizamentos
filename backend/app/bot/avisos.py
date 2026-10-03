@@ -99,32 +99,51 @@ async def enviar_avisos(
     _exigir_fuso("agora_utc", agora_utc)
 
     for aviso in avisos:
-        if not aviso.avisar:
-            banco.atualizar_ultima_classe_notificada(
-                conexao, aviso.ibge, aviso.nova_classe, agora_utc
+        # Uma exceção inesperada num município não pode calar os seguintes. O
+        # caso realista não é o bot: é `sqlite3.OperationalError` nas escritas,
+        # porque a thread do pipeline e este loop gravam no mesmo arquivo e o
+        # `timeout` pode esgotar. Sem esta guarda, os municípios restantes
+        # ficariam sem gravar a classe e os inscritos do município que já
+        # recebeu a mensagem a receberiam de novo na execução seguinte.
+        try:
+            await _tratar_um_aviso(bot, conexao, aviso, agora_utc, site_url)
+        except Exception:  # noqa: BLE001 — ver comentário acima
+            _log.exception(
+                "tratamento do aviso de '%s' falhou; seguindo para o próximo município",
+                aviso.ibge,
             )
-            continue
 
-        tentativas, enviados, falhas = await _enviar_para_um_municipio(
-            bot, conexao, aviso, site_url
+
+async def _tratar_um_aviso(
+    bot, conexao: sqlite3.Connection, aviso: Aviso, agora_utc: datetime, site_url: str
+) -> None:
+    """Envia (se for o caso) e grava a classe notificada de **um** município."""
+    if not aviso.avisar:
+        banco.atualizar_ultima_classe_notificada(
+            conexao, aviso.ibge, aviso.nova_classe, agora_utc
         )
+        return
 
-        if enviados > 0 or (tentativas > 0 and falhas == 0):
-            banco.atualizar_ultima_classe_notificada(
-                conexao, aviso.ibge, aviso.nova_classe, agora_utc
-            )
-            _log.info(
-                "aviso de '%s' enviado a %s de %s inscrito(s); classe notificada: %s",
-                aviso.ibge,
-                enviados,
-                tentativas,
-                aviso.nova_classe,
-            )
-        else:
-            _log.warning(
-                "aviso de '%s' não chegou a ninguém (%s inscrito(s), %s falha(s)): "
-                "a classe notificada não foi gravada e o aviso será reenviado",
-                aviso.ibge,
-                tentativas,
-                falhas,
-            )
+    tentativas, enviados, falhas = await _enviar_para_um_municipio(
+        bot, conexao, aviso, site_url
+    )
+
+    if enviados > 0 or (tentativas > 0 and falhas == 0):
+        banco.atualizar_ultima_classe_notificada(
+            conexao, aviso.ibge, aviso.nova_classe, agora_utc
+        )
+        _log.info(
+            "aviso de '%s' enviado a %s de %s inscrito(s); classe notificada: %s",
+            aviso.ibge,
+            enviados,
+            tentativas,
+            aviso.nova_classe,
+        )
+    else:
+        _log.warning(
+            "aviso de '%s' não chegou a ninguém (%s inscrito(s), %s falha(s)): "
+            "a classe notificada não foi gravada e o aviso será reenviado",
+            aviso.ibge,
+            tentativas,
+            falhas,
+        )

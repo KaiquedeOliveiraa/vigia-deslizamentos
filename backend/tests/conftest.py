@@ -11,6 +11,7 @@ fixture registra o que `banco.abrir` devolveu e fecha ao fim de cada teste.
 from __future__ import annotations
 
 import sqlite3
+import threading
 
 import pytest
 
@@ -19,15 +20,21 @@ from app.modelos import banco
 
 @pytest.fixture(autouse=True)
 def _fechar_conexoes_sqlite(monkeypatch):
-    abertas: list[sqlite3.Connection] = []
+    abertas: list[tuple[int, sqlite3.Connection]] = []
     abrir_original = banco.abrir
 
     def abrir_e_registrar(caminho):
         conexao = abrir_original(caminho)
-        abertas.append(conexao)
+        abertas.append((threading.get_ident(), conexao))
         return conexao
 
     monkeypatch.setattr(banco, "abrir", abrir_e_registrar)
     yield
-    for conexao in abertas:
-        conexao.close()
+
+    # Só as conexões desta thread. O `sqlite3` recusa qualquer uso de uma
+    # conexão em outra thread, inclusive `close()`, e as abertas numa thread de
+    # trabalho (`app.main._executar_na_thread`) já são fechadas lá no `finally`.
+    thread_atual = threading.get_ident()
+    for thread_de_origem, conexao in abertas:
+        if thread_de_origem == thread_atual:
+            conexao.close()

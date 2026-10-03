@@ -27,6 +27,33 @@ CAMINHO_SCHEMA = Path(__file__).resolve().parent / "schema.sql"
 #: Formato de data-hora gravado no banco (ordena como texto).
 _FORMATO_DATA_HORA = "%Y-%m-%dT%H:%M:%SZ"
 
+#: Versão do schema, gravada em `PRAGMA user_version`. Subir este número ao
+#: mudar `schema.sql` **de forma incompatível** (coluna nova, tipo alterado,
+#: restrição nova).
+#:
+#: Existe porque `CREATE TABLE IF NOT EXISTS` não é camada de migração: num
+#: banco fora de versão ele passa batido, `abrir()` não falha, e o erro só
+#: aparece na primeira gravação — dentro do `except Exception` do job agendado,
+#: o que significa o pipeline parando de gravar e de avisar a cada 6 h, com
+#: nada no log além de um traceback genérico, enquanto o site segue servindo o
+#: último `indices.json` como se estivesse tudo bem. Falhar ruidosamente na
+#: subida é muito melhor.
+VERSAO_SCHEMA = 1
+
+#: `user_version` nasce em 0; um banco criado antes desta checagem também está
+#: em 0 e já tem o schema corrente. Por isso 0 é aceito como "novo ou anterior
+#: ao versionamento", e não como incompatível.
+_VERSAO_NAO_MARCADA = 0
+
+
+class SchemaIncompativelError(Exception):
+    """O banco está numa versão de schema que este código não sabe ler."""
+
+
+def versao_compativel(versao_encontrada: int) -> bool:
+    """Se um banco em `versao_encontrada` pode ser usado por este código."""
+    return versao_encontrada in (_VERSAO_NAO_MARCADA, VERSAO_SCHEMA)
+
 
 def _exigir_fuso(nome: str, momento: datetime) -> None:
     if momento.tzinfo is None or momento.utcoffset() is None:
@@ -53,11 +80,29 @@ def abrir(caminho: str | Path) -> sqlite3.Connection:
     Chamar de novo sobre o mesmo arquivo é seguro (`CREATE TABLE IF NOT
     EXISTS`). Uma conexão por thread — nunca compartilhe a mesma conexão
     entre threads.
+
+    Levanta `SchemaIncompativelError` se o `PRAGMA user_version` do arquivo não
+    for compatível com `VERSAO_SCHEMA`, em vez de abrir um banco que falharia na
+    primeira gravação.
     """
     conexao = sqlite3.connect(str(caminho), timeout=30)
-    conexao.execute("PRAGMA journal_mode=WAL")
-    conexao.executescript(CAMINHO_SCHEMA.read_text(encoding="utf-8"))
-    conexao.commit()
+    try:
+        conexao.execute("PRAGMA journal_mode=WAL")
+
+        versao = conexao.execute("PRAGMA user_version").fetchone()[0]
+        if not versao_compativel(versao):
+            raise SchemaIncompativelError(
+                f"o banco '{caminho}' está na versão de schema {versao} e este "
+                f"código espera a {VERSAO_SCHEMA}; não há camada de migração — "
+                "migre o arquivo ou aponte DB_PATH para outro"
+            )
+
+        conexao.executescript(CAMINHO_SCHEMA.read_text(encoding="utf-8"))
+        conexao.execute(f"PRAGMA user_version = {VERSAO_SCHEMA}")
+        conexao.commit()
+    except BaseException:
+        conexao.close()
+        raise
     return conexao
 
 
@@ -161,10 +206,17 @@ def historico(
 
 @dataclass(frozen=True)
 class IndiceAtual:
-    """Índice, classe e data/hora do cálculo mais recente de um município."""
+    """Índice, classe, dia-alvo e data/hora do cálculo mais recente de um município.
+
+    `dia_alvo` vai junto porque o `/status` tem de exibi-lo (RN11): quando o
+    município fica sem dados numa execução, o índice mais recente é o da
+    execução anterior, e sem o dia-alvo o leitor não sabe a que dia ele se
+    refere.
+    """
 
     indice: float
     classe: int
+    dia_alvo: date
     calculado_em: datetime
 
 
@@ -178,7 +230,7 @@ def indice_atual(conexao: sqlite3.Connection, ibge: str) -> IndiceAtual | None:
     """
     linha = conexao.execute(
         """
-        SELECT indice, classe, calculado_em
+        SELECT indice, classe, dia_alvo, calculado_em
         FROM indices
         WHERE ibge = ?
           AND calculado_em = (SELECT MAX(calculado_em) FROM indices WHERE ibge = ?)
@@ -192,7 +244,10 @@ def indice_atual(conexao: sqlite3.Connection, ibge: str) -> IndiceAtual | None:
         return None
 
     return IndiceAtual(
-        indice=linha[0], classe=linha[1], calculado_em=_data_hora_de_texto(linha[2])
+        indice=linha[0],
+        classe=linha[1],
+        dia_alvo=date.fromisoformat(linha[2]),
+        calculado_em=_data_hora_de_texto(linha[3]),
     )
 
 

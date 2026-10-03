@@ -11,13 +11,13 @@ apoio do site.
 Não exige token: a rota `/estacoes/T` é aberta. O que exige token é a chuva
 horária, usada só na comparação de conferência (`app/coleta/inmet.py`).
 
-**Leia isto antes de interpretar o campo `ibge`:** nenhuma estação automática do
+**Por que o campo se chama `ibge_referencia`:** nenhuma estação automática do
 INMET fica dentro dos seis municípios do projeto — a mais próxima operante está
-a ~61 km — e a resposta do INMET não traz código IBGE nenhum
-(`docs/decisoes/ensemble.md` §8). O `ibge` gravado é, portanto, o do município
-**mais próximo** dentro do raio de corte, e `distancia_km` registra a distância
-real. É uma estação de referência regional, que é o papel que o README atribui
-ao INMET ("comparação e validação na região"), não uma estação local.
+a ~30 km — e a resposta do INMET não traz código IBGE nenhum
+(`docs/decisoes/ensemble.md` §8). O código gravado é o do município **mais
+próximo** dentro do raio de corte, e `distancia_km` registra a distância real. É
+uma estação de referência regional, que é o papel que o README atribui ao INMET
+("comparação e validação na região"), não uma estação local.
 """
 
 from __future__ import annotations
@@ -48,7 +48,9 @@ CAMINHO_MUNICIPIOS = RAIZ_BACKEND / "config" / "municipios.json"
 def gerar(brutas: list[dict], municipios, raio_km: float) -> list[dict]:
     """Converte a resposta do INMET nos itens do `estacoes.json`, ordenados."""
     estacoes = associar_estacoes(brutas, municipios, raio_km=raio_km)
-    estacoes.sort(key=lambda estacao: (estacao.ibge, estacao.distancia_km))
+    estacoes.sort(
+        key=lambda estacao: (estacao.ibge_referencia, estacao.distancia_km)
+    )
     return [estacao_em_json(estacao) for estacao in estacoes]
 
 
@@ -77,7 +79,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"{len(itens)} estação(ões) gravada(s) em {argumentos.saida}")
     for item in itens:
         print(
-            f"  {item['codigo']} {item['nome']} -> {item['ibge']} "
+            f"  {item['codigo']} {item['nome']} -> {item['ibge_referencia']} "
             f"({item['distancia_km']} km)"
         )
     if not itens:
