@@ -11,6 +11,7 @@ import {
   maxEvolucao,
   maxPluviometro,
   serieMunicipio,
+  variacoesDiarias,
   type Area,
 } from "../lib/graficos";
 import { sentido } from "../lib/texto";
@@ -34,10 +35,11 @@ interface PropsEvolucao {
 /** Evolução do índice (RF06): faixas das classes, linha de alerta, demais municípios em cinza e o destaque. */
 export function Evolucao({ t, municipios, ibge, eixo, aoSelecionar }: PropsEvolucao) {
   const chips = useRef<(HTMLButtonElement | null)[]>([]);
-  const series = new Map(municipios.map((m) => [m.ibge, serieMunicipio(m, eixo.length)]));
+  const series = new Map(municipios.map((m) => [m.ibge, serieMunicipio(m, eixo)]));
   const max = maxEvolucao([...series.values()].flat().map((p) => p.indice));
   const destaque = municipios.find((m) => m.ibge === ibge)!;
   const coords = coordenadas(series.get(ibge)!, eixo, max, AREA);
+  const deltas = variacoesDiarias(coords.map((c) => c.ponto));
   const { esq, dir, largura, altura, topo, base } = AREA;
   const util = altura - topo - base;
   const y = (v: number) => topo + util - escala(v, max, util);
@@ -105,16 +107,16 @@ export function Evolucao({ t, municipios, ibge, eixo, aoSelecionar }: PropsEvolu
           <polyline className="main" points={pontos(coords)} />
           {coords.map((c, i) => {
             const n = classe(c.ponto.indice);
-            const anterior = coords[i - 1]?.ponto.indice;
-            const marca = anterior === undefined ? null : marcaClasse(anterior, c.ponto.indice);
+            const delta = deltas[i];
+            const marca = delta === null ? null : marcaClasse(c.ponto.indice - delta, c.ponto.indice);
             return (
               <g key={c.ponto.dia_alvo}>
                 <circle className="pt" cx={c.x} cy={c.y} r="6" style={{ fill: `var(--c${n})` }}>
                   <title>{t("{N}: {N} — {C}", { N: [formatarData(c.ponto.dia_alvo, "dia"), formatarIndice(c.ponto.indice)], C: infoClasse(n).nome })}</title>
                 </circle>
-                {anterior !== undefined && (
-                  <text className={`dl ${CLASSE_SENTIDO[sentido(c.ponto.indice - anterior)]}`} x={c.x} y={c.y - 13}>
-                    {formatarVariacao(c.ponto.indice - anterior)}
+                {delta !== null && (
+                  <text className={`dl ${CLASSE_SENTIDO[sentido(delta)]}`} x={c.x} y={c.y - 13}>
+                    {formatarVariacao(delta)}
                   </text>
                 )}
                 {marca && (
@@ -152,7 +154,7 @@ export function Evolucao({ t, municipios, ibge, eixo, aoSelecionar }: PropsEvolu
 
 /** Minigráfico da tabela: série do período com a linha de alerta. Decorativo: os valores estão nas outras colunas. */
 export function Minigrafico({ municipio, eixo }: { municipio: Municipio; eixo: string[] }) {
-  const serie = serieMunicipio(municipio, eixo.length);
+  const serie = serieMunicipio(municipio, eixo);
   const max = maxEvolucao(serie.map((p) => p.indice));
   const coords = coordenadas(serie, eixo, max, AREA_MINI);
   const { largura, altura, topo, base } = AREA_MINI;

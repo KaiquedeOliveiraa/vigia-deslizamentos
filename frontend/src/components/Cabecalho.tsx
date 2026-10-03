@@ -4,7 +4,7 @@ import { tradutor } from "../i18n";
 import { carregar, desatualizado, lerIndices, type Resultado } from "../lib/dados";
 import { formatarData, formatarDataHora, formatarHora } from "../lib/formato";
 import { lerPreferencias, salvarPreferencias, type Idioma } from "../lib/preferencias";
-import { rota } from "../lib/telas";
+import { rota, rotaComEstado } from "../lib/telas";
 import type { Indices } from "../lib/tipos";
 import JanelaTelegram, { DiscoTelegram } from "./JanelaTelegram";
 import PainelAcessibilidade from "./PainelAcessibilidade";
@@ -21,15 +21,21 @@ const IDIOMAS: [Idioma, string, string][] = [
   ["es", "ES", "Español"],
 ];
 
+const REAVALIAR_MS = 60_000;
+
 /** Marca, região, Telegram, idioma, acessibilidade e o carimbo dia-alvo/atualização (RN11, RN12). */
 export default function Cabecalho({ lang, tela, municipios }: Props) {
   const t = tradutor(lang);
   const [telegram, setTelegram] = useState(false);
   const [acessibilidade, setAcessibilidade] = useState(false);
   const [indices, setIndices] = useState<Resultado<Indices>>();
+  const [agora, setAgora] = useState(() => new Date());
 
   useEffect(() => {
     carregar("indices.json", lerIndices).then(setIndices);
+    // RN12 com a aba aberta: reavalia o atraso a cada minuto.
+    const timer = setInterval(() => setAgora(new Date()), REAVALIAR_MS);
+    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -66,7 +72,10 @@ export default function Cabecalho({ lang, tela, municipios }: Props) {
               hrefLang={valor === "es" ? "es" : "pt-BR"}
               lang={valor === "es" ? "es" : "pt-BR"}
               aria-current={valor === lang ? "true" : undefined}
-              onClick={() => salvarPreferencias({ ...lerPreferencias(), lang: valor })}
+              onClick={(e) => {
+                e.currentTarget.href = rotaComEstado(tela, valor, location);
+                salvarPreferencias({ ...lerPreferencias(), lang: valor });
+              }}
             >
               <abbr title={nome}>{sigla}</abbr>
             </a>
@@ -98,7 +107,7 @@ export default function Cabecalho({ lang, tela, municipios }: Props) {
           )}
         </p>
       </header>
-      {indices?.ok && desatualizado(indices.dados.gerado_em, new Date()) && (
+      {indices?.ok && desatualizado(indices.dados.gerado_em, agora) && (
         <div className="faixa-aviso" role="status">
           <TriangleAlert aria-hidden="true" />
           {t("Dados desatualizados: a última atualização foi em {N}. Os valores podem não refletir a situação atual.", {

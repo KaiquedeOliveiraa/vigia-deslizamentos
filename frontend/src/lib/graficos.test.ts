@@ -12,7 +12,7 @@ import {
   maxEvolucao,
   maxPluviometro,
   serieMunicipio,
-  variacoes,
+  variacoesDiarias,
 } from "./graficos";
 
 const municipio = (
@@ -35,10 +35,7 @@ const municipio = (
   chuva_acum_mm: { "24h": chuva24h, "48h": 0, "72h": 0, "96h": 0 },
 });
 
-const historico15: [string, number][] = Array.from({ length: 15 }, (_, i) => [
-  `2026-09-${String(17 + i).padStart(2, "0")}`,
-  i / 10,
-]);
+const historico15: [string, number][] = diasEixo("2026-10-01", 15).map((dia, i) => [dia, i / 10]);
 
 describe("maxPluviometro", () => {
   it("maior valor entre 150 mm e limiar × 1,2", () => {
@@ -89,29 +86,49 @@ describe("marcaClasse", () => {
 describe("serieMunicipio", () => {
   const m = municipio("4200001", "A", { indice: 2.0, efr_mm: 50 }, historico15);
 
-  it("últimos N dias do historico seguidos do D0", () => {
-    const serie = serieMunicipio(m, 7);
+  it("pontos do historico e do D0 dentro dos dias do eixo", () => {
+    const serie = serieMunicipio(m, diasEixo("2026-10-02", 7));
     expect(serie).toHaveLength(7);
     expect(serie[0].dia_alvo).toBe("2026-09-26");
     expect(serie[6]).toEqual({ dia_alvo: "2026-10-02", indice: 2.0 });
   });
 
   it("5 e 15 dias", () => {
-    expect(serieMunicipio(m, 5)).toHaveLength(5);
-    expect(serieMunicipio(m, 15)[0].dia_alvo).toBe("2026-09-18");
+    expect(serieMunicipio(m, diasEixo("2026-10-02", 5))).toHaveLength(5);
+    expect(serieMunicipio(m, diasEixo("2026-10-02", 15))[0].dia_alvo).toBe("2026-09-18");
   });
 
   it("historico curto devolve o que houver", () => {
-    expect(serieMunicipio(municipio("1", "B", { indice: 1, efr_mm: 0 }, [["2026-10-01", 0.5]]), 7)).toHaveLength(2);
+    expect(serieMunicipio(municipio("1", "B", { indice: 1, efr_mm: 0 }, [["2026-10-01", 0.5]]), diasEixo("2026-10-02", 7))).toHaveLength(2);
+  });
+
+  it("com falhas no historico, conta dias e não pontos", () => {
+    const comFalha = municipio("1", "B", { indice: 1, efr_mm: 0 }, [["2026-09-20", 3], ["2026-09-29", 0.5], ["2026-10-01", 0.6]]);
+    expect(serieMunicipio(comFalha, diasEixo("2026-10-02", 3)).map((p) => p.dia_alvo)).toEqual(["2026-10-01", "2026-10-02"]);
   });
 });
 
-describe("variacoes", () => {
-  it("diferença de cada dia para o anterior", () => {
-    const v = variacoes([0.5, 0.8, 0.6]);
-    expect(v).toHaveLength(2);
-    expect(v[0]).toBeCloseTo(0.3);
-    expect(v[1]).toBeCloseTo(-0.2);
+describe("variacoesDiarias", () => {
+  it("diferença para o ponto anterior quando ele é o dia anterior", () => {
+    const v = variacoesDiarias([
+      { dia_alvo: "2026-09-30", indice: 0.5 },
+      { dia_alvo: "2026-10-01", indice: 0.8 },
+      { dia_alvo: "2026-10-02", indice: 0.6 },
+    ]);
+    expect(v).toHaveLength(3);
+    expect(v[0]).toBeNull();
+    expect(v[1]).toBeCloseTo(0.3);
+    expect(v[2]).toBeCloseTo(-0.2);
+  });
+
+  it("depois de uma falha no historico não há variação diária", () => {
+    expect(
+      variacoesDiarias([
+        { dia_alvo: "2026-09-28", indice: 0.5 },
+        { dia_alvo: "2026-09-30", indice: 0.8 },
+        { dia_alvo: "2026-10-01", indice: 0.6 },
+      ])[1],
+    ).toBeNull();
   });
 });
 
@@ -143,6 +160,14 @@ describe("indicadores", () => {
   it("sem municípios com dados não há máximos", () => {
     const r = indicadores({ ...indices, municipios: [] });
     expect(r).toEqual({ monitorados: 1, emAlerta: 0, chuvaEfetivaMax: null, pico: null });
+  });
+
+  it("pico da semana conta dias, não pontos: falhas no historico não puxam dias antigos", () => {
+    const r = indicadores({
+      ...indices,
+      municipios: [municipio("4200001", "Ibirama", { indice: 1.0, efr_mm: 72 }, [["2026-09-20", 3.9], ["2026-10-01", 1.2]])],
+    });
+    expect(r.pico?.dia_alvo).toBe("2026-10-01");
   });
 });
 

@@ -11,7 +11,7 @@ const LIMITE_MS = 12 * 60 * 60 * 1000;
 
 const CAMPOS_RAIZ = ["gerado_em", "dia_alvo_d0", "municipios_sem_dados", "municipios"];
 const CAMPOS_MUNICIPIO = ["ibge", "nome", "limiar_mm", "mv_h", "dias", "historico", "chuva_acum_mm"];
-const CAMPOS_DIA = ["dia_alvo", "d", "indice", "classe", "efr_mm", "rtotal_mm", "prob"];
+const CAMPOS_DIA = ["dia_alvo", "d", "indice", "classe", "efr_mm", "rtotal_mm", "n_membros", "prob"];
 const CAMPOS_OCORRENCIA = ["ibge", "data", "tipo", "descricao", "fonte"];
 const CAMPOS_ESTACAO = ["codigo", "nome", "ibge_referencia", "distancia_km", "lat", "lon"];
 const CAMPOS_CONTATO = ["ibge", "nome", "verificado"];

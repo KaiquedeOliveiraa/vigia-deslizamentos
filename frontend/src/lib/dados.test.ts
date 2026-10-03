@@ -36,6 +36,12 @@ describe("lerIndices", () => {
     expect(lerIndices(null).ok).toBe(false);
   });
 
+  it("dia sem n_membros (mostrado na tela) → erro", () => {
+    const sem = copia(indices) as { municipios: { dias: Record<string, unknown>[] }[] };
+    delete sem.municipios[0].dias[0].n_membros;
+    expect(lerIndices(sem)).toEqual({ ok: false, erro: expect.stringContaining("n_membros") });
+  });
+
   it("municipios ou dias que não são listas → erro, sem lançar", () => {
     expect(lerIndices({ ...copia(indices), municipios: {} }).ok).toBe(false);
     const dias = copia(indices) as { municipios: Record<string, unknown>[] };

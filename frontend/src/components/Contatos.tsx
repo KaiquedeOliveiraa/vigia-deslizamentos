@@ -8,6 +8,7 @@ import type { Idioma } from "../lib/preferencias";
 import type { Contato } from "../lib/tipos";
 import { anunciar } from "./anunciar";
 import BannerTelegram from "./BannerTelegram";
+import { copiarTexto } from "./copiar";
 
 interface Props {
   lang: Idioma;
@@ -23,21 +24,6 @@ const EMERGENCIAS = [
 
 const semMovimento = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/** Fora de contexto seguro não há navigator.clipboard: copia pela seleção do texto. */
-async function copiarTexto(texto: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(texto);
-    return true;
-  } catch {
-    const campo = Object.assign(document.createElement("textarea"), { value: texto });
-    document.body.append(campo);
-    campo.select();
-    const ok = document.execCommand("copy");
-    campo.remove();
-    return ok;
-  }
-}
-
 /** Contatos (RF12): números de emergência e a Defesa Civil de cada município (só verificados, RN09). */
 export default function Contatos({ lang, municipios }: Props) {
   const t = tradutor(lang);
@@ -49,6 +35,13 @@ export default function Contatos({ lang, municipios }: Props) {
     carregar("contatos.json", lerContatos).then((r) => r.ok && setContatos(r.dados));
   }, []);
 
+  // Depois de renderizar: o aviso só existe no DOM depois da escolha.
+  useEffect(() => {
+    if (!escolhido) return;
+    const alvo = document.getElementById("aviso-municipio") ?? document.getElementById(`cc-${escolhido}`);
+    alvo?.scrollIntoView({ block: "nearest", behavior: semMovimento() ? "auto" : "smooth" });
+  }, [escolhido]);
+
   const nomeEscolhido = municipios.find((m) => m.ibge === escolhido)?.nome ?? "";
   const filtro = filtrarContatos(t, contatos, escolhido, nomeEscolhido);
 
@@ -59,8 +52,6 @@ export default function Contatos({ lang, municipios }: Props) {
     const nome = municipios.find((m) => m.ibge === ibge)!.nome;
     const aviso = filtrarContatos(t, contatos, ibge, nome).aviso;
     anunciar(aviso ?? t("Mostrando {M}", { M: nome }));
-    const alvo = document.getElementById(aviso ? "aviso-municipio" : `cc-${ibge}`);
-    requestAnimationFrame(() => alvo?.scrollIntoView({ block: "nearest", behavior: semMovimento() ? "auto" : "smooth" }));
   };
 
   const copiar = async (c: Contato) => {

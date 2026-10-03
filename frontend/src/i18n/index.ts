@@ -12,7 +12,7 @@ const DICIONARIO: Record<string, string> = ES;
 
 // Nomes mais longos primeiro: "muito alto" antes de "alto".
 const NOMES_CLASSE = CLASSES.map((c) => c.nome).sort((a, b) => b.length - a.length);
-const RE_CLASSE = new RegExp(`(?<![\p{L}])(${NOMES_CLASSE.join("|")})(?![\p{L}])`, "u");
+export const RE_CLASSE = new RegExp(String.raw`(?<!\p{L})(${NOMES_CLASSE.join("|")})(?!\p{L})`, "u");
 
 /** Frase já montada por src/lib com o nome da classe dentro ("↑ moderado") → modelo com {C}. */
 function comoModelo(frase: string): [string, Vars] | undefined {

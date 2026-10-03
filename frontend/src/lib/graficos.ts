@@ -84,16 +84,17 @@ export function marcaClasse(anterior: number, atual: number): string | null {
 
 const d0 = (m: Municipio) => m.dias.find((d) => d.d === 0);
 
-/** Últimos `dias` pontos: historico (mais antigo → mais recente) seguido do D0. */
-export function serieMunicipio(m: Municipio, dias: number): Ponto[] {
+/** Pontos do historico e do D0 cujos dias estão no `eixo` (diasEixo): falhas no historico não puxam dias mais antigos. */
+export function serieMunicipio(m: Municipio, eixo: readonly string[]): Ponto[] {
   const atual = d0(m);
   const pontos: Ponto[] = m.historico.map(({ dia_alvo, indice }) => ({ dia_alvo, indice }));
   if (atual) pontos.push({ dia_alvo: atual.dia_alvo, indice: atual.indice });
-  return pontos.slice(-dias);
+  return pontos.filter((p) => eixo.includes(p.dia_alvo));
 }
 
-/** Diferença de cada valor para o anterior (n − 1 itens). */
-export const variacoes = (valores: number[]): number[] => valores.slice(1).map((v, i) => v - valores[i]);
+/** Variação de cada ponto para o anterior, só quando o anterior é o dia anterior (senão `null`), como `tendencia`. */
+export const variacoesDiarias = (serie: readonly Ponto[]): (number | null)[] =>
+  serie.map((p, i) => (i > 0 && serie[i - 1].dia_alvo === diasEixo(p.dia_alvo, 2)[0] ? p.indice - serie[i - 1].indice : null));
 
 export interface Indicadores {
   monitorados: number;
@@ -114,7 +115,7 @@ export function indicadores(indices: Indices): Indicadores {
     if (atual && emAlerta(atual.indice)) alerta++;
     if (atual && (!chuvaEfetivaMax || atual.efr_mm > chuvaEfetivaMax.efr_mm))
       chuvaEfetivaMax = { efr_mm: atual.efr_mm, nome: m.nome };
-    for (const p of serieMunicipio(m, DIAS_SEMANA))
+    for (const p of serieMunicipio(m, diasEixo(indices.dia_alvo_d0, DIAS_SEMANA)))
       if (!pico || p.indice > pico.indice) pico = { indice: p.indice, nome: m.nome, dia_alvo: p.dia_alvo };
   }
   return {

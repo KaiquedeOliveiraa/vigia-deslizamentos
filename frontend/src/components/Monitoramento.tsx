@@ -14,6 +14,7 @@ import { textoCompartilhar } from "../lib/texto";
 import type { Indices } from "../lib/tipos";
 import { anunciar } from "./anunciar";
 import Busca from "./Busca";
+import { copiarTexto } from "./copiar";
 import JanelaTelegram, { DiscoTelegram } from "./JanelaTelegram";
 import Legenda from "./Legenda";
 import Mapa, { type MapaApi } from "./Mapa";
@@ -66,9 +67,10 @@ export default function Monitoramento({ lang }: { lang: Idioma }) {
       await navigator.share({ title: "VIGIA", text: texto, url }).catch(() => {});
       return;
     }
-    await navigator.clipboard?.writeText(`${texto} ${url}`).catch(() => {});
-    setToast(aviso);
-    anunciar(aviso);
+    const copiou = await copiarTexto(`${texto} ${url}`);
+    const mensagem = copiou ? aviso : t("Não foi possível copiar o link.");
+    setToast(mensagem);
+    anunciar(mensagem);
   }
 
   return (

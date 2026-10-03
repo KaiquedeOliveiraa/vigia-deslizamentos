@@ -9,7 +9,7 @@ import {
   type Idioma,
   type Preferencias,
 } from "../lib/preferencias";
-import { rota } from "../lib/telas";
+import { rotaComEstado } from "../lib/telas";
 import { anunciar } from "./anunciar";
 import Dialogo from "./Dialogo";
 
@@ -52,7 +52,7 @@ export default function PainelAcessibilidade({ lang, tela, aberto, aoFechar }: P
     const nova = { ...pref, [chave]: valor };
     salvarPreferencias(nova);
     if (chave === "lang") {
-      if (valor !== lang) location.assign(rota(tela, valor as Idioma));
+      if (valor !== lang) location.assign(rotaComEstado(tela, valor as Idioma, location));
       return;
     }
     setPref(nova);

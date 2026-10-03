@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { marcaClasse } from "../lib/graficos";
 import { TELAS } from "../lib/telas";
 import ES from "./es.json";
-import { tradutor } from "./index";
+import { RE_CLASSE, tradutor } from "./index";
 
 const pt = tradutor("pt");
 const es = tradutor("es");
@@ -27,6 +27,13 @@ describe("t", () => {
 
   it("frase ausente do dicionário volta em português", () => {
     expect(es("Frase que não existe {N}", { N: "3" })).toBe("Frase que não existe 3");
+  });
+
+  it("nome de classe dentro de outra palavra não é classe", () => {
+    expect(RE_CLASSE.exec("Planalto Alegre")).toBeNull();
+    expect(RE_CLASSE.exec("Lalto")).toBeNull();
+    expect(es("Planalto Alegre")).toBe("Planalto Alegre");
+    expect(es("↑ alto")).toBe("↑ alto");
   });
 
   it("traduz os textos devolvidos por src/lib", () => {

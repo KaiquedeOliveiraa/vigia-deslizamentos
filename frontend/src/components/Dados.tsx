@@ -14,7 +14,7 @@ import {
   formatarPercentual,
   formatarVariacao,
 } from "../lib/formato";
-import { diasEixo, etiquetaChuva, indicadores, serieMunicipio, variacoes } from "../lib/graficos";
+import { diasEixo, etiquetaChuva, indicadores, serieMunicipio, variacoesDiarias } from "../lib/graficos";
 import { municipioInicial, variaveis } from "../lib/monitoramento";
 import type { Idioma } from "../lib/preferencias";
 import { tendencia } from "../lib/texto";
@@ -194,6 +194,7 @@ function Tabela({ t, municipios, ibge, eixo, aoSelecionar }: PropsTabela) {
               const dia = d0(m);
               const n = classe(dia.indice);
               const tend = tendencia(dia.indice, dia.dia_alvo, m.historico);
+              const delta = variacoesDiarias(serieMunicipio(m, diasEixo(dia.dia_alvo, 2))).at(-1);
               const Icone = tend ? ICONE_TENDENCIA[tend] : ArrowRight;
               const v = variaveis(m, dia);
               return (
@@ -216,7 +217,7 @@ function Tabela({ t, municipios, ibge, eixo, aoSelecionar }: PropsTabela) {
                   <td className="n">
                     <span className={`trend ${tend ? CLASSE_TENDENCIA[tend] : ""}`}>
                       <Icone aria-hidden="true" />
-                      {tend ? formatarVariacao(variacoes(serieMunicipio(m, 2).map((p) => p.indice))[0]) : "—"}
+                      {delta != null ? formatarVariacao(delta) : "—"}
                     </span>
                   </td>
                   <td>

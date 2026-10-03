@@ -23,3 +23,11 @@ export function rota(tela: string, lang: Idioma, base: string = import.meta.env.
   const partes = [base, lang === "es" ? "es" : "", tela].map((p) => p.replace(/^\/+|\/+$/g, "")).filter(Boolean);
   return `/${partes.map((p) => `${p}/`).join("")}`;
 }
+
+/** Troca de idioma sem perder o estado da URL (?municipio=, #âncora). */
+export const rotaComEstado = (
+  tela: string,
+  lang: Idioma,
+  local: Pick<Location, "search" | "hash">,
+  base: string = import.meta.env.BASE_URL,
+): string => rota(tela, lang, base) + local.search + local.hash;
