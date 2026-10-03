@@ -382,6 +382,28 @@ astro-island {
   padding: 10px 0;
 }
 
+/* ---------- painéis laterais ---------- */
+.side {
+  background: var(--surface-000);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  overflow: auto;
+  flex: none;
+}
+
+.disc {
+  margin-top: auto;
+  background: var(--surface-050);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--ink-2);
+}
+
 /* ---------- botões ---------- */
 .btn {
   display: inline-flex;
@@ -417,6 +439,11 @@ astro-island {
 .btn svg {
   width: 16px;
   height: 16px;
+}
+
+.btn.tgbtn {
+  justify-content: flex-start;
+  width: 100%;
 }
 
 .seg {
