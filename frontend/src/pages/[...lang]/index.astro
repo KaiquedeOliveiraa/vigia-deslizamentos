@@ -1,0 +1,10 @@
+---
+import Base from "../../layouts/Base.astro";
+import { caminhosIdioma, idioma, tradutor } from "../../i18n";
+
+export const getStaticPaths = caminhosIdioma;
+const t = tradutor(idioma(Astro.params.lang));
+---
+<Base tela="">
+  <h1 class="sr-only">{t("Monitoramento do risco de deslizamento")}</h1>
+</Base>

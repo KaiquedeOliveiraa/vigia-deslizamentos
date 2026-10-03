@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { urlDados } from "./config";
+import { botTelegram, linkTelegram, urlDados } from "./config";
 
 describe("urlDados", () => {
   it("junta base e pasta de dados sem barras duplicadas", () => {
@@ -9,5 +9,18 @@ describe("urlDados", () => {
 
   it("usa data/ quando PUBLIC_DADOS_URL não está definida", () => {
     expect(urlDados("contatos.json", "/", undefined)).toBe("/data/contatos.json");
+  });
+});
+
+describe("Telegram", () => {
+  it("nome do bot vem de PUBLIC_TELEGRAM_BOT, com padrão", () => {
+    expect(botTelegram(undefined)).toBe("VigiaDeslizamentosBot");
+    expect(botTelegram("")).toBe("VigiaDeslizamentosBot");
+    expect(botTelegram("OutroBot")).toBe("OutroBot");
+  });
+
+  it("link do bot, com ?start=<ibge> quando aberto de um município", () => {
+    expect(linkTelegram("VigiaDeslizamentosBot")).toBe("https://t.me/VigiaDeslizamentosBot");
+    expect(linkTelegram("VigiaDeslizamentosBot", "4206900")).toBe("https://t.me/VigiaDeslizamentosBot?start=4206900");
   });
 });

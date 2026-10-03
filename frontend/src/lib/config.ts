@@ -7,3 +7,11 @@ export function urlDados(
   const partes = [base, dados ?? "data/", arquivo].map((p) => p.replace(/^\/+|\/+$/g, "")).filter(Boolean);
   return "/" + partes.join("/");
 }
+
+/** Nome do bot do Telegram (PUBLIC_TELEGRAM_BOT); provisório: VigiaDeslizamentosBot. */
+export const botTelegram = (nome: string | undefined = import.meta.env.PUBLIC_TELEGRAM_BOT): string =>
+  nome || "VigiaDeslizamentosBot";
+
+/** Link do bot; com `ibge`, o bot já sugere aquele município. */
+export const linkTelegram = (bot: string, ibge?: string): string =>
+  `https://t.me/${bot}${ibge ? `?start=${ibge}` : ""}`;
