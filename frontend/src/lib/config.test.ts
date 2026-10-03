@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { botTelegram, linkTelegram, urlDados } from "./config";
+import { botTelegram, iframeSC, linkTelegram, urlDados } from "./config";
 
 describe("urlDados", () => {
   it("junta base e pasta de dados sem barras duplicadas", () => {
@@ -22,5 +22,15 @@ describe("Telegram", () => {
   it("link do bot, com ?start=<ibge> quando aberto de um município", () => {
     expect(linkTelegram("VigiaDeslizamentosBot")).toBe("https://t.me/VigiaDeslizamentosBot");
     expect(linkTelegram("VigiaDeslizamentosBot", "4206900")).toBe("https://t.me/VigiaDeslizamentosBot?start=4206900");
+  });
+});
+
+describe("iframeSC", () => {
+  it("só exibe o iframe com PUBLIC_SC_IFRAME=true (RN10: autorização)", () => {
+    expect(iframeSC("true")).toBe(true);
+    expect(iframeSC(undefined)).toBe(false);
+    expect(iframeSC("")).toBe(false);
+    expect(iframeSC("false")).toBe(false);
+    expect(iframeSC("1")).toBe(false);
   });
 });

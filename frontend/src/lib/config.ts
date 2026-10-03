@@ -15,3 +15,6 @@ export const botTelegram = (nome: string | undefined = import.meta.env.PUBLIC_TE
 /** Link do bot; com `ibge`, o bot já sugere aquele município. */
 export const linkTelegram = (bot: string, ibge?: string): string =>
   `https://t.me/${bot}${ibge ? `?start=${ibge}` : ""}`;
+
+/** Iframe do mapa da Defesa Civil de SC: só com PUBLIC_SC_IFRAME=true, depois da autorização (RN10). */
+export const iframeSC = (flag: string | undefined = import.meta.env.PUBLIC_SC_IFRAME): boolean => flag === "true";

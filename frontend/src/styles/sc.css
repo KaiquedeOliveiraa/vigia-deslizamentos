@@ -1,0 +1,142 @@
+/* Tela Monitoramento SC (protótipo: pages/sc.css, sem a checklist do time). */
+
+.sc {
+  min-height: 100%;
+  padding: 24px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--surface-100);
+}
+
+.sc .card {
+  background: var(--surface-000);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--nav-900);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+
+.sc .card h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 6px;
+  font-size: 20px;
+  color: var(--ink-brand);
+}
+
+.sc .card h1 svg {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+
+.sc .card p {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--ink-2);
+}
+
+.sc .row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.frame {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--surface-050);
+}
+
+.frame .bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-000);
+  font-size: 13px;
+}
+
+.frame .bar svg {
+  width: 18px;
+  height: 18px;
+  color: var(--ink-brand);
+}
+
+.frame .bar b {
+  color: var(--ink-brand);
+}
+
+.frame .bar .mono {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.frame .area {
+  display: block;
+  width: 100%;
+  height: 520px;
+  border: 0;
+  background: var(--surface-000);
+}
+
+.frame .fallback {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  min-height: 520px;
+  padding: 40px;
+  text-align: center;
+  background: var(--surface-000);
+}
+
+.fallback h2 {
+  margin: 0 0 8px;
+  font-size: 17px;
+  color: var(--ink-brand);
+}
+
+.fallback p {
+  max-width: 420px;
+  margin: 0 auto 16px;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--ink-2);
+}
+
+.frame .foot {
+  padding: 8px 14px;
+  font-size: 11px;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  background: var(--surface-000);
+}
+
+.frame .foot a {
+  color: var(--ink-brand);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .sc {
+    padding: 16px;
+  }
+
+  .frame .area {
+    height: 70vh;
+    height: 70dvh;
+  }
+
+  .frame .fallback {
+    min-height: 0;
+    padding: 28px 20px;
+  }
+}
