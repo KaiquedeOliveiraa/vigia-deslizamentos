@@ -7,6 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "gerar:geojson": "node scripts/gerar-geojson.mjs"
   },
   "dependencies": {
