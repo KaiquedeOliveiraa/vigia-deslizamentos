@@ -1,0 +1,30 @@
+[
+  {
+    "ibge": "4206900",
+    "data": "2023-10-05",
+    "tipo": "deslizamento",
+    "descricao": "Deslizamento de encosta na área urbana após chuva persistente; via interditada.",
+    "fonte": "Defesa Civil de Ibirama"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2023-10-06",
+    "tipo": "decreto de emergência",
+    "descricao": "Situação de emergência decretada por chuvas intensas.",
+    "fonte": "S2iD"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2020-12-17",
+    "tipo": "deslizamento",
+    "descricao": "Movimentos de massa e enxurrada após chuva extrema na madrugada.",
+    "fonte": "S2iD"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2022-11-30",
+    "tipo": "deslizamento",
+    "descricao": "Queda de barreira em estrada do interior.",
+    "fonte": "Defesa Civil de SC"
+  }
+]
