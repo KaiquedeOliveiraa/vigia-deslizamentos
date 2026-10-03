@@ -386,7 +386,7 @@
   height: 22px;
   border-radius: 50%;
   background: var(--status-ok);
-  color: #fff;
+  color: var(--on-status-ok);
   display: none;
   place-items: center;
 }

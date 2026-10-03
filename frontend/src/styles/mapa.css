@@ -563,7 +563,15 @@
 @media (pointer: coarse) {
   .zoom button,
   .prevs .ctl button,
-  .layers button {
+  .layers button,
+  .prevs label,
+  .leg .foot .seg button {
+    min-height: 44px;
+  }
+
+  .leg .lockb,
+  .leg .strip {
+    width: 44px;
     min-height: 44px;
   }
 

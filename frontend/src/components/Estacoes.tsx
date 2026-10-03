@@ -3,12 +3,13 @@ import { MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import geojson from "../data/municipios.geojson?raw";
 import { tradutor } from "../i18n";
-import { carregar, lerEstacoes } from "../lib/dados";
+import { carregar, lerEstacoes, type Resultado } from "../lib/dados";
 import { ordenarPorDistancia, rotuloEstacao, textoDistancia } from "../lib/estacoes";
 import { formatarCoord } from "../lib/formato";
 import type { FeicaoMunicipio } from "../lib/mapa";
 import type { Idioma } from "../lib/preferencias";
 import type { Estacao } from "../lib/tipos";
+import EstadoCarregamento from "./EstadoCarregamento";
 import Mapa, { type Pino } from "./Mapa";
 
 const NOMES = new Map((JSON.parse(geojson).features as FeicaoMunicipio[]).map((f) => [f.properties.ibge, f.properties.nome]));
@@ -17,15 +18,16 @@ const nome = (ibge: string) => NOMES.get(ibge) ?? ibge;
 /** Estações automáticas do INMET da região (RF09): pins no mapa em branco e lista à direita. */
 export default function Estacoes({ lang }: { lang: Idioma }) {
   const t = tradutor(lang);
-  const [estacoes, setEstacoes] = useState<Estacao[]>();
+  const [carga, setCarga] = useState<Resultado<Estacao[]>>();
   const [selecionada, setSelecionada] = useState<string | null>(null);
 
   useEffect(() => {
-    carregar("estacoes.json", lerEstacoes).then((r) => r.ok && setEstacoes(ordenarPorDistancia(r.dados)));
+    carregar("estacoes.json", lerEstacoes).then(setCarga);
   }, []);
 
-  if (!estacoes) return null;
+  if (!carga?.ok) return <EstadoCarregamento t={t} falhou={!!carga} />;
 
+  const estacoes = ordenarPorDistancia(carga.dados);
   const alternar = (codigo: string) => setSelecionada((atual) => (atual === codigo ? null : codigo));
   const distancia = (e: Estacao) => textoDistancia(t, e.distancia_km, nome(e.ibge_referencia));
   const pinos: Pino[] = estacoes.map((e) => ({
@@ -38,7 +40,7 @@ export default function Estacoes({ lang }: { lang: Idioma }) {
         <b>{e.nome}</b>
         <span>{distancia(e)}</span>
         <span>INMET {e.codigo}</span>
-        <span className="mono">{formatarCoord(e.lat, e.lon)}</span>
+        <span className="mono">{formatarCoord(e.lat, e.lon, t)}</span>
       </>
     ),
   }));
@@ -67,7 +69,7 @@ export default function Estacoes({ lang }: { lang: Idioma }) {
                   <small>
                     {distancia(e)} · INMET {e.codigo}
                   </small>
-                  <small className="mono">{formatarCoord(e.lat, e.lon)}</small>
+                  <small className="mono">{formatarCoord(e.lat, e.lon, t)}</small>
                 </span>
               </button>
             </li>

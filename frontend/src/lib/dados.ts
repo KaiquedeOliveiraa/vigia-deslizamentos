@@ -71,6 +71,19 @@ export function estadoMunicipio(indices: Indices, ibge: string): EstadoMunicipio
   return municipio ? { estado: "ok", municipio } : { estado: "sem dados" };
 }
 
+export interface NomeMunicipio {
+  ibge: string;
+  nome: string;
+}
+
+/** Tela de dados: municípios com D0 e os "sem dados" (em municipios_sem_dados ou sem D0), com o nome de `nomes`. */
+export function separarPorDados(indices: Indices, nomes: readonly NomeMunicipio[]): { comDados: Municipio[]; semDados: NomeMunicipio[] } {
+  const temDados = (m: Municipio) => !indices.municipios_sem_dados.includes(m.ibge) && m.dias.some((d) => d.d === 0);
+  const nome = (ibge: string) => nomes.find((n) => n.ibge === ibge)?.nome ?? indices.municipios.find((m) => m.ibge === ibge)?.nome ?? ibge;
+  const semDados = [...new Set([...indices.municipios_sem_dados, ...indices.municipios.filter((m) => !temDados(m)).map((m) => m.ibge)])];
+  return { comDados: indices.municipios.filter(temDados), semDados: semDados.map((ibge) => ({ ibge, nome: nome(ibge) })) };
+}
+
 /** Busca `arquivo` em urlDados e aplica `ler`; nunca lança. `buscar` é injetado para testar sem rede. */
 export async function carregar<T>(
   arquivo: string,

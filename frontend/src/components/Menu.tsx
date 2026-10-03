@@ -61,14 +61,13 @@ export default function Menu({ lang, tela }: Props) {
                 href={rota(r, lang)}
                 className={`item${ativo ? " on" : ""}`}
                 aria-current={ativo ? "page" : undefined}
-                aria-label={t(nome)}
               >
                 <Icone aria-hidden="true" />
-                <span className="full" aria-hidden="true">
-                  {t(nome)}
-                </span>
-                <span className="short" aria-hidden="true">
+                <span className="full">{t(nome)}</span>
+                {/* Celular: o nome acessível começa pelo rótulo curto visível (WCAG 2.5.3). */}
+                <span className="short">
                   {t(curto)}
+                  {curto !== nome && <span className="sr-only"> — {t(nome)}</span>}
                 </span>
                 <em className="tip" aria-hidden="true">
                   {t(nome)}

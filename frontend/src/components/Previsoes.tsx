@@ -22,23 +22,26 @@ export default function Previsoes({ lang, dias, d, aoMudar }: Props) {
   const nome = useId();
   const [tocando, setTocando] = useState(false);
 
+  // Só passos manuais são anunciados: na reprodução, o leitor de tela ouviria um dia a cada 1,1 s.
   function ir(novo: number) {
     aoMudar(novo);
     const data = formatarData(dias[novo], "curto");
     anunciar(novo ? t("Previsão para {N}", { N: data }) : t("Hoje, {N}", { N: data }));
   }
   const passo = (p: number) => ir(passoDia(d, p, dias.length));
+  const avancarCalado = () => aoMudar(passoDia(d, 1, dias.length));
 
   // Um passo por vez: o timer some ao pausar, ao mudar de dia e ao sair da tela.
   useEffect(() => {
     if (!tocando) return;
-    const timer = setTimeout(() => passo(1), INTERVALO_MS);
+    const timer = setTimeout(avancarCalado, INTERVALO_MS);
     return () => clearTimeout(timer);
   }, [tocando, d]);
 
   function alternar() {
-    if (!tocando) passo(1);
+    if (!tocando) avancarCalado();
     setTocando(!tocando);
+    anunciar(t(tocando ? "Previsões pausadas" : "Reproduzindo as previsões"));
   }
 
   return (

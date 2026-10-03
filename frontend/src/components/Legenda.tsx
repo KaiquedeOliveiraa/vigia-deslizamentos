@@ -9,14 +9,14 @@ import SeloClasse from "./SeloClasse";
 
 const DO_MAIOR_RISCO = [...CLASSES].reverse();
 
-/** Legenda recolhida numa faixa de cores; abre com hover, foco ou toque; o cadeado a mantém aberta. */
+/** Legenda recolhida numa faixa de cores; abre com hover, clique, toque, Enter ou Espaço; o cadeado a mantém aberta. */
 export default function Legenda({ lang }: { lang: Idioma }) {
   const t = tradutor(lang);
   const [aberta, setAberta] = useState(false);
   const [fixada, setFixada] = useState(false);
   const [paleta, setPaleta] = useState<Paleta>("geo");
   const raiz = useRef<HTMLDivElement>(null);
-  const cadeado = useRef<HTMLButtonElement>(null);
+  const faixa = useRef<HTMLButtonElement>(null);
   const fechar = useRef<HTMLButtonElement>(null);
 
   // A paleta vive na classe do <html>; o painel de acessibilidade também a troca.
@@ -29,6 +29,7 @@ export default function Legenda({ lang }: { lang: Idioma }) {
     return () => observador.disconnect();
   }, []);
 
+  // A faixa some quando a legenda abre: o foco passa para "Recolher" (e volta à faixa ao recolher).
   function abrirPelaFaixa() {
     setAberta(true);
     setTimeout(() => fechar.current?.focus(), 0);
@@ -51,8 +52,7 @@ export default function Legenda({ lang }: { lang: Idioma }) {
   function recolher() {
     setFixada(false);
     setAberta(false);
-    // O foco volta ao cadeado: na faixa, ela abriria a legenda de novo.
-    cadeado.current?.focus();
+    setTimeout(() => faixa.current?.focus(), 0);
   }
 
   function escolherPaleta(p: Paleta) {
@@ -69,16 +69,16 @@ export default function Legenda({ lang }: { lang: Idioma }) {
       onMouseLeave={sair}
       onBlur={perdeuFoco}
     >
-      <button ref={cadeado} type="button" className="lockb" aria-pressed={fixada} aria-label={rotuloCadeado} title={rotuloCadeado} onClick={alternarFixada}>
+      <button type="button" className="lockb" aria-pressed={fixada} aria-label={rotuloCadeado} title={rotuloCadeado} onClick={alternarFixada}>
         {fixada ? <Lock aria-hidden="true" /> : <LockOpen aria-hidden="true" />}
       </button>
       <button
+        ref={faixa}
         type="button"
         className="strip"
         aria-expanded={aberta}
         aria-label={t("Mostrar legenda das classes de risco")}
         onClick={abrirPelaFaixa}
-        onFocus={abrirPelaFaixa}
       >
         {DO_MAIOR_RISCO.map((c) => (
           <i key={c.numero} style={{ background: c.cor }} />

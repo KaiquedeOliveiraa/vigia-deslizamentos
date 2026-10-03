@@ -12,6 +12,7 @@ import {
   lerIndices,
   lerOcorrencias,
   ocorrenciasDoMunicipio,
+  separarPorDados,
 } from "./dados";
 import type { Indices } from "./tipos";
 
@@ -57,6 +58,29 @@ describe("desatualizado (RN12)", () => {
   });
   it("12 h e 1 min → verdadeiro", () => {
     expect(desatualizado(gerado, new Date("2026-09-29T18:01:00-03:00"))).toBe(true);
+  });
+});
+
+describe("separarPorDados", () => {
+  const base = indices as Indices;
+  const nomes = [
+    { ibge: "4200009", nome: "Witmarsum" },
+    { ibge: base.municipios[1].ibge, nome: base.municipios[1].nome },
+  ];
+
+  it("municípios com D0 de um lado; os de municipios_sem_dados (com o nome) e os sem D0 do outro", () => {
+    const semD0 = { ...base.municipios[1], dias: base.municipios[1].dias.filter((d) => d.d !== 0) };
+    const d: Indices = { ...base, municipios_sem_dados: ["4200009"], municipios: [base.municipios[0], semD0] };
+    const r = separarPorDados(d, nomes);
+    expect(r.comDados.map((m) => m.ibge)).toEqual([base.municipios[0].ibge]);
+    expect(r.semDados).toEqual([
+      { ibge: "4200009", nome: "Witmarsum" },
+      { ibge: semD0.ibge, nome: semD0.nome },
+    ]);
+  });
+
+  it("código sem nome conhecido aparece pelo código", () => {
+    expect(separarPorDados({ ...base, municipios_sem_dados: ["4299999"] }, nomes).semDados).toEqual([{ ibge: "4299999", nome: "4299999" }]);
   });
 });
 

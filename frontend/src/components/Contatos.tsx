@@ -3,12 +3,13 @@ import { Bell, Copy, ExternalLink, Mail, MapPin, Phone, Route, User } from "luci
 import { useEffect, useState, type ChangeEvent } from "react";
 import { tradutor } from "../i18n";
 import { filtrarContatos, hrefSite, hrefTelefone, urlComoChegar } from "../lib/contatos";
-import { carregar, lerContatos } from "../lib/dados";
+import { carregar, lerContatos, type Resultado } from "../lib/dados";
 import type { Idioma } from "../lib/preferencias";
 import type { Contato } from "../lib/tipos";
 import { anunciar } from "./anunciar";
 import BannerTelegram from "./BannerTelegram";
 import { copiarTexto } from "./copiar";
+import EstadoCarregamento from "./EstadoCarregamento";
 
 interface Props {
   lang: Idioma;
@@ -27,12 +28,12 @@ const semMovimento = () => matchMedia("(prefers-reduced-motion: reduce)").matche
 /** Contatos (RF12): números de emergência e a Defesa Civil de cada município (só verificados, RN09). */
 export default function Contatos({ lang, municipios }: Props) {
   const t = tradutor(lang);
-  const [contatos, setContatos] = useState<Contato[]>([]);
+  const [carga, setCarga] = useState<Resultado<Contato[]>>();
   const [escolhido, setEscolhido] = useState("");
   const [copiado, setCopiado] = useState<string>();
 
   useEffect(() => {
-    carregar("contatos.json", lerContatos).then((r) => r.ok && setContatos(r.dados));
+    carregar("contatos.json", lerContatos).then(setCarga);
   }, []);
 
   // Depois de renderizar: o aviso só existe no DOM depois da escolha.
@@ -42,15 +43,17 @@ export default function Contatos({ lang, municipios }: Props) {
     alvo?.scrollIntoView({ block: "nearest", behavior: semMovimento() ? "auto" : "smooth" });
   }, [escolhido]);
 
-  const nomeEscolhido = municipios.find((m) => m.ibge === escolhido)?.nome ?? "";
-  const filtro = filtrarContatos(t, contatos, escolhido, nomeEscolhido);
+  // Sem a lista carregada não se sabe se o município tem contato: nada de aviso "sem contato verificado".
+  const contatos = carga?.ok ? carga.dados : [];
+  const filtrar = (ibge: string, nome: string) => (carga?.ok ? filtrarContatos(t, contatos, ibge, nome) : filtrarContatos(t, [], "", ""));
+  const filtro = filtrar(escolhido, municipios.find((m) => m.ibge === escolhido)?.nome ?? "");
 
   const escolher = (e: ChangeEvent<HTMLSelectElement>) => {
     const ibge = e.target.value;
     setEscolhido(ibge);
     if (!ibge) return;
     const nome = municipios.find((m) => m.ibge === ibge)!.nome;
-    const aviso = filtrarContatos(t, contatos, ibge, nome).aviso;
+    const aviso = filtrar(ibge, nome).aviso;
     anunciar(aviso ?? t("Mostrando {M}", { M: nome }));
   };
 
@@ -104,6 +107,8 @@ export default function Contatos({ lang, municipios }: Props) {
           {filtro.aviso}
         </p>
       )}
+
+      {!carga?.ok && <EstadoCarregamento t={t} falhou={!!carga} />}
 
       <div className="cgrid">
         {contatos.map((c) => (

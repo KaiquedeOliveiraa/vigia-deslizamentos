@@ -19,8 +19,9 @@ export function formatarVariacao(delta: number): string {
 /** Razão chuva/limiar: "0,60×". */
 export const formatarRazao = (x: number): string => `${formatarNumero(x, 2)}×`;
 
-export function formatarCoord(lat: number, lon: number): string {
-  const grau = (v: number, pos: string, neg: string) => `${formatarNumero(Math.abs(v), 4)}° ${v < 0 ? neg : pos}`;
+/** "27,0007° S, 49,5212° O"; `traduzir` troca as letras do hemisfério (leste: L em português, E em espanhol). */
+export function formatarCoord(lat: number, lon: number, traduzir = (s: string) => s): string {
+  const grau = (v: number, pos: string, neg: string) => `${formatarNumero(Math.abs(v), 4)}° ${traduzir(v < 0 ? neg : pos)}`;
   return `${grau(lat, "N", "S")}, ${grau(lon, "L", "O")}`;
 }
 

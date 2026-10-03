@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { tradutor } from "../i18n";
 import { formatarCoord, formatarData, formatarDataHora, formatarHora, formatarIndice, formatarMm, formatarPercentual, formatarRazao, formatarVariacao } from "./formato";
 
 describe("números", () => {
@@ -11,6 +12,12 @@ describe("números", () => {
   it("coordenadas com hemisfério e quatro casas", () => {
     expect(formatarCoord(-27.0007, -49.5212)).toBe("27,0007° S, 49,5212° O");
     expect(formatarCoord(1.5, 2.25)).toBe("1,5000° N, 2,2500° L");
+  });
+
+  it("letras do hemisfério traduzidas: leste é E em espanhol", () => {
+    const es = tradutor("es");
+    expect(formatarCoord(1.5, 2.25, es)).toBe("1,5000° N, 2,2500° E");
+    expect(formatarCoord(-27, -49, es)).toBe("27,0000° S, 49,0000° O");
   });
 });
 

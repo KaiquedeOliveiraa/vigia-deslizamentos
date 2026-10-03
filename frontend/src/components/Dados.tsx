@@ -1,9 +1,9 @@
 import "../styles/dados.css";
 import { ArrowDown, ArrowRight, ArrowUp, Calculator, ChartLine, ClipboardList, Droplet, MapIcon } from "lucide-react";
-import { useEffect, useState, type KeyboardEvent } from "react";
+import { useEffect, useState } from "react";
 import { tradutor, type T } from "../i18n";
 import { classe, emAlerta, infoClasse, LIMIAR_ALERTA } from "../lib/classes";
-import { carregar, lerIndices, lerOcorrencias, ocorrenciasDoMunicipio, type Resultado } from "../lib/dados";
+import { carregar, lerIndices, lerOcorrencias, ocorrenciasDoMunicipio, separarPorDados, type NomeMunicipio, type Resultado } from "../lib/dados";
 import {
   formatarData,
   formatarDataHora,
@@ -21,6 +21,7 @@ import { tendencia } from "../lib/texto";
 import type { Dia, Indices, Municipio, Ocorrencia } from "../lib/tipos";
 import { anunciar } from "./anunciar";
 import { Evolucao, Minigrafico, Pluviometro } from "./Graficos";
+import EstadoCarregamento from "./EstadoCarregamento";
 import SeloClasse from "./SeloClasse";
 
 const PERIODOS = [7, 5, 15];
@@ -29,25 +30,32 @@ const CLASSE_TENDENCIA = { subindo: "up", descendo: "dn", estável: "" };
 
 const d0 = (m: Municipio) => m.dias.find((d) => d.d === 0)!;
 
-export default function Dados({ lang }: { lang: Idioma }) {
+export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly NomeMunicipio[] }) {
   const t = tradutor(lang);
-  const [indices, setIndices] = useState<Indices>();
+  const [carga, setCarga] = useState<Resultado<Indices>>();
   const [ocorrencias, setOcorrencias] = useState<Resultado<Ocorrencia[]>>();
   const [periodo, setPeriodo] = useState(PERIODOS[0]);
   const [ibge, setIbge] = useState<string>();
 
   useEffect(() => {
     carregar("indices.json", lerIndices).then((r) => {
-      if (!r.ok) return;
-      setIndices(r.dados);
-      setIbge(municipioInicial(r.dados));
+      setCarga(r);
+      if (r.ok) setIbge(municipioInicial(r.dados));
     });
     carregar("ocorrencias.json", lerOcorrencias).then(setOcorrencias);
   }, []);
 
-  if (!indices) return null;
+  const titulo = t("Como a região chegou até aqui");
+  if (!carga?.ok)
+    return (
+      <div className="dados">
+        <h1>{titulo}</h1>
+        <EstadoCarregamento t={t} falhou={!!carga} />
+      </div>
+    );
 
-  const municipios = indices.municipios.filter((m) => !indices.municipios_sem_dados.includes(m.ibge) && m.dias.some((d) => d.d === 0));
+  const indices = carga.dados;
+  const { comDados: municipios, semDados } = separarPorDados(indices, nomes);
   const destaque = municipios.find((m) => m.ibge === ibge);
   const eixo = diasEixo(indices.dia_alvo_d0, periodo);
   const k = indicadores(indices);
@@ -57,12 +65,14 @@ export default function Dados({ lang }: { lang: Idioma }) {
     anunciar(t("Evolução do índice — {M}", { M: municipios.find((m) => m.ibge === novo)!.nome }));
   };
 
+  const tabela = <Tabela t={t} municipios={municipios} semDados={semDados} ibge={destaque?.ibge} eixo={eixo} aoSelecionar={selecionar} />;
+
   return (
     <div className="dados">
       <div className="ttl">
         <div>
           <span className="lbl">{t("Dados da análise · dia-alvo {N}", { N: formatarData(indices.dia_alvo_d0) })}</span>
-          <h1>{t("Como a região chegou até aqui")}</h1>
+          <h1>{titulo}</h1>
           <p>{t("Mesmos dados do mapa, com a chuva acumulada e a evolução do índice nos últimos {N} dias.", { N: String(periodo) })}</p>
         </div>
         <div className="seg" role="group" aria-label={t("Período")}>
@@ -96,7 +106,7 @@ export default function Dados({ lang }: { lang: Idioma }) {
         </li>
       </ul>
 
-      {destaque && (
+      {destaque ? (
         <>
           <div className="grid2">
             <section className="card" aria-labelledby="evo-t">
@@ -120,6 +130,9 @@ export default function Dados({ lang }: { lang: Idioma }) {
                 <span>{t("↑/↓ mudança de classe")}</span>
               </div>
               <Evolucao t={t} municipios={municipios} ibge={destaque.ibge} eixo={eixo} aoSelecionar={selecionar} />
+              {semDados.length > 0 && (
+                <p className="sub">{t("Sem dados nesta execução: {M}.", { M: semDados.map((m) => m.nome).join(", ") })}</p>
+              )}
             </section>
             <section className="card chuva" aria-labelledby="pluv-t">
               <div className="ch">
@@ -132,12 +145,19 @@ export default function Dados({ lang }: { lang: Idioma }) {
             </section>
           </div>
 
-          <Tabela t={t} municipios={municipios} ibge={destaque.ibge} eixo={eixo} aoSelecionar={selecionar} />
+          {tabela}
 
           <div className="grid2 meio">
             <Detalhes t={t} municipio={destaque} dia={d0(destaque)} gerado_em={indices.gerado_em} />
             <Ocorrencias t={t} municipio={destaque} ocorrencias={ocorrencias} />
           </div>
+        </>
+      ) : (
+        <>
+          <p className="card vazio" role="status">
+            {t("Nenhum município tem dados nesta execução.")}
+          </p>
+          {tabela}
         </>
       )}
 
@@ -152,17 +172,13 @@ export default function Dados({ lang }: { lang: Idioma }) {
 interface PropsTabela {
   t: T;
   municipios: Municipio[];
-  ibge: string;
+  semDados: NomeMunicipio[];
+  ibge?: string;
   eixo: string[];
   aoSelecionar: (ibge: string) => void;
 }
 
-function Tabela({ t, municipios, ibge, eixo, aoSelecionar }: PropsTabela) {
-  const teclado = (e: KeyboardEvent, novo: string) => {
-    if (e.key !== "Enter" && e.key !== " ") return;
-    e.preventDefault();
-    aoSelecionar(novo);
-  };
+function Tabela({ t, municipios, semDados, ibge, eixo, aoSelecionar }: PropsTabela) {
   return (
     <section className="card" aria-labelledby="tab-t">
       <div className="ch">
@@ -198,15 +214,13 @@ function Tabela({ t, municipios, ibge, eixo, aoSelecionar }: PropsTabela) {
               const Icone = tend ? ICONE_TENDENCIA[tend] : ArrowRight;
               const v = variaveis(m, dia);
               return (
-                <tr
-                  key={m.ibge}
-                  className={m.ibge === ibge ? "hl" : undefined}
-                  aria-current={m.ibge === ibge ? "true" : undefined}
-                  tabIndex={0}
-                  onClick={() => aoSelecionar(m.ibge)}
-                  onKeyDown={(e) => teclado(e, m.ibge)}
-                >
-                  <th scope="row">{m.nome}</th>
+                // A linha inteira responde ao clique; no teclado, o botão do nome (Enter/Espaço viram clique, que sobe até a linha).
+                <tr key={m.ibge} className={m.ibge === ibge ? "hl" : undefined} onClick={() => aoSelecionar(m.ibge)}>
+                  <th scope="row">
+                    <button type="button" className="linha" aria-pressed={m.ibge === ibge}>
+                      {m.nome}
+                    </button>
+                  </th>
                   <td className="n">{formatarIndice(dia.indice)}</td>
                   <td>
                     <span className="cls">
@@ -235,6 +249,14 @@ function Tabela({ t, municipios, ibge, eixo, aoSelecionar }: PropsTabela) {
                 </tr>
               );
             })}
+            {semDados.map((m) => (
+              <tr key={m.ibge} className="sd">
+                <th scope="row">{m.nome}</th>
+                <td colSpan={6}>
+                  <span className="sd-tag">{t("sem dados")}</span>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

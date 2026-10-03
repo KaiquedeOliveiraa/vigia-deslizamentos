@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import geojson from "../data/municipios.geojson?raw";
 import { tradutor, type T } from "../i18n";
 import { classe, emAlerta, infoClasse } from "../lib/classes";
-import { carregar, estadoMunicipio, lerIndices } from "../lib/dados";
+import { carregar, estadoMunicipio, lerIndices, type Resultado } from "../lib/dados";
 import { formatarData, formatarIndice, formatarMm, formatarRazao } from "../lib/formato";
 import { mensagemSelecao, valoresDoDia, type FeicaoMunicipio } from "../lib/mapa";
 import { municipioInicial, resumo, variaveis, type Variaveis } from "../lib/monitoramento";
@@ -15,6 +15,7 @@ import type { Indices } from "../lib/tipos";
 import { anunciar } from "./anunciar";
 import Busca from "./Busca";
 import { copiarTexto } from "./copiar";
+import EstadoCarregamento from "./EstadoCarregamento";
 import JanelaTelegram, { DiscoTelegram } from "./JanelaTelegram";
 import Legenda from "./Legenda";
 import Mapa, { type MapaApi } from "./Mapa";
@@ -28,7 +29,7 @@ const TOAST_MS = 2200;
 
 export default function Monitoramento({ lang }: { lang: Idioma }) {
   const t = tradutor(lang);
-  const [indices, setIndices] = useState<Indices>();
+  const [carga, setCarga] = useState<Resultado<Indices>>();
   const [d, setD] = useState(0);
   const [selecionado, setSelecionado] = useState<string>();
   const [telegram, setTelegram] = useState(false);
@@ -37,9 +38,8 @@ export default function Monitoramento({ lang }: { lang: Idioma }) {
 
   useEffect(() => {
     carregar("indices.json", lerIndices).then((r) => {
-      if (!r.ok) return;
-      setIndices(r.dados);
-      setSelecionado(municipioInicial(r.dados));
+      setCarga(r);
+      if (r.ok) setSelecionado(municipioInicial(r.dados));
     });
   }, []);
 
@@ -49,8 +49,9 @@ export default function Monitoramento({ lang }: { lang: Idioma }) {
     return () => clearTimeout(timer);
   }, [toast]);
 
-  if (!indices) return null;
+  if (!carga?.ok) return <EstadoCarregamento t={t} falhou={!!carga} />;
 
+  const indices = carga.dados;
   const valores = valoresDoDia(indices, d);
   const dias = indices.municipios[0]?.dias.map((x) => x.dia_alvo) ?? [indices.dia_alvo_d0];
   const { emAlerta: nAlerta, total, maior } = resumo(valores);

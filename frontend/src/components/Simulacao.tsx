@@ -3,7 +3,7 @@ import { ArrowRight, CloudRain, Info, RotateCcw, TriangleAlert } from "lucide-re
 import { useEffect, useRef, useState } from "react";
 import { tradutor, type T } from "../i18n";
 import { classe, infoClasse, LIMIAR_ALERTA } from "../lib/classes";
-import { carregar, lerIndices } from "../lib/dados";
+import { carregar, lerIndices, type Resultado } from "../lib/dados";
 import { formatarData, formatarHora, formatarIndice, formatarMm } from "../lib/formato";
 import { valoresDoDia } from "../lib/mapa";
 import { resumo } from "../lib/monitoramento";
@@ -25,6 +25,7 @@ import {
 } from "../lib/simulacao";
 import type { Indices } from "../lib/tipos";
 import { anunciar } from "./anunciar";
+import EstadoCarregamento from "./EstadoCarregamento";
 import Legenda from "./Legenda";
 import Mapa, { type MapaApi } from "./Mapa";
 import SeloClasse from "./SeloClasse";
@@ -44,7 +45,7 @@ type Ver = "agora" | "simulado";
 
 export default function Simulacao({ lang }: { lang: Idioma }) {
   const t = tradutor(lang);
-  const [indices, setIndices] = useState<Indices>();
+  const [carga, setCarga] = useState<Resultado<Indices>>();
   const [ibge, setIbge] = useState("");
   const [horas, setHoras] = useState<Horas>(48);
   const [chuva, setChuva] = useState(CHUVA_INICIAL);
@@ -55,16 +56,24 @@ export default function Simulacao({ lang }: { lang: Idioma }) {
 
   useEffect(() => {
     carregar("indices.json", lerIndices).then((r) => {
+      setCarga(r);
       if (!r.ok) return;
       const inicial = municipioDaBusca(r.dados, location.search) ?? "";
-      setIndices(r.dados);
       setIbge(inicial);
       setCenario({ ibge: inicial, chuva_mm: CHUVA_INICIAL, horas: 48, regional: false });
     });
   }, []);
 
-  if (!indices) return null;
+  const titulo = t("E se chover…?");
+  if (!carga?.ok)
+    return (
+      <div className="sim-carga">
+        <h1 className="simh">{titulo}</h1>
+        <EstadoCarregamento t={t} falhou={!!carga} />
+      </div>
+    );
 
+  const indices = carga.dados;
   const municipios = indices.municipios
     .filter((m) => !indices.municipios_sem_dados.includes(m.ibge))
     .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
@@ -81,7 +90,7 @@ export default function Simulacao({ lang }: { lang: Idioma }) {
     const s = m && simularMunicipio(m, c.chuva_mm, c.horas);
     if (!m || !d0 || !s) return null;
     const avisos = [avisoSimulacao(t, { nome: m.nome, atual: d0.indice, simulado: s.indice, chuva_mm: c.chuva_mm, horas: c.horas })];
-    if (c.regional) avisos.push(avisoRegional(t, simular(indices!.municipios, c), nomes));
+    if (c.regional) avisos.push(avisoRegional(t, simular(indices.municipios, c), nomes));
     return { m, d0, s, avisos };
   }
 
@@ -118,7 +127,7 @@ export default function Simulacao({ lang }: { lang: Idioma }) {
       <aside className="side form" aria-label={t("Simulação de cenário")}>
         <div>
           <span className="lbl">{t("Simulação de cenário")}</span>
-          <h1 className="simh">{t("E se chover…?")}</h1>
+          <h1 className="simh">{titulo}</h1>
           <p className="intro">
             {t("Parte das condições de agora ({N}, {N}). Informe a chuva que você espera e veja como o índice do município reagiria.", { N: quando })}
           </p>

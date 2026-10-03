@@ -47,6 +47,11 @@ astro-island {
   outline-color: var(--accent);
 }
 
+/* O diálogo de acessibilidade aberto pelo rail fica dentro do <nav>: volta ao foco padrão. */
+.dlg :focus-visible {
+  outline-color: var(--focus);
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -152,6 +157,12 @@ astro-island {
 
 .hbtn:hover {
   background: var(--nav-700);
+}
+
+/* No alto contraste o --nav-700 é claro (borda): o hover escurece e acende a borda. */
+[data-theme="contraste"] .hbtn:hover {
+  background: var(--nav-900);
+  border-color: var(--on-nav);
 }
 
 .hbtn.a11yb {
@@ -907,4 +918,21 @@ astro-island {
   .lang .lg {
     display: none;
   }
+}
+
+/* Carregando / falha ao carregar um arquivo de dados */
+.estado-carga {
+  margin: 0;
+  padding: var(--space-6);
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.estado-carga.erro {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+:is(.dados, .sim-carga) .estado-carga {
+  padding: 0;
 }
