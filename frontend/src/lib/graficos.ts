@@ -1,0 +1,79 @@
+// Escalas e séries dos gráficos (pluviômetro, evolução do índice) e indicadores da tela de dados.
+import { classe, emAlerta, infoClasse } from "./classes";
+import type { Indices, Municipio } from "./tipos";
+
+export interface Ponto {
+  dia_alvo: string;
+  indice: number;
+}
+
+const PLUV_MIN_MM = 150;
+const EVOLUCAO_MIN = 2.0;
+const PASSO_EVOLUCAO = 0.5;
+
+/** Topo da escala do pluviômetro: sempre acima do limiar, para a linha dele aparecer. */
+export const maxPluviometro = (limiar_mm: number): number => Math.max(PLUV_MIN_MM, limiar_mm * 1.2);
+
+/** Topo do eixo Y da evolução: 2,00, ou o maior índice arredondado para cima em 0,5. */
+export function maxEvolucao(indices: number[]): number {
+  const maior = Math.max(EVOLUCAO_MIN, ...indices);
+  return maior > EVOLUCAO_MIN ? Math.ceil(maior / PASSO_EVOLUCAO) * PASSO_EVOLUCAO : EVOLUCAO_MIN;
+}
+
+/** Valor em 0..max convertido para 0..alturaPx, limitado às pontas. */
+export const escala = (valor: number, max: number, alturaPx: number): number =>
+  (Math.min(Math.max(valor, 0), max) / max) * alturaPx;
+
+/** "↑ moderado" / "↓ moderado" quando a classe muda de um dia para o seguinte. */
+export function marcaClasse(anterior: number, atual: number): string | null {
+  const de = classe(anterior);
+  const para = classe(atual);
+  if (de === para) return null;
+  return `${para > de ? "↑" : "↓"} ${infoClasse(para).nome}`;
+}
+
+const d0 = (m: Municipio) => m.dias.find((d) => d.d === 0);
+
+/** Últimos `dias` pontos: historico (mais antigo → mais recente) seguido do D0. */
+export function serieMunicipio(m: Municipio, dias: number): Ponto[] {
+  const atual = d0(m);
+  const pontos: Ponto[] = m.historico.map(({ dia_alvo, indice }) => ({ dia_alvo, indice }));
+  if (atual) pontos.push({ dia_alvo: atual.dia_alvo, indice: atual.indice });
+  return pontos.slice(-dias);
+}
+
+/** Diferença de cada valor para o anterior (n − 1 itens). */
+export const variacoes = (valores: number[]): number[] => valores.slice(1).map((v, i) => v - valores[i]);
+
+export interface Indicadores {
+  monitorados: number;
+  emAlerta: number;
+  chuvaEfetivaMax: { efr_mm: number; nome: string } | null;
+  pico: { indice: number; nome: string; dia_alvo: string } | null;
+}
+
+/** Pico da semana: últimos 6 dias do historico mais o D0. */
+const DIAS_SEMANA = 7;
+
+export function indicadores(indices: Indices): Indicadores {
+  let chuvaEfetivaMax: Indicadores["chuvaEfetivaMax"] = null;
+  let pico: Indicadores["pico"] = null;
+  let alerta = 0;
+  for (const m of indices.municipios) {
+    const atual = d0(m);
+    if (atual && emAlerta(atual.indice)) alerta++;
+    if (atual && (!chuvaEfetivaMax || atual.efr_mm > chuvaEfetivaMax.efr_mm))
+      chuvaEfetivaMax = { efr_mm: atual.efr_mm, nome: m.nome };
+    for (const p of serieMunicipio(m, DIAS_SEMANA))
+      if (!pico || p.indice > pico.indice) pico = { indice: p.indice, nome: m.nome, dia_alvo: p.dia_alvo };
+  }
+  return {
+    monitorados: indices.municipios.length + indices.municipios_sem_dados.length,
+    emAlerta: alerta,
+    chuvaEfetivaMax,
+    pico,
+  };
+}
+
+export const etiquetaChuva = (m: Municipio): string =>
+  m.chuva_acum_mm["24h"] > 1 ? "choveu nas últimas 24h" : "sem chuva agora";
