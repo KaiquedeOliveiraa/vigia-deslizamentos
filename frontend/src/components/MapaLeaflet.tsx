@@ -1,14 +1,14 @@
-import type { Map as MapaL, Polygon as PoligonoL } from "leaflet";
+import { divIcon, type Map as MapaL, type Marker as MarcadorL, type Polygon as PoligonoL } from "leaflet";
 import { useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { MapContainer, Polygon, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { MapContainer, Marker, Polygon, TileLayer, Tooltip, useMap } from "react-leaflet";
 import geojson from "../data/municipios.geojson?raw";
 import { tradutor, type T } from "../i18n";
 import { classe, CLASSES, infoClasse, SEM_DADOS } from "../lib/classes";
 import { formatarIndice } from "../lib/formato";
 import { CAMADAS, limites, posicoes, rotuloAria, type FeicaoMunicipio, type IdCamada, type Valor } from "../lib/mapa";
 import Camadas from "./Camadas";
-import type { PropsMapa } from "./Mapa";
+import type { Pino, PropsMapa } from "./Mapa";
 import SeloClasse from "./SeloClasse";
 
 const FEICOES = JSON.parse(geojson).features as FeicaoMunicipio[];
@@ -18,6 +18,15 @@ const LIMITES = limites(FEICOES);
 const POSICOES = new Map(FEICOES.map((f) => [f.properties.ibge, posicoes(f)]));
 
 const id = (n: number) => `hachura-${n}`;
+
+// Gota azul-marinho com miolo branco (protótipo: est.js); a ponta fica na coordenada da estação.
+const ICONE_PINO = divIcon({
+  className: "pin",
+  html: '<svg viewBox="-20 -54 40 56" width="28" height="39" aria-hidden="true"><path d="M0 0c-4-10-18-20-18-34a18 18 0 0 1 36 0c0 14-14 24-18 34z"/><circle cy="-34" r="6.5"/></svg>',
+  iconSize: [28, 39],
+  iconAnchor: [14, 38],
+  tooltipAnchor: [0, -24],
+});
 
 /** Um <pattern> por classe com hachura, dentro do SVG do Leaflet (protótipo: #pat4…#pat7). */
 function Hachuras() {
@@ -57,10 +66,12 @@ function Municipio({ t, feicao, valor, selecionado, onSelecionar }: PropsMunicip
   escolher.current = onSelecionar;
   const n = typeof valor === "number" ? classe(valor) : null;
 
-  // Polígono focável por Tab e selecionável por Enter/Espaço.
+  const interativo = onSelecionar !== undefined;
+
+  // Polígono focável por Tab e selecionável por Enter/Espaço (só quando há seleção de município).
   useEffect(() => {
     const el = fundo.current?.getElement();
-    if (!el) return;
+    if (!el || !interativo) return;
     el.setAttribute("tabindex", "0");
     el.setAttribute("role", "button");
     el.setAttribute("data-ibge", ibge);
@@ -72,7 +83,7 @@ function Municipio({ t, feicao, valor, selecionado, onSelecionar }: PropsMunicip
     };
     el.addEventListener("keydown", tecla);
     return () => el.removeEventListener("keydown", tecla);
-  }, [ibge]);
+  }, [ibge, interativo]);
 
   // className e interactive só valem na criação do polígono. Cor, hachura e estado vão por estilo inline:
   // atributos SVG não aceitam var(--cN), e assim a cor anima por CSS.
@@ -98,6 +109,7 @@ function Municipio({ t, feicao, valor, selecionado, onSelecionar }: PropsMunicip
         ref={fundo}
         positions={pos}
         className="mun"
+        interactive={interativo}
         pathOptions={{ fillOpacity: 1 }}
         eventHandlers={{ click: () => escolher.current?.(ibge) }}
       >
@@ -114,12 +126,75 @@ function Municipio({ t, feicao, valor, selecionado, onSelecionar }: PropsMunicip
   );
 }
 
-export default function MapaLeaflet({ lang, valores, selecionado = null, onSelecionar, camadas = true, ref }: PropsMapa) {
+interface PropsPin {
+  pino: Pino;
+  selecionado: boolean;
+  onSelecionar?: (id: string) => void;
+}
+
+/** Pin focável por Tab; clique, Enter ou Espaço selecionam. */
+function Pin({ pino, selecionado, onSelecionar }: PropsPin) {
+  const marcador = useRef<MarcadorL>(null);
+  const escolher = useRef(onSelecionar);
+  escolher.current = onSelecionar;
+
+  // O Leaflet torna o pin focável (keyboard: true); Enter/Espaço selecionam.
+  useEffect(() => {
+    const el = marcador.current?.getElement();
+    if (!el) return;
+    const tecla = (e: KeyboardEvent) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      escolher.current?.(pino.id);
+    };
+    el.addEventListener("keydown", tecla);
+    return () => el.removeEventListener("keydown", tecla);
+  }, [pino.id]);
+
+  useEffect(() => {
+    const el = marcador.current?.getElement();
+    if (!el) return;
+    el.setAttribute("aria-label", pino.rotulo);
+    el.setAttribute("aria-pressed", String(selecionado));
+    el.classList.toggle("sel", selecionado);
+  }, [pino.rotulo, selecionado]);
+
+  return (
+    <Marker
+      ref={marcador}
+      position={[pino.lat, pino.lon]}
+      icon={ICONE_PINO}
+      zIndexOffset={selecionado ? 1000 : 0}
+      eventHandlers={{ click: () => escolher.current?.(pino.id) }}
+    >
+      {selecionado && (
+        <Tooltip permanent direction="auto" offset={[16, 0]} className="balao">
+          {pino.balao}
+        </Tooltip>
+      )}
+    </Marker>
+  );
+}
+
+export default function MapaLeaflet({
+  lang,
+  valores,
+  selecionado = null,
+  onSelecionar,
+  pinos = [],
+  pinoSelecionado = null,
+  onSelecionarPino,
+  camadas = true,
+  ref,
+}: PropsMapa) {
   const t = useMemo(() => tradutor(lang), [lang]);
   const [mapa, setMapa] = useState<MapaL | null>(null);
   // Neutro: o fundo claro não compete com as cores das classes (o protótipo abria no Satélite).
   const [camada, setCamada] = useState<IdCamada>("neutro");
   const fundo = CAMADAS.find((c) => c.id === camada)!;
+  const comPinos = pinos.length > 0;
+  // Só vale na criação do mapa: quem passa pinos já os tem ao montar o Mapa.
+  const enquadramento = comPinos ? limites(FEICOES, pinos.map((p) => [p.lat, p.lon])) : LIMITES;
 
   useImperativeHandle(ref, () => ({
     piscar(ibge) {
@@ -134,12 +209,17 @@ export default function MapaLeaflet({ lang, valores, selecionado = null, onSelec
   useEffect(() => {
     const c = mapa?.getContainer();
     c?.setAttribute("role", "group");
-    c?.setAttribute("aria-label", t("Mapa dos municípios monitorados. Use Tab para percorrer os municípios e Enter para selecionar."));
-  }, [mapa, t]);
+    c?.setAttribute(
+      "aria-label",
+      comPinos
+        ? t("Mapa das estações de monitoramento. Use Tab para percorrer as estações e Enter para selecionar.")
+        : t("Mapa dos municípios monitorados. Use Tab para percorrer os municípios e Enter para selecionar."),
+    );
+  }, [mapa, t, comPinos]);
 
   return (
     <>
-      <MapContainer ref={setMapa} bounds={LIMITES} boundsOptions={{ padding: [24, 24] }} zoomSnap={0.25} zoomControl={false} className="mapa">
+      <MapContainer ref={setMapa} bounds={enquadramento} boundsOptions={{ padding: comPinos ? [48, 48] : [24, 24] }} zoomSnap={0.25} zoomControl={false} className="mapa">
         <TileLayer
           key={fundo.id}
           url={fundo.url}
@@ -163,6 +243,9 @@ export default function MapaLeaflet({ lang, valores, selecionado = null, onSelec
             selecionado={selecionado === f.properties.ibge}
             onSelecionar={onSelecionar}
           />
+        ))}
+        {pinos.map((p) => (
+          <Pin key={p.id} pino={p} selecionado={pinoSelecionado === p.id} onSelecionar={onSelecionarPino} />
         ))}
         <Hachuras />
       </MapContainer>

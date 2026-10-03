@@ -45,9 +45,9 @@ export function valoresDoDia(indices: Indices, d: number): Record<string, number
 export const posicoes = (f: FeicaoMunicipio): LatLon[][] =>
   f.geometry.coordinates.map((anel) => anel.map(([lon, lat]) => [lat, lon]));
 
-/** [[sul, oeste], [norte, leste]] dos municípios monitorados, para enquadrar o mapa. */
-export function limites(feicoes: readonly FeicaoMunicipio[]): [LatLon, LatLon] {
-  const pontos = feicoes.filter((f) => f.properties.monitorado).flatMap((f) => posicoes(f).flat());
+/** [[sul, oeste], [norte, leste]] dos municípios monitorados e dos pontos `extras`, para enquadrar o mapa. */
+export function limites(feicoes: readonly FeicaoMunicipio[], extras: readonly LatLon[] = []): [LatLon, LatLon] {
+  const pontos = [...feicoes.filter((f) => f.properties.monitorado).flatMap((f) => posicoes(f).flat()), ...extras];
   const lats = pontos.map(([lat]) => lat);
   const lons = pontos.map(([, lon]) => lon);
   return [

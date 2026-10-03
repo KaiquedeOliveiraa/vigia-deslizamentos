@@ -50,6 +50,11 @@ describe("posicoes e limites", () => {
     expect(limites(fs)).toEqual([[-27.3, -49.5], [-27.1, -49.4]]);
   });
 
+  it("limites incluem pontos extras (estações fora dos municípios)", () => {
+    const fs = [feicao(true, [[[-49.5, -27.1], [-49.4, -27.3]]])];
+    expect(limites(fs, [[-26.4, -50.4], [-27.0, -48.8]])).toEqual([[-27.3, -50.4], [-26.4, -48.8]]);
+  });
+
   it("os 6 municípios monitorados do GeoJSON ficam no Alto Vale", () => {
     const fs = JSON.parse(geojson).features as FeicaoMunicipio[];
     expect(fs.filter((f) => f.properties.monitorado)).toHaveLength(6);

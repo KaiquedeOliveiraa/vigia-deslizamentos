@@ -443,5 +443,9 @@
 "Execução do modelo (horário de Brasília)": "Ejecución del modelo (hora de Brasilia)",
 "Detalhes do cálculo — {M}": "Detalles del cálculo — {M}",
 "Ocorrências registradas — {M}": "Ocurrencias registradas — {M}",
-"Nenhuma ocorrência registrada": "Ninguna ocurrencia registrada"
+"Nenhuma ocorrência registrada": "Ninguna ocurrencia registrada",
+"a {N} km de {M}": "a {N} km de {M}",
+"Mapa das estações de monitoramento. Use Tab para percorrer as estações e Enter para selecionar.": "Mapa de las estaciones de monitoreo. Use Tab para recorrer las estaciones y Enter para seleccionar.",
+"Estações automáticas do INMET mais próximas dos municípios monitorados. Nenhuma fica dentro deles: cada uma mostra a distância até o município de referência. Toque num pin ou na lista para localizar.": "Estaciones automáticas del INMET más cercanas a los municipios monitoreados. Ninguna está dentro de ellos: cada una muestra la distancia al municipio de referencia. Toque un pin o la lista para ubicarla.",
+"Fonte: cadastro de estações automáticas do INMET. A distância é medida até o centro do município mais próximo de cada estação.": "Fuente: catastro de estaciones automáticas del INMET. La distancia se mide hasta el centro del municipio más cercano a cada estación."
 }

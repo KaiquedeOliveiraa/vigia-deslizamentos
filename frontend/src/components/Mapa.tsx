@@ -11,12 +11,25 @@ export interface MapaApi {
   piscar: (ibge: string) => void;
 }
 
+/** Ponto no mapa (Estações): `rotulo` é o nome acessível; `balao` aparece quando selecionado. */
+export interface Pino {
+  id: string;
+  lat: number;
+  lon: number;
+  rotulo: string;
+  balao: ReactNode;
+}
+
 export interface PropsMapa {
   lang: Idioma;
   /** Índice por IBGE; `null` = sem dados; ausente = município em branco (Estações). */
   valores: Record<string, number | null>;
   selecionado?: string | null;
   onSelecionar?: (ibge: string) => void;
+  /** Pins sobre o mapa; o enquadramento passa a incluí-los. */
+  pinos?: Pino[];
+  pinoSelecionado?: string | null;
+  onSelecionarPino?: (id: string) => void;
   /** Seletor de mapa de fundo no alto à direita (padrão: sim). */
   camadas?: boolean;
   ref?: Ref<MapaApi>;
