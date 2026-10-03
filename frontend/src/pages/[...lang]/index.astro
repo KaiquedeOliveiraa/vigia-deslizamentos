@@ -1,10 +1,13 @@
 ---
 import Base from "../../layouts/Base.astro";
+import DemoMapa from "../../components/DemoMapa";
 import { caminhosIdioma, idioma, tradutor } from "../../i18n";
 
 export const getStaticPaths = caminhosIdioma;
-const t = tradutor(idioma(Astro.params.lang));
+const lang = idioma(Astro.params.lang);
+const t = tradutor(lang);
 ---
 <Base tela="">
   <h1 class="sr-only">{t("Monitoramento do risco de deslizamento")}</h1>
+  {import.meta.env.DEV && <DemoMapa client:only="react" lang={lang} />}
 </Base>

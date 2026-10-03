@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { CHAVE, PADRAO, aplicarPreferencias, lerPreferencias, salvarPreferencias } from "./preferencias";
+import {
+  CHAVE,
+  PADRAO,
+  aplicarPreferencias,
+  lerPreferencias,
+  paletaAplicada,
+  salvarPreferencias,
+  trocarPaleta,
+} from "./preferencias";
 
 const memoria = (inicial: Record<string, string> = {}) => {
   const dados = { ...inicial };
@@ -44,19 +52,22 @@ describe("salvarPreferencias", () => {
   });
 });
 
-describe("aplicarPreferencias", () => {
-  const raiz = () => {
-    const attrs: Record<string, string> = {};
-    const classes = new Set<string>();
-    return {
-      attrs,
-      classes,
-      setAttribute: (k: string, v: string) => void (attrs[k] = v),
-      removeAttribute: (k: string) => void delete attrs[k],
-      classList: { toggle: (c: string, on: boolean) => (on ? classes.add(c) : classes.delete(c), on) },
-    };
+const raiz = () => {
+  const attrs: Record<string, string> = {};
+  const classes = new Set<string>();
+  return {
+    attrs,
+    classes,
+    setAttribute: (k: string, v: string) => void (attrs[k] = v),
+    removeAttribute: (k: string) => void delete attrs[k],
+    classList: {
+      toggle: (c: string, on: boolean) => (on ? classes.add(c) : classes.delete(c), on),
+      contains: (c: string) => classes.has(c),
+    },
   };
+};
 
+describe("aplicarPreferencias", () => {
   it("tema auto = sem data-theme; paleta vira classe pal-*", () => {
     const r = raiz();
     aplicarPreferencias({ lang: "pt", theme: "dark", pal: "acc" }, r);
@@ -65,5 +76,24 @@ describe("aplicarPreferencias", () => {
     aplicarPreferencias(PADRAO, r);
     expect(r.attrs["data-theme"]).toBeUndefined();
     expect([...r.classes]).toEqual(["pal-geo"]);
+  });
+});
+
+describe("paleta (legenda e painel de acessibilidade)", () => {
+  it("trocarPaleta guarda só a paleta e troca a classe do <html>; paletaAplicada lê essa classe", () => {
+    const m = memoria({ [CHAVE]: JSON.stringify({ lang: "es", theme: "dark", pal: "geo" }) });
+    const r = raiz();
+    trocarPaleta("acc", r, () => m);
+    expect(lerPreferencias(() => m)).toEqual({ lang: "es", theme: "dark", pal: "acc" });
+    expect(paletaAplicada(r)).toBe("acc");
+    trocarPaleta("geo", r, () => m);
+    expect([...r.classes]).toEqual(["pal-geo"]);
+    expect(paletaAplicada(r)).toBe("geo");
+  });
+
+  it("sem armazenamento a troca vale na página", () => {
+    const r = raiz();
+    trocarPaleta("acc", r, indisponivel);
+    expect(paletaAplicada(r)).toBe("acc");
   });
 });

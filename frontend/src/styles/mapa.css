@@ -1,0 +1,602 @@
+/* Mapa e controles sobrepostos (protótipo: base.css › map, widgets.css › legenda, busca, previsões). */
+
+.mapwrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  background: var(--map-ground);
+  overflow: hidden;
+}
+
+/* z-index 0 cria um contexto de empilhamento: os painéis do Leaflet (400+) ficam abaixo dos controles. */
+.mapwrap .mapa {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--map-ground);
+  font-family: var(--font-sans);
+}
+
+.mapa .ctx {
+  fill: var(--map-context);
+  fill-opacity: 1;
+  stroke: var(--map-stroke);
+  stroke-width: 1.2px;
+  opacity: 0.8;
+}
+
+.mapa .mun {
+  stroke: var(--map-stroke);
+  stroke-width: 2px;
+  transition: fill 0.6s ease, opacity 0.2s;
+}
+
+.mapa .mun:hover {
+  opacity: 0.85;
+}
+
+.mapa .mun:focus-visible {
+  outline: none;
+  stroke: var(--focus);
+  stroke-width: 6px;
+}
+
+.mapa .mun.sel {
+  stroke: var(--nav-900);
+  stroke-width: 5px;
+}
+
+.mapa .mun.pulse {
+  animation: piscar 1.2s ease 2;
+}
+
+@keyframes piscar {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.mapa .munp {
+  pointer-events: none;
+}
+
+.hatch {
+  stroke: rgba(0, 0, 0, 0.42);
+  stroke-width: 2.2;
+}
+
+[data-theme="contraste"] .mapa .mun {
+  stroke: #000;
+  stroke-width: 2.5px;
+}
+
+[data-theme="contraste"] .hatch {
+  stroke: #000;
+  stroke-width: 2.6;
+}
+
+/* Rótulos: tooltips permanentes do Leaflet no centro de cada polígono */
+.mapa .leaflet-tooltip.mlabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-000);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14px;
+  padding: 4px 8px 4px 5px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  white-space: nowrap;
+  box-shadow: var(--shadow-float);
+}
+
+.mlabel b {
+  font-weight: 700;
+}
+
+.mlabel small {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  color: var(--ink-2);
+}
+
+.mlabel .swi {
+  width: 18px;
+  height: 18px;
+}
+
+.mlabel .swi svg {
+  width: 13px;
+  height: 13px;
+}
+
+.mapa .leaflet-tooltip.ctxl {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  opacity: 0.9;
+}
+
+.mapa .leaflet-control-attribution {
+  font-size: 10px;
+}
+
+/* Cartões flutuantes */
+.float {
+  position: absolute;
+  background: var(--surface-000);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+}
+
+[data-theme="contraste"] .float {
+  border-width: 2px;
+}
+
+.zoom {
+  left: 16px;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 4;
+}
+
+.zoom button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: none;
+  font-size: 20px;
+  color: var(--ink);
+}
+
+.zoom button + button {
+  border-top: 1px solid var(--line);
+}
+
+.zoom button:hover {
+  background: var(--surface-050);
+}
+
+.layers {
+  right: 16px;
+  top: 16px;
+  display: flex;
+  overflow: hidden;
+  z-index: 4;
+}
+
+.layers button {
+  border: none;
+  background: none;
+  padding: 9px 13px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  border-right: 1px solid var(--line);
+}
+
+.layers button:last-child {
+  border-right: none;
+}
+
+.layers button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+}
+
+/* Legenda recolhível */
+.leg {
+  position: absolute;
+  left: 16px;
+  bottom: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  z-index: 4;
+}
+
+.leg .lockb {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-000);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-float);
+  color: var(--ink);
+}
+
+.leg .lockb svg {
+  width: 17px;
+  height: 17px;
+}
+
+.leg.pinned .lockb {
+  background: var(--nav-900);
+  color: var(--on-nav);
+  border-color: var(--nav-900);
+}
+
+.leg .strip {
+  display: flex;
+  flex-direction: column;
+  width: 32px;
+  padding: 4px;
+  background: var(--surface-000);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-float);
+  cursor: help;
+}
+
+.leg .strip i {
+  display: block;
+  height: 10px;
+}
+
+.leg .card {
+  display: none;
+  width: 268px;
+  padding: 12px 14px 14px;
+  background: var(--surface-000);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+}
+
+[data-theme="contraste"] .leg .card {
+  border-width: 2px;
+}
+
+.leg.open .strip {
+  display: none;
+}
+
+.leg.open .card {
+  display: block;
+}
+
+.leg .card .hd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.leg .card .hd .lbl {
+  flex: 1;
+}
+
+.leg .card .hd svg {
+  width: 16px;
+  height: 16px;
+}
+
+.leg .card .hd button {
+  border: none;
+  background: none;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  border-radius: var(--radius-sm);
+}
+
+.leg .card .hd button:hover {
+  background: var(--surface-050);
+  color: var(--ink);
+}
+
+.leg .card h4 {
+  margin: 6px 0 10px;
+  font-size: 13px;
+  line-height: 17px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.leg .rows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.leg .rows div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12.5px;
+}
+
+.leg .rows .r {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+.leg .foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.leg .foot .lbl {
+  flex: 1;
+}
+
+.leg .foot .seg button {
+  padding: 5px 9px;
+  font-size: 10px;
+}
+
+.leg .hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 8px;
+  line-height: 15px;
+}
+
+/* Busca de município */
+.busca {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column-reverse;
+  gap: 6px;
+  z-index: 6;
+}
+
+.busca .go {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--nav-900);
+  color: var(--on-nav);
+  border: 2px solid var(--surface-000);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-float);
+}
+
+.busca .go svg {
+  width: 20px;
+  height: 20px;
+}
+
+.busca.open .go {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.busca .box {
+  width: min(280px, calc(100vw - 32px));
+  background: var(--surface-000);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+  overflow: hidden;
+}
+
+.busca input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 14px;
+  background: var(--surface-000);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.busca input:focus {
+  outline: none;
+  box-shadow: inset 0 -2px 0 var(--focus);
+}
+
+.busca ul {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.busca ul:empty {
+  display: none;
+}
+
+.busca li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.busca li:hover,
+.busca li.hi {
+  background: var(--surface-050);
+}
+
+.busca li small {
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.busca li .num {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.busca li mark {
+  background: none;
+  color: var(--ink-brand);
+  font-weight: 700;
+}
+
+.busca .empty {
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Previsões */
+.prevs {
+  left: 68px;
+  top: 16px;
+  width: 188px;
+  padding: 12px 14px;
+  z-index: 4;
+}
+
+.prevs .lbl {
+  display: block;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 8px;
+}
+
+.prevs label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.prevs label.on {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.prevs label small {
+  margin-left: auto;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.prevs input {
+  accent-color: var(--accent);
+  margin: 0;
+}
+
+.prevs .ctl {
+  display: flex;
+  margin-top: 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.prevs .ctl button {
+  flex: 1;
+  height: 30px;
+  border: none;
+  background: var(--surface-050);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+}
+
+.prevs .ctl button + button {
+  border-left: 1px solid var(--line);
+}
+
+.prevs .ctl button:hover {
+  background: var(--line);
+}
+
+.prevs .ctl svg {
+  width: 15px;
+  height: 15px;
+}
+
+.dayflag {
+  position: absolute;
+  left: 50%;
+  top: 16px;
+  transform: translateX(-50%);
+  z-index: 4;
+  padding: 7px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--accent-ink);
+  background: var(--alert-bg);
+  border: 1px solid var(--alert-line);
+  border-radius: var(--radius-md);
+}
+
+@media (pointer: coarse) {
+  .zoom button,
+  .prevs .ctl button,
+  .layers button {
+    min-height: 44px;
+  }
+
+  .zoom button {
+    width: 44px;
+  }
+}
+
+@media (max-width: 900px) {
+  .prevs {
+    left: 64px;
+    width: 168px;
+    padding: 10px 12px;
+  }
+
+  .layers {
+    display: none;
+  }
+
+  .mapa .leaflet-tooltip.mlabel {
+    font-size: 10.5px;
+    padding: 3px 6px 3px 4px;
+  }
+
+  .mlabel small {
+    display: none;
+  }
+
+  .leg {
+    bottom: 76px;
+  }
+}
+
+@media (max-width: 380px) {
+  .prevs {
+    display: none;
+  }
+}

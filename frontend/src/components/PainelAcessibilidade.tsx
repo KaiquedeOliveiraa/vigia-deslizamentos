@@ -4,6 +4,7 @@ import {
   aplicarPreferencias,
   lerPreferencias,
   PADRAO,
+  paletaAplicada,
   salvarPreferencias,
   type Idioma,
   type Preferencias,
@@ -44,7 +45,7 @@ export default function PainelAcessibilidade({ lang, tela, aberto, aoFechar }: P
 
   // Relê ao abrir: a outra porta de entrada (menu ou cabeçalho) ou a legenda podem ter mudado algo.
   useEffect(() => {
-    if (aberto) setPref({ ...lerPreferencias(), lang });
+    if (aberto) setPref({ ...lerPreferencias(), lang, pal: paletaAplicada(document.documentElement) });
   }, [aberto, lang]);
 
   function escolher<K extends keyof Preferencias>(chave: K, valor: Preferencias[K], rotulo: string) {

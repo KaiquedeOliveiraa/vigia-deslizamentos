@@ -118,3 +118,31 @@ a {
     scroll-behavior: auto !important;
   }
 }
+
+/* Selo da classe de risco: cor + ícone */
+.swi {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-sm);
+  flex: none;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.28);
+}
+
+.swi svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.2;
+}
+
+.swi.big {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+}
+
+.swi.big svg {
+  width: 22px;
+  height: 22px;
+}

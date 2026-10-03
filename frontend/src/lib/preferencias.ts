@@ -48,11 +48,25 @@ export function salvarPreferencias(p: Preferencias, armazenamento: () => Armazen
 type Raiz = Pick<HTMLElement, "setAttribute" | "removeAttribute"> & {
   classList: Pick<DOMTokenList, "toggle">;
 };
+type RaizPaleta = { classList: Pick<DOMTokenList, "toggle" | "contains"> };
 
 /** Tema em `data-theme` (auto = sem atributo) e paleta em `pal-geo`/`pal-acc`, ambos no <html>. */
 export function aplicarPreferencias(p: Preferencias, raiz: Raiz): void {
   if (p.theme === "auto") raiz.removeAttribute("data-theme");
   else raiz.setAttribute("data-theme", p.theme);
-  raiz.classList.toggle("pal-acc", p.pal === "acc");
-  raiz.classList.toggle("pal-geo", p.pal !== "acc");
+  aplicarPaleta(p.pal, raiz);
+}
+
+function aplicarPaleta(pal: Paleta, raiz: { classList: Pick<DOMTokenList, "toggle"> }): void {
+  raiz.classList.toggle("pal-acc", pal === "acc");
+  raiz.classList.toggle("pal-geo", pal !== "acc");
+}
+
+/** Paleta em uso, lida da classe do <html>: fonte única da legenda e do painel, mesmo sem armazenamento. */
+export const paletaAplicada = (raiz: RaizPaleta): Paleta => (raiz.classList.contains("pal-acc") ? "acc" : "geo");
+
+/** Troca só a paleta (legenda do mapa), sem mexer no tema aplicado. */
+export function trocarPaleta(pal: Paleta, raiz: RaizPaleta, armazenamento: () => Armazenamento = local): void {
+  salvarPreferencias({ ...lerPreferencias(armazenamento), pal }, armazenamento);
+  aplicarPaleta(pal, raiz);
 }
