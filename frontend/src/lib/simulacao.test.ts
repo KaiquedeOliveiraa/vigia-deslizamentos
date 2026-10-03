@@ -7,7 +7,6 @@ import {
   avisoSimulacao,
   faixasEscala,
   municipioDaBusca,
-  municipiosEmAlerta,
   nivelAviso,
   posicaoEscala,
   simular,
@@ -36,6 +35,7 @@ describe("simularMunicipio (RN07)", () => {
     const r = simularMunicipio(a, 60, 24);
     expect(r?.chuva_efetiva_mm).toBeCloseTo(160);
     expect(r?.indice).toBeCloseTo(0.8);
+    expect(r?.classe).toBe(3);
   });
 
   it("h = 48 com MV = 24: EfR × 0,5", () => {
@@ -60,14 +60,15 @@ describe("simularMunicipio (RN07)", () => {
 describe("simular", () => {
   it("modo regional aplica a mesma chuva a todos", () => {
     const r = simular([a, b], { ibge: a.ibge, chuva_mm: 60, horas: 24, regional: true });
-    expect(r[a.ibge]).toBeCloseTo(0.8);
-    expect(r[b.ibge]).toBeCloseTo(0.5);
+    expect(r[a.ibge].indice).toBeCloseTo(0.8);
+    expect(r[a.ibge].classe).toBe(3);
+    expect(r[b.ibge].indice).toBeCloseTo(0.5);
   });
 
   it("sem modo regional só o escolhido muda; os outros ficam no índice atual", () => {
     const r = simular([a, b], { ibge: a.ibge, chuva_mm: 60, horas: 24, regional: false });
-    expect(r[a.ibge]).toBeCloseTo(0.8);
-    expect(r[b.ibge]).toBeCloseTo(0.3);
+    expect(r[a.ibge].indice).toBeCloseTo(0.8);
+    expect(r[b.ibge]).toEqual({ indice: 0.3, classe: 2 });
   });
 
   it("nunca altera os dados carregados", () => {
@@ -84,15 +85,6 @@ describe("nivelAviso", () => {
     expect(nivelAviso(0.99, 1.0)).toBe("entra");
     expect(nivelAviso(1.0, 2.59)).toBe("continua");
     expect(nivelAviso(1.5, 0.99)).toBe("ok");
-  });
-});
-
-describe("municipiosEmAlerta", () => {
-  it("devolve a lista e a contagem", () => {
-    expect(municipiosEmAlerta({ "4200001": 1.0, "4200002": 0.99, "4200003": 2.7 })).toEqual({
-      ibges: ["4200001", "4200003"],
-      total: 2,
-    });
   });
 });
 
@@ -174,9 +166,10 @@ describe("avisoSimulacao (RN04: sempre condicional)", () => {
 describe("avisoRegional", () => {
   const t = tradutor("pt");
   const nomes = { "1": "A", "2": "B", "3": "C" };
+  const valores = (v: Record<string, number>) => Object.fromEntries(Object.entries(v).map(([k, indice]) => [k, { indice, classe: 1 as const }]));
 
   it("lista os municípios que passariam de 1,00", () => {
-    expect(avisoRegional(t, { "1": 1.2, "2": 0.4, "3": 3 }, nomes)).toEqual({
+    expect(avisoRegional(t, valores({ "1": 1.0, "2": 0.99, "3": 3 }), nomes)).toEqual({
       tipo: "warn",
       titulo: "Chuva regional: 2 de 3 em alerta",
       texto: "Municípios que passariam de 1,00: A, C.",
@@ -184,7 +177,7 @@ describe("avisoRegional", () => {
   });
 
   it("nenhum em alerta", () => {
-    expect(avisoRegional(t, { "1": 0.2, "2": 0.4, "3": 0.9 }, nomes)).toEqual({
+    expect(avisoRegional(t, valores({ "1": 0.2, "2": 0.4, "3": 0.9 }), nomes)).toEqual({
       tipo: "ok",
       titulo: "Chuva regional: 0 de 3 em alerta",
       texto: "Nenhum município passaria de 1,00.",

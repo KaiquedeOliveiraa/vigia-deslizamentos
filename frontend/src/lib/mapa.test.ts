@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { tradutor } from "../i18n";
-import geojson from "../data/municipios.geojson?raw";
 import exemplo from "../fixtures/indices.exemplo.json";
+import { FEICOES } from "./municipios";
 import type { Indices } from "./tipos";
 import { destacar, limites, municipiosMonitorados, valoresDoDia, mensagemSelecao, passoDia, posicoes, rotuloAria, rotuloDia, type FeicaoMunicipio } from "./mapa";
 
@@ -16,9 +16,13 @@ const feicao = (monitorado: boolean, coordinates: number[][][]): FeicaoMunicipio
 
 describe("rotuloAria", () => {
   it("índice, classe e alerta a partir de 1,00", () => {
-    expect(rotuloAria(pt, "Ibirama", 1.3448)).toBe("Ibirama: índice 1,34, classe moderado, em alerta");
-    expect(rotuloAria(pt, "Witmarsum", 0.9999)).toBe("Witmarsum: índice 1,00, classe baixo");
-    expect(rotuloAria(pt, "Ibirama", 1)).toBe("Ibirama: índice 1,00, classe moderado, em alerta");
+    expect(rotuloAria(pt, "Ibirama", { indice: 1.3448, classe: 4 })).toBe("Ibirama: índice 1,34, classe moderado, em alerta");
+    expect(rotuloAria(pt, "Witmarsum", { indice: 0.9999, classe: 3 })).toBe("Witmarsum: índice 1,00, classe baixo");
+    expect(rotuloAria(pt, "Ibirama", { indice: 1, classe: 4 })).toBe("Ibirama: índice 1,00, classe moderado, em alerta");
+  });
+
+  it("usa a classe publicada, sem recalcular pelo índice", () => {
+    expect(rotuloAria(pt, "Ibirama", { indice: 1.3448, classe: 5 })).toBe("Ibirama: índice 1,34, classe alto, em alerta");
   });
 
   it("sem dados (null) e sem valor (estações: só o nome)", () => {
@@ -27,15 +31,15 @@ describe("rotuloAria", () => {
   });
 
   it("em espanhol", () => {
-    expect(rotuloAria(es, "Ibirama", 2.7)).toBe("Ibirama: índice 2,70, clase muy alto, en alerta");
+    expect(rotuloAria(es, "Ibirama", { indice: 2.7, classe: 6 })).toBe("Ibirama: índice 2,70, clase muy alto, en alerta");
     expect(rotuloAria(es, "Dona Emma", null)).toBe("Dona Emma: sin datos");
   });
 });
 
 describe("mensagemSelecao", () => {
   it("anuncia índice, classe e alerta", () => {
-    expect(mensagemSelecao(pt, "Ibirama", 1.34)).toBe("Ibirama selecionado. Índice 1,34, classe moderado, em alerta.");
-    expect(mensagemSelecao(es, "Witmarsum", 0.3)).toBe("Witmarsum seleccionado. Índice 0,30, clase extremadamente bajo, sin alerta.");
+    expect(mensagemSelecao(pt, "Ibirama", { indice: 1.34, classe: 4 })).toBe("Ibirama selecionado. Índice 1,34, classe moderado, em alerta.");
+    expect(mensagemSelecao(es, "Witmarsum", { indice: 0.3, classe: 1 })).toBe("Witmarsum seleccionado. Índice 0,30, clase extremadamente bajo, sin alerta.");
     expect(mensagemSelecao(pt, "Dona Emma", null)).toBe("Dona Emma: sem dados");
   });
 });
@@ -56,7 +60,7 @@ describe("posicoes e limites", () => {
   });
 
   it("os 6 municípios monitorados do GeoJSON ficam no Alto Vale", () => {
-    const fs = JSON.parse(geojson).features as FeicaoMunicipio[];
+    const fs = FEICOES;
     expect(fs.filter((f) => f.properties.monitorado)).toHaveLength(6);
     const [[s, o], [n, l]] = limites(fs);
     expect(s).toBeGreaterThan(-27.4);
@@ -94,15 +98,16 @@ describe("valoresDoDia", () => {
   it("índice de cada município no dia d; sem dados → null", () => {
     const indices = { ...(exemplo as Indices), municipios_sem_dados: ["4205100"] };
     const v = valoresDoDia(indices, 1);
-    expect(v["4206900"]).toBeCloseTo(0.8812);
+    expect(v["4206900"]?.indice).toBeCloseTo(0.8812);
     expect(v["4205100"]).toBeNull();
-    expect(valoresDoDia(indices, 0)["4206900"]).toBeCloseTo(1.3448);
+    const dia = indices.municipios.find((m) => m.ibge === "4206900")?.dias.find((x) => x.d === 0);
+    expect(valoresDoDia(indices, 0)["4206900"]).toEqual({ indice: dia?.indice, classe: dia?.classe });
   });
 });
 
 describe("municipiosMonitorados", () => {
   it("só os monitorados, em ordem alfabética", () => {
-    const fs = JSON.parse(geojson).features as FeicaoMunicipio[];
+    const fs = FEICOES;
     const lista = municipiosMonitorados(fs);
     expect(lista).toHaveLength(6);
     expect(lista[0]).toEqual({ ibge: "4205100", nome: "Dona Emma" });

@@ -2,7 +2,7 @@ import "../styles/dados.css";
 import { ArrowDown, ArrowRight, ArrowUp, Calculator, ChartLine, ClipboardList, Droplet, MapIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { tradutor, type T } from "../i18n";
-import { classe, emAlerta, infoClasse, LIMIAR_ALERTA } from "../lib/classes";
+import { emAlerta, infoClasse, LIMIAR_ALERTA } from "../lib/classes";
 import { carregar, lerIndices, lerOcorrencias, ocorrenciasDoMunicipio, separarPorDados, type NomeMunicipio, type Resultado } from "../lib/dados";
 import {
   formatarData,
@@ -18,7 +18,7 @@ import { diasEixo, etiquetaChuva, indicadores, serieMunicipio, variacoesDiarias 
 import { municipioInicial, variaveis } from "../lib/monitoramento";
 import type { Idioma } from "../lib/preferencias";
 import { tendencia } from "../lib/texto";
-import type { Dia, Indices, Municipio, Ocorrencia } from "../lib/tipos";
+import type { Indices, Municipio, Ocorrencia } from "../lib/tipos";
 import { anunciar } from "./anunciar";
 import { Evolucao, Minigrafico, Pluviometro } from "./Graficos";
 import EstadoCarregamento from "./EstadoCarregamento";
@@ -28,7 +28,7 @@ const PERIODOS = [7, 5, 15];
 const ICONE_TENDENCIA = { subindo: ArrowUp, descendo: ArrowDown, estável: ArrowRight };
 const CLASSE_TENDENCIA = { subindo: "up", descendo: "dn", estável: "" };
 
-const d0 = (m: Municipio) => m.dias.find((d) => d.d === 0)!;
+const d0 = (m: Municipio) => m.dias.find((d) => d.d === 0);
 
 export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly NomeMunicipio[] }) {
   const t = tradutor(lang);
@@ -62,7 +62,8 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
 
   const selecionar = (novo: string) => {
     setIbge(novo);
-    anunciar(t("Evolução do índice — {M}", { M: municipios.find((m) => m.ibge === novo)!.nome }));
+    const m = municipios.find((x) => x.ibge === novo);
+    if (m) anunciar(t("Evolução do índice — {M}", { M: m.nome }));
   };
 
   const tabela = <Tabela t={t} municipios={municipios} semDados={semDados} ibge={destaque?.ibge} eixo={eixo} aoSelecionar={selecionar} />;
@@ -129,7 +130,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
                 </span>
                 <span>{t("↑/↓ mudança de classe")}</span>
               </div>
-              <Evolucao t={t} municipios={municipios} ibge={destaque.ibge} eixo={eixo} aoSelecionar={selecionar} />
+              <Evolucao t={t} municipios={municipios} destaque={destaque} eixo={eixo} aoSelecionar={selecionar} />
               {semDados.length > 0 && (
                 <p className="sub">{t("Sem dados nesta execução: {M}.", { M: semDados.map((m) => m.nome).join(", ") })}</p>
               )}
@@ -148,7 +149,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
           {tabela}
 
           <div className="grid2 meio">
-            <Detalhes t={t} municipio={destaque} dia={d0(destaque)} gerado_em={indices.gerado_em} />
+            <Detalhes t={t} municipio={destaque} gerado_em={indices.gerado_em} />
             <Ocorrencias t={t} municipio={destaque} ocorrencias={ocorrencias} />
           </div>
         </>
@@ -207,8 +208,10 @@ function Tabela({ t, municipios, semDados, ibge, eixo, aoSelecionar }: PropsTabe
           </thead>
           <tbody>
             {municipios.map((m) => {
+              // separarPorDados só põe aqui municípios com D0.
               const dia = d0(m);
-              const n = classe(dia.indice);
+              if (!dia) return null;
+              const n = dia.classe;
               const tend = tendencia(dia.indice, dia.dia_alvo, m.historico);
               const delta = variacoesDiarias(serieMunicipio(m, diasEixo(dia.dia_alvo, 2))).at(-1);
               const Icone = tend ? ICONE_TENDENCIA[tend] : ArrowRight;
@@ -264,7 +267,9 @@ function Tabela({ t, municipios, semDados, ibge, eixo, aoSelecionar }: PropsTabe
   );
 }
 
-function Detalhes({ t, municipio, dia, gerado_em }: { t: T; municipio: Municipio; dia: Dia; gerado_em: string }) {
+function Detalhes({ t, municipio, gerado_em }: { t: T; municipio: Municipio; gerado_em: string }) {
+  const dia = d0(municipio);
+  if (!dia) return null;
   const linhas: [string, string][] = [
     [t("Probabilidade de deslizamentos pontuais"), formatarPercentual(dia.prob.pontuais)],
     [t("Probabilidade de deslizamentos esparsos"), formatarPercentual(dia.prob.esparsos)],

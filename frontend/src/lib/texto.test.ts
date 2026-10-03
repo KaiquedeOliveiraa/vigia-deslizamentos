@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { buscar, normalizar, sentido, tendencia, textoCompartilhar } from "./texto";
 import { tradutor } from "../i18n";
+import type { HistoricoItem } from "./tipos";
 
-const historico = (indice: number) => [
+const historico = (indice: number): HistoricoItem[] => [
   { dia_alvo: "2026-09-27", indice: 0.1, classe: 1 },
   { dia_alvo: "2026-09-28", indice, classe: 4 },
 ];
@@ -39,11 +40,11 @@ describe("busca", () => {
 
 describe("textoCompartilhar", () => {
   it("município, classe e índice", () => {
-    expect(textoCompartilhar("Ibirama", 1.3449)).toBe("Ibirama — moderado (1,34)");
+    expect(textoCompartilhar("Ibirama", { indice: 1.3449, classe: 4 })).toBe("Ibirama — moderado (1,34)");
   });
 
   it("traduz o nome da classe", () => {
-    expect(textoCompartilhar("Ibirama", 3, tradutor("es"))).toBe("Ibirama — muy alto (3,00)");
+    expect(textoCompartilhar("Ibirama", { indice: 3, classe: 6 }, tradutor("es"))).toBe("Ibirama — muy alto (3,00)");
   });
 });
 

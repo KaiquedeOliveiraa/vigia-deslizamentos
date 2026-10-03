@@ -1,6 +1,6 @@
-import { classe, infoClasse } from "./classes";
+import { infoClasse } from "./classes";
 import { formatarIndice } from "./formato";
-import type { HistoricoItem } from "./tipos";
+import type { HistoricoItem, IndiceClasse } from "./tipos";
 
 export type Tendencia = "subindo" | "descendo" | "estável";
 
@@ -36,5 +36,5 @@ export function buscar<T extends { nome: string }>(lista: T[], termo: string): T
 }
 
 /** `traduzir` recebe o nome da classe em português. */
-export const textoCompartilhar = (nome: string, indice: number, traduzir = (s: string) => s): string =>
-  `${nome} — ${traduzir(infoClasse(classe(indice)).nome)} (${formatarIndice(indice)})`;
+export const textoCompartilhar = (nome: string, { indice, classe }: IndiceClasse, traduzir = (s: string) => s): string =>
+  `${nome} — ${traduzir(infoClasse(classe).nome)} (${formatarIndice(indice)})`;

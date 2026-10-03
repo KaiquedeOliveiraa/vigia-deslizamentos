@@ -1,18 +1,16 @@
 import "../styles/estacoes.css";
 import { MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
-import geojson from "../data/municipios.geojson?raw";
 import { tradutor } from "../i18n";
 import { carregar, lerEstacoes, type Resultado } from "../lib/dados";
 import { ordenarPorDistancia, rotuloEstacao, textoDistancia } from "../lib/estacoes";
 import { formatarCoord } from "../lib/formato";
-import type { FeicaoMunicipio } from "../lib/mapa";
+import { NOMES } from "../lib/municipios";
 import type { Idioma } from "../lib/preferencias";
 import type { Estacao } from "../lib/tipos";
 import EstadoCarregamento from "./EstadoCarregamento";
 import Mapa, { type Pino } from "./Mapa";
 
-const NOMES = new Map((JSON.parse(geojson).features as FeicaoMunicipio[]).map((f) => [f.properties.ibge, f.properties.nome]));
 const nome = (ibge: string) => NOMES.get(ibge) ?? ibge;
 
 /** Estações automáticas do INMET da região (RF09): pins no mapa em branco e lista à direita. */

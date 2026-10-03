@@ -2,20 +2,19 @@ import { divIcon, type Map as MapaL, type Marker as MarcadorL, type Polygon as P
 import { useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { MapContainer, Marker, Polygon, TileLayer, Tooltip, useMap } from "react-leaflet";
-import geojson from "../data/municipios.geojson?raw";
 import { tradutor, type T } from "../i18n";
-import { classe, CLASSES, infoClasse, SEM_DADOS } from "../lib/classes";
+import { CLASSES, infoClasse, SEM_DADOS } from "../lib/classes";
 import { formatarIndice } from "../lib/formato";
-import { CAMADAS, limites, posicoes, rotuloAria, type FeicaoMunicipio, type IdCamada, type Valor } from "../lib/mapa";
+import { CAMADA_NEUTRA, limites, posicoes, rotuloAria, type Camada, type FeicaoMunicipio, type LatLon, type Valor } from "../lib/mapa";
+import { FEICOES } from "../lib/municipios";
 import Camadas from "./Camadas";
 import type { Pino, PropsMapa } from "./Mapa";
 import SeloClasse from "./SeloClasse";
 
-const FEICOES = JSON.parse(geojson).features as FeicaoMunicipio[];
-const MONITORADOS = FEICOES.filter((f) => f.properties.monitorado);
-const VIZINHOS = FEICOES.filter((f) => !f.properties.monitorado);
+const COM_POSICOES = FEICOES.map((feicao) => ({ feicao, pos: posicoes(feicao) }));
+const MONITORADOS = COM_POSICOES.filter((x) => x.feicao.properties.monitorado);
+const VIZINHOS = COM_POSICOES.filter((x) => !x.feicao.properties.monitorado);
 const LIMITES = limites(FEICOES);
-const POSICOES = new Map(FEICOES.map((f) => [f.properties.ibge, posicoes(f)]));
 
 const id = (n: number) => `hachura-${n}`;
 
@@ -53,18 +52,20 @@ function Hachuras() {
 interface PropsMunicipio {
   t: T;
   feicao: FeicaoMunicipio;
+  /** Anéis do polígono, já em [lat, lon]. */
+  pos: LatLon[][];
   valor: Valor;
   selecionado: boolean;
   onSelecionar?: (ibge: string) => void;
 }
 
-function Municipio({ t, feicao, valor, selecionado, onSelecionar }: PropsMunicipio) {
+function Municipio({ t, feicao, pos, valor, selecionado, onSelecionar }: PropsMunicipio) {
   const { ibge, nome } = feicao.properties;
   const fundo = useRef<PoligonoL>(null);
   const hachura = useRef<PoligonoL>(null);
   const escolher = useRef(onSelecionar);
   escolher.current = onSelecionar;
-  const n = typeof valor === "number" ? classe(valor) : null;
+  const n = valor ? valor.classe : null;
 
   const interativo = onSelecionar !== undefined;
 
@@ -105,7 +106,6 @@ function Municipio({ t, feicao, valor, selecionado, onSelecionar }: PropsMunicip
     }
   }, [t, nome, valor, n, selecionado, interativo]);
 
-  const pos = POSICOES.get(ibge)!;
   return (
     <>
       <Polygon
@@ -119,7 +119,7 @@ function Municipio({ t, feicao, valor, selecionado, onSelecionar }: PropsMunicip
         <Tooltip permanent direction="center" className="mlabel">
           {valor !== undefined && <SeloClasse classe={n} />}
           <span>
-            {nome} {typeof valor === "number" && <b>{formatarIndice(valor)}</b>}
+            {nome} {valor && <b>{formatarIndice(valor.indice)}</b>}
             {valor !== undefined && <small>{t(n ? infoClasse(n).nome : SEM_DADOS.nome)}</small>}
           </span>
         </Tooltip>
@@ -192,9 +192,7 @@ export default function MapaLeaflet({
 }: PropsMapa) {
   const t = useMemo(() => tradutor(lang), [lang]);
   const [mapa, setMapa] = useState<MapaL | null>(null);
-  // Neutro: o fundo claro não compete com as cores das classes (o protótipo abria no Satélite).
-  const [camada, setCamada] = useState<IdCamada>("neutro");
-  const fundo = CAMADAS.find((c) => c.id === camada)!;
+  const [fundo, setFundo] = useState<Camada>(CAMADA_NEUTRA);
   const comPinos = pinos.length > 0;
   // Só vale na criação do mapa: quem passa pinos já os tem ao montar o Mapa.
   const enquadramento = comPinos ? limites(FEICOES, pinos.map((p) => [p.lat, p.lon])) : LIMITES;
@@ -243,18 +241,19 @@ export default function MapaLeaflet({
           maxZoom={fundo.zoomMax}
           {...(fundo.subdominios && { subdomains: fundo.subdominios })}
         />
-        {VIZINHOS.map((f) => (
-          <Polygon key={f.properties.ibge} positions={POSICOES.get(f.properties.ibge)!} className="ctx" interactive={false}>
+        {VIZINHOS.map(({ feicao: f, pos }) => (
+          <Polygon key={f.properties.ibge} positions={pos} className="ctx" interactive={false}>
             <Tooltip permanent direction="center" className="ctxl">
               {f.properties.nome}
             </Tooltip>
           </Polygon>
         ))}
-        {MONITORADOS.map((f) => (
+        {MONITORADOS.map(({ feicao: f, pos }) => (
           <Municipio
             key={f.properties.ibge}
             t={t}
             feicao={f}
+            pos={pos}
             valor={valores[f.properties.ibge]}
             selecionado={selecionado === f.properties.ibge}
             onSelecionar={onSelecionar}
@@ -273,7 +272,7 @@ export default function MapaLeaflet({
           −
         </button>
       </div>
-      {camadas && <Camadas lang={lang} camada={camada} aoMudar={setCamada} />}
+      {camadas && <Camadas lang={lang} camada={fundo} aoMudar={setFundo} />}
     </>
   );
 }

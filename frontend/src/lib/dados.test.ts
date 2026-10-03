@@ -48,6 +48,18 @@ describe("lerIndices", () => {
     const dias = copia(indices) as { municipios: Record<string, unknown>[] };
     dias.municipios[0].dias = "x";
     expect(lerIndices(dias).ok).toBe(false);
+    const historico = copia(indices) as { municipios: Record<string, unknown>[] };
+    historico.municipios[0].historico = null;
+    expect(lerIndices(historico).ok).toBe(false);
+  });
+
+  it.each([0, 8, 2.5, "4", null])("classe %s (fora de 1–7) no dia ou no historico → erro", (classe) => {
+    const dia = copia(indices) as { municipios: { dias: Record<string, unknown>[] }[] };
+    dia.municipios[0].dias[0].classe = classe;
+    expect(lerIndices(dia)).toEqual({ ok: false, erro: expect.stringContaining("classe") });
+    const hist = copia(indices) as { municipios: { historico: Record<string, unknown>[] }[] };
+    hist.municipios[0].historico[0].classe = classe;
+    expect(lerIndices(hist)).toEqual({ ok: false, erro: expect.stringContaining("classe") });
   });
 });
 

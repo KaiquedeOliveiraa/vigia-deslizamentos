@@ -1,18 +1,19 @@
 import { Search } from "lucide-react";
 import { useId, useRef, useState, type KeyboardEvent } from "react";
 import { tradutor } from "../i18n";
-import { classe, infoClasse, SEM_DADOS } from "../lib/classes";
+import { infoClasse, SEM_DADOS } from "../lib/classes";
 import { formatarIndice } from "../lib/formato";
 import { destacar } from "../lib/mapa";
 import type { Idioma } from "../lib/preferencias";
 import { buscar } from "../lib/texto";
+import type { IndiceClasse } from "../lib/tipos";
 import SeloClasse from "./SeloClasse";
 
 export interface ItemBusca {
   ibge: string;
   nome: string;
   /** `null` = sem dados. */
-  indice: number | null;
+  valor: IndiceClasse | null;
 }
 
 interface Props {
@@ -96,7 +97,7 @@ export default function Busca({ lang, municipios, aoEscolher }: Props) {
           />
           <ul role="listbox" id={`${base}-lista`} aria-label={t("Municípios")}>
             {resultados.map((m, i) => {
-              const n = m.indice === null ? null : classe(m.indice);
+              const n = m.valor && m.valor.classe;
               return (
                 <li
                   key={m.ibge}
@@ -111,7 +112,7 @@ export default function Busca({ lang, municipios, aoEscolher }: Props) {
                   <span>
                     <Nome nome={m.nome} termo={termo} /> <small>{t(n ? infoClasse(n).nome : SEM_DADOS.nome)}</small>
                   </span>
-                  {m.indice !== null && <span className="num">{formatarIndice(m.indice)}</span>}
+                  {m.valor && <span className="num">{formatarIndice(m.valor.indice)}</span>}
                 </li>
               );
             })}

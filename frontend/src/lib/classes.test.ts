@@ -1,5 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { CLASSES, NAO_MONITORADO, SEM_DADOS, classe, emAlerta } from "./classes";
+// Lido do backend a cada execução: se as faixas mudarem lá, este teste acusa a diferença.
+import classesPy from "../../../backend/app/classificacao/classes.py?raw";
+import { CLASSE_CRITICA, CLASSES, LIMIAR_ALERTA, NAO_MONITORADO, SEM_DADOS, classe, emAlerta, infoClasse } from "./classes";
+
+describe("paridade com backend/app/classificacao/classes.py", () => {
+  it("limite inferior de cada classe igual ao do backend", () => {
+    const bloco = classesPy.match(/_LIMITES_INFERIORES_POR_CLASSE = \(([\s\S]*?)^\)/m)?.[1] ?? "";
+    const limites = [...bloco.matchAll(/\((\d+),\s*([\d.]+)\)/g)].map(([, n, min]) => [Number(n), Number(min)]);
+    expect(limites).toHaveLength(CLASSES.length - 1);
+    expect(Object.fromEntries(limites)).toEqual(Object.fromEntries(CLASSES.slice(1).map((c) => [c.numero, c.min])));
+    expect(CLASSES[0].min).toBe(0);
+  });
+
+  it("mesmo gatilho de alerta (RN02)", () => {
+    expect(Number(classesPy.match(/^LIMIAR_ALERTA = ([\d.]+)/m)?.[1])).toBe(LIMIAR_ALERTA);
+  });
+});
 
 describe("classe", () => {
   it("usa as mesmas faixas [a, b) do backend", () => {
@@ -13,6 +29,10 @@ describe("classe", () => {
     expect(classe(2.6)).toBe(6);
     expect(classe(3.4)).toBe(7);
     expect(classe(10)).toBe(7);
+  });
+
+  it("classe crítica (alerta máximo na simulação) começa em 2,60", () => {
+    expect(infoClasse(CLASSE_CRITICA)).toMatchObject({ numero: 6, nome: "muito alto", min: 2.6 });
   });
 
   it("alerta a partir de 1,00 (RN02)", () => {

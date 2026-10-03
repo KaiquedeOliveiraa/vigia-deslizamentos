@@ -2,12 +2,11 @@
 import "../styles/tokens.css";
 import "../styles/base.css";
 import "../styles/estrutura.css";
-import geojson from "../data/municipios.geojson?raw";
 import Cabecalho from "../components/Cabecalho";
 import Menu from "../components/Menu";
 import { atributoLang, idioma, tradutor } from "../i18n";
-import { municipiosMonitorados, type FeicaoMunicipio } from "../lib/mapa";
 import { urlDados } from "../lib/config";
+import { MONITORADOS } from "../lib/municipios";
 import { CHAVE } from "../lib/preferencias";
 import { TELAS, rota } from "../lib/telas";
 
@@ -19,14 +18,16 @@ interface Props {
 const { tela } = Astro.props;
 const lang = idioma(Astro.params.lang);
 const t = tradutor(lang);
-const nome = TELAS.find((x) => x.rota === tela)!.nome;
+const atual = TELAS.find((x) => x.rota === tela);
+if (!atual) throw new Error(`Base.astro: tela desconhecida "${tela}"`);
+const { nome } = atual;
 const outroLang = lang === "es" ? "pt" : "es";
 // O script inline do <head> roda antes da pintura: idioma lembrado (vai para a outra versão da página),
 // tema e paleta, com as mesmas regras de lerPreferencias/aplicarPreferencias (src/lib/preferencias.ts).
 
 const FONTES = "https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap";
 
-const municipios = municipiosMonitorados(JSON.parse(geojson).features as FeicaoMunicipio[]).map((m) => m.nome);
+const municipios = MONITORADOS.map((m) => m.nome);
 ---
 <!doctype html>
 <html lang={atributoLang(lang)} class="pal-geo">

@@ -1,6 +1,6 @@
 // Escalas e séries dos gráficos (pluviômetro, evolução do índice) e indicadores da tela de dados.
-import { CLASSES, classe, emAlerta, infoClasse, type NumeroClasse } from "./classes";
-import type { Indices, Municipio } from "./tipos";
+import { CLASSES, emAlerta, infoClasse, type NumeroClasse } from "./classes";
+import type { HistoricoItem, Indices, Municipio } from "./tipos";
 
 export interface Ponto {
   dia_alvo: string;
@@ -40,14 +40,14 @@ export interface Area {
   base: number;
 }
 
-export interface Coordenada {
+export interface Coordenada<P extends Ponto = Ponto> {
   x: number;
   y: number;
-  ponto: Ponto;
+  ponto: P;
 }
 
 /** Posição de cada ponto: x pela data no `eixo` (fora do eixo fica de fora), y pelo índice de 0 a `max`. */
-export function coordenadas(serie: Ponto[], eixo: string[], max: number, area: Area): Coordenada[] {
+export function coordenadas<P extends Ponto>(serie: P[], eixo: string[], max: number, area: Area): Coordenada<P>[] {
   const passo = eixo.length > 1 ? (area.largura - area.esq - area.dir) / (eixo.length - 1) : 0;
   const util = area.altura - area.topo - area.base;
   return serie.flatMap((ponto) => {
@@ -75,20 +75,18 @@ export const marcasEvolucao = (max: number): number[] =>
   [0, 0.4, 0.7, 1.0, 1.4, ...CLASSES.filter((c) => c.min >= 1.8).map((c) => c.min)].filter((v) => v < max);
 
 /** "↑ moderado" / "↓ moderado" quando a classe muda de um dia para o seguinte. */
-export function marcaClasse(anterior: number, atual: number): string | null {
-  const de = classe(anterior);
-  const para = classe(atual);
+export function marcaClasse(de: NumeroClasse, para: NumeroClasse): string | null {
   if (de === para) return null;
   return `${para > de ? "↑" : "↓"} ${infoClasse(para).nome}`;
 }
 
 const d0 = (m: Municipio) => m.dias.find((d) => d.d === 0);
 
-/** Pontos do historico e do D0 cujos dias estão no `eixo` (diasEixo): falhas no historico não puxam dias mais antigos. */
-export function serieMunicipio(m: Municipio, eixo: readonly string[]): Ponto[] {
+/** Pontos do historico e do D0 (com a classe publicada) cujos dias estão no `eixo` (diasEixo): falhas no historico não puxam dias mais antigos. */
+export function serieMunicipio(m: Municipio, eixo: readonly string[]): HistoricoItem[] {
   const atual = d0(m);
-  const pontos: Ponto[] = m.historico.map(({ dia_alvo, indice }) => ({ dia_alvo, indice }));
-  if (atual) pontos.push({ dia_alvo: atual.dia_alvo, indice: atual.indice });
+  const pontos: HistoricoItem[] = m.historico.map(({ dia_alvo, indice, classe }) => ({ dia_alvo, indice, classe }));
+  if (atual) pontos.push({ dia_alvo: atual.dia_alvo, indice: atual.indice, classe: atual.classe });
   return pontos.filter((p) => eixo.includes(p.dia_alvo));
 }
 

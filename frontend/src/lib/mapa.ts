@@ -1,9 +1,9 @@
 // Regras do mapa: rótulos acessíveis, geometria para o Leaflet, destaque da busca e dias de previsão.
 import type { T } from "../i18n";
-import { classe, emAlerta, infoClasse } from "./classes";
+import { emAlerta, infoClasse } from "./classes";
 import { formatarIndice } from "./formato";
 import { normalizar } from "./texto";
-import type { Indices } from "./tipos";
+import type { IndiceClasse, Indices } from "./tipos";
 
 export interface FeicaoMunicipio {
   type: "Feature";
@@ -11,8 +11,8 @@ export interface FeicaoMunicipio {
   geometry: { type: "Polygon"; coordinates: number[][][] };
 }
 
-/** Índice do município no mapa: número, `null` = sem dados, `undefined` = sem valor (municípios em branco). */
-export type Valor = number | null | undefined;
+/** Índice e classe do município no mapa; `null` = sem dados, `undefined` = sem valor (municípios em branco). */
+export type Valor = IndiceClasse | null | undefined;
 
 export type LatLon = [number, number];
 
@@ -20,23 +20,26 @@ export type LatLon = [number, number];
 export function rotuloAria(t: T, nome: string, valor: Valor): string {
   if (valor === undefined) return nome;
   if (valor === null) return t("{M}: sem dados", { M: nome });
-  const modelo = emAlerta(valor) ? "{M}: índice {N}, classe {C}, em alerta" : "{M}: índice {N}, classe {C}";
-  return t(modelo, { M: nome, N: formatarIndice(valor), C: infoClasse(classe(valor)).nome });
+  const modelo = emAlerta(valor.indice) ? "{M}: índice {N}, classe {C}, em alerta" : "{M}: índice {N}, classe {C}";
+  return t(modelo, { M: nome, N: formatarIndice(valor.indice), C: infoClasse(valor.classe).nome });
 }
 
 /** Mensagem do aria-live ao selecionar um município. */
 export function mensagemSelecao(t: T, nome: string, valor: Valor): string {
   if (valor == null) return rotuloAria(t, nome, valor);
-  const modelo = emAlerta(valor)
+  const modelo = emAlerta(valor.indice)
     ? "{M} selecionado. Índice {N}, classe {C}, em alerta."
     : "{M} selecionado. Índice {N}, classe {C}, sem alerta.";
-  return t(modelo, { M: nome, N: formatarIndice(valor), C: infoClasse(classe(valor)).nome });
+  return t(modelo, { M: nome, N: formatarIndice(valor.indice), C: infoClasse(valor.classe).nome });
 }
 
-/** `valores` do mapa no dia `d` (0 = dia-alvo): sem dados ou sem esse dia → `null`. */
-export function valoresDoDia(indices: Indices, d: number): Record<string, number | null> {
-  const valores: Record<string, number | null> = {};
-  for (const m of indices.municipios) valores[m.ibge] = m.dias.find((x) => x.d === d)?.indice ?? null;
+/** `valores` do mapa no dia `d` (0 = dia-alvo), com a classe publicada: sem dados ou sem esse dia → `null`. */
+export function valoresDoDia(indices: Indices, d: number): Record<string, IndiceClasse | null> {
+  const valores: Record<string, IndiceClasse | null> = {};
+  for (const m of indices.municipios) {
+    const dia = m.dias.find((x) => x.d === d);
+    valores[m.ibge] = dia ? { indice: dia.indice, classe: dia.classe } : null;
+  }
   for (const ibge of indices.municipios_sem_dados) valores[ibge] = null;
   return valores;
 }
@@ -95,6 +98,16 @@ export interface Camada {
 
 const OSM = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
+/** Fundo inicial: o cinza claro não compete com as cores das classes (o protótipo abria no Satélite). */
+export const CAMADA_NEUTRA: Camada = {
+  // CARTO passou a exigir chave; o Light Gray Canvas da Esri é livre com atribuição.
+  id: "neutro",
+  nome: "Neutro",
+  url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+  atribuicao: `&copy; Esri, HERE, Garmin, ${OSM}`,
+  zoomMax: 16,
+};
+
 /** Provedores gratuitos de mapa de fundo, cada um com a atribuição exigida. */
 export const CAMADAS: readonly Camada[] = [
   {
@@ -104,14 +117,7 @@ export const CAMADAS: readonly Camada[] = [
     atribuicao: "Imagens &copy; Esri, Maxar, Earthstar Geographics",
     zoomMax: 18,
   },
-  {
-    // CARTO passou a exigir chave; o Light Gray Canvas da Esri é livre com atribuição.
-    id: "neutro",
-    nome: "Neutro",
-    url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-    atribuicao: `&copy; Esri, HERE, Garmin, ${OSM}`,
-    zoomMax: 16,
-  },
+  CAMADA_NEUTRA,
   {
     id: "ruas",
     nome: "Ruas",

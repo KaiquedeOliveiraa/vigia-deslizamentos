@@ -74,23 +74,23 @@ describe("escala", () => {
 
 describe("marcaClasse", () => {
   it("marca subida e descida de classe entre dias consecutivos", () => {
-    expect(marcaClasse(0.9, 1.1)).toBe("↑ moderado");
-    expect(marcaClasse(1.9, 1.5)).toBe("↓ moderado");
+    expect(marcaClasse(3, 4)).toBe("↑ moderado");
+    expect(marcaClasse(5, 4)).toBe("↓ moderado");
   });
 
   it("sem mudança de classe não há marca", () => {
-    expect(marcaClasse(1.0, 1.79)).toBeNull();
+    expect(marcaClasse(4, 4)).toBeNull();
   });
 });
 
 describe("serieMunicipio", () => {
   const m = municipio("4200001", "A", { indice: 2.0, efr_mm: 50 }, historico15);
 
-  it("pontos do historico e do D0 dentro dos dias do eixo", () => {
+  it("pontos do historico e do D0 dentro dos dias do eixo, com a classe publicada", () => {
     const serie = serieMunicipio(m, diasEixo("2026-10-02", 7));
     expect(serie).toHaveLength(7);
     expect(serie[0].dia_alvo).toBe("2026-09-26");
-    expect(serie[6]).toEqual({ dia_alvo: "2026-10-02", indice: 2.0 });
+    expect(serie[6]).toEqual({ dia_alvo: "2026-10-02", indice: 2.0, classe: 1 });
   });
 
   it("5 e 15 dias", () => {

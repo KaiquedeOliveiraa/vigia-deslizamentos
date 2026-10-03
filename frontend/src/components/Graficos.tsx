@@ -1,6 +1,6 @@
 import { useRef, type KeyboardEvent } from "react";
 import type { T } from "../i18n";
-import { classe, infoClasse, LIMIAR_ALERTA } from "../lib/classes";
+import { infoClasse, LIMIAR_ALERTA } from "../lib/classes";
 import { formatarData, formatarIndice, formatarMm, formatarNumero, formatarVariacao } from "../lib/formato";
 import {
   coordenadas,
@@ -26,19 +26,19 @@ const pontos = (c: { x: number; y: number }[]) => c.map((p) => `${p.x.toFixed(1)
 interface PropsEvolucao {
   t: T;
   municipios: Municipio[];
-  ibge: string;
+  destaque: Municipio;
   /** Dias do eixo X, do mais antigo ao D0. */
   eixo: string[];
   aoSelecionar: (ibge: string) => void;
 }
 
 /** Evolução do índice (RF06): faixas das classes, linha de alerta, demais municípios em cinza e o destaque. */
-export function Evolucao({ t, municipios, ibge, eixo, aoSelecionar }: PropsEvolucao) {
+export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsEvolucao) {
   const chips = useRef<(HTMLButtonElement | null)[]>([]);
-  const series = new Map(municipios.map((m) => [m.ibge, serieMunicipio(m, eixo)]));
-  const max = maxEvolucao([...series.values()].flat().map((p) => p.indice));
-  const destaque = municipios.find((m) => m.ibge === ibge)!;
-  const coords = coordenadas(series.get(ibge)!, eixo, max, AREA);
+  const { ibge } = destaque;
+  const series = municipios.map((m) => ({ ibge: m.ibge, serie: serieMunicipio(m, eixo) }));
+  const max = maxEvolucao(series.flatMap((s) => s.serie.map((p) => p.indice)));
+  const coords = coordenadas(serieMunicipio(destaque, eixo), eixo, max, AREA);
   const deltas = variacoesDiarias(coords.map((c) => c.ponto));
   const { esq, dir, largura, altura, topo, base } = AREA;
   const util = altura - topo - base;
@@ -99,16 +99,17 @@ export function Evolucao({ t, municipios, ibge, eixo, aoSelecionar }: PropsEvolu
               {formatarData(c.ponto.dia_alvo, "dia")}
             </text>
           ))}
-          {municipios
-            .filter((m) => m.ibge !== ibge)
-            .map((m) => (
-              <polyline key={m.ibge} className="other" points={pontos(coordenadas(series.get(m.ibge)!, eixo, max, AREA))} />
+          {series
+            .filter((s) => s.ibge !== ibge)
+            .map((s) => (
+              <polyline key={s.ibge} className="other" points={pontos(coordenadas(s.serie, eixo, max, AREA))} />
             ))}
           <polyline className="main" points={pontos(coords)} />
           {coords.map((c, i) => {
-            const n = classe(c.ponto.indice);
+            const n = c.ponto.classe;
             const delta = deltas[i];
-            const marca = delta === null ? null : marcaClasse(c.ponto.indice - delta, c.ponto.indice);
+            // Variação só existe quando o ponto anterior é o dia anterior.
+            const marca = delta === null ? null : marcaClasse(coords[i - 1].ponto.classe, n);
             return (
               <g key={c.ponto.dia_alvo}>
                 <circle className="pt" cx={c.x} cy={c.y} r="6" style={{ fill: `var(--c${n})` }}>
@@ -142,7 +143,7 @@ export function Evolucao({ t, municipios, ibge, eixo, aoSelecionar }: PropsEvolu
               <tr key={ponto.dia_alvo}>
                 <td>{formatarData(ponto.dia_alvo)}</td>
                 <td>{formatarIndice(ponto.indice)}</td>
-                <td>{t(infoClasse(classe(ponto.indice)).nome)}</td>
+                <td>{t(infoClasse(ponto.classe).nome)}</td>
               </tr>
             ))}
           </tbody>
@@ -164,7 +165,7 @@ export function Minigrafico({ municipio, eixo }: { municipio: Municipio; eixo: s
       <line x1="0" x2={largura} y1={yAlerta} y2={yAlerta} stroke="var(--alert-line)" strokeDasharray="3 3" />
       <polyline fill="none" stroke="var(--ink-brand)" strokeWidth="1.5" points={pontos(coords)} />
       {coords.map((c) => (
-        <circle key={c.ponto.dia_alvo} cx={c.x} cy={c.y} r="2.4" style={{ fill: `var(--c${classe(c.ponto.indice)})` }} stroke="var(--ink)" strokeWidth=".6" />
+        <circle key={c.ponto.dia_alvo} cx={c.x} cy={c.y} r="2.4" style={{ fill: `var(--c${c.ponto.classe})` }} stroke="var(--ink)" strokeWidth=".6" />
       ))}
     </svg>
   );

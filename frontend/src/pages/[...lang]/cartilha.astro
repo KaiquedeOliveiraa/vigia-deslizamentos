@@ -1,13 +1,12 @@
 ---
 import Base from "../../layouts/Base.astro";
 import Cartilha from "../../components/Cartilha";
-import geojson from "../../data/municipios.geojson?raw";
 import { caminhosIdioma, idioma } from "../../i18n";
-import { municipiosMonitorados, type FeicaoMunicipio } from "../../lib/mapa";
+import { MONITORADOS } from "../../lib/municipios";
 
 export const getStaticPaths = caminhosIdioma;
 const lang = idioma(Astro.params.lang);
-const municipios = municipiosMonitorados(JSON.parse(geojson).features as FeicaoMunicipio[]).map((m) => m.nome);
+const municipios = MONITORADOS.map((m) => m.nome);
 ---
 <Base tela="cartilha">
   <Cartilha client:load lang={lang} municipios={municipios} />

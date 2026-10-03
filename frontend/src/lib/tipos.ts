@@ -1,4 +1,5 @@
 // Tipos dos arquivos publicados, conforme docs/contratos-de-dados.md e docs/indices.schema.json.
+import type { NumeroClasse } from "./classes";
 
 export interface Prob {
   pontuais: number;
@@ -6,21 +7,23 @@ export interface Prob {
   generalizados: number;
 }
 
-export interface Dia {
+/** Índice com a classe publicada pelo backend: nos dados reais, use esta `classe` em vez de recalcular. */
+export interface IndiceClasse {
+  indice: number;
+  classe: NumeroClasse;
+}
+
+export interface Dia extends IndiceClasse {
   dia_alvo: string;
   d: number;
-  indice: number;
-  classe: number;
   efr_mm: number;
   rtotal_mm: number;
   n_membros: number;
   prob: Prob;
 }
 
-export interface HistoricoItem {
+export interface HistoricoItem extends IndiceClasse {
   dia_alvo: string;
-  indice: number;
-  classe: number;
 }
 
 export interface ChuvaAcum {

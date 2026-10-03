@@ -52,7 +52,8 @@ export default function Contatos({ lang, municipios }: Props) {
     const ibge = e.target.value;
     setEscolhido(ibge);
     if (!ibge) return;
-    const nome = municipios.find((m) => m.ibge === ibge)!.nome;
+    const nome = municipios.find((m) => m.ibge === ibge)?.nome;
+    if (!nome) return;
     const aviso = filtrar(ibge, nome).aviso;
     anunciar(aviso ?? t("Mostrando {M}", { M: nome }));
   };

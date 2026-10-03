@@ -2,7 +2,7 @@ import "../styles/simulacao.css";
 import { ArrowRight, CloudRain, Info, RotateCcw, TriangleAlert } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { tradutor, type T } from "../i18n";
-import { classe, infoClasse, LIMIAR_ALERTA } from "../lib/classes";
+import { CLASSE_CRITICA, infoClasse, LIMIAR_ALERTA } from "../lib/classes";
 import { carregar, lerIndices, type Resultado } from "../lib/dados";
 import { formatarData, formatarHora, formatarIndice, formatarMm } from "../lib/formato";
 import { valoresDoDia } from "../lib/mapa";
@@ -23,7 +23,7 @@ import {
   type Cenario,
   type Horas,
 } from "../lib/simulacao";
-import type { Indices } from "../lib/tipos";
+import type { IndiceClasse, Indices } from "../lib/tipos";
 import { anunciar } from "./anunciar";
 import EstadoCarregamento from "./EstadoCarregamento";
 import Legenda from "./Legenda";
@@ -38,7 +38,7 @@ const ATALHOS: [string, number][] = [
   ["muito forte", 100],
   ["extrema", 180],
 ];
-const MARCAS = [0, LIMIAR_ALERTA, 2.6, ESCALA_MAX];
+const MARCAS = [0, LIMIAR_ALERTA, infoClasse(CLASSE_CRITICA).min, ESCALA_MAX];
 const CHUVA_INICIAL = 40;
 
 type Ver = "agora" | "simulado";
@@ -106,7 +106,7 @@ export default function Simulacao({ lang }: { lang: Idioma }) {
     const { m, s, avisos } = novo;
     anunciar(
       [
-        t("Resultado da simulação: {M}, índice {N}, classe {C}.", { M: m.nome, N: formatarIndice(s.indice), C: infoClasse(classe(s.indice)).nome }),
+        t("Resultado da simulação: {M}, índice {N}, classe {C}.", { M: m.nome, N: formatarIndice(s.indice), C: infoClasse(s.classe).nome }),
         ...avisos.flatMap((a) => [`${a.titulo}.`, a.texto]),
       ].join(" "),
     );
@@ -201,7 +201,7 @@ export default function Simulacao({ lang }: { lang: Idioma }) {
             <RotateCcw aria-hidden="true" />
           </button>
         </div>
-        {r && <Resultado t={t} atual={r.d0.indice} simulado={r.s.indice} efr={r.d0.efr_mm} efrSimulada={r.s.chuva_efetiva_mm} limiar={r.m.limiar_mm} />}
+        {r && <Resultado t={t} atual={r.d0} simulado={r.s} efr={r.d0.efr_mm} efrSimulada={r.s.chuva_efetiva_mm} limiar={r.m.limiar_mm} />}
         <p className="disc">
           {t("Simulação com a mesma equação do índice: (chuva efetiva + chuva informada) ÷ limiar. Não altera os dados reais e não dispara alertas.")}{" "}
           {t("Sistema de")} <b>{t("apoio à decisão")}</b>
@@ -250,8 +250,8 @@ function CaixaAviso({ tipo, titulo, texto }: Aviso) {
 
 interface PropsResultado {
   t: T;
-  atual: number;
-  simulado: number;
+  atual: IndiceClasse;
+  simulado: IndiceClasse;
   efr: number;
   efrSimulada: number;
   limiar: number;
@@ -261,12 +261,12 @@ function Resultado({ t, atual, simulado, efr, efrSimulada, limiar }: PropsResult
   return (
     <section className="res" aria-label={t("Resultado")}>
       <div className="cmp">
-        <Valor t={t} rotulo={t("Agora")} indice={atual} />
+        <Valor t={t} rotulo={t("Agora")} valor={atual} />
         <ArrowRight className="arr" aria-hidden="true" />
-        <Valor t={t} rotulo={t("Simulado")} indice={simulado} />
+        <Valor t={t} rotulo={t("Simulado")} valor={simulado} />
       </div>
       <div className="scalew" aria-hidden="true">
-        <span className="mk s" style={{ left: `${posicaoEscala(simulado)}%` }}>
+        <span className="mk s" style={{ left: `${posicaoEscala(simulado.indice)}%` }}>
           {t("simulado")}
         </span>
         <div className="scale">
@@ -274,7 +274,7 @@ function Resultado({ t, atual, simulado, efr, efrSimulada, limiar }: PropsResult
             <i key={f.numero} style={{ flexBasis: `${f.largura}%`, background: `var(--c${f.numero})` }} />
           ))}
         </div>
-        <span className="mk a" style={{ left: `${posicaoEscala(atual)}%` }}>
+        <span className="mk a" style={{ left: `${posicaoEscala(atual.indice)}%` }}>
           {t("agora")}
         </span>
         <div className="ends">
@@ -303,15 +303,14 @@ function Resultado({ t, atual, simulado, efr, efrSimulada, limiar }: PropsResult
   );
 }
 
-function Valor({ t, rotulo, indice }: { t: T; rotulo: string; indice: number }) {
-  const n = classe(indice);
+function Valor({ t, rotulo, valor: { indice, classe } }: { t: T; rotulo: string; valor: IndiceClasse }) {
   return (
     <div className="c">
       <span className="lbl">{rotulo}</span>
       <b className="num">{formatarIndice(indice)}</b>
       <span className="cls">
-        <SeloClasse classe={n} />
-        {t(infoClasse(n).nome)}
+        <SeloClasse classe={classe} />
+        {t(infoClasse(classe).nome)}
       </span>
     </div>
   );

@@ -1,13 +1,12 @@
 ---
 import Base from "../../layouts/Base.astro";
 import Contatos from "../../components/Contatos";
-import geojson from "../../data/municipios.geojson?raw";
 import { caminhosIdioma, idioma } from "../../i18n";
-import { municipiosMonitorados, type FeicaoMunicipio } from "../../lib/mapa";
+import { MONITORADOS } from "../../lib/municipios";
 
 export const getStaticPaths = caminhosIdioma;
 const lang = idioma(Astro.params.lang);
-const municipios = municipiosMonitorados(JSON.parse(geojson).features as FeicaoMunicipio[]);
+const municipios = MONITORADOS;
 ---
 <Base tela="contatos">
   <Contatos client:load lang={lang} municipios={municipios} />

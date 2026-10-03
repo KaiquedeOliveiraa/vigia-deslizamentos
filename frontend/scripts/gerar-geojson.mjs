@@ -3,7 +3,9 @@
 // Uso: npm run gerar:geojson
 import { writeFileSync } from "node:fs";
 
-const FONTE = "https://raw.githubusercontent.com/tbrugz/geodata-br/master/geojson/geojs-42-mun.json";
+// Fixada num commit do tbrugz/geodata-br para a saída ser reprodutível (master em 2026-10-03).
+const COMMIT = "c39dfb040bfd466fe2a476bafed00749c5c42f16";
+const FONTE = `https://raw.githubusercontent.com/tbrugz/geodata-br/${COMMIT}/geojson/geojs-42-mun.json`;
 const MONITORADOS = ["4219358", "4209151", "4219408", "4205100", "4214003", "4206900"];
 const TOLERANCIA = 0.01; // graus; mesmo buffer do protótipo para decidir quem é vizinho
 const SAIDA = new URL("../src/data/municipios.geojson", import.meta.url);

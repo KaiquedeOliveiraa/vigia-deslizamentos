@@ -30,6 +30,9 @@ export interface InfoClasse {
 
 export const LIMIAR_ALERTA = 1.0;
 
+/** A partir desta classe ("muito alto") a simulação fala em alerta máximo. */
+export const CLASSE_CRITICA: NumeroClasse = 6;
+
 const info = (
   numero: NumeroClasse,
   nome: string,

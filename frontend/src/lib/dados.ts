@@ -18,6 +18,9 @@ const CAMPOS_CONTATO = ["ibge", "nome", "verificado"];
 
 const erro = (mensagem: string): Resultado<never> => ({ ok: false, erro: mensagem });
 
+/** A tela usa a `classe` publicada (cor, nome, ícone): fora de 1–7 não há o que mostrar. */
+const classeValida = (c: unknown): boolean => Number.isInteger(c) && (c as number) >= 1 && (c as number) <= 7;
+
 function faltando(item: unknown, campos: string[]): string | undefined {
   if (typeof item !== "object" || item === null) return "objeto";
   return campos.find((c) => !(c in item));
@@ -39,10 +42,12 @@ export function lerIndices(json: unknown): Resultado<Indices> {
   }
   const lista = (v: unknown, nome: string) => (Array.isArray(v) ? undefined : nome);
   const faltandoNoMunicipio = (m: Municipio) =>
-    faltando(m, CAMPOS_MUNICIPIO) ?? lista(m.dias, "dias") ?? m.dias.map((d) => faltando(d, CAMPOS_DIA)).find(Boolean);
+    faltando(m, CAMPOS_MUNICIPIO) ?? lista(m.dias, "dias") ?? lista(m.historico, "historico") ?? m.dias.map((d) => faltando(d, CAMPOS_DIA)).find(Boolean);
   const campo =
     faltando(raiz, CAMPOS_RAIZ) ?? lista(raiz.municipios, "municipios") ?? raiz.municipios!.map(faltandoNoMunicipio).find(Boolean);
   if (campo) return erro(`indices.json: falta o campo "${campo}"`);
+  const itens = raiz.municipios!.flatMap((m) => [...m.dias, ...m.historico]);
+  if (itens.some((x) => !classeValida(x.classe))) return erro("indices.json: classe fora de 1–7");
   return { ok: true, dados: raiz as Indices };
 }
 

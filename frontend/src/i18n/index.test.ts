@@ -41,8 +41,8 @@ describe("t", () => {
     expect(es("subindo")).toBe("subiendo");
     expect(es("estável")).toBe("estable");
     expect(es("sem chuva agora")).toBe("sin lluvia ahora");
-    expect(es(marcaClasse(0.5, 3.5)!)).toBe("↑ extremadamente alto");
-    expect(pt(marcaClasse(3.5, 0.3)!)).toBe("↓ extremamente baixo");
+    expect(es(marcaClasse(2, 7)!)).toBe("↑ extremadamente alto");
+    expect(pt(marcaClasse(7, 1)!)).toBe("↓ extremamente baixo");
   });
 });
 

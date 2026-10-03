@@ -1,13 +1,13 @@
 import "../styles/monitoramento.css";
 import { Check, CloudRain, Share2, TriangleAlert } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import geojson from "../data/municipios.geojson?raw";
 import { tradutor, type T } from "../i18n";
-import { classe, emAlerta, infoClasse } from "../lib/classes";
+import { emAlerta, infoClasse, type NumeroClasse } from "../lib/classes";
 import { carregar, estadoMunicipio, lerIndices, type Resultado } from "../lib/dados";
 import { formatarData, formatarIndice, formatarMm, formatarRazao } from "../lib/formato";
-import { mensagemSelecao, valoresDoDia, type FeicaoMunicipio } from "../lib/mapa";
+import { mensagemSelecao, valoresDoDia } from "../lib/mapa";
 import { municipioInicial, resumo, variaveis, type Variaveis } from "../lib/monitoramento";
+import { MONITORADOS, NOMES } from "../lib/municipios";
 import type { Idioma } from "../lib/preferencias";
 import { rota } from "../lib/telas";
 import { textoCompartilhar } from "../lib/texto";
@@ -22,9 +22,7 @@ import Mapa, { type MapaApi } from "./Mapa";
 import Previsoes, { FaixaPrevisao } from "./Previsoes";
 import SeloClasse from "./SeloClasse";
 
-const MONITORADOS = (JSON.parse(geojson).features as FeicaoMunicipio[]).filter((f) => f.properties.monitorado);
-const NOMES = new Map(MONITORADOS.map((f) => [f.properties.ibge, f.properties.nome]));
-const LISTA_NOMES = [...NOMES.values()].sort((a, b) => a.localeCompare(b, "pt-BR"));
+const LISTA_NOMES = MONITORADOS.map((m) => m.nome);
 const TOAST_MS = 2200;
 
 export default function Monitoramento({ lang }: { lang: Idioma }) {
@@ -82,7 +80,7 @@ export default function Monitoramento({ lang }: { lang: Idioma }) {
         <Legenda lang={lang} />
         <Busca
           lang={lang}
-          municipios={MONITORADOS.map((f) => ({ ...f.properties, indice: valores[f.properties.ibge] ?? null }))}
+          municipios={MONITORADOS.map((m) => ({ ...m, valor: valores[m.ibge] ?? null }))}
           aoEscolher={(ibge) => {
             selecionar(ibge);
             mapa.current?.piscar(ibge);
@@ -134,7 +132,7 @@ function Painel({ t, lang, indices, ibge, nome, d, aoCompartilhar, aoTelegram }:
       <div>
         <span className="lbl">{t("Município selecionado")}</span>
         <h2 className="mname">{nome}</h2>
-        {municipio && dia ? <Indice t={t} indice={dia.indice} dia={d ? dia.dia_alvo : undefined} /> : <span className="pill">{t("sem dados")}</span>}
+        {municipio && dia ? <Indice t={t} indice={dia.indice} classe={dia.classe} dia={d ? dia.dia_alvo : undefined} /> : <span className="pill">{t("sem dados")}</span>}
       </div>
       {municipio && dia && (
         <>
@@ -144,9 +142,8 @@ function Painel({ t, lang, indices, ibge, nome, d, aoCompartilhar, aoTelegram }:
               type="button"
               className="btn pri"
               onClick={() => {
-                const v = dia.indice;
-                const aviso = t("Link copiado: “{M} — {C} ({N})”", { M: nome, C: infoClasse(classe(v)).nome, N: formatarIndice(v) });
-                aoCompartilhar(textoCompartilhar(nome, v, t), aviso);
+                const aviso = t("Link copiado: “{M} — {C} ({N})”", { M: nome, C: infoClasse(dia.classe).nome, N: formatarIndice(dia.indice) });
+                aoCompartilhar(textoCompartilhar(nome, dia, t), aviso);
               }}
             >
               <Share2 aria-hidden="true" />
@@ -172,9 +169,8 @@ function Painel({ t, lang, indices, ibge, nome, d, aoCompartilhar, aoTelegram }:
 }
 
 /** Pílula de alerta, índice grande e "índice de risco · classe[ · previsão dd/mm/aa]". */
-function Indice({ t, indice, dia }: { t: T; indice: number; dia?: string }) {
-  const n = classe(indice);
-  const nomeClasse = infoClasse(n).nome;
+function Indice({ t, indice, classe, dia }: { t: T; indice: number; classe: NumeroClasse; dia?: string }) {
+  const nomeClasse = infoClasse(classe).nome;
   const alerta = emAlerta(indice);
   return (
     <>
@@ -183,7 +179,7 @@ function Indice({ t, indice, dia }: { t: T; indice: number; dia?: string }) {
         {t(alerta ? "Em alerta" : "Sem alerta")} <span className="mono">{t("classe {C}", { C: nomeClasse })}</span>
       </span>
       <div className="bigidx">
-        <SeloClasse classe={n} grande />
+        <SeloClasse classe={classe} grande />
         <b className="num">{formatarIndice(indice)}</b>
       </div>
       <div className="bigsub">

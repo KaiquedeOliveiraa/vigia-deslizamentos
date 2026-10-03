@@ -1,6 +1,6 @@
 // Regras da tela Monitoramento: resumo do dia, município inicial e variáveis do painel.
 import { emAlerta } from "./classes";
-import type { Dia, Indices, Municipio } from "./tipos";
+import type { Dia, IndiceClasse, Indices, Municipio } from "./tipos";
 
 export interface Resumo {
   emAlerta: number;
@@ -10,8 +10,8 @@ export interface Resumo {
   maior: number | null;
 }
 
-export function resumo(valores: Record<string, number | null>): Resumo {
-  const indices = Object.values(valores).filter((v): v is number => v !== null);
+export function resumo(valores: Record<string, IndiceClasse | null>): Resumo {
+  const indices = Object.values(valores).flatMap((v) => (v ? [v.indice] : []));
   return {
     emAlerta: indices.filter(emAlerta).length,
     total: Object.keys(valores).length,

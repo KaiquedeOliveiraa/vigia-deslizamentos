@@ -7,7 +7,7 @@ const indices = exemplo as Indices;
 
 describe("resumo", () => {
   it("conta os em alerta (≥ 1,00) entre todos os monitorados e acha o maior índice", () => {
-    expect(resumo({ a: 1, b: 0.9999, c: 1.924, d: null })).toEqual({ emAlerta: 2, total: 4, maior: 1.924 });
+    expect(resumo({ a: { indice: 1, classe: 4 }, b: { indice: 0.9999, classe: 3 }, c: { indice: 1.924, classe: 5 }, d: null })).toEqual({ emAlerta: 2, total: 4, maior: 1.924 });
   });
 
   it("sem nenhum índice: maior = null", () => {
