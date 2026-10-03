@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatarCoord, formatarData, formatarDataHora, formatarHora, formatarIndice, formatarMm, formatarRazao } from "./formato";
+import { formatarCoord, formatarData, formatarDataHora, formatarHora, formatarIndice, formatarMm, formatarPercentual, formatarRazao, formatarVariacao } from "./formato";
 
 describe("números", () => {
   it("usa vírgula decimal e as casas de cada grandeza (RN05)", () => {
@@ -26,5 +26,19 @@ describe("datas", () => {
     expect(formatarData("2026-09-29")).toBe("29/09/2026");
     expect(formatarData("2026-09-29", "curto")).toBe("29/09/26");
     expect(formatarData("2026-09-29", "dia")).toBe("29/09");
+  });
+});
+
+describe("percentual e variação", () => {
+  it("fração de 0 a 1 em porcentagem inteira", () => {
+    expect(formatarPercentual(0.65)).toBe("65%");
+    expect(formatarPercentual(0.054)).toBe("5%");
+  });
+
+  it("variação com sinal + ou − (sinal de menos tipográfico) e duas casas", () => {
+    expect(formatarVariacao(0.123)).toBe("+0,12");
+    expect(formatarVariacao(-0.05)).toBe("−0,05");
+    expect(formatarVariacao(0.004)).toBe("0,00");
+    expect(formatarVariacao(-0.004)).toBe("0,00");
   });
 });

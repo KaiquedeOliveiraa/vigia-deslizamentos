@@ -432,5 +432,16 @@
 "Carregando os dados…": "Cargando los datos…",
 "Se essa previsão se concretizar, o município poderá entrar em estado de alerta máximo. Fique atento aos avisos oficiais e, diante de sinais de deslizamento, ligue 199.": "Si este pronóstico se cumple, el municipio podría entrar en estado de alerta máximo. Esté atento a los avisos oficiales y, ante señales de deslizamiento, llame al 199.",
 "Simulação com a mesma equação do índice: (chuva efetiva + chuva informada) ÷ limiar. Não altera os dados reais e não dispara alertas.": "Simulación con la misma ecuación del índice: (lluvia efectiva + lluvia indicada) ÷ umbral. No altera los datos reales y no emite alertas.",
-"Mostrar no mapa": "Mostrar en el mapa"
+"Mostrar no mapa": "Mostrar en el mapa",
+"Data": "Fecha",
+"Probabilidade de deslizamentos pontuais": "Probabilidad de deslizamientos puntuales",
+"Probabilidade de deslizamentos esparsos": "Probabilidad de deslizamientos dispersos",
+"Probabilidade de deslizamentos generalizados": "Probabilidad de deslizamientos generalizados",
+"Chuva efetiva antecedente (EfR)": "Lluvia efectiva antecedente (EfR)",
+"Chuva prevista para o dia-alvo": "Lluvia prevista para el día objetivo",
+"Fonte do limiar": "Fuente del umbral",
+"Execução do modelo (horário de Brasília)": "Ejecución del modelo (hora de Brasilia)",
+"Detalhes do cálculo — {M}": "Detalles del cálculo — {M}",
+"Ocorrências registradas — {M}": "Ocurrencias registradas — {M}",
+"Nenhuma ocorrência registrada": "Ninguna ocurrencia registrada"
 }

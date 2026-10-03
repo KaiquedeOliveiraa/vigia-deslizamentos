@@ -46,6 +46,10 @@ export function lerIndices(json: unknown): Resultado<Indices> {
 
 export const lerOcorrencias = (json: unknown) => lerLista<Ocorrencia>(json, CAMPOS_OCORRENCIA, "ocorrencias.json");
 
+/** Ocorrências do município, da mais recente para a mais antiga. */
+export const ocorrenciasDoMunicipio = (lista: Ocorrencia[], ibge: string): Ocorrencia[] =>
+  lista.filter((o) => o.ibge === ibge).sort((a, b) => b.data.localeCompare(a.data));
+
 export const lerEstacoes = (json: unknown) => lerLista<Estacao>(json, CAMPOS_ESTACAO, "estacoes.json");
 
 /** Só os contatos confirmados com a prefeitura (RN09). */

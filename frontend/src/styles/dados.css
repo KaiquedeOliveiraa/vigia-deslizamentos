@@ -1,0 +1,552 @@
+/* Tela Dados da análise (protótipo: pages/dados.css e widgets.css › pluviômetro, evolução). */
+
+.dados {
+  min-height: 100%;
+  padding: 24px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--surface-100);
+}
+
+.dados .ttl {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.dados .ttl h1 {
+  margin: 4px 0 0;
+  font-size: 22px;
+  line-height: 28px;
+  color: var(--ink-brand);
+}
+
+.dados .ttl p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.kstrip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kpi {
+  background: var(--surface-000);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 12px;
+}
+
+.kpi b {
+  display: block;
+  font-size: 26px;
+  line-height: 26px;
+  color: var(--ink-brand);
+}
+
+.kpi b small {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.kpi span {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 15px;
+}
+
+.dados .al {
+  font-weight: 700;
+  color: var(--accent-ink);
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+  gap: 18px;
+}
+
+.grid2.meio {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.card {
+  min-width: 0;
+  background: var(--surface-000);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--nav-900);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+
+.card.chuva {
+  border-top-color: var(--rain);
+}
+
+.card .ch {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.card .ch > svg {
+  width: 20px;
+  height: 20px;
+  color: var(--ink-brand);
+}
+
+.card .ch h2 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--ink-brand);
+}
+
+.card .ch .tag {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 5px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-050);
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+}
+
+.card .sub {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.legend2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--ink-2);
+  margin: 4px 0 10px;
+}
+
+.legend2 span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend2 svg {
+  width: 13px;
+  height: 13px;
+}
+
+.trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.trend svg {
+  width: 14px;
+  height: 14px;
+}
+
+.trend.up {
+  color: var(--danger-ink);
+}
+
+.trend.dn {
+  color: var(--status-ok);
+}
+
+/* ---------- evolução ---------- */
+.evo .pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.evo .pick button {
+  border: 1px solid var(--line-strong);
+  background: var(--surface-000);
+  border-radius: var(--radius-pill);
+  padding: 5px 11px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.evo .pick button[aria-selected="true"] {
+  background: var(--nav-900);
+  border-color: var(--nav-900);
+  color: var(--on-nav);
+  font-weight: 600;
+}
+
+.evo-svg {
+  overflow-x: auto;
+}
+
+.evo svg {
+  display: block;
+  width: 100%;
+  min-width: 560px;
+  height: auto;
+  overflow: visible;
+}
+
+.evo .band {
+  opacity: 0.22;
+}
+
+.evo .grid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.evo .ax {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--muted);
+}
+
+.evo .alerta {
+  stroke: var(--accent-ink);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+}
+
+.evo .alertal {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  fill: var(--accent-ink);
+}
+
+.evo .other {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.25;
+  opacity: 0.35;
+}
+
+.evo .main {
+  fill: none;
+  stroke: var(--ink-brand);
+  stroke-width: 2.5;
+}
+
+.evo .pt {
+  stroke: var(--ink);
+  stroke-width: 1.25;
+}
+
+.evo .dl {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-anchor: middle;
+  fill: var(--muted);
+}
+
+.evo .dl.up {
+  fill: var(--danger-ink);
+}
+
+.evo .dl.dn {
+  fill: var(--status-ok);
+}
+
+.evo .cl {
+  font-size: 10.5px;
+  fill: var(--ink-2);
+  text-anchor: middle;
+}
+
+/* ---------- pluviômetro ---------- */
+.pluv {
+  margin-top: 26px;
+}
+
+.pluv .tubos,
+.pluv .rots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  justify-items: center;
+}
+
+.pluv .tubos {
+  position: relative;
+  height: 280px;
+}
+
+.pluv .tube {
+  position: relative;
+  width: 100%;
+  max-width: 58px;
+  background: var(--rain-track);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.pluv .fill {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  background: var(--rain);
+  border-radius: 7px;
+  transition: height 0.6s ease;
+}
+
+.pluv .tick {
+  position: absolute;
+  left: 6px;
+  width: 8px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.pluv .lim {
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  border-top: 2px dashed var(--danger-ink);
+  pointer-events: none;
+}
+
+.pluv .lim span {
+  position: absolute;
+  left: 0;
+  top: -19px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--danger-ink);
+  background: var(--surface-000);
+  padding: 0 4px;
+}
+
+.pluv .rots {
+  margin: 6px 0 0;
+}
+
+.pluv .rots div {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 6px;
+}
+
+.pluv .v {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.pluv .v small {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.pluv .p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* ---------- tabela ---------- */
+.rolagem {
+  overflow-x: auto;
+}
+
+.tab {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tab thead th {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line-strong);
+  white-space: nowrap;
+}
+
+.tab tbody th,
+.tab td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13.5px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.tab .n {
+  text-align: right;
+}
+
+.tab td.n {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.tab tbody tr {
+  cursor: pointer;
+}
+
+.tab tbody tr:hover > *,
+.tab tbody tr.hl > * {
+  background: var(--surface-050);
+}
+
+.tab tbody tr.hl > th {
+  box-shadow: inset 3px 0 0 var(--nav-900);
+}
+
+.tab tbody tr:focus-visible {
+  outline-offset: -3px;
+}
+
+.cls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spark {
+  display: block;
+}
+
+.ratio {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.ratio .b {
+  width: 90px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface-050);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.ratio .b i {
+  display: block;
+  height: 100%;
+  background: var(--rain);
+}
+
+/* ---------- detalhes e ocorrências ---------- */
+.det {
+  margin: 8px 0 0;
+}
+
+.det div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.det dt {
+  color: var(--ink-2);
+}
+
+.det dd {
+  margin: 0;
+  text-align: right;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.ocs {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ocs li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.ocs p {
+  margin: 4px 0;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--ink);
+}
+
+.dados .disc {
+  margin: 0;
+}
+
+@media (pointer: coarse) {
+  .evo .pick button {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .grid2,
+  .grid2.meio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .dados {
+    padding: 16px;
+  }
+
+  .kstrip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pluv .tubos {
+    height: 220px;
+  }
+
+  .pluv .tubos,
+  .pluv .rots {
+    gap: 10px;
+  }
+
+  .pluv .v {
+    font-size: 16px;
+  }
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buscar, normalizar, tendencia, textoCompartilhar } from "./texto";
+import { buscar, normalizar, sentido, tendencia, textoCompartilhar } from "./texto";
 
 const historico = (indice: number) => [
   { dia_alvo: "2026-09-27", indice: 0.1, classe: 1 },
@@ -39,5 +39,14 @@ describe("busca", () => {
 describe("textoCompartilhar", () => {
   it("município, classe e índice", () => {
     expect(textoCompartilhar("Ibirama", 1.3449)).toBe("Ibirama — moderado (1,34)");
+  });
+});
+
+describe("sentido", () => {
+  it("diferença entre dois índices, com folga de ±0,005", () => {
+    expect(sentido(0.006)).toBe("subindo");
+    expect(sentido(-0.006)).toBe("descendo");
+    expect(sentido(0.005)).toBe("estável");
+    expect(sentido(-0.005)).toBe("estável");
   });
 });

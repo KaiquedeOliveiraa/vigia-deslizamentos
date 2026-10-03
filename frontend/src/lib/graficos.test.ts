@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { Indices, Municipio } from "./tipos";
 import {
+  coordenadas,
+  diasEixo,
   escala,
   etiquetaChuva,
+  faixasClasse,
   indicadores,
   marcaClasse,
   maxEvolucao,
@@ -139,5 +142,50 @@ describe("etiquetaChuva", () => {
   it("acumulado de 24 h acima de 1 mm", () => {
     expect(etiquetaChuva(municipio("1", "A", { indice: 0, efr_mm: 0 }, [], 1.1))).toBe("choveu nas últimas 24h");
     expect(etiquetaChuva(municipio("1", "A", { indice: 0, efr_mm: 0 }, [], 1))).toBe("sem chuva agora");
+  });
+});
+
+describe("diasEixo", () => {
+  it("N dias consecutivos terminando no D0, atravessando o mês", () => {
+    expect(diasEixo("2026-10-02", 3)).toEqual(["2026-09-30", "2026-10-01", "2026-10-02"]);
+    expect(diasEixo("2026-10-02", 7)).toHaveLength(7);
+  });
+});
+
+describe("coordenadas", () => {
+  const area = { largura: 120, altura: 60, esq: 10, dir: 10, topo: 5, base: 5 };
+  const eixo = ["2026-09-30", "2026-10-01", "2026-10-02"];
+
+  it("x pela posição da data no eixo e y pelo índice (0 embaixo, max em cima)", () => {
+    const c = coordenadas([{ dia_alvo: "2026-09-30", indice: 0 }, { dia_alvo: "2026-10-02", indice: 2 }], eixo, 2, area);
+    expect(c.map((p) => [p.x, p.y])).toEqual([[10, 55], [110, 5]]);
+    expect(c[1].ponto.indice).toBe(2);
+  });
+
+  it("dia fora do eixo fica de fora; índice acima do max fica no topo", () => {
+    const c = coordenadas([{ dia_alvo: "2026-09-01", indice: 1 }, { dia_alvo: "2026-10-01", indice: 9 }], eixo, 2, area);
+    expect(c).toHaveLength(1);
+    expect(c[0].x).toBeCloseTo(60);
+    expect(c[0].y).toBeCloseTo(5);
+  });
+
+  it("eixo de um dia só fica à esquerda", () => {
+    expect(coordenadas([{ dia_alvo: "2026-10-02", indice: 1 }], ["2026-10-02"], 2, area)[0].x).toBe(10);
+  });
+});
+
+describe("faixasClasse", () => {
+  it("classes que começam abaixo do max, cortadas no max", () => {
+    expect(faixasClasse(2)).toEqual([
+      { numero: 1, de: 0, ate: 0.4 },
+      { numero: 2, de: 0.4, ate: 0.7 },
+      { numero: 3, de: 0.7, ate: 1.0 },
+      { numero: 4, de: 1.0, ate: 1.8 },
+      { numero: 5, de: 1.8, ate: 2 },
+    ]);
+  });
+
+  it("acima de 3,40 a última faixa vai até o max", () => {
+    expect(faixasClasse(4).at(-1)).toEqual({ numero: 7, de: 3.4, ate: 4 });
   });
 });

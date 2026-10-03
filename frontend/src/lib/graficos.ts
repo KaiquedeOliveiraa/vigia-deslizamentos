@@ -1,5 +1,5 @@
 // Escalas e séries dos gráficos (pluviômetro, evolução do índice) e indicadores da tela de dados.
-import { classe, emAlerta, infoClasse } from "./classes";
+import { CLASSES, classe, emAlerta, infoClasse, type NumeroClasse } from "./classes";
 import type { Indices, Municipio } from "./tipos";
 
 export interface Ponto {
@@ -23,6 +23,52 @@ export function maxEvolucao(indices: number[]): number {
 /** Valor em 0..max convertido para 0..alturaPx, limitado às pontas. */
 export const escala = (valor: number, max: number, alturaPx: number): number =>
   (Math.min(Math.max(valor, 0), max) / max) * alturaPx;
+
+/** `n` dias consecutivos terminando no D0 (AAAA-MM-DD), do mais antigo para o mais recente. */
+export function diasEixo(dia_alvo_d0: string, n: number): string[] {
+  const fim = new Date(`${dia_alvo_d0}T00:00:00Z`).getTime();
+  return Array.from({ length: n }, (_, i) => new Date(fim - (n - 1 - i) * 86_400_000).toISOString().slice(0, 10));
+}
+
+/** Área de desenho em px: tamanho total e margens. */
+export interface Area {
+  largura: number;
+  altura: number;
+  esq: number;
+  dir: number;
+  topo: number;
+  base: number;
+}
+
+export interface Coordenada {
+  x: number;
+  y: number;
+  ponto: Ponto;
+}
+
+/** Posição de cada ponto: x pela data no `eixo` (fora do eixo fica de fora), y pelo índice de 0 a `max`. */
+export function coordenadas(serie: Ponto[], eixo: string[], max: number, area: Area): Coordenada[] {
+  const passo = eixo.length > 1 ? (area.largura - area.esq - area.dir) / (eixo.length - 1) : 0;
+  const util = area.altura - area.topo - area.base;
+  return serie.flatMap((ponto) => {
+    const i = eixo.indexOf(ponto.dia_alvo);
+    return i < 0 ? [] : [{ x: area.esq + i * passo, y: area.topo + util - escala(ponto.indice, max, util), ponto }];
+  });
+}
+
+export interface Faixa {
+  numero: NumeroClasse;
+  de: number;
+  ate: number;
+}
+
+/** Faixas de fundo do gráfico: as classes que começam abaixo de `max`, cortadas em `max`. */
+export const faixasClasse = (max: number): Faixa[] =>
+  CLASSES.filter((c) => c.min < max).map((c, i, lista) => ({
+    numero: c.numero,
+    de: c.min,
+    ate: Math.min(lista[i + 1]?.min ?? max, max),
+  }));
 
 /** "↑ moderado" / "↓ moderado" quando a classe muda de um dia para o seguinte. */
 export function marcaClasse(anterior: number, atual: number): string | null {

@@ -12,15 +12,19 @@ function diaAnterior(dia_alvo: string): string {
   return d.toISOString().slice(0, 10);
 }
 
-/** Índice − índice do dia anterior no `historico`; `null` se esse dia não estiver lá. */
-export function tendencia(indice: number, dia_alvo: string, historico: HistoricoItem[]): Tendencia | null {
-  const anterior = historico.find((h) => h.dia_alvo === diaAnterior(dia_alvo));
-  if (!anterior) return null;
+/** Sentido de uma diferença entre dois índices, com folga de ±0,005. */
+export function sentido(diferenca: number): Tendencia {
   // Índices têm 4 casas: arredonda a diferença para a fronteira de ±0,005 não depender de erro de ponto flutuante.
-  const delta = Math.round((indice - anterior.indice) * 1e4) / 1e4;
+  const delta = Math.round(diferenca * 1e4) / 1e4;
   if (delta > FOLGA) return "subindo";
   if (delta < -FOLGA) return "descendo";
   return "estável";
+}
+
+/** Índice − índice do dia anterior no `historico`; `null` se esse dia não estiver lá. */
+export function tendencia(indice: number, dia_alvo: string, historico: HistoricoItem[]): Tendencia | null {
+  const anterior = historico.find((h) => h.dia_alvo === diaAnterior(dia_alvo));
+  return anterior ? sentido(indice - anterior.indice) : null;
 }
 
 /** Minúsculas e sem acento, para a busca. */

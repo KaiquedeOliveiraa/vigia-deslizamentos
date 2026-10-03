@@ -6,6 +6,16 @@ export const formatarIndice = (x: number): string => formatarNumero(x, 2);
 
 export const formatarMm = (x: number): string => formatarNumero(x, 1);
 
+/** Fração de 0 a 1 em porcentagem inteira: "65%". */
+export const formatarPercentual = (fracao: number): string => `${Math.round(fracao * 100)}%`;
+
+/** Variação de índice com sinal: "+0,12", "−0,05" (sinal de menos tipográfico) ou "0,00". */
+export function formatarVariacao(delta: number): string {
+  const texto = formatarIndice(Math.abs(delta));
+  if (texto === formatarIndice(0)) return texto;
+  return `${delta > 0 ? "+" : "−"}${texto}`;
+}
+
 /** Razão chuva/limiar: "0,60×". */
 export const formatarRazao = (x: number): string => `${formatarNumero(x, 2)}×`;
 

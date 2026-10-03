@@ -11,6 +11,7 @@ import {
   lerEstacoes,
   lerIndices,
   lerOcorrencias,
+  ocorrenciasDoMunicipio,
 } from "./dados";
 import type { Indices } from "./tipos";
 
@@ -77,6 +78,15 @@ describe("listas", () => {
   it("ocorrencias.json: lista válida; raiz que não é lista → erro", () => {
     expect(lerOcorrencias(ocorrencias)).toEqual({ ok: true, dados: ocorrencias });
     expect(lerOcorrencias({}).ok).toBe(false);
+  });
+});
+
+describe("ocorrenciasDoMunicipio", () => {
+  it("só as do município, da mais recente para a mais antiga", () => {
+    const o = (ibge: string, data: string) => ({ ibge, data, tipo: "deslizamento", descricao: "", fonte: "S2iD" });
+    const lista = [o("1", "2020-01-05"), o("2", "2024-01-01"), o("1", "2023-10-06"), o("1", "2021-07-30")];
+    expect(ocorrenciasDoMunicipio(lista, "1").map((x) => x.data)).toEqual(["2023-10-06", "2021-07-30", "2020-01-05"]);
+    expect(ocorrenciasDoMunicipio(lista, "3")).toEqual([]);
   });
 });
 
