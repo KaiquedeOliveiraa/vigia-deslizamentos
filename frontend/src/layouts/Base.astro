@@ -6,6 +6,7 @@ import geojson from "../data/municipios.geojson?raw";
 import Cabecalho from "../components/Cabecalho";
 import Menu from "../components/Menu";
 import { atributoLang, idioma, tradutor } from "../i18n";
+import { municipiosMonitorados, type FeicaoMunicipio } from "../lib/mapa";
 import { CHAVE } from "../lib/preferencias";
 import { TELAS, rota } from "../lib/telas";
 
@@ -22,11 +23,7 @@ const outroLang = lang === "es" ? "pt" : "es";
 // O script inline do <head> roda antes da pintura: idioma lembrado (vai para a outra versão da página),
 // tema e paleta, com as mesmas regras de lerPreferencias/aplicarPreferencias (src/lib/preferencias.ts).
 
-type Feicao = { properties: { nome: string; monitorado: boolean } };
-const municipios = (JSON.parse(geojson).features as Feicao[])
-  .filter((f) => f.properties.monitorado)
-  .map((f) => f.properties.nome)
-  .sort((a, b) => a.localeCompare(b, "pt-BR"));
+const municipios = municipiosMonitorados(JSON.parse(geojson).features as FeicaoMunicipio[]).map((m) => m.nome);
 ---
 <!doctype html>
 <html lang={atributoLang(lang)} class="pal-geo">

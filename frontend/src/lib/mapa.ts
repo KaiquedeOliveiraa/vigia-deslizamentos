@@ -128,3 +128,10 @@ export const CAMADAS: readonly Camada[] = [
     zoomMax: 17,
   },
 ];
+
+/** { ibge, nome } dos municípios monitorados, em ordem alfabética. */
+export const municipiosMonitorados = (feicoes: readonly FeicaoMunicipio[]): { ibge: string; nome: string }[] =>
+  feicoes
+    .filter((f) => f.properties.monitorado)
+    .map(({ properties: { ibge, nome } }) => ({ ibge, nome }))
+    .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));

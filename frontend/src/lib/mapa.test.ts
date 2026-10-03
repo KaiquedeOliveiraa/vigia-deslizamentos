@@ -3,7 +3,7 @@ import { tradutor } from "../i18n";
 import geojson from "../data/municipios.geojson?raw";
 import exemplo from "../fixtures/indices.exemplo.json";
 import type { Indices } from "./tipos";
-import { destacar, limites, valoresDoDia, mensagemSelecao, passoDia, posicoes, rotuloAria, rotuloDia, type FeicaoMunicipio } from "./mapa";
+import { destacar, limites, municipiosMonitorados, valoresDoDia, mensagemSelecao, passoDia, posicoes, rotuloAria, rotuloDia, type FeicaoMunicipio } from "./mapa";
 
 const pt = tradutor("pt");
 const es = tradutor("es");
@@ -97,5 +97,15 @@ describe("valoresDoDia", () => {
     expect(v["4206900"]).toBeCloseTo(0.8812);
     expect(v["4205100"]).toBeNull();
     expect(valoresDoDia(indices, 0)["4206900"]).toBeCloseTo(1.3448);
+  });
+});
+
+describe("municipiosMonitorados", () => {
+  it("só os monitorados, em ordem alfabética", () => {
+    const fs = JSON.parse(geojson).features as FeicaoMunicipio[];
+    const lista = municipiosMonitorados(fs);
+    expect(lista).toHaveLength(6);
+    expect(lista[0]).toEqual({ ibge: "4205100", nome: "Dona Emma" });
+    expect(lista.map((m) => m.nome)).toEqual([...lista.map((m) => m.nome)].sort((a, b) => a.localeCompare(b, "pt-BR")));
   });
 });
