@@ -1,0 +1,62 @@
+[
+  {
+    "ibge": "4206900",
+    "nome": "Ibirama",
+    "verificado": true,
+    "responsavel": null,
+    "telefone": "(47) 98838-5645",
+    "email": "defesacivil@ibirama.sc.gov.br",
+    "endereco": "Rua Prof. Gertrud Aichinger, 272 — Centro, Ibirama/SC, 89140-000",
+    "site": "www.defesacivilibirama.com.br"
+  },
+  {
+    "ibge": "4214003",
+    "nome": "Presidente Getúlio",
+    "verificado": false,
+    "responsavel": null,
+    "telefone": null,
+    "email": null,
+    "endereco": null,
+    "site": "pdc.presidentegetulio.sc.gov.br"
+  },
+  {
+    "ibge": "4209151",
+    "nome": "José Boiteux",
+    "verificado": false,
+    "responsavel": null,
+    "telefone": null,
+    "email": null,
+    "endereco": null,
+    "site": "www.pmjb.sc.gov.br"
+  },
+  {
+    "ibge": "4205100",
+    "nome": "Dona Emma",
+    "verificado": false,
+    "responsavel": null,
+    "telefone": null,
+    "email": null,
+    "endereco": null,
+    "site": "donaemma.sc.gov.br"
+  },
+  {
+    "ibge": "4219408",
+    "nome": "Witmarsum",
+    "verificado": false,
+    "responsavel": null,
+    "telefone": null,
+    "email": null,
+    "endereco": null,
+    "site": "witmarsum.atende.net"
+  },
+  {
+    "ibge": "4219358",
+    "nome": "Vitor Meireles",
+    "verificado": false,
+    "responsavel": null,
+    "telefone": null,
+    "email": null,
+    "endereco": null,
+    "site": "vitormeireles.sc.gov.br"
+  }
+]
