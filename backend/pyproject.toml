@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vigia-deslizamentos-backend"
+version = "0.1.0"
+description = "Backend do VIGIA Deslizamentos: coleta, cálculo do índice de risco GeoRisk, persistência, exportação e bot do Telegram."
+requires-python = ">=3.12"
+dependencies = [
+    "requests",
+    "python-telegram-bot>=21",
+    "APScheduler>=3.10,<4",
+    "tzdata",
+    "jsonschema",
+    "pytest",
+]
+
+# Só o pacote `app` é instalado. `config/`, `scripts/`, `deploy/` e `tests/` são
+# diretórios do repositório, não pacotes — sem esta lista a descoberta
+# automática do setuptools tropeça neles.
+[tool.setuptools]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+markers = [
+    "rede: teste que acessa a rede de verdade (fora da suíte padrão)",
+]
+addopts = "-m 'not rede'"

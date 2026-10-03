@@ -1,0 +1,50 @@
+[
+  {
+    "ibge": "4205100",
+    "nome": "Dona Emma",
+    "limiar_mm": 250,
+    "fonte_limiar": "GeoRisk, limiar hipotético padrão",
+    "mv_h": 24,
+    "pontos": [{"lat": -26.9887, "lon": -49.7781}]
+  },
+  {
+    "ibge": "4206900",
+    "nome": "Ibirama",
+    "limiar_mm": 250,
+    "fonte_limiar": "GeoRisk, limiar hipotético padrão",
+    "mv_h": 24,
+    "pontos": [{"lat": -27.0181, "lon": -49.5286}]
+  },
+  {
+    "ibge": "4209151",
+    "nome": "José Boiteux",
+    "limiar_mm": 250,
+    "fonte_limiar": "GeoRisk, limiar hipotético padrão",
+    "mv_h": 24,
+    "pontos": [{"lat": -26.8595, "lon": -49.6463}]
+  },
+  {
+    "ibge": "4214003",
+    "nome": "Presidente Getúlio",
+    "limiar_mm": 250,
+    "fonte_limiar": "GeoRisk, limiar hipotético padrão",
+    "mv_h": 24,
+    "pontos": [{"lat": -27.0626, "lon": -49.7144}]
+  },
+  {
+    "ibge": "4219358",
+    "nome": "Vitor Meireles",
+    "limiar_mm": 250,
+    "fonte_limiar": "GeoRisk, limiar hipotético padrão",
+    "mv_h": 24,
+    "pontos": [{"lat": -26.8264, "lon": -49.8452}]
+  },
+  {
+    "ibge": "4219408",
+    "nome": "Witmarsum",
+    "limiar_mm": 250,
+    "fonte_limiar": "GeoRisk, limiar hipotético padrão",
+    "mv_h": 24,
+    "pontos": [{"lat": -26.9373, "lon": -49.8417}]
+  }
+]

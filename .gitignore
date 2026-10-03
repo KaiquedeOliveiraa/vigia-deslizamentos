@@ -1,0 +1,18 @@
+# Segredos reais — só o .env.exemplo é versionado
+backend/.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Banco de dados SQLite (DB_PATH) e seus acessórios
+*.db
+*.db-wal
+*.db-shm

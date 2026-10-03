@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vigia-deslizamentos.local/schemas/indices.schema.json",
+  "title": "indices.json — VIGIA Deslizamentos",
+  "description": "Contrato do arquivo publicado em frontend/public/data/indices.json, conforme docs/contratos-de-dados.md.",
+  "$comment": "No vocabulário de formato do draft 2020-12, `format` (usado em `date` e `date-time`) é só anotação: um Validator sem `format_checker` explícito não rejeita uma data-hora malformada. Quem validar este schema (Tarefa 9 inclusive) precisa passar um `jsonschema.FormatChecker()` explicitamente. O checador padrão só cobre `date` nativamente (stdlib); `date-time` não tem checador registrado sem o extra opcional `rfc3339-validator` — backend/tests/test_config.py registra um checador mínimo próprio para `date-time` em vez de adicionar essa dependência.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "gerado_em",
+    "dia_alvo_d0",
+    "municipios_sem_dados",
+    "municipios"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "gerado_em": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "dia_alvo_d0": {
+      "type": "string",
+      "format": "date"
+    },
+    "municipios_sem_dados": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9]{7}$"
+      }
+    },
+    "municipios": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/municipio"
+      }
+    }
+  },
+  "$defs": {
+    "municipio": {
+      "type": "object",
+      "required": [
+        "ibge",
+        "nome",
+        "limiar_mm",
+        "fonte_limiar",
+        "mv_h",
+        "dias",
+        "historico",
+        "chuva_acum_mm"
+      ],
+      "properties": {
+        "ibge": {
+          "type": "string",
+          "pattern": "^[0-9]{7}$"
+        },
+        "nome": {
+          "type": "string"
+        },
+        "limiar_mm": {
+          "type": "number"
+        },
+        "fonte_limiar": {
+          "type": "string"
+        },
+        "mv_h": {
+          "type": "number"
+        },
+        "dias": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dia"
+          }
+        },
+        "historico": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/historico_item"
+          }
+        },
+        "chuva_acum_mm": {
+          "$ref": "#/$defs/chuva_acum_mm"
+        }
+      }
+    },
+    "dia": {
+      "type": "object",
+      "required": [
+        "dia_alvo",
+        "d",
+        "indice",
+        "classe",
+        "efr_mm",
+        "rtotal_mm",
+        "n_membros",
+        "prob"
+      ],
+      "properties": {
+        "dia_alvo": {
+          "type": "string",
+          "format": "date"
+        },
+        "d": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "indice": {
+          "type": "number"
+        },
+        "classe": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 7
+        },
+        "efr_mm": {
+          "type": "number"
+        },
+        "rtotal_mm": {
+          "type": "number"
+        },
+        "n_membros": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "prob": {
+          "$ref": "#/$defs/prob"
+        }
+      }
+    },
+    "historico_item": {
+      "type": "object",
+      "required": ["dia_alvo", "indice", "classe"],
+      "properties": {
+        "dia_alvo": {
+          "type": "string",
+          "format": "date"
+        },
+        "indice": {
+          "type": "number"
+        },
+        "classe": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 7
+        }
+      }
+    },
+    "chuva_acum_mm": {
+      "type": "object",
+      "required": ["24h", "48h", "72h", "96h"],
+      "properties": {
+        "24h": { "type": "number" },
+        "48h": { "type": "number" },
+        "72h": { "type": "number" },
+        "96h": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "prob": {
+      "type": "object",
+      "required": ["pontuais", "esparsos", "generalizados"],
+      "properties": {
+        "pontuais": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "esparsos": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "generalizados": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  }
+}
