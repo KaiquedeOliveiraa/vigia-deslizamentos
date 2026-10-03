@@ -35,5 +35,6 @@ export function buscar<T extends { nome: string }>(lista: T[], termo: string): T
   return lista.filter((m) => normalizar(m.nome).includes(q));
 }
 
-export const textoCompartilhar = (nome: string, indice: number): string =>
-  `${nome} — ${infoClasse(classe(indice)).nome} (${formatarIndice(indice)})`;
+/** `traduzir` recebe o nome da classe em português. */
+export const textoCompartilhar = (nome: string, indice: number, traduzir = (s: string) => s): string =>
+  `${nome} — ${traduzir(infoClasse(classe(indice)).nome)} (${formatarIndice(indice)})`;

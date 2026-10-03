@@ -194,9 +194,11 @@
   color: var(--ink-2);
 }
 
+/* ink-brand = nav-900 no tema claro; no escuro dá contraste ao chip sobre o cartão. */
 .evo .pick button[aria-selected="true"] {
   background: var(--nav-900);
-  border-color: var(--nav-900);
+  border-color: var(--ink-brand);
+  box-shadow: 0 0 0 1px var(--ink-brand);
   color: var(--on-nav);
   font-weight: 600;
 }

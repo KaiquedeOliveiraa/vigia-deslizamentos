@@ -1,6 +1,6 @@
 import "../styles/monitoramento.css";
 import { Check, CloudRain, Share2, TriangleAlert } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import geojson from "../data/municipios.geojson?raw";
 import { tradutor, type T } from "../i18n";
 import { classe, emAlerta, infoClasse } from "../lib/classes";
@@ -143,7 +143,7 @@ function Painel({ t, lang, indices, ibge, nome, d, aoCompartilhar, aoTelegram }:
               onClick={() => {
                 const v = dia.indice;
                 const aviso = t("Link copiado: “{M} — {C} ({N})”", { M: nome, C: infoClasse(classe(v)).nome, N: formatarIndice(v) });
-                aoCompartilhar(textoCompartilhar(nome, v), aviso);
+                aoCompartilhar(textoCompartilhar(nome, v, t), aviso);
               }}
             >
               <Share2 aria-hidden="true" />
@@ -202,16 +202,9 @@ function ListaVariaveis({ t, efr_mm, limiar_mm, razao, barra, n_membros }: { t: 
   return (
     <dl className="vars">
       {linhas.map(([rotulo, valor, comBarra]) => (
-        <div key={rotulo} className="var">
-          <div className="t">
-            <dt>{rotulo}</dt>
-            <dd className="num">{valor}</dd>
-          </div>
-          {comBarra && (
-            <div className="bar" aria-hidden="true">
-              <i style={{ width: `${barra}%` }} />
-            </div>
-          )}
+        <div key={rotulo} className={comBarra ? "var com-barra" : "var"} style={comBarra ? ({ "--barra": `${barra}%` } as CSSProperties) : undefined}>
+          <dt>{rotulo}</dt>
+          <dd className="num">{valor}</dd>
         </div>
       ))}
     </dl>

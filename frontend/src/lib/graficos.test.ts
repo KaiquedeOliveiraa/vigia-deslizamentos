@@ -8,6 +8,7 @@ import {
   faixasClasse,
   indicadores,
   marcaClasse,
+  marcasEvolucao,
   maxEvolucao,
   maxPluviometro,
   serieMunicipio,
@@ -55,6 +56,13 @@ describe("maxEvolucao", () => {
   it("acima de 2,00 arredonda o maior para cima em 0,5", () => {
     expect(maxEvolucao([1.0, 2.3])).toBeCloseTo(2.5);
     expect(maxEvolucao([3.0, 0.5])).toBeCloseTo(3.0);
+  });
+});
+
+describe("marcasEvolucao", () => {
+  it("as do protótipo, mais o início das classes acima de 1,80, abaixo do max", () => {
+    expect(marcasEvolucao(2)).toEqual([0, 0.4, 0.7, 1.0, 1.4, 1.8]);
+    expect(marcasEvolucao(3)).toEqual([0, 0.4, 0.7, 1.0, 1.4, 1.8, 2.6]);
   });
 });
 

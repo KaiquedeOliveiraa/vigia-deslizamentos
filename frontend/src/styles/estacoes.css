@@ -31,6 +31,11 @@
   opacity: 1;
 }
 
+/* Mapa afastado (zoom < 8,5, ver MapaLeaflet): os nomes se sobreporiam; voltam ao aproximar. */
+.est .mapa.longe .leaflet-tooltip.mlabel {
+  display: none;
+}
+
 /* Nome escrito sobre o município em branco, sem a caixa do rótulo de risco. */
 .est .mapa .leaflet-tooltip.mlabel {
   background: none;

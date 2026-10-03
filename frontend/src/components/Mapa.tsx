@@ -1,10 +1,10 @@
 import "leaflet/dist/leaflet.css";
 import "../styles/mapa.css";
-import { lazy, Suspense, useEffect, useState, type ReactNode, type Ref } from "react";
+import type { ReactNode, Ref } from "react";
 import type { Idioma } from "../lib/preferencias";
-
-// O Leaflet usa `window` ao ser importado: só carrega no navegador, depois da hidratação.
-const MapaLeaflet = lazy(() => import("./MapaLeaflet"));
+// O Leaflet usa `window` ao ser importado: as telas com mapa são ilhas client:only, nunca renderizadas no servidor.
+// Import estático (sem lazy) para o módulo baixar junto com a tela (RNF03: o LCP é um tile do mapa).
+import MapaLeaflet from "./MapaLeaflet";
 
 export interface MapaApi {
   /** Faz o município piscar 2× (escolhido pela busca). */
@@ -37,15 +37,9 @@ export interface PropsMapa {
 
 /** Mapa dos municípios, igual em todas as telas; `children` são os controles sobrepostos (legenda, busca…). */
 export default function Mapa({ children, ...props }: PropsMapa & { children?: ReactNode }) {
-  const [noNavegador, setNoNavegador] = useState(false);
-  useEffect(() => setNoNavegador(true), []);
   return (
     <div className="mapwrap">
-      {noNavegador && (
-        <Suspense fallback={null}>
-          <MapaLeaflet {...props} />
-        </Suspense>
-      )}
+      <MapaLeaflet {...props} />
       {children}
     </div>
   );

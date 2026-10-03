@@ -36,15 +36,17 @@
   opacity: 0.85;
 }
 
+.mapa .mun.sel {
+  stroke: var(--nav-900);
+  stroke-width: 5px;
+}
+
+/* Depois de .sel, e tracejado: no selecionado o foco não se confunde com a seleção. */
 .mapa .mun:focus-visible {
   outline: none;
   stroke: var(--focus);
   stroke-width: 6px;
-}
-
-.mapa .mun.sel {
-  stroke: var(--nav-900);
-  stroke-width: 5px;
+  stroke-dasharray: 10 5;
 }
 
 .mapa .mun.pulse {

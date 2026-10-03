@@ -106,6 +106,12 @@ export default function Cabecalho({ lang, tela, municipios }: Props) {
           })}
         </div>
       )}
+      {indices && !indices.ok && (
+        <div className="faixa-aviso" role="alert">
+          <TriangleAlert aria-hidden="true" />
+          {t("Não foi possível carregar os dados.")}
+        </div>
+      )}
       <JanelaTelegram lang={lang} aberto={telegram} aoFechar={() => setTelegram(false)} municipios={municipios} />
       <PainelAcessibilidade lang={lang} tela={tela} aberto={acessibilidade} aoFechar={() => setAcessibilidade(false)} />
     </>

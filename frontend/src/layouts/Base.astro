@@ -7,6 +7,7 @@ import Cabecalho from "../components/Cabecalho";
 import Menu from "../components/Menu";
 import { atributoLang, idioma, tradutor } from "../i18n";
 import { municipiosMonitorados, type FeicaoMunicipio } from "../lib/mapa";
+import { urlDados } from "../lib/config";
 import { CHAVE } from "../lib/preferencias";
 import { TELAS, rota } from "../lib/telas";
 
@@ -23,6 +24,8 @@ const outroLang = lang === "es" ? "pt" : "es";
 // O script inline do <head> roda antes da pintura: idioma lembrado (vai para a outra versão da página),
 // tema e paleta, com as mesmas regras de lerPreferencias/aplicarPreferencias (src/lib/preferencias.ts).
 
+const FONTES = "https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap";
+
 const municipios = municipiosMonitorados(JSON.parse(geojson).features as FeicaoMunicipio[]).map((m) => m.nome);
 ---
 <!doctype html>
@@ -31,6 +34,13 @@ const municipios = municipiosMonitorados(JSON.parse(geojson).features as FeicaoM
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{t(`VIGIA · ${nome}`)}</title>
+    <!-- Fontes fora do caminho crítico (RNF03): o texto aparece na fonte do sistema e troca quando chegam. -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://server.arcgisonline.com" />
+    <!-- O cabeçalho de toda tela lê o indices.json: a busca começa junto com o HTML. -->
+    <link rel="preload" href={urlDados("indices.json")} as="fetch" crossorigin />
+    <link rel="stylesheet" href={FONTES} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={FONTES} /></noscript>
     <link rel="alternate" hreflang="pt-BR" href={rota(tela, "pt")} />
     <link rel="alternate" hreflang="es" href={rota(tela, "es")} />
     <script is:inline define:vars={{ chave: CHAVE, lang, outra: rota(tela, outroLang) }}>

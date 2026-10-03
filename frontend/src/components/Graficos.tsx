@@ -7,6 +7,7 @@ import {
   escala,
   faixasClasse,
   marcaClasse,
+  marcasEvolucao,
   maxEvolucao,
   maxPluviometro,
   serieMunicipio,
@@ -74,12 +75,12 @@ export function Evolucao({ t, municipios, ibge, eixo, aoSelecionar }: PropsEvolu
           </button>
         ))}
       </div>
-      <div className="evo-svg" id="evo-painel" role="tabpanel" aria-labelledby={`evo-${ibge}`}>
+      <div className="evo-svg" id="evo-painel" role="tabpanel" aria-labelledby={`evo-${ibge}`} tabIndex={0}>
         <svg viewBox={`0 0 ${largura} ${altura}`} role="img" aria-label={rotulo}>
           {faixas.map((f) => (
             <rect key={f.numero} className="band" x={esq} width={largura - esq - dir} y={y(f.ate)} height={y(f.de) - y(f.ate)} style={{ fill: `var(--c${f.numero})` }} />
           ))}
-          {[...faixas.map((f) => f.de), max].map((v) => (
+          {marcasEvolucao(max).map((v) => (
             <g key={v}>
               <line className="grid" x1={esq} x2={largura - dir} y1={y(v)} y2={y(v)} />
               <text className="ax" x={esq - 8} y={y(v) + 4} textAnchor="end">

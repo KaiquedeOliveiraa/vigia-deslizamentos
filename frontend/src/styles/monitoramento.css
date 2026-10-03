@@ -74,9 +74,10 @@
   margin: 0;
 }
 
-.var .t {
-  display: flex;
-  justify-content: space-between;
+/* dt e dd na mesma linha, barra embaixo: o <dl> só aceita <div> com dt/dd como filhos. */
+.var {
+  display: grid;
+  grid-template-columns: 1fr auto;
   font-size: 13.5px;
   color: var(--ink-2);
 }
@@ -87,19 +88,15 @@
   font-size: 13px;
 }
 
-.var .bar {
+/* Barra desenhada em CSS (--barra = % preenchido): o <dl> não aceita outros elementos. */
+.var.com-barra::after {
+  content: "";
+  grid-column: 1 / -1;
   height: 5px;
   border-radius: 3px;
-  background: var(--surface-050);
+  background: linear-gradient(var(--ink-brand), var(--ink-brand)) 0 0 / var(--barra) 100% no-repeat, var(--surface-050);
   margin-top: 7px;
-  overflow: hidden;
   border: 1px solid var(--line);
-}
-
-.var .bar i {
-  display: block;
-  height: 100%;
-  background: var(--ink-brand);
 }
 
 .acts {

@@ -35,6 +35,13 @@ describe("lerIndices", () => {
     expect(lerIndices(sem).ok).toBe(false);
     expect(lerIndices(null).ok).toBe(false);
   });
+
+  it("municipios ou dias que não são listas → erro, sem lançar", () => {
+    expect(lerIndices({ ...copia(indices), municipios: {} }).ok).toBe(false);
+    const dias = copia(indices) as { municipios: Record<string, unknown>[] };
+    dias.municipios[0].dias = "x";
+    expect(lerIndices(dias).ok).toBe(false);
+  });
 });
 
 describe("desatualizado (RN12)", () => {

@@ -70,6 +70,10 @@ export const faixasClasse = (max: number): Faixa[] =>
     ate: Math.min(lista[i + 1]?.min ?? max, max),
   }));
 
+/** Linhas do eixo Y da evolução: as do protótipo e o início das classes acima de 1,80, abaixo do `max`. */
+export const marcasEvolucao = (max: number): number[] =>
+  [0, 0.4, 0.7, 1.0, 1.4, ...CLASSES.filter((c) => c.min >= 1.8).map((c) => c.min)].filter((v) => v < max);
+
 /** "↑ moderado" / "↓ moderado" quando a classe muda de um dia para o seguinte. */
 export function marcaClasse(anterior: number, atual: number): string | null {
   const de = classe(anterior);

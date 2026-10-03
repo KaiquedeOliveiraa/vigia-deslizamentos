@@ -37,9 +37,11 @@ export function lerIndices(json: unknown): Resultado<Indices> {
   if (raiz?.schema_version !== SCHEMA_VERSION) {
     return erro(`indices.json: schema_version desconhecido (${String(raiz?.schema_version)})`);
   }
+  const lista = (v: unknown, nome: string) => (Array.isArray(v) ? undefined : nome);
   const faltandoNoMunicipio = (m: Municipio) =>
-    faltando(m, CAMPOS_MUNICIPIO) ?? m.dias.map((d) => faltando(d, CAMPOS_DIA)).find(Boolean);
-  const campo = faltando(raiz, CAMPOS_RAIZ) ?? raiz.municipios!.map(faltandoNoMunicipio).find(Boolean);
+    faltando(m, CAMPOS_MUNICIPIO) ?? lista(m.dias, "dias") ?? m.dias.map((d) => faltando(d, CAMPOS_DIA)).find(Boolean);
+  const campo =
+    faltando(raiz, CAMPOS_RAIZ) ?? lista(raiz.municipios, "municipios") ?? raiz.municipios!.map(faltandoNoMunicipio).find(Boolean);
   if (campo) return erro(`indices.json: falta o campo "${campo}"`);
   return { ok: true, dados: raiz as Indices };
 }

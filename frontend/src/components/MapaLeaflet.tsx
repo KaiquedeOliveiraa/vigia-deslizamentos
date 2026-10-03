@@ -93,14 +93,17 @@ function Municipio({ t, feicao, valor, selecionado, onSelecionar }: PropsMunicip
     if (!el || !h) return;
     el.style.fill = n ? infoClasse(n).cor : valor === null ? SEM_DADOS.cor : "var(--surface-000)";
     h.style.fill = n && infoClasse(n).hachura ? `url(#${id(n)})` : "none";
-    el.setAttribute("aria-label", rotuloAria(t, nome, valor));
-    el.setAttribute("aria-pressed", String(selecionado));
+    // Sem role (mapa só de contexto), aria-label num <path> é proibido.
+    if (interativo) {
+      el.setAttribute("aria-label", rotuloAria(t, nome, valor));
+      el.setAttribute("aria-pressed", String(selecionado));
+    }
     el.classList.toggle("sel", selecionado);
     if (selecionado) {
       fundo.current?.bringToFront();
       hachura.current?.bringToFront();
     }
-  }, [t, nome, valor, n, selecionado]);
+  }, [t, nome, valor, n, selecionado, interativo]);
 
   const pos = POSICOES.get(ibge)!;
   return (
@@ -206,9 +209,22 @@ export default function MapaLeaflet({
     },
   }));
 
+  // "longe" abaixo do zoom 8,5: com o mapa afastado (celular), os nomes dos municípios se sobrepõem.
+  useEffect(() => {
+    if (!mapa) return;
+    const marcar = () => mapa.getContainer().classList.toggle("longe", mapa.getZoom() < 8.5);
+    marcar();
+    mapa.on("zoomend", marcar);
+    return () => {
+      mapa.off("zoomend", marcar);
+    };
+  }, [mapa]);
+
   useEffect(() => {
     const c = mapa?.getContainer();
     c?.setAttribute("role", "group");
+    // O Chrome põe o <svg> dos polígonos na ordem do Tab, sem nome nem foco visível.
+    mapa?.getPanes().overlayPane.querySelector("svg")?.setAttribute("tabindex", "-1");
     c?.setAttribute(
       "aria-label",
       comPinos
@@ -219,7 +235,7 @@ export default function MapaLeaflet({
 
   return (
     <>
-      <MapContainer ref={setMapa} bounds={enquadramento} boundsOptions={{ padding: comPinos ? [48, 48] : [24, 24] }} zoomSnap={0.25} zoomControl={false} className="mapa">
+      <MapContainer ref={setMapa} fadeAnimation={false} bounds={enquadramento} boundsOptions={{ padding: comPinos ? [48, 48] : [24, 24] }} zoomSnap={0.25} zoomControl={false} className="mapa">
         <TileLayer
           key={fundo.id}
           url={fundo.url}
