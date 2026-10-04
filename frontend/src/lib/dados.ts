@@ -1,5 +1,5 @@
 import { urlDados } from "./config";
-import type { Contato, Estacao, Indices, Municipio, Ocorrencia } from "./tipos";
+import type { Contato, Dia, Estacao, Indices, Municipio, Ocorrencia } from "./tipos";
 
 // Em execução só se confere schema_version e a presença dos campos usados;
 // a validação completa contra docs/indices.schema.json fica nos testes.
@@ -10,7 +10,9 @@ const SCHEMA_VERSION = 1;
 const LIMITE_MS = 12 * 60 * 60 * 1000;
 
 const CAMPOS_RAIZ = ["gerado_em", "dia_alvo_d0", "municipios_sem_dados", "municipios"];
-const CAMPOS_MUNICIPIO = ["ibge", "nome", "limiar_mm", "mv_h", "dias", "historico", "chuva_acum_mm"];
+const CAMPOS_MUNICIPIO = ["ibge", "nome", "limiar_mm", "fonte_limiar", "mv_h", "dias", "historico", "chuva_acum_mm"];
+const CHAVES_CHUVA = ["24h", "48h", "72h", "96h"];
+const CHAVES_PROB = ["pontuais", "esparsos", "generalizados"];
 const CAMPOS_DIA = ["dia_alvo", "d", "indice", "classe", "efr_mm", "rtotal_mm", "n_membros", "prob"];
 const CAMPOS_OCORRENCIA = ["ibge", "data", "tipo", "descricao", "fonte"];
 const CAMPOS_ESTACAO = ["codigo", "nome", "ibge_referencia", "distancia_km", "lat", "lon"];
@@ -41,12 +43,18 @@ export function lerIndices(json: unknown): Resultado<Indices> {
     return erro(`indices.json: schema_version desconhecido (${String(raiz?.schema_version)})`);
   }
   const lista = (v: unknown, nome: string) => (Array.isArray(v) ? undefined : nome);
+  const sub = (item: unknown, chaves: string[], nome: string) => {
+    const c = faltando(item, chaves);
+    return c && `${nome}.${c}`;
+  };
+  const faltandoNoDia = (d: Dia) => faltando(d, CAMPOS_DIA) ?? sub(d.prob, CHAVES_PROB, "prob");
   const faltandoNoMunicipio = (m: Municipio) =>
-    faltando(m, CAMPOS_MUNICIPIO) ?? lista(m.dias, "dias") ?? lista(m.historico, "historico") ?? m.dias.map((d) => faltando(d, CAMPOS_DIA)).find(Boolean);
+    faltando(m, CAMPOS_MUNICIPIO) ?? lista(m.dias, "dias") ?? lista(m.historico, "historico") ?? sub(m.chuva_acum_mm, CHAVES_CHUVA, "chuva_acum_mm") ?? m.dias.map(faltandoNoDia).find(Boolean);
   const campo =
     faltando(raiz, CAMPOS_RAIZ) ?? lista(raiz.municipios, "municipios") ?? raiz.municipios!.map(faltandoNoMunicipio).find(Boolean);
   if (campo) return erro(`indices.json: falta o campo "${campo}"`);
   const itens = raiz.municipios!.flatMap((m) => [...m.dias, ...m.historico]);
+  if (Number.isNaN(Date.parse(raiz.gerado_em!))) return erro("indices.json: gerado_em inválido");
   if (itens.some((x) => !classeValida(x.classe))) return erro("indices.json: classe fora de 1–7");
   return { ok: true, dados: raiz as Indices };
 }

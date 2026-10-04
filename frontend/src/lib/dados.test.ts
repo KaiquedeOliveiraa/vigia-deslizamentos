@@ -43,6 +43,21 @@ describe("lerIndices", () => {
     expect(lerIndices(sem)).toEqual({ ok: false, erro: expect.stringContaining("n_membros") });
   });
 
+  it("fonte_limiar, chaves de chuva_acum_mm e de prob ausentes → erro com o nome do campo", () => {
+    const m = (f: (x: any) => void) => {
+      const c = copia(indices) as any;
+      f(c.municipios[0]);
+      return lerIndices(c);
+    };
+    expect(m((x) => delete x.fonte_limiar)).toEqual({ ok: false, erro: expect.stringContaining("fonte_limiar") });
+    expect(m((x) => delete x.chuva_acum_mm["72h"])).toEqual({ ok: false, erro: expect.stringContaining("chuva_acum_mm.72h") });
+    expect(m((x) => delete x.dias[0].prob.esparsos)).toEqual({ ok: false, erro: expect.stringContaining("prob.esparsos") });
+  });
+
+  it("gerado_em não parseável → erro", () => {
+    expect(lerIndices({ ...copia(indices), gerado_em: "ontem" })).toEqual({ ok: false, erro: expect.stringContaining("gerado_em") });
+  });
+
   it("municipios ou dias que não são listas → erro, sem lançar", () => {
     expect(lerIndices({ ...copia(indices), municipios: {} }).ok).toBe(false);
     const dias = copia(indices) as { municipios: Record<string, unknown>[] };
