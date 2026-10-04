@@ -215,8 +215,8 @@ EXEMPLO_MINIMO_VALIDO = {
             "mv_h": 24,
             "dias": [
                 {
-                    "dia_alvo": "2026-09-30",
-                    "d": 0,
+                    "dia_alvo": f"2026-09-{30 + d:02d}" if d == 0 else f"2026-10-{d:02d}",
+                    "d": d,
                     "indice": 1.05,
                     "classe": 4,
                     "efr_mm": 12.3,
@@ -224,6 +224,7 @@ EXEMPLO_MINIMO_VALIDO = {
                     "n_membros": 4,
                     "prob": {"pontuais": 0.8, "esparsos": 0.2, "generalizados": 0.0},
                 }
+                for d in range(4)
             ],
             "historico": [{"dia_alvo": "2026-09-29", "indice": 0.9, "classe": 3}],
             "chuva_acum_mm": {"24h": 10.0, "48h": 20.0, "72h": 30.0, "96h": 40.0},
@@ -235,6 +236,19 @@ EXEMPLO_MINIMO_VALIDO = {
 def test_schema_aceita_exemplo_minimo_valido():
     schema = _carregar_schema()
     _validador_estrito(schema).validate(EXEMPLO_MINIMO_VALIDO)
+
+
+def test_schema_exige_4_dias_e_no_maximo_15_de_historico():
+    schema = _carregar_schema()
+    dias_a_menos = copy.deepcopy(EXEMPLO_MINIMO_VALIDO)
+    dias_a_menos["municipios"][0]["dias"].pop()
+    historico_demais = copy.deepcopy(EXEMPLO_MINIMO_VALIDO)
+    item = historico_demais["municipios"][0]["historico"][0]
+    historico_demais["municipios"][0]["historico"] = [item] * 16
+
+    for exemplo in (dias_a_menos, historico_demais):
+        with pytest.raises(jsonschema.ValidationError):
+            _validador_estrito(schema).validate(exemplo)
 
 
 def test_schema_rejeita_exemplo_sem_dia_alvo_d0():

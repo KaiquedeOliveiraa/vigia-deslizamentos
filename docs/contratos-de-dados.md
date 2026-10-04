@@ -110,3 +110,4 @@ Contatos da Defesa Civil de cada município, levantados com as prefeituras e ver
 - Caminho: `frontend/public/data/indices.json`, no branch `main`.
 - Token: *fine-grained*, com permissão só de `contents: write` neste repositório e data de expiração registrada.
 - Falha no commit: o erro é registrado e o pipeline continua; os avisos do bot não dependem da publicação.
+- Nenhum município calculado: a execução não publica; o `indices.json` anterior permanece e o aviso de dados desatualizados (12 h) cobre o caso.

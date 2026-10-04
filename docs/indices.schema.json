@@ -70,12 +70,15 @@
         },
         "dias": {
           "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
           "items": {
             "$ref": "#/$defs/dia"
           }
         },
         "historico": {
           "type": "array",
+          "maxItems": 15,
           "items": {
             "$ref": "#/$defs/historico_item"
           }

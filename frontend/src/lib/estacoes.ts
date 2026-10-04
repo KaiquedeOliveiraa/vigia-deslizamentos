@@ -2,9 +2,12 @@
 import type { T } from "../i18n";
 import type { Estacao } from "./tipos";
 
-/** Cópia da lista, da estação mais próxima do seu município de referência para a mais distante. */
-export const ordenarPorDistancia = (lista: readonly Estacao[]): Estacao[] =>
-  [...lista].sort((a, b) => a.distancia_km - b.distancia_km);
+/** Mesmo raio padrão de corte do script backend/scripts/gerar_estacoes.py. */
+export const DISTANCIA_MAX_KM = 100;
+
+/** Estações até DISTANCIA_MAX_KM, da mais próxima do seu município de referência para a mais distante (cópia). */
+export const estacoesVisiveis = (lista: readonly Estacao[]): Estacao[] =>
+  lista.filter((e) => e.distancia_km <= DISTANCIA_MAX_KM).sort((a, b) => a.distancia_km - b.distancia_km);
 
 /** "a 76 km de Ibirama": a estação nunca é dita "em" um município (contratos-de-dados, regra de leitura). */
 export const textoDistancia = (t: T, distancia_km: number, municipio: string): string =>

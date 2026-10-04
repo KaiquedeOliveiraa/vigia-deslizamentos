@@ -3,7 +3,7 @@ import { MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { tradutor } from "../i18n";
 import { carregar, lerEstacoes, type Resultado } from "../lib/dados";
-import { ordenarPorDistancia, rotuloEstacao, textoDistancia } from "../lib/estacoes";
+import { estacoesVisiveis, rotuloEstacao, textoDistancia } from "../lib/estacoes";
 import { formatarCoord } from "../lib/formato";
 import { NOMES } from "../lib/municipios";
 import type { Idioma } from "../lib/preferencias";
@@ -25,7 +25,7 @@ export default function Estacoes({ lang }: { lang: Idioma }) {
 
   if (!carga?.ok) return <EstadoCarregamento t={t} falhou={!!carga} />;
 
-  const estacoes = ordenarPorDistancia(carga.dados);
+  const estacoes = estacoesVisiveis(carga.dados);
   const alternar = (codigo: string) => setSelecionada((atual) => (atual === codigo ? null : codigo));
   const distancia = (e: Estacao) => textoDistancia(t, e.distancia_km, nome(e.ibge_referencia));
   const pinos: Pino[] = estacoes.map((e) => ({
