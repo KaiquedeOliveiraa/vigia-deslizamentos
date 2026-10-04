@@ -1,0 +1,13 @@
+---
+import Base from "../../layouts/Base.astro";
+import Estacoes from "../../components/Estacoes";
+import { caminhosIdioma, idioma, tradutor } from "../../i18n";
+
+export const getStaticPaths = caminhosIdioma;
+const lang = idioma(Astro.params.lang);
+const t = tradutor(lang);
+---
+<Base tela="estacoes">
+  <h1 class="sr-only">{t("Estações de monitoramento")}</h1>
+  <Estacoes client:only="react" lang={lang} />
+</Base>

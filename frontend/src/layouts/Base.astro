@@ -1,0 +1,68 @@
+---
+import "../styles/tokens.css";
+import "../styles/base.css";
+import "../styles/estrutura.css";
+import Cabecalho from "../components/Cabecalho";
+import Menu from "../components/Menu";
+import { atributoLang, idioma, tradutor } from "../i18n";
+import { urlDados } from "../lib/config";
+import { MONITORADOS } from "../lib/municipios";
+import { CHAVE } from "../lib/preferencias";
+import { TELAS, rota } from "../lib/telas";
+
+interface Props {
+  /** Rota da tela ("" = Monitoramento). */
+  tela: string;
+}
+
+const { tela } = Astro.props;
+const lang = idioma(Astro.params.lang);
+const t = tradutor(lang);
+const atual = TELAS.find((x) => x.rota === tela);
+if (!atual) throw new Error(`Base.astro: tela desconhecida "${tela}"`);
+const { nome } = atual;
+const outroLang = lang === "es" ? "pt" : "es";
+// O script inline do <head> roda antes da pintura: idioma lembrado (vai para a outra versão da página),
+// tema e paleta, com as mesmas regras de lerPreferencias/aplicarPreferencias (src/lib/preferencias.ts).
+
+const FONTES = "https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap";
+
+const municipios = MONITORADOS.map((m) => m.nome);
+---
+<!doctype html>
+<html lang={atributoLang(lang)} class="pal-geo">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{t(`VIGIA · ${nome}`)}</title>
+    <!-- Fontes fora do caminho crítico (RNF03): o texto aparece na fonte do sistema e troca quando chegam. -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://server.arcgisonline.com" />
+    <!-- O cabeçalho de toda tela lê o indices.json: a busca começa junto com o HTML. -->
+    <link rel="preload" href={urlDados("indices.json")} as="fetch" crossorigin />
+    <link rel="stylesheet" href={FONTES} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={FONTES} /></noscript>
+    <link rel="alternate" hreflang="pt-BR" href={rota(tela, "pt")} />
+    <link rel="alternate" hreflang="es" href={rota(tela, "es")} />
+    <script is:inline define:vars={{ chave: CHAVE, lang, outra: rota(tela, outroLang) }}>
+      try {
+        var p = JSON.parse(localStorage.getItem(chave) || "{}") || {};
+        if ((p.lang === "pt" || p.lang === "es") && p.lang !== lang) location.replace(outra + location.search + location.hash);
+        var d = document.documentElement;
+        if (["light", "dark", "contraste"].indexOf(p.theme) >= 0) d.setAttribute("data-theme", p.theme);
+        if (p.pal === "acc") d.classList.replace("pal-geo", "pal-acc");
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div class="app">
+      <a class="skip" href="#conteudo">{t("Pular para o conteúdo")}</a>
+      <Menu client:load lang={lang} tela={tela} />
+      <Cabecalho client:load lang={lang} tela={tela} municipios={municipios} />
+      <main id="conteudo" tabindex="-1">
+        <slot />
+      </main>
+      <div id="anuncio" class="sr-only" role="status" aria-live="polite"></div>
+    </div>
+  </body>
+</html>

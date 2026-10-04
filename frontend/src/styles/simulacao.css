@@ -1,0 +1,424 @@
+/* Tela Simulação (protótipo: pages/sim.css e widgets.css › aviso). */
+
+.sim {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  gap: 1px;
+  background: var(--line);
+}
+
+/* Sem dados ainda: título e estado de carregamento */
+.sim-carga {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px 28px;
+}
+
+.side.form {
+  width: 360px;
+  gap: 18px;
+}
+
+.simh {
+  margin: 0;
+  font-size: 22px;
+  line-height: 28px;
+  color: var(--ink-brand);
+}
+
+.intro {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--ink-2);
+}
+
+.fld {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.fld select,
+.fld input[type="number"] {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-050);
+  padding: 9px 11px;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.fld .row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fld input[type="range"] {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--accent);
+}
+
+.fld input[type="number"] {
+  width: 92px;
+  font-family: var(--font-mono);
+  text-align: right;
+}
+
+.fld .unit {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.fld .seg button {
+  flex: 1;
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.presets button {
+  border: 1px solid var(--line-strong);
+  background: var(--surface-000);
+  border-radius: var(--radius-pill);
+  padding: 5px 10px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.presets button:hover {
+  border-color: var(--ink-brand);
+  color: var(--ink-brand);
+}
+
+@media (pointer: coarse) {
+  .presets button {
+    min-height: 44px;
+  }
+}
+
+.presets b {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.chk {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.chk input {
+  accent-color: var(--accent);
+  margin: 2px 0 0;
+}
+
+.go {
+  display: flex;
+  gap: 8px;
+}
+
+.go .pri {
+  flex: 1;
+  padding: 12px 14px;
+  font-size: 14px;
+}
+
+.go .btn:not(.pri) {
+  min-width: 44px;
+}
+
+/* Resultado */
+.res {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cmp {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-050);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+}
+
+.cmp .lbl {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.cmp b {
+  display: block;
+  font-size: 26px;
+  line-height: 28px;
+}
+
+.cmp .cls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  margin-top: 4px;
+}
+
+.cmp .arr {
+  width: 22px;
+  height: 22px;
+  color: var(--muted);
+}
+
+.scalew {
+  position: relative;
+  padding: 20px 0 22px;
+}
+
+.scale {
+  display: flex;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+.scale i {
+  flex: 0 0 auto;
+}
+
+.mk {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ink);
+  transition: left 0.6s ease;
+}
+
+.mk::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 14px;
+  width: 2px;
+  height: 16px;
+  margin-left: -1px;
+  background: currentColor;
+}
+
+.mk.a {
+  top: 34px;
+  color: var(--muted);
+}
+
+.mk.a::after {
+  top: -16px;
+}
+
+.ends {
+  position: relative;
+  height: 14px;
+  margin-top: 22px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.ends span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.ends span:first-child {
+  transform: none;
+}
+
+.ends span:last-child {
+  transform: translateX(-100%);
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.detail div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detail dd {
+  margin: 0;
+  color: var(--ink);
+}
+
+/* Sobre o mapa */
+.maphd {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 16px;
+  z-index: 5;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  pointer-events: none;
+}
+
+.maphd > * {
+  pointer-events: auto;
+}
+
+.avisos {
+  flex: 1;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aviso {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: var(--surface-050);
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--ink);
+  box-shadow: var(--shadow-float);
+}
+
+.aviso svg {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  margin-top: 1px;
+}
+
+.aviso strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.aviso.ok svg {
+  color: var(--status-ok);
+}
+
+.aviso.warn {
+  background: var(--alert-bg);
+  border-color: var(--alert-line);
+}
+
+.aviso.warn :is(svg, strong) {
+  color: var(--accent-ink);
+}
+
+.aviso.crit {
+  background: var(--danger-bg);
+  border-color: var(--danger-ink);
+}
+
+.aviso.crit :is(svg, strong) {
+  color: var(--danger-ink);
+}
+
+.maphd .seg {
+  margin-left: auto;
+  flex-wrap: nowrap;
+  box-shadow: var(--shadow-float);
+}
+
+.maphd .seg button:disabled {
+  opacity: 0.5;
+}
+
+.sim .zoom {
+  top: auto;
+  left: auto;
+  right: 16px;
+  bottom: 30px;
+}
+
+.sim .leg {
+  bottom: 100px;
+}
+
+.snap {
+  left: 16px;
+  bottom: 16px;
+  z-index: 4;
+  max-width: 300px;
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.snap .lbl {
+  display: block;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 900px) {
+  .sim {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .side.form {
+    width: auto;
+  }
+
+  .sim .mapwrap {
+    flex: none;
+    height: 70vh;
+    height: 70dvh;
+    min-height: 420px;
+  }
+
+  .maphd {
+    left: 12px;
+    right: 12px;
+    top: 12px;
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .maphd .seg {
+    align-self: flex-end;
+  }
+
+  .aviso {
+    padding: 10px 12px;
+    font-size: 12.5px;
+    line-height: 17px;
+  }
+
+  .sim .leg {
+    bottom: 90px;
+  }
+}
