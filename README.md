@@ -62,7 +62,7 @@ O limiar crítico é o valor mínimo de chuva acumulada que, quando superado, in
 
 Para municípios não monitorados pelo Cemaden ou sem áreas suscetíveis mapeadas, o GeoRisk adota um limiar hipotético padrão de **250 mm**, e recomenda usar apenas os resultados de análise regional.
 
-No VIGIA, o limiar é um **parâmetro de configuração por município**, versionado no repositório e documentado com a respectiva fonte. Os valores dos seis municípios ainda serão definidos.
+No VIGIA, o limiar é um **parâmetro de configuração por município**, versionado no repositório e documentado com a respectiva fonte. Enquanto não houver valor de fonte oficial, os seis municípios usam um limiar provisório de **150 mm**, definido pela equipe abaixo do hipotético de 250 mm: com 250 mm, um município só entra em alerta com cerca de 230 mm de chuva, e a simulação de cenários quase não mostrava mudança de classe.
 
 ### Chuva efetiva antecedente
 
@@ -129,7 +129,7 @@ Conforme o manual, essas probabilidades são **informação secundária** — o 
 | Grade de cálculo | Grade de 5 km × 5 km sobre todo o território nacional | Pontos representativos por município (centróide e pontos adicionais conforme a extensão territorial) |
 | Modelos de previsão | 15 a 25 rodadas de GEFS, GFS, WRF, Eta e ECMWF, obtidas direto da fonte | Modelos e ensembles disponibilizados via API pública (a definir na integração) |
 | Pesos do ensemble | Recalibrados periodicamente por matriz de confusão contra ocorrências reais | Pesos fixos por recência e horário de assimilação, **sem calibração** |
-| Limiar crítico | Calibrado por município pelo Cemaden | Parâmetro de configuração, com fonte documentada |
+| Limiar crítico | Calibrado por município pelo Cemaden | Parâmetro de configuração, com fonte documentada; provisório de 150 mm nos seis municípios |
 | Meia-vida (MV) | Valor por município quando há estudo disponível | 24 horas (padrão) para todos os municípios |
 | Validação | Matriz de confusão contra o REINDESC (2017–presente) | Sem validação estatística — ver limitações |
 

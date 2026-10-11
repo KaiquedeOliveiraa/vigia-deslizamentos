@@ -267,8 +267,8 @@ def _dados_de_teste(ibge: str) -> DadosMunicipio:
 
     `AGORA` é 2026-10-01T21:00Z, logo D0 é 2026-10-01: a antecedente cobre
     2026-09-24T00:00Z em diante e a previsão vai de 2026-10-01T01:00Z a
-    2026-10-05T00:00Z. Com `limiar_mm = 250` e 300 mm de chuva em D0, o índice
-    do D0 é 1,2 (classe 4) e o município entra em alerta.
+    2026-10-05T00:00Z. Com o `limiar_mm = 150` de config/municipios.json e 180 mm
+    de chuva em D0, o índice do D0 é 1,2 (classe 4) e o município entra em alerta.
     """
     antecedente = {
         datetime(2026, 9, 24, 0, 0, tzinfo=UTC) + timedelta(hours=k): 0.0
@@ -278,7 +278,7 @@ def _dados_de_teste(ibge: str) -> DadosMunicipio:
         datetime(2026, 10, 1, 1, 0, tzinfo=UTC) + timedelta(hours=k): 0.0
         for k in range(96)
     }
-    previsao[datetime(2026, 10, 1, 1, 0, tzinfo=UTC)] = 300.0
+    previsao[datetime(2026, 10, 1, 1, 0, tzinfo=UTC)] = 180.0
     return DadosMunicipio(
         ibge=ibge,
         antecedente=[antecedente],

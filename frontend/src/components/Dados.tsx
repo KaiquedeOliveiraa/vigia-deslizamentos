@@ -24,7 +24,9 @@ import { Evolucao, Minigrafico, Pluviometro } from "./Graficos";
 import EstadoCarregamento from "./EstadoCarregamento";
 import SeloClasse from "./SeloClasse";
 
-const PERIODOS = [7, 5, 15];
+/** Em ordem crescente no seletor; 7 dias é o padrão. */
+const PERIODOS = [5, 7, 15];
+const PERIODO_PADRAO = 7;
 const ICONE_TENDENCIA = { subindo: ArrowUp, descendo: ArrowDown, estável: ArrowRight };
 const CLASSE_TENDENCIA = { subindo: "up", descendo: "dn", estável: "" };
 
@@ -34,7 +36,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
   const t = tradutor(lang);
   const [carga, setCarga] = useState<Resultado<Indices>>();
   const [ocorrencias, setOcorrencias] = useState<Resultado<Ocorrencia[]>>();
-  const [periodo, setPeriodo] = useState(PERIODOS[0]);
+  const [periodo, setPeriodo] = useState(PERIODO_PADRAO);
   const [ibge, setIbge] = useState<string>();
 
   useEffect(() => {
