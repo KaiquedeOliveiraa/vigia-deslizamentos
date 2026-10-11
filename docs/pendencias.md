@@ -37,3 +37,23 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 - ⚪ **Conferência visual dos gráficos novos da tela Dados** (linha-guia, dica, mini-gráficos, pluviômetro) com histórico de vários dias. Também: rótulo do último ponto perto da linha de ALERTA e seletor de camadas da Simulação com avisos abertos em telas largas.
 - ⚪ **Período maior que o histórico:** com menos dias de histórico que o período escolhido (5/7/15), o eixo mostra dias vazios. Avisar "histórico de N dias" ou desabilitar o período.
+- ⚪ **Contorno do município sem classe nos fundos detalhados:** `--cor-mun` vira `var(--surface-000)` (`MapaLeaflet.tsx`), e no tema escuro sobre o Satélite o contorno fica quase invisível.
+- ⚪ **Seletor de camadas da Simulação some abaixo de 900 px** (regra geral de `.layers` em `mapa.css`), como já acontecia no Monitoramento. Avaliar uma versão para celular.
+- ⚪ **Altura fixa do iframe da Defesa Civil** (760 px em `sc.css`): trocar por `min(80vh, 760px)` para não cortar em notebooks pequenos.
+
+## Backend
+
+- ⚪ **`rodar_local.py` grava em `frontend/public/data/indices.json`**, o mesmo caminho que o bot publica na `main`. O arquivo não pode ir para o `.gitignore`; cuidado para não commitá-lo, e apagar a cópia local antes de um `git pull` depois da primeira publicação.
+- ⚪ **Recálculo do histórico quando o `limiar_mm` muda:** criar um comando ou aviso para não misturar limiares no gráfico de evolução.
+- ⚪ **Conferência de chuva com as estações da Defesa Civil**, no lugar ou ao lado do INMET (depende da autorização RN10).
+
+## Qualidade e testes
+
+- ⚪ **Workflow `backend.yml`** com `pytest -W error` (a suíte é offline e leva ~3 s).
+- ⚪ **axe-core no `pages.yml`** sobre o `dist/`, como o README exige antes de cada publicação.
+- ⚪ **Teste de componente da Evolução:** dia mais próximo do ponteiro e navegação por ←/→ não têm teste.
+- ⚪ **O PR não roda CI:** `pages.yml` só dispara em push na `main`. Adicionar `pull_request` para os testes rodarem antes do merge.
+
+## Documentação
+
+- ⚪ Documentar no `backend/README.md` o `scripts.rodar_local` e o `frontend/.env.development.local` com `PUBLIC_DADOS_URL=data/`, para ver dados reais no `npm run dev` (por padrão o dev mostra os dados de exemplo).
