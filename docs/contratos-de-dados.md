@@ -10,7 +10,7 @@ Parâmetros de cada município, versionados no repositório. Incluir um municíp
 |---|---|---|
 | `ibge` | string (7 dígitos) | Código IBGE; chave do município em todo o sistema |
 | `nome` | string | Nome oficial (IBGE) |
-| `limiar_mm` | número | Limiar crítico de 24 h. Enquanto não houver valor de fonte oficial: 250 (limiar hipotético do GeoRisk) |
+| `limiar_mm` | número | Limiar crítico de 24 h. Enquanto não houver valor de fonte oficial: 150 (provisório da equipe; o hipotético do GeoRisk é 250) |
 | `fonte_limiar` | string | Origem do limiar (ex.: "GeoRisk, limiar hipotético padrão") |
 | `mv_h` | número | Meia-vida da água no solo, em horas. Padrão: 24 |
 | `pontos` | lista de `{lat, lon}` | Pontos de cálculo; no mínimo o centroide do município |
