@@ -367,6 +367,11 @@
   bottom: 100px;
 }
 
+/* Camadas do mapa abaixo do "Agora | Simulado", que ocupa o canto superior direito. */
+.sim .layers {
+  top: 72px;
+}
+
 .snap {
   left: 16px;
   bottom: 16px;

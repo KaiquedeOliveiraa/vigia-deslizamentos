@@ -208,7 +208,7 @@ export default function Simulacao({ lang }: { lang: Idioma }) {
           {t(", de caráter acadêmico. Não constitui alerta oficial e não substitui o Cemaden nem a Defesa Civil.")}
         </p>
       </aside>
-      <Mapa ref={mapa} lang={lang} valores={valores} selecionado={ibge} onSelecionar={escolher} camadas={false}>
+      <Mapa ref={mapa} lang={lang} valores={valores} selecionado={ibge} onSelecionar={escolher}>
         <div className="maphd">
           {r && (
             <div className="avisos">
