@@ -1,4 +1,4 @@
-import { Accessibility, Globe, TriangleAlert } from "lucide-react";
+import { Globe, PersonStanding, TriangleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 import { tradutor } from "../i18n";
 import { carregar, desatualizado, lerIndices, type Resultado } from "../lib/dados";
@@ -87,7 +87,7 @@ export default function Cabecalho({ lang, tela, municipios }: Props) {
           aria-label={t("Acessibilidade: tema, contraste e cores")}
           onClick={() => setAcessibilidade(true)}
         >
-          <Accessibility aria-hidden="true" />
+          <PersonStanding aria-hidden="true" />
         </button>
         <p className="status">
           {!indices && t("Carregando os dados…")}

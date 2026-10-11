@@ -92,7 +92,10 @@ function Municipio({ t, feicao, pos, valor, selecionado, onSelecionar }: PropsMu
     const el = fundo.current?.getElement() as SVGPathElement | undefined;
     const h = hachura.current?.getElement() as SVGPathElement | undefined;
     if (!el || !h) return;
-    el.style.fill = n ? infoClasse(n).cor : valor === null ? SEM_DADOS.cor : "var(--surface-000)";
+    const cor = n ? infoClasse(n).cor : valor === null ? SEM_DADOS.cor : "var(--surface-000)";
+    el.style.fill = cor;
+    // Nos fundos detalhados (Satélite, Ruas, Relevo) a cor vira contorno: mapa.css usa --cor-mun no stroke.
+    el.style.setProperty("--cor-mun", cor);
     h.style.fill = n && infoClasse(n).hachura ? `url(#${id(n)})` : "none";
     // Sem role (mapa só de contexto), aria-label num <path> é proibido.
     if (interativo) {
@@ -217,6 +220,12 @@ export default function MapaLeaflet({
       mapa.off("zoomend", marcar);
     };
   }, [mapa]);
+
+  // Fora do Neutro, as cores ficam translúcidas para o fundo aparecer (mapa.css › [data-fundo]).
+  useEffect(() => {
+    const c = mapa?.getContainer();
+    if (c) c.dataset.fundo = fundo.id;
+  }, [mapa, fundo.id]);
 
   useEffect(() => {
     const c = mapa?.getContainer();
