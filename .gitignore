@@ -16,3 +16,6 @@ env/
 *.db
 *.db-wal
 *.db-shm
+
+# Banco e log locais (DB_PATH/LOG_PATH do .env de desenvolvimento)
+backend/dados/
