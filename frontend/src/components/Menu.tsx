@@ -1,11 +1,11 @@
 import {
-  Accessibility,
   BookOpen,
   ChartLine,
   CloudRain,
   Gauge,
   Map as IconeMapa,
   Menu as IconeMenu,
+  PersonStanding,
   Phone,
   RadioTower,
   type LucideIcon,
@@ -79,7 +79,7 @@ export default function Menu({ lang, tela }: Props) {
       </ul>
       <div className="foot">
         <button type="button" className="item" onClick={() => setAcessibilidade(true)}>
-          <Accessibility aria-hidden="true" />
+          <PersonStanding aria-hidden="true" />
           <span className="full">{t("Acessibilidade")}</span>
           <em className="tip" aria-hidden="true">
             {t("Acessibilidade")}
