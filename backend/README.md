@@ -104,12 +104,13 @@ Configuração em Settings > Secrets and variables > Actions:
 | Secret (opcional) | `INMET_TOKEN` | Veja a tabela de variáveis |
 | Variable | `VIGIA_WORKER_URL` | `https://vigia-bot.kaiquedeoliveira0412.workers.dev` |
 | Variable | `SITE_URL` | URL pública do site |
-| Variable | `VIGIA_SIMULACAO` | Vazia em produção |
+| Variable | `VIGIA_SIMULACAO` | Com `1` só durante a demonstração; sai antes da entrega final |
 
 > **O GitHub pode atrasar execuções agendadas** nos horários de pico, e **desativa
 > o agendamento depois de 60 dias sem atividade** no repositório. Para reativar:
-> aba Actions, workflow Pipeline, **Enable workflow**. O commit diário na `estado`
-> conta como atividade, mas não custa conferir se o último run é recente.
+> aba Actions, workflow Pipeline, **Enable workflow**. Os commits diários do
+> `indices.json` na `main` mantêm o repositório ativo; mesmo assim, confira em Actions
+> que a última execução agendada é recente.
 
 ### Worker do bot
 
@@ -132,7 +133,10 @@ e é registrado com `setWebhook` (comando abaixo).
 > (`python -m app.main`, sem `--uma-vez`) usa long polling, e o Telegram não
 > mantém webhook e polling juntos: o `run_polling` **apaga o webhook do
 > @VigiaDeslizamentosBot**, e o Worker deixa de receber mensagens. O `--uma-vez` não
-> apaga o webhook. Depois de usar o modo serviço, refaça o webhook:
+> apaga o webhook, mas **não o rode no PC com `VIGIA_WORKER_URL` e
+> `VIGIA_WORKER_SEGREDO` no `.env`**: ele leria os inscritos reais do D1 e decidiria a
+> RN08 com um `vigia.db` local, diferente do da `estado`, mandando avisos repetidos
+> aos inscritos reais. Depois de usar o modo serviço, refaça o webhook:
 
 ```powershell
 # Dentro de backend/. Lê o .env sem mostrar os valores. TELEGRAM_WEBHOOK_SEGREDO

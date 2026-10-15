@@ -49,6 +49,8 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 - ⚪ **`rodar_local.py` grava em `frontend/public/data/indices.json`**, o mesmo caminho que o bot publica na `main`. O arquivo não pode ir para o `.gitignore`; cuidado para não commitá-lo, e apagar a cópia local antes de um `git pull` depois da primeira publicação.
 - ⚪ **Recálculo do histórico quando o `limiar_mm` muda:** criar um comando ou aviso para não misturar limiares no gráfico de evolução.
 - ⚪ **Conferência de chuva com as estações da Defesa Civil**, no lugar ou ao lado do INMET (depende da autorização RN10).
+- ⚪ **Execução com o Worker indisponível termina verde:** o erro fica só no log. Avaliar um código de saída próprio ou um `::warning::` no workflow para avisar o operador.
+- ⚪ **Fixture de contrato do `bot.json`:** gerar o exemplo dos testes do Worker a partir de `montar_bot_json`, para um campo renomeado falhar nos dois lados.
 
 ## Qualidade e testes
 
