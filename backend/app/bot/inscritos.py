@@ -97,7 +97,7 @@ class InscritosWorker:
                 "falha ao remover inscrição no Worker: %s", type(erro).__name__
             )
             return
-        if resposta.status_code != 200:
+        if not 200 <= resposta.status_code < 300:
             _log.warning(
                 "falha ao remover inscrição no Worker: status %s",
                 resposta.status_code,

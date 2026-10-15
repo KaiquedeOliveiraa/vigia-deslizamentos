@@ -119,7 +119,7 @@ def test_erro_do_worker_nao_contem_o_segredo():
 
 
 def test_timeout_de_30_s_em_todas_as_chamadas():
-    http = HttpFalso([lista((1, "4206900"))], [RespostaFalsa(200)])
+    http = HttpFalso([lista((1, "4206900"))], [RespostaFalsa(204)])
     worker = InscritosWorker(URL, SEGREDO, http)
 
     worker.listar("4206900")
@@ -129,15 +129,17 @@ def test_timeout_de_30_s_em_todas_as_chamadas():
     assert [k["timeout"] for _, _, k in http.chamadas] == [30, 30]
 
 
-def test_remover_chat_negativo_chama_delete_e_some_da_lista():
+def test_remover_chat_negativo_chama_delete_e_some_da_lista(caplog):
     http = HttpFalso(
-        [lista((-1001234567890, "4206900"), (5, "4206900"))], [RespostaFalsa(200)]
+        [lista((-1001234567890, "4206900"), (5, "4206900"))], [RespostaFalsa(204)]
     )
     worker = InscritosWorker(URL, SEGREDO, http)
     assert worker.listar("4206900") == [-1001234567890, 5]
 
-    worker.remover_chat(-1001234567890)
+    with caplog.at_level("WARNING"):
+        worker.remover_chat(-1001234567890)
 
+    assert "falha" not in caplog.text
     metodo, url, kwargs = http.chamadas[-1]
     assert (metodo, url) == ("DELETE", f"{URL}/inscritos/-1001234567890")
     assert kwargs["headers"] == {"Authorization": f"Bearer {SEGREDO}"}

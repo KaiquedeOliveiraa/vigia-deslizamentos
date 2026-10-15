@@ -232,7 +232,6 @@ async def executar_ciclo_padrao(
     return execucao
 
 
-
 def montar_agendador(job: Callable[[], Coroutine | None]) -> AsyncIOScheduler:
     """`AsyncIOScheduler` em UTC com o cron da Tarefa 0 e as proteções do plano."""
     agendador = AsyncIOScheduler(timezone=timezone.utc)
