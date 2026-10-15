@@ -105,9 +105,45 @@ Contatos da Defesa Civil de cada município, levantados com as prefeituras e ver
 | `endereco` | string ou nulo | Endereço completo, usado no "Como chegar" |
 | `site` | string ou nulo | Site da prefeitura, exibido quando não há telefone |
 
+## `bot.json`
+
+Textos prontos do bot, gerados pelo backend (`app/exportacao/bot_json.py`) a cada execução com algum município calculado e lidos pelo Cloudflare Worker em `https://raw.githubusercontent.com/KaiquedeOliveiraa/vigia-deslizamentos/estado/bot.json`. O Worker não escreve texto do domínio: só repassa estes. Todos os textos são HTML do Telegram (`parse_mode: "HTML"`). Um `schema_version` desconhecido faz o Worker responder que o bot está indisponível.
+
+| Campo | Conteúdo |
+|---|---|
+| `schema_version` | `1` |
+| `gerado_em` | `"YYYY-MM-DDTHH:MM:SSZ"` |
+| `municipios` | `[{"ibge", "nome"}]` na ordem da configuração |
+| `textos.opcao_todos` | Rótulo da opção que inscreve em todos os municípios |
+| `textos.boas_vindas` | Resposta ao `/start` sem município |
+| `textos.boas_vindas_sugerido` | `{ibge: texto}`: `/start` já com um município sugerido |
+| `textos.inscricao_confirmada` | `{ibge: texto}`: confirmação de inscrição em um município |
+| `textos.inscricao_confirmada_todos` | Confirmação de inscrição em todos, na ordem da configuração |
+| `textos.opcao_desconhecida` | Resposta a uma opção que não existe |
+| `textos.inscricoes_apagadas` | Resposta ao `/parar` |
+| `status.cabecalho` | Início do `/status` |
+| `status.blocos` | `{ibge: bloco}`: situação atual de cada município |
+| `status.separador` | Entre blocos |
+| `status.rodape` | Fim do `/status`, com o link do site |
+| `status.sem_inscricao` | `/status` de quem não tem inscrição |
+| `simulacao` | `null`, ou, com `VIGIA_SIMULACAO=1`, `{mensagens: {ibge: [...]}, fim, municipio_invalido, pausa_s}` para o `/simular` |
+
+O `/status` é montado como `cabecalho + separador.join(blocos dos municípios inscritos) + rodape`.
+
+## Branch `estado`
+
+Branch órfã (sem histórico em comum com a `main`) onde o pipeline guarda o que precisa sobreviver entre execuções do Actions:
+
+| Arquivo | Conteúdo |
+|---|---|
+| `vigia.db` | Banco SQLite com `indices` e `notificacoes`, depois de um checkpoint do WAL (`scripts/preparar_estado.py`) |
+| `bot.json` | O arquivo descrito acima |
+
+Só o pipeline escreve nela, com o `GITHUB_TOKEN` do workflow, em um commit por execução quando algo mudou. O workflow a restaura no início e a cria se ainda não existir. Os inscritos não ficam aqui: estão no D1 do Worker.
+
 ## Publicação
 
 - Caminho: `frontend/public/data/indices.json`, no branch `main`.
-- Token: *fine-grained*, com permissão só de `contents: write` neste repositório e data de expiração registrada.
+- Token: o secret `TOKEN_DADOS`, um PAT *fine-grained* (`vigia_publicacao`) só deste repositório, com *Contents: Read and write* e data de expiração registrada.
 - Falha no commit: o erro é registrado e o pipeline continua; os avisos do bot não dependem da publicação.
 - Nenhum município calculado: a execução não publica; o `indices.json` anterior permanece e o aviso de dados desatualizados (12 h) cobre o caso.

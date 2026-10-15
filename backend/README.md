@@ -2,7 +2,8 @@
 
 Calcula o índice de risco de deslizamento dos seis municípios do Alto Vale do
 Itajaí a cada 6 horas, grava no SQLite, publica o `indices.json` que o site lê e
-avisa pelo Telegram quem estiver inscrito.
+avisa pelo Telegram quem estiver inscrito. Roda no GitHub Actions; o bot que
+atende os comandos é um Cloudflare Worker (`bot-worker/`).
 
 A metodologia, os requisitos e as regras de negócio estão no [README do
 projeto](../README.md). O formato dos arquivos trocados entre backend, repositório
@@ -21,11 +22,12 @@ app/
   exportacao/      monta o indices.json e publica por commit no repositório
   bot/             mensagens, inscrição, regra de aviso e envio
   pipeline.py      encadeia uma execução inteira
-  main.py          processo: bot em long polling + agendador
+  main.py          `--uma-vez` (usado pelo Actions) ou serviço: long polling + agendador
 config/
   municipios.json  parâmetros de cada município (incluir um é acrescentar um item)
 scripts/
   gerar_estacoes.py  gera frontend/public/data/estacoes.json (roda uma vez)
+  preparar_estado.py checkpoint do WAL do vigia.db antes do commit na branch estado
 deploy/
   vigia.service    unidade systemd
 tests/             a suíte; nenhum teste da suíte padrão acessa a rede
@@ -55,8 +57,8 @@ nomeando a que falta:
 | Variável | Para que serve |
 |---|---|
 | `TELEGRAM_TOKEN` | Token do bot, obtido com o [@BotFather](https://t.me/BotFather) |
-| `GITHUB_TOKEN_DADOS` | Token *fine-grained* com permissão só de `contents: write` neste repositório |
-| `GITHUB_REPO` | Repositório de publicação, no formato `dono/repo` |
+| `GITHUB_TOKEN_DADOS` | Token *fine-grained* com permissão só de `contents: write` neste repositório. No Actions vem do secret `TOKEN_DADOS` (veja a seção do Actions). Local, use um valor falso |
+| `GITHUB_REPO` | Repositório de publicação, no formato `dono/repo`. Local, use um valor falso: nenhuma execução local publica na `main` |
 | `SITE_URL` | URL pública do site, usada nas mensagens do bot |
 | `DB_PATH` | Arquivo do banco SQLite, num disco persistente |
 | `LOG_PATH` | Arquivo de log |
@@ -66,14 +68,96 @@ Opcional:
 | Variável | Para que serve |
 |---|---|
 | `INMET_TOKEN` | Token da API do INMET, solicitado por e-mail a `cadastro.act@inmet.gov.br`. Sem ele o sistema roda igual; só a comparação de conferência entre a chuva medida e a calculada deixa de ser registrada. |
-| `VIGIA_SIMULACAO` | **Só para demonstração.** Com `1`, o bot ganha o comando `/simular`, que envia a mensagem de aviso de cada classe de risco sem chuva real, sem gravar classe notificada e sem publicar nada. Fica vazia em produção; o comando será removido antes do deploy. |
+| `VIGIA_SIMULACAO` | **Só para demonstração.** Com `1`, o bot ganha o comando `/simular`, que envia a mensagem de aviso de cada classe de risco sem chuva real, sem gravar classe notificada e sem publicar nada. Fica vazia em produção; o comando será removido antes do deploy (`docs/pendencias.md`). No Actions vem da variável `VIGIA_SIMULACAO`. |
+| `VIGIA_WORKER_URL` | URL do Worker do bot. Com ela, os avisos usam os inscritos do Worker em vez dos do SQLite local. Vem sempre junto de `VIGIA_WORKER_SEGREDO` |
+| `VIGIA_WORKER_SEGREDO` | Segredo compartilhado com o Worker, para listar e apagar inscritos |
+| `BOT_JSON_PATH` | Onde gravar o `bot.json` com os textos do bot. Sem ele, o arquivo não é gerado |
 
 O `.env` real **nunca** é versionado. Em produção ele vira o `EnvironmentFile`
-do systemd, com permissão 600.
+do systemd, com permissão 600; no Actions, as variáveis vêm de secrets e variables
+do repositório.
 
 ## Rodando
 
+### No GitHub Actions (produção)
+
+O workflow [`.github/workflows/pipeline.yml`](../.github/workflows/pipeline.yml)
+roda `python -m app.main --uma-vez` às **3, 9, 15 e 21 UTC** (minuto 7, para fugir
+do pico das horas cheias) e também por **Run workflow** na aba Actions. Em cada
+execução ele:
+
+1. restaura a branch órfã `estado` (com `vigia.db` e `bot.json`) na pasta `estado/`;
+2. roda o pipeline, que busca os inscritos no Worker e envia os avisos;
+3. publica o `indices.json` na `main` com o `TOKEN_DADOS`;
+4. faz o checkpoint do WAL e commita o `vigia.db` e o `bot.json` na `estado`.
+
+Se a branch `estado` não existir, é criada. Um erro de rede ao consultá-la falha o
+job, em vez de recomeçar com estado vazio, o que repetiria avisos.
+
+Configuração em Settings > Secrets and variables > Actions:
+
+| Tipo | Nome | Para que serve |
+|---|---|---|
+| Secret | `TELEGRAM_TOKEN` | Token do bot |
+| Secret | `TOKEN_DADOS` | PAT *fine-grained* `vigia_publicacao`, só este repositório, *Contents: Read and write*. Publica o `indices.json` na `main`. Tem validade: confira a data em github.com/settings/personal-access-tokens e renove antes. Vencido, a publicação falha com 401/403 e o run continua verde |
+| Secret | `VIGIA_WORKER_SEGREDO` | Mesmo valor do secret do Worker |
+| Secret (opcional) | `INMET_TOKEN` | Veja a tabela de variáveis |
+| Variable | `VIGIA_WORKER_URL` | `https://vigia-bot.kaiquedeoliveira0412.workers.dev` |
+| Variable | `SITE_URL` | URL pública do site |
+| Variable | `VIGIA_SIMULACAO` | Vazia em produção |
+
+> **O GitHub pode atrasar execuções agendadas** nos horários de pico, e **desativa
+> o agendamento depois de 60 dias sem atividade** no repositório. Para reativar:
+> aba Actions, workflow Pipeline, **Enable workflow**. O commit diário na `estado`
+> conta como atividade, mas não custa conferir se o último run é recente.
+
+### Worker do bot
+
+O Worker (`vigia-bot`, em `bot-worker/`) guarda os inscritos no D1 `vigia` e lê os
+textos do `bot.json` da branch `estado`. Deploy e migrações:
+
+```bash
+cd bot-worker
+npm ci
+npx wrangler d1 migrations apply vigia --remote
+npm run deploy
+```
+
+Os secrets do Worker são definidos uma vez com `npx wrangler secret put <NOME>`
+(o valor é pedido no terminal): `TELEGRAM_TOKEN`, `TELEGRAM_WEBHOOK_SEGREDO` e
+`VIGIA_WORKER_SEGREDO`. O webhook do Telegram aponta para `<URL do Worker>/telegram`
+e é registrado com `setWebhook` (comando abaixo).
+
+> **Rodar o `app.main` no seu PC derruba o bot.** O modo serviço
+> (`python -m app.main`, sem `--uma-vez`) usa long polling, e o Telegram não
+> mantém webhook e polling juntos: o `run_polling` **apaga o webhook do
+> @VigiaDeslizamentosBot**, e o Worker deixa de receber mensagens. O `--uma-vez` não
+> apaga o webhook. Depois de usar o modo serviço, refaça o webhook:
+
+```powershell
+# Dentro de backend/. Lê o .env sem mostrar os valores. TELEGRAM_WEBHOOK_SEGREDO
+# é o mesmo valor do secret do Worker; guarde-o no .env local (não versionado).
+$cfg = @{}
+Get-Content .env | Where-Object { $_ -match '^\s*[A-Z_]+=' } | ForEach-Object {
+  $k, $v = $_ -split '=', 2; $cfg[$k.Trim()] = $v.Trim()
+}
+$api = "https://api.telegram.org/bot$($cfg['TELEGRAM_TOKEN'])"
+Invoke-RestMethod -Method Post "$api/setWebhook" -Body @{
+  url          = "$($cfg['VIGIA_WORKER_URL'])/telegram"
+  secret_token = $cfg['TELEGRAM_WEBHOOK_SEGREDO']
+}
+# Conferência:
+(Invoke-RestMethod "$api/getWebhookInfo").result |
+  Select-Object url, pending_update_count, last_error_message
+```
+
+Se `url` voltar vazia no `getWebhookInfo`, o webhook não está registrado; se
+`last_error_message` vier preenchido, o Telegram está chegando ao Worker e
+recebendo erro.
+
 ### Serviço (bot + agendador)
+
+Alternativa ao Actions e ao Worker, para uso local ou em um servidor próprio.
 
 ```bash
 .venv/bin/python -m app.main
@@ -101,7 +185,7 @@ incompleta e **3** quando o Telegram rejeitou o token. Os códigos 2 e 3 estão 
 `RestartPreventExitStatus` da unidade systemd: são falhas permanentes, e
 reiniciar a cada 10 s só poluiria o journal.
 
-> **Pare o serviço antes.** Dois processos executando o pipeline gravam no mesmo
+> **Pare o serviço antes** (só vale para quem usa o modo serviço em servidor próprio). Dois processos executando o pipeline gravam no mesmo
 > banco e decidem os avisos a partir do mesmo estado: o resultado são **avisos
 > duplicados** para os inscritos.
 >
@@ -141,7 +225,10 @@ Os testes marcados `rede` ficam fora da suíte padrão (`addopts` em
 `pyproject.toml`). Todo o resto roda com fixtures de respostas reais e dublês de
 cliente HTTP: nenhum teste da suíte padrão abre conexão.
 
-## Implantação (systemd)
+## Implantação em servidor próprio (systemd)
+
+Opcional: a produção atual roda no Actions e no Worker. Esta é a alternativa com
+o processo em execução contínua.
 
 ```bash
 # código
@@ -192,6 +279,7 @@ ficaram sem, se a publicação deu certo e quantos avisos havia a tratar.
 | Coleta de todos | Nada é gravado, nada é publicado, nenhum aviso é enviado — o último `indices.json` continua no ar (RNF04/UC06) e a classe notificada de cada município fica intacta |
 | Um modelo do ensemble | Aquele membro é descartado; o cálculo segue com os demais, e `n_membros` no JSON mostra quantos entraram. Abaixo de 3 membros em qualquer dia-alvo, o município fica "sem dados" |
 | Publicação no GitHub | O erro é registrado e a execução continua: os avisos **não** dependem da publicação |
+| Worker fora do ar ao buscar os inscritos | Nada é enviado e a classe notificada não é gravada; a próxima execução tenta de novo |
 | Envio a um chat que bloqueou o bot | As inscrições daquele chat são apagadas (RNF05) e o laço segue |
 | Envio falhando por rede em todos os inscritos | A classe notificada não é gravada, e a próxima execução reenvia |
 | INMET fora do ar ou sem token | Só a linha de comparação deixa de ser registrada; o índice não muda |

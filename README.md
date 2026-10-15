@@ -234,25 +234,27 @@ Não se aplicam ao projeto o módulo Planejamento da Execução (abrigos, doaç�
 | Coletor | Consumo das APIs de precipitação observada e prevista |
 | Processador | Cálculo da chuva efetiva antecedente, subíndices e índice de risco |
 | Classificador | Enquadramento nas classes e cálculo das probabilidades complementares |
-| Persistência | Banco SQLite com os índices calculados, os inscritos do bot e o controle de notificações |
+| Persistência | Banco SQLite com os índices calculados e o controle de notificações; os inscritos ficam no D1 do Cloudflare, junto do Worker |
 | Exportador | Gera o `indices.json` com os resultados e o publica junto do frontend |
-| Notificador | Bot do Telegram: inscrição, disparo e controle de repetição |
+| Notificador | Bot do Telegram: o Worker atende `/start`, `/status` e `/parar`; o pipeline dispara os avisos e controla a repetição |
 | Interface | Mapa, painéis e consulta aos dados |
 
 ### Fluxo de dados
 
-O backend roda o pipeline de forma agendada, grava os resultados no SQLite e publica um arquivo `indices.json` junto do frontend no GitHub Pages. O site lê esse arquivo em vez de consultar o backend a cada visita; assim, se o backend ficar fora do ar, o site continua exibindo o último índice publicado, com data e hora. A publicação é feita por commit automático do arquivo no repositório, pela API do GitHub, com um token restrito a este repositório.
+O pipeline roda no GitHub Actions 4 vezes por dia, grava os resultados no SQLite e publica um arquivo `indices.json` junto do frontend no GitHub Pages. O site lê esse arquivo em vez de consultar o backend a cada visita; assim, se o backend ficar fora do ar, o site continua exibindo o último índice publicado, com data e hora. A publicação é feita por commit automático do arquivo no repositório, pela API do GitHub, com um token restrito a este repositório.
+
+O bot tem duas metades. Um **Cloudflare Worker** (`bot-worker/`) recebe as mensagens do Telegram por webhook, responde `/start`, `/status` e `/parar` e guarda os inscritos num banco D1. O **pipeline** consulta o Worker para saber quem avisar e envia os avisos. Os textos das respostas são escritos pelo backend em um `bot.json`, que o Worker lê. O `vigia.db` e o `bot.json` ficam na branch `estado`, que só o pipeline escreve (contrato em [docs/contratos-de-dados.md](docs/contratos-de-dados.md)). Operação e deploy em [backend/README.md](backend/README.md).
 
 ### Banco de dados
 
-O VIGIA usa **SQLite** como banco padrão: um único arquivo, sem servidor, suficiente para o volume do projeto (seis municípios e algumas rodadas de cálculo por dia). A troca para PostgreSQL só é necessária se a hospedagem do backend não tiver disco persistente ou se houver mais de uma instância.
+O VIGIA usa **SQLite** como banco padrão: um único arquivo, sem servidor, suficiente para o volume do projeto (seis municípios e algumas rodadas de cálculo por dia). O arquivo vive na branch `estado`, restaurado e gravado a cada execução do pipeline. A troca para PostgreSQL só seria necessária com mais de uma instância escrevendo ao mesmo tempo.
 
 O banco guarda apenas o que não pode ser obtido de novo nas APIs:
 
 | Tabela | Conteúdo | Uso |
 |---|---|---|
 | `indices` | Município (código IBGE), dia-alvo, data/hora do cálculo, índice de risco, classe, probabilidades complementares e os valores usados no cálculo (chuva efetiva antecedente, chuva prevista, limiar) | Mapa, painel do município, evolução do índice, tendência e consulta aos dados de cada análise |
-| `inscritos` | Identificador do chat do Telegram, municípios escolhidos e data da inscrição | Envio dos avisos; removidos com `/parar` |
+| `inscritos` | Identificador do chat do Telegram, municípios escolhidos e data da inscrição | Envio dos avisos; removidos com `/parar`. Ficam no D1 do Worker; no SQLite só existem quando o backend roda sem Worker |
 | `notificacoes` | Município e última classe notificada | Evitar repetir o aviso enquanto o município permanecer na mesma classe |
 
 Os municípios (código IBGE, nome, limiar, meia-vida e pontos de cálculo) vêm do arquivo de configuração `config/municipios.json`, não de uma tabela editável.
@@ -345,16 +347,16 @@ Em todas as telas: menu, seletor PT/ES, acessibilidade e "Alertas no Telegram".
 - **Backend:** Python
 - **API:** FastAPI (opcional; o site lê o JSON exportado)
 - **Cálculo:** pandas / NumPy
-- **Agendamento:** APScheduler (ou cron no host), a cada 6 horas
-- **Bot:** python-telegram-bot, em long polling (dispensa domínio e certificado HTTPS próprios)
-- **Banco de dados:** SQLite (PostgreSQL se a hospedagem exigir)
+- **Agendamento:** GitHub Actions (cron), às 3, 9, 15 e 21 UTC; APScheduler no modo serviço
+- **Bot:** Cloudflare Worker (TypeScript) por webhook para os comandos; python-telegram-bot para os avisos
+- **Banco de dados:** SQLite (índices e notificações, na branch `estado`) e Cloudflare D1 (inscritos)
 - **Hospedagem do frontend:** GitHub Pages
-- **Hospedagem do backend:** *a definir*
+- **Hospedagem do backend:** GitHub Actions (pipeline) e Cloudflare Workers (bot)
 - **Arquitetura de referência:** RADIAN
 - **Idiomas:** Português e Espanhol
 - **Acessibilidade:** verificação com axe-core antes de cada publicação
 
-> **Sobre a escolha do backend:** o GitHub Pages serve apenas conteúdo estático, e o bot com inscrição por usuário exige um processo em execução contínua e um banco de inscritos. Isso torna necessário um backend próprio, hospedado fora do GitHub Pages. Python foi escolhido por concentrar as bibliotecas adequadas ao tipo de processamento da metodologia (séries horárias, decaimento exponencial, agregação de ensemble) e por ter a biblioteca de bot mais madura para o caso de uso.
+> **Sobre a escolha do backend:** o GitHub Pages serve apenas conteúdo estático, e o bot com inscrição por usuário exige um banco de inscritos e algo que responda ao Telegram a qualquer hora. A solução sem servidor próprio é o Worker, que responde por webhook e guarda os inscritos no D1, e o Actions, que roda o pipeline por agendamento. Python foi escolhido por concentrar as bibliotecas adequadas ao tipo de processamento da metodologia (séries horárias, decaimento exponencial, agregação de ensemble) e por ter a biblioteca de bot mais madura para o caso de uso.
 
 ## Estrutura do repositório
 
@@ -365,12 +367,13 @@ vigia-deslizamentos/
 │   │   ├── coleta/          # Clientes das APIs de precipitação
 │   │   ├── calculo/         # Chuva efetiva, subíndices, índice de risco
 │   │   ├── classificacao/   # Classes de risco e probabilidades
-│   │   ├── bot/             # Bot do Telegram
+│   │   ├── bot/             # Mensagens e avisos do Telegram
 │   │   ├── exportacao/      # Geração do indices.json consumido pelo frontend
 │   │   └── modelos/         # Modelos de dados e persistência
 │   ├── config/
 │   │   └── municipios.json  # Limiar, meia-vida e pontos de cálculo por município
 │   └── tests/
+├── bot-worker/              # Worker do Telegram (webhook, inscritos no D1)
 ├── frontend/
 │   ├── src/
 │   │   ├── components/      # Componentes de interface (React)
