@@ -20,11 +20,13 @@ concurrency:
 
 jobs:
   pipeline:
-    runs-on: ubuntu-latest
+    # Runner fixo: o ubuntu-latest migra para o Ubuntu 26 em 19/10/2026.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
 
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: "3.12"
           cache: pip
@@ -38,11 +40,18 @@ jobs:
       - name: Restaurar o estado
         run: |
           set -euo pipefail
-          if git ls-remote --exit-code --heads origin estado > /dev/null; then
+          # 0: a branch existe; 2: não existe (cria órfã); outro código é erro
+          # de rede e falha o job, para não repetir avisos com um estado vazio.
+          codigo=0
+          git ls-remote --exit-code --heads origin estado > /dev/null || codigo=$?
+          if [ "$codigo" -eq 0 ]; then
             git fetch --depth=1 origin estado
             git worktree add estado FETCH_HEAD
-          else
+          elif [ "$codigo" -eq 2 ]; then
             git worktree add --orphan -b estado estado
+          else
+            echo "Falha ao consultar a branch estado (código $codigo)." >&2
+            exit "$codigo"
           fi
 
       - name: Rodar o pipeline
