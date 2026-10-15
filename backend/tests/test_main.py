@@ -18,6 +18,7 @@ from pathlib import Path
 from telegram.error import InvalidToken
 
 from app import main as modulo_main
+from app.bot.inscritos import InscritosSqlite, InscritosWorker
 from app.bot.regra_aviso import Aviso
 from app.calculo.agregacao import Resultado, ResultadoDia, ResultadoMunicipio
 from app.classificacao.probabilidades import Probabilidades
@@ -477,3 +478,134 @@ def test_ciclo_completo_em_arquivo_grava_o_banco_e_a_classe_notificada(
     assert len(enviados) == 1
     assert "Ibirama" in enviados[0][1]
     assert banco.ultima_classe_notificada(conexao_do_loop, "4206900") == 4
+
+
+# --- escolha do repositório de inscritos e vida do http ----------------------
+
+
+class _RespostaDoWorker:
+    def __init__(self, status_code: int, corpo=None):
+        self.status_code = status_code
+        self._corpo = corpo if corpo is not None else {}
+        self.text = ""
+
+    def json(self):
+        return self._corpo
+
+
+class _HttpDoWorker:
+    """Dublê do `requests.Session` que só atende o `GET /inscritos` do Worker."""
+
+    def __init__(self, resposta: _RespostaDoWorker, eventos: list | None = None):
+        self.resposta = resposta
+        self.eventos = eventos if eventos is not None else []
+        self.chamadas: list[str] = []
+
+    def get(self, url, **_):
+        self.chamadas.append(url)
+        self.eventos.append("get")
+        return self.resposta
+
+    def delete(self, url, **_):
+        self.eventos.append("delete")
+        return _RespostaDoWorker(200)
+
+    def close(self):
+        self.eventos.append("close")
+
+
+def _ambiente_com_worker(tmp_path: Path) -> dict[str, str]:
+    ambiente = ambiente_de_teste(tmp_path)
+    ambiente["VIGIA_WORKER_URL"] = "https://worker.exemplo.dev"
+    ambiente["VIGIA_WORKER_SEGREDO"] = "segredo-do-worker"
+    return ambiente
+
+
+def _inscritos_de_ibirama() -> _RespostaDoWorker:
+    return _RespostaDoWorker(200, {"inscritos": [{"chat_id": 555, "ibge": "4206900"}]})
+
+
+def test_escolhe_worker_com_url_configurada(tmp_path):
+    config, _ = modulo_main.carregar_dependencias(_ambiente_com_worker(tmp_path))
+
+    escolhido = modulo_main.escolher_inscritos(config, banco.abrir(":memory:"), object())
+
+    assert isinstance(escolhido, InscritosWorker)
+
+
+def test_escolhe_sqlite_sem_worker(tmp_path):
+    config, _ = modulo_main.carregar_dependencias(ambiente_de_teste(tmp_path))
+
+    escolhido = modulo_main.escolher_inscritos(config, banco.abrir(":memory:"), object())
+
+    assert isinstance(escolhido, InscritosSqlite)
+
+
+def test_ciclo_com_worker_envia_aos_chats_do_worker(tmp_path, monkeypatch):
+    config, municipios = modulo_main.carregar_dependencias(_ambiente_com_worker(tmp_path))
+    pipeline, _ = _pipeline_falso(_execucao_com_aviso())
+    monkeypatch.setattr(modulo_main, "executar_pipeline", pipeline)
+    http = _HttpDoWorker(_inscritos_de_ibirama())
+    conexao = banco.abrir(":memory:")
+    enviados: list = []
+
+    class BotDeTeste:
+        async def send_message(self, chat_id, text, **_):
+            enviados.append(chat_id)
+
+    asyncio.run(
+        modulo_main.executar_ciclo_padrao(
+            config, municipios, AGORA, bot=BotDeTeste(), conexao_do_bot=conexao, http=http
+        )
+    )
+
+    assert http.chamadas == ["https://worker.exemplo.dev/inscritos"]
+    assert enviados == [555]
+    assert conexao.execute("SELECT COUNT(*) FROM inscritos").fetchone()[0] == 0
+
+
+def test_ciclo_com_worker_fora_do_ar_nao_grava_classe(tmp_path, monkeypatch):
+    config, municipios = modulo_main.carregar_dependencias(_ambiente_com_worker(tmp_path))
+    pipeline, _ = _pipeline_falso(_execucao_com_aviso())
+    monkeypatch.setattr(modulo_main, "executar_pipeline", pipeline)
+    http = _HttpDoWorker(_RespostaDoWorker(503))
+    conexao = banco.abrir(":memory:")
+    enviados: list = []
+
+    class BotDeTeste:
+        async def send_message(self, chat_id, text, **_):
+            enviados.append(chat_id)
+
+    asyncio.run(
+        modulo_main.executar_ciclo_padrao(
+            config, municipios, AGORA, bot=BotDeTeste(), conexao_do_bot=conexao, http=http
+        )
+    )
+
+    assert enviados == []
+    assert banco.ultima_classe_notificada(conexao, "4206900") is None
+
+
+def test_http_criado_pelo_ciclo_so_fecha_depois_do_envio(tmp_path, monkeypatch):
+    config, municipios = modulo_main.carregar_dependencias(_ambiente_com_worker(tmp_path))
+    pipeline, _ = _pipeline_falso(_execucao_com_aviso())
+    monkeypatch.setattr(modulo_main, "executar_pipeline", pipeline)
+    eventos: list = []
+    sessao = _HttpDoWorker(_inscritos_de_ibirama(), eventos)
+    monkeypatch.setattr(modulo_main.requests, "Session", lambda: sessao)
+
+    class BotDeTeste:
+        async def send_message(self, chat_id, text, **_):
+            eventos.append("envio")
+
+    asyncio.run(
+        modulo_main.executar_ciclo_padrao(
+            config,
+            municipios,
+            AGORA,
+            bot=BotDeTeste(),
+            conexao_do_bot=banco.abrir(":memory:"),
+        )
+    )
+
+    assert eventos == ["get", "envio", "close"]

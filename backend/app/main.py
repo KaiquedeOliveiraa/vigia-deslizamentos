@@ -40,7 +40,7 @@ from telegram.error import InvalidToken
 from app.bot.avisos import enviar_avisos
 from app.bot.bot import construir_aplicacao as construir_aplicacao_padrao
 from app.bot.bot import silenciar_url_com_token
-from app.bot.inscritos import InscritosSqlite
+from app.bot.inscritos import InscritosSqlite, InscritosWorker, RepositorioInscritos
 from app.config import (
     Config,
     ConfiguracaoInvalidaError,
@@ -133,6 +133,13 @@ def _executar_na_thread(
         conexao.close()
 
 
+def escolher_inscritos(config: Config, conexao, http) -> RepositorioInscritos:
+    """Os inscritos vêm do Worker quando ele está configurado, senão do SQLite."""
+    if config.worker_url is not None:
+        return InscritosWorker(config.worker_url, config.worker_segredo, http)
+    return InscritosSqlite(conexao)
+
+
 @asynccontextmanager
 async def bot_temporario(
     config: Config,
@@ -182,44 +189,48 @@ async def executar_ciclo_padrao(
         execucao = await asyncio.to_thread(
             _executar_na_thread, agora_utc, municipios, config, http
         )
-    finally:
-        if criou_http:
-            http.close()
 
-    if not execucao.avisos:
-        return execucao
+        if not execucao.avisos:
+            return execucao
 
-    conexao = conexao_do_bot if conexao_do_bot is not None else banco.abrir(config.db_path)
-    try:
-        if bot is not None:
-            await enviar_avisos(
-                bot,
-                conexao,
-                InscritosSqlite(conexao),
-                execucao.avisos,
-                relogio(),
-                config.site_url,
-            )
-        elif abrir_bot is not None:
-            async with abrir_bot() as bot_do_envio:
+        conexao = (
+            conexao_do_bot if conexao_do_bot is not None else banco.abrir(config.db_path)
+        )
+        try:
+            inscritos = escolher_inscritos(config, conexao, http)
+            if bot is not None:
                 await enviar_avisos(
-                    bot_do_envio,
+                    bot,
                     conexao,
-                    InscritosSqlite(conexao),
+                    inscritos,
                     execucao.avisos,
                     relogio(),
                     config.site_url,
                 )
-        else:
-            _log.warning(
-                "%s aviso(s) decidido(s) sem bot disponível: nada foi enviado",
-                len(execucao.avisos),
-            )
+            elif abrir_bot is not None:
+                async with abrir_bot() as bot_do_envio:
+                    await enviar_avisos(
+                        bot_do_envio,
+                        conexao,
+                        inscritos,
+                        execucao.avisos,
+                        relogio(),
+                        config.site_url,
+                    )
+            else:
+                _log.warning(
+                    "%s aviso(s) decidido(s) sem bot disponível: nada foi enviado",
+                    len(execucao.avisos),
+                )
+        finally:
+            if conexao_do_bot is None:
+                conexao.close()
     finally:
-        if conexao_do_bot is None:
-            conexao.close()
+        if criou_http:
+            http.close()
 
     return execucao
+
 
 
 def montar_agendador(job: Callable[[], Coroutine | None]) -> AsyncIOScheduler:
