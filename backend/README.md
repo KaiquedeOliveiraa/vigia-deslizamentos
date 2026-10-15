@@ -66,6 +66,7 @@ Opcional:
 | Variável | Para que serve |
 |---|---|
 | `INMET_TOKEN` | Token da API do INMET, solicitado por e-mail a `cadastro.act@inmet.gov.br`. Sem ele o sistema roda igual; só a comparação de conferência entre a chuva medida e a calculada deixa de ser registrada. |
+| `VIGIA_SIMULACAO` | **Só para demonstração.** Com `1`, o bot ganha o comando `/simular`, que envia a mensagem de aviso de cada classe de risco sem chuva real, sem gravar classe notificada e sem publicar nada. Fica vazia em produção; o comando será removido antes do deploy. |
 
 O `.env` real **nunca** é versionado. Em produção ele vira o `EnvironmentFile`
 do systemd, com permissão 600.

@@ -11,6 +11,7 @@ import asyncio
 import logging
 from datetime import datetime, timezone
 
+from telegram.constants import ParseMode
 from telegram.ext import CommandHandler, MessageHandler
 
 from app.bot import bot as modulo_bot
@@ -56,10 +57,12 @@ class MensagemFalsa:
         self.chat_id = chat_id
         self.respostas: list[str] = []
         self.teclados: list[object] = []
+        self.parse_modes: list[object] = []
 
-    async def reply_text(self, texto: str, reply_markup=None) -> None:
+    async def reply_text(self, texto: str, reply_markup=None, parse_mode=None) -> None:
         self.respostas.append(texto)
         self.teclados.append(reply_markup)
+        self.parse_modes.append(parse_mode)
 
 
 class UpdateFalso:
@@ -177,7 +180,17 @@ def test_status_lista_os_municipios_inscritos_como_sem_dados_antes_do_primeiro_c
     asyncio.run(modulo_bot.comando_status(UpdateFalso(mensagem), ContextoFalso(conn)))
 
     assert "Ibirama" in mensagem.respostas[0]
-    assert "sem dados" in mensagem.respostas[0]
+    assert "ainda sem cálculo" in mensagem.respostas[0]
+
+
+def test_status_e_enviado_em_html():
+    conn = conexao()
+    banco.inscrever(conn, CHAT, "4206900", AGORA)
+    mensagem = MensagemFalsa("/status")
+
+    asyncio.run(modulo_bot.comando_status(UpdateFalso(mensagem), ContextoFalso(conn)))
+
+    assert mensagem.parse_modes == [ParseMode.HTML]
 
 
 def test_parar_apaga_as_inscricoes_do_chat():
