@@ -3,12 +3,13 @@ import type { BotJson } from "./tipos";
 export const TEXTO_INDISPONIVEL =
   "O VIGIA está temporariamente indisponível. Tente de novo em alguns minutos.";
 
+const TEMPO_LIMITE_MS = 5000;
 const SCHEMA_VERSION_ESPERADA = 1;
 
 /** Baixa o `bot.json`. Devolve `null` em qualquer falha ou schema desconhecido. */
 export async function carregarBotJson(url: string): Promise<BotJson | null> {
   try {
-    const resposta = await fetch(url);
+    const resposta = await fetch(url, { signal: AbortSignal.timeout(TEMPO_LIMITE_MS) });
     if (resposta.status !== 200) return null;
     const dados = (await resposta.json()) as BotJson | null;
     if (dados === null || typeof dados !== "object") return null;

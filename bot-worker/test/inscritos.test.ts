@@ -1,3 +1,4 @@
+import { createExecutionContext } from "cloudflare:test";
 import { env } from "cloudflare:workers";
 import { beforeEach, describe, expect, it } from "vitest";
 import worker from "../src/index";
@@ -7,7 +8,7 @@ const GRUPO = -1001234567890;
 const AUTH = { Authorization: `Bearer ${env.VIGIA_WORKER_SEGREDO}` };
 
 function chamar(caminho: string, init?: RequestInit) {
-  return worker.fetch(new Request(`https://w.test${caminho}`, init), env);
+  return worker.fetch(new Request(`https://w.test${caminho}`, init), env, createExecutionContext());
 }
 
 beforeEach(async () => {

@@ -1,4 +1,5 @@
 import { segredoConfere, segredoDoBearer } from "./autenticacao";
+import { tratarAtualizacao } from "./comandos";
 import { listarTodos, removerChat } from "./inscritos";
 import type { Env } from "./tipos";
 
@@ -28,9 +29,30 @@ async function tratarInscritos(requisicao: Request, env: Env, caminho: string): 
   return new Response("Não encontrado", { status: 404 });
 }
 
+async function tratarTelegram(
+  requisicao: Request,
+  env: Env,
+  ctx: ExecutionContext,
+): Promise<Response> {
+  const recebido = requisicao.headers.get("X-Telegram-Bot-Api-Secret-Token");
+  if (!segredoConfere(recebido, env.TELEGRAM_WEBHOOK_SEGREDO)) {
+    return new Response("Não autorizado", { status: 401 });
+  }
+  try {
+    await tratarAtualizacao(await requisicao.json(), env, ctx);
+  } catch (erro) {
+    // Sempre 200 para o Telegram não reenviar a mesma atualização em laço.
+    console.error(`falha ao tratar atualização: ${erro instanceof Error ? erro.name : "erro"}`);
+  }
+  return new Response(null, { status: 200 });
+}
+
 export default {
-  async fetch(requisicao: Request, env: Env): Promise<Response> {
+  async fetch(requisicao: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const { pathname } = new URL(requisicao.url);
+    if (pathname === "/telegram" && requisicao.method === "POST") {
+      return tratarTelegram(requisicao, env, ctx);
+    }
     if (pathname === "/inscritos" || pathname.startsWith("/inscritos/")) {
       return tratarInscritos(requisicao, env, pathname);
     }
