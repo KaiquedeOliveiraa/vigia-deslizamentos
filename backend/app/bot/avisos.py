@@ -116,6 +116,14 @@ async def enviar_avisos(
             erro,
         )
         return
+    except Exception:  # noqa: BLE001 — p.ex. `sqlite3.OperationalError` (banco travado)
+        # Tratada como fonte indisponível: sem os chats não se envia nem se grava
+        # classe; a execução seguinte tenta de novo.
+        _log.exception(
+            "falha inesperada ao ler os inscritos: nenhum aviso enviado e "
+            "nenhuma classe gravada"
+        )
+        return
 
     for aviso in avisos:
         # Uma exceção inesperada num município não pode calar os seguintes. O

@@ -442,3 +442,17 @@ def test_nenhuma_linha_de_log_contem_chat_id(caplog):
     assert caplog.records
     assert "987654321" not in caplog.text
     assert "123456789" not in caplog.text
+
+
+def test_erro_inesperado_ao_listar_inscritos_nao_propaga(caplog):
+    conn = conexao()
+    bot = BotFalso()
+    repo = InscritosFalso(erro=sqlite3.OperationalError("database is locked"))
+
+    with caplog.at_level(logging.ERROR):
+        executar(bot, conn, [aviso(), aviso(avisar=False, ibge="4205100")], inscritos=repo)
+
+    assert bot.enviados == []
+    assert banco.ultima_classe_notificada(conn, "4206900") is None
+    assert banco.ultima_classe_notificada(conn, "4205100") is None
+    assert caplog.records
