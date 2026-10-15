@@ -1,0 +1,440 @@
+{
+  "schema_version": 1,
+  "gerado_em": "2026-10-15T20:41:52.933471+00:00",
+  "dia_alvo_d0": "2026-10-15",
+  "municipios_sem_dados": [],
+  "municipios": [
+    {
+      "ibge": "4205100",
+      "nome": "Dona Emma",
+      "limiar_mm": 150,
+      "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+      "mv_h": 24,
+      "dias": [
+        {
+          "dia_alvo": "2026-10-15",
+          "d": 0,
+          "indice": 0.1767652200333224,
+          "classe": 1,
+          "efr_mm": 6.379416107369549,
+          "rtotal_mm": 20.135366897628813,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-16",
+          "d": 1,
+          "indice": 0.22378793134477573,
+          "classe": 1,
+          "efr_mm": 22.98482147620562,
+          "rtotal_mm": 10.583368225510732,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-17",
+          "d": 2,
+          "indice": 0.1178771162583472,
+          "classe": 1,
+          "efr_mm": 17.681567438752083,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-18",
+          "d": 3,
+          "indice": 0.0587794154959447,
+          "classe": 1,
+          "efr_mm": 8.816912324391703,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        }
+      ],
+      "historico": [],
+      "chuva_acum_mm": {
+        "24h": 21.3,
+        "48h": 24.9,
+        "72h": 35.0,
+        "96h": 36.5
+      }
+    },
+    {
+      "ibge": "4206900",
+      "nome": "Ibirama",
+      "limiar_mm": 150,
+      "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+      "mv_h": 24,
+      "dias": [
+        {
+          "dia_alvo": "2026-10-15",
+          "d": 0,
+          "indice": 0.29417128348252386,
+          "classe": 1,
+          "efr_mm": 20.73990861375039,
+          "rtotal_mm": 23.385783908628184,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-16",
+          "d": 1,
+          "indice": 0.3022545860889595,
+          "classe": 1,
+          "efr_mm": 38.93026300922641,
+          "rtotal_mm": 6.407924904117524,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-17",
+          "d": 2,
+          "indice": 0.15584539985257947,
+          "classe": 1,
+          "efr_mm": 23.37680997788692,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-18",
+          "d": 3,
+          "indice": 0.07784492495336424,
+          "classe": 1,
+          "efr_mm": 11.676738743004636,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        }
+      ],
+      "historico": [],
+      "chuva_acum_mm": {
+        "24h": 51.4,
+        "48h": 55.2,
+        "72h": 65.4,
+        "96h": 67.9
+      }
+    },
+    {
+      "ibge": "4209151",
+      "nome": "José Boiteux",
+      "limiar_mm": 150,
+      "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+      "mv_h": 24,
+      "dias": [
+        {
+          "dia_alvo": "2026-10-15",
+          "d": 0,
+          "indice": 0.17979720274759045,
+          "classe": 1,
+          "efr_mm": 7.452826797549975,
+          "rtotal_mm": 19.51675361458859,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-16",
+          "d": 1,
+          "indice": 0.17952070286986282,
+          "classe": 1,
+          "efr_mm": 22.05042032181262,
+          "rtotal_mm": 4.877685108666805,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-17",
+          "d": 2,
+          "indice": 0.09413818458344263,
+          "classe": 1,
+          "efr_mm": 14.120727687516395,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-18",
+          "d": 3,
+          "indice": 0.046892209315605976,
+          "classe": 1,
+          "efr_mm": 7.033831397340897,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        }
+      ],
+      "historico": [],
+      "chuva_acum_mm": {
+        "24h": 23.0,
+        "48h": 26.4,
+        "72h": 37.6,
+        "96h": 40.1
+      }
+    },
+    {
+      "ibge": "4214003",
+      "nome": "Presidente Getúlio",
+      "limiar_mm": 150,
+      "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+      "mv_h": 24,
+      "dias": [
+        {
+          "dia_alvo": "2026-10-15",
+          "d": 0,
+          "indice": 0.17632474736576134,
+          "classe": 1,
+          "efr_mm": 6.2433069953531914,
+          "rtotal_mm": 20.20540510951101,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-16",
+          "d": 1,
+          "indice": 0.23292145685761945,
+          "classe": 1,
+          "efr_mm": 25.45985556521095,
+          "rtotal_mm": 9.478362963431966,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-17",
+          "d": 2,
+          "indice": 0.12197729222285852,
+          "classe": 1,
+          "efr_mm": 18.29659383342878,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-18",
+          "d": 3,
+          "indice": 0.06085452232426769,
+          "classe": 1,
+          "efr_mm": 9.128178348640152,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        }
+      ],
+      "historico": [],
+      "chuva_acum_mm": {
+        "24h": 24.4,
+        "48h": 27.6,
+        "72h": 37.3,
+        "96h": 38.6
+      }
+    },
+    {
+      "ibge": "4219358",
+      "nome": "Vitor Meireles",
+      "limiar_mm": 150,
+      "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+      "mv_h": 24,
+      "dias": [
+        {
+          "dia_alvo": "2026-10-15",
+          "d": 0,
+          "indice": 0.18341640988961272,
+          "classe": 1,
+          "efr_mm": 7.728485187520817,
+          "rtotal_mm": 19.783976295921093,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-16",
+          "d": 1,
+          "indice": 0.20339047255909354,
+          "classe": 1,
+          "efr_mm": 24.669224370609328,
+          "rtotal_mm": 5.839346513254705,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-17",
+          "d": 2,
+          "indice": 0.10601392151954779,
+          "classe": 1,
+          "efr_mm": 15.902088227932168,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-18",
+          "d": 3,
+          "indice": 0.0527767912779015,
+          "classe": 1,
+          "efr_mm": 7.9165186916852255,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        }
+      ],
+      "historico": [],
+      "chuva_acum_mm": {
+        "24h": 23.8,
+        "48h": 27.8,
+        "72h": 40.1,
+        "96h": 41.5
+      }
+    },
+    {
+      "ibge": "4219408",
+      "nome": "Witmarsum",
+      "limiar_mm": 150,
+      "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+      "mv_h": 24,
+      "dias": [
+        {
+          "dia_alvo": "2026-10-15",
+          "d": 0,
+          "indice": 0.2018534386492202,
+          "classe": 1,
+          "efr_mm": 8.421063918930715,
+          "rtotal_mm": 21.856951878452318,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-16",
+          "d": 1,
+          "indice": 0.23559454693683468,
+          "classe": 1,
+          "efr_mm": 27.473245284368225,
+          "rtotal_mm": 7.865936756156977,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-17",
+          "d": 2,
+          "indice": 0.12264611728734863,
+          "classe": 1,
+          "efr_mm": 18.39691759310229,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-18",
+          "d": 3,
+          "indice": 0.061179907575249534,
+          "classe": 1,
+          "efr_mm": 9.176986136287429,
+          "rtotal_mm": 0.0,
+          "n_membros": 6,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        }
+      ],
+      "historico": [],
+      "chuva_acum_mm": {
+        "24h": 24.6,
+        "48h": 29.2,
+        "72h": 39.8,
+        "96h": 41.7
+      }
+    }
+  ]
+}
