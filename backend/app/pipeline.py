@@ -20,7 +20,9 @@ Ordem e tolerância a falhas:
 5. exportação e publicação — falha aqui é registrada e **não** impede os avisos,
    inclusive se vier como exceção em vez de `False`;
 6. comparação de conferência com o INMET, que só escreve no log;
-7. decisão dos avisos pela RN08.
+7. decisão dos avisos pela RN08;
+8. gravação do `bot.json` (se configurado) — falha é registrada e não para a
+   execução.
 """
 
 from __future__ import annotations
@@ -30,11 +32,13 @@ import sqlite3
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from pathlib import Path
 
 from app.bot.regra_aviso import Aviso, decidir
 from app.calculo.agregacao import Resultado, calcular
 from app.coleta import inmet, open_meteo
 from app.config import Config, Municipio
+from app.exportacao.bot_json import montar_bot_json
 from app.exportacao.exportar import montar_indices, serializar
 from app.exportacao.publicar import publicar as publicar_indices
 from app.modelos import banco
@@ -157,6 +161,24 @@ def _publicar_indices(
     return publicar(serializar(dados), config, http)
 
 
+def _gravar_bot_json(
+    municipios: list[Municipio],
+    conexao: sqlite3.Connection,
+    config: Config,
+    gerado_em: datetime,
+) -> None:
+    atuais = {
+        municipio.ibge: banco.indice_atual(conexao, municipio.ibge)
+        for municipio in municipios
+    }
+    dados = montar_bot_json(
+        municipios, atuais, config.site_url, config.simulacao, gerado_em
+    )
+    caminho = Path(config.bot_json_path)
+    caminho.parent.mkdir(parents=True, exist_ok=True)
+    caminho.write_bytes(serializar(dados))
+
+
 def executar_pipeline(
     agora_utc: datetime,
     municipios: list[Municipio],
@@ -216,6 +238,15 @@ def executar_pipeline(
         _log.exception("comparação com o INMET falhou; a execução segue")
 
     avisos = _decidir_avisos(conexao, municipios, resultado, fim_da_execucao)
+
+    # Mesma razão da guarda da publicação: o `bot.json` é um extra do Worker e
+    # não pode custar os avisos que já estão decididos.
+    if config.bot_json_path is not None:
+        try:
+            _gravar_bot_json(municipios, conexao, config, fim_da_execucao)
+        except Exception:  # noqa: BLE001 — bot.json nunca impede os avisos
+            _log.exception("gravação do bot.json falhou; a execução segue")
+
     _log.info(
         "execução de %s: %s município(s) com dados, %s sem dados, publicado=%s, "
         "%s aviso(s) a tratar",

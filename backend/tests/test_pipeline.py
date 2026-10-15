@@ -13,10 +13,12 @@ from __future__ import annotations
 
 import json
 import logging
+from dataclasses import replace
 from datetime import date, datetime, timedelta, timezone
 
 import pytest
 
+from app.bot.mensagens import numero_br
 from app.bot.regra_aviso import Aviso
 from app.coleta.open_meteo import ColetaError
 from app.config import Config, Municipio, Ponto
@@ -596,3 +598,67 @@ def test_publicacao_que_levanta_excecao_nao_impede_os_avisos(caplog):
     # E o cálculo ficou gravado: a publicação é o último elo, não o primeiro.
     assert conn.execute("SELECT COUNT(*) FROM indices").fetchone()[0] == 4
     assert caplog.records
+
+
+# --- bot.json -----------------------------------------------------------------
+
+
+def executar_com_bot_json(caminho, municipios, por_ibge):
+    conn = conexao()
+    execucao = executar_pipeline(
+        AGORA,
+        municipios,
+        conn,
+        http=object(),
+        config=replace(config_de_teste(), bot_json_path=caminho),
+        relogio=lambda: FIM_DA_EXECUCAO,
+        coletar=coleta_falsa(por_ibge),
+        publicar=PublicacaoFalsa(),
+    )
+    return execucao, conn
+
+
+def test_grava_bot_json_quando_configurado(tmp_path):
+    caminho = tmp_path / "pasta" / "nova" / "bot.json"
+
+    _, conn = executar_com_bot_json(
+        str(caminho), [IBIRAMA], {"4206900": dados("4206900", 120.0)}
+    )
+
+    conteudo = json.loads(caminho.read_text(encoding="utf-8"))
+    assert conteudo["schema_version"] == 1
+    assert conteudo["gerado_em"] == "2026-10-01T12:03:20Z"
+    gravado = banco.indice_atual(conn, "4206900")
+    assert numero_br(gravado.indice) in conteudo["status"]["blocos"]["4206900"]
+
+
+def test_sem_bot_json_path_nao_grava_nada(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+
+    executar([IBIRAMA], {"4206900": dados("4206900", 120.0)})
+
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_sem_municipio_calculado_nao_grava_bot_json(tmp_path):
+    caminho = tmp_path / "bot.json"
+
+    execucao, _ = executar_com_bot_json(
+        str(caminho), [IBIRAMA], {"4206900": ColetaError("sem rede")}
+    )
+
+    assert execucao.avisos == []
+    assert not caminho.exists()
+
+
+def test_falha_ao_gravar_bot_json_nao_impede_os_avisos(tmp_path, caplog):
+    pasta = tmp_path / "bot.json"
+    pasta.mkdir()
+
+    with caplog.at_level(logging.ERROR, logger="app.pipeline"):
+        execucao, _ = executar_com_bot_json(
+            str(pasta), [IBIRAMA], {"4206900": dados("4206900", 120.0)}
+        )
+
+    assert [aviso.avisar for aviso in execucao.avisos] == [True]
+    assert any("bot.json" in registro.getMessage() for registro in caplog.records)
