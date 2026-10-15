@@ -33,6 +33,20 @@ def classe(indice: float) -> int:
     return CLASSE_EXTREMAMENTE_BAIXO
 
 
+def faixas_das_classes() -> list[tuple[int, float, float | None]]:
+    """`(classe, limite_inferior, limite_superior)` da classe 1 à 7, derivadas
+    de `_LIMITES_INFERIORES_POR_CLASSE`. A classe 1 começa em 0 (o índice não é
+    negativo) e a última faixa é aberta: limite superior `None`.
+    """
+    crescentes = [(CLASSE_EXTREMAMENTE_BAIXO, 0.0)] + sorted(
+        _LIMITES_INFERIORES_POR_CLASSE
+    )
+    return [
+        (numero, inferior, crescentes[i + 1][1] if i + 1 < len(crescentes) else None)
+        for i, (numero, inferior) in enumerate(crescentes)
+    ]
+
+
 def em_alerta(indice: float) -> bool:
     """Indica se o índice atinge o gatilho de notificação (classe moderado
     ou superior), isto é, índice maior ou igual a 1,00 (RN02).

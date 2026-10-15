@@ -12,6 +12,7 @@ estimado — nenhum deles dispara aviso, por alto que seja o índice.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date, datetime
 
 from app.classificacao.classes import classe, em_alerta
 
@@ -24,6 +25,10 @@ class Aviso:
     `app.bot.avisos` (Tarefa 10): `avisar` diz se há mensagem a enviar e
     `nova_classe` é o valor a gravar em `notificacoes` **depois** de o envio
     dar certo. `indice` e `classe` são os do D0 — os que a mensagem exibe.
+
+    `efr_mm`, `rtotal_mm`, `dia_alvo` e `calculado_em` também são do D0 e só
+    servem à mensagem; ficam `None` quando não há cálculo por trás (o
+    `/simular`), e a mensagem então omite as linhas correspondentes.
     """
 
     ibge: str
@@ -32,6 +37,10 @@ class Aviso:
     classe: int | None
     avisar: bool
     nova_classe: int | None
+    efr_mm: float | None = None
+    rtotal_mm: float | None = None
+    dia_alvo: date | None = None
+    calculado_em: datetime | None = None
 
 
 def decidir(

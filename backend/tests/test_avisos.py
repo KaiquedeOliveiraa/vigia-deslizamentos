@@ -16,6 +16,7 @@ import sqlite3
 from datetime import datetime, timezone
 
 import pytest
+from telegram.constants import ParseMode
 from telegram.error import Forbidden, NetworkError, TelegramError
 
 from app.bot.avisos import enviar_avisos
@@ -35,13 +36,15 @@ class BotFalso:
 
     def __init__(self, erros_por_chat: dict[int, Exception] | None = None):
         self.enviados: list[tuple[int, str]] = []
+        self.parse_modes: list[object] = []
         self.erros_por_chat = erros_por_chat or {}
 
-    async def send_message(self, chat_id: int, text: str, **_):
+    async def send_message(self, chat_id: int, text: str, parse_mode=None, **_):
         erro = self.erros_por_chat.get(chat_id)
         if erro is not None:
             raise erro
         self.enviados.append((chat_id, text))
+        self.parse_modes.append(parse_mode)
 
 
 def conexao():
@@ -97,6 +100,17 @@ def test_a_mensagem_enviada_e_a_do_modulo_de_mensagens():
     assert "1,25" in texto
     assert SITE_URL in texto
     assert "não emite alerta oficial" in texto
+
+
+def test_aviso_e_enviado_em_html():
+    conn = conexao()
+    banco.inscrever(conn, 1, "4206900", AGORA)
+    banco.inscrever(conn, 2, "4206900", AGORA)
+    bot = BotFalso()
+
+    executar(bot, conn, [aviso()])
+
+    assert bot.parse_modes == [ParseMode.HTML, ParseMode.HTML]
 
 
 def test_nao_envia_para_inscritos_de_outro_municipio():

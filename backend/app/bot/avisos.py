@@ -19,6 +19,7 @@ import logging
 import sqlite3
 from datetime import datetime
 
+from telegram.constants import ParseMode
 from telegram.error import Forbidden, TelegramError
 
 from app.bot.mensagens import texto_do_aviso
@@ -53,7 +54,7 @@ async def _enviar_para_um_municipio(
     falhas_transitorias = 0
     for chat_id in chats:
         try:
-            await bot.send_message(chat_id=chat_id, text=texto)
+            await bot.send_message(chat_id=chat_id, text=texto, parse_mode=ParseMode.HTML)
         except Forbidden:
             _log.info(
                 "chat %s bloqueou o bot: apagando as inscrições dele (RNF05)", chat_id

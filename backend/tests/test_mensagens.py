@@ -11,8 +11,19 @@ from __future__ import annotations
 
 from datetime import date, datetime, timedelta, timezone
 
-from app.bot.mensagens import RESSALVA_RN04, texto_do_aviso, texto_do_status
+import pytest
+
+from app.bot.mensagens import (
+    CORES_DA_BARRA,
+    ORIENTACOES_POR_CLASSE,
+    RESSALVA_RN04,
+    barra,
+    texto_do_aviso,
+    texto_do_status,
+)
 from app.bot.regra_aviso import Aviso
+from app.bot.simulacao import indices_simulados
+from app.classificacao.classes import faixas_das_classes, nome_classe
 from app.modelos.banco import IndiceAtual
 
 UTC = timezone.utc
@@ -55,10 +66,9 @@ def test_aviso_nao_usa_ponto_decimal_no_indice():
     assert "1.25" not in texto
 
 
-def test_aviso_e_condicional_e_diz_que_nao_e_alerta_oficial():
+def test_aviso_diz_que_nao_e_alerta_oficial():
     texto = texto_do_aviso(aviso_de_teste(), SITE_URL)
 
-    assert "poderá" in texto  # texto condicional (RN04)
     assert "não emite alerta oficial" in texto
 
 
@@ -120,7 +130,7 @@ def test_status_mostra_sem_dados_para_municipio_sem_calculo():
     texto = texto_do_status([("Witmarsum", None)], SITE_URL)
 
     assert "Witmarsum" in texto
-    assert "sem dados" in texto
+    assert "ainda sem cálculo" in texto
 
 
 def test_status_sem_inscricoes_orienta_a_usar_start():
@@ -174,3 +184,155 @@ def test_status_mostra_o_dia_alvo_do_indice_exibido():
 
     assert "30/09/2026" in texto
     assert "01/10/2026 18:30" in texto
+
+
+# --- formato HTML -------------------------------------------------------------
+
+BARRAS_ESPERADAS = {
+    1: "🟩⬜⬜⬜⬜⬜⬜",
+    2: "🟩🟩⬜⬜⬜⬜⬜",
+    3: "🟩🟩🟩⬜⬜⬜⬜",
+    4: "🟩🟩🟩🟨⬜⬜⬜",
+    5: "🟩🟩🟩🟨🟧⬜⬜",
+    6: "🟩🟩🟩🟨🟧🟥⬜",
+    7: "🟩🟩🟩🟨🟧🟥🟪",
+}
+
+ICONE_E_TITULO_ESPERADOS = {
+    1: ("ℹ️", "Ibirama — sem alerta"),
+    2: ("ℹ️", "Ibirama — sem alerta"),
+    3: ("ℹ️", "Ibirama — sem alerta"),
+    4: ("⚠️", "ATENÇÃO — Ibirama"),
+    5: ("⚠️", "ALERTA — Ibirama"),
+    6: ("🚨", "ALERTA — Ibirama"),
+    7: ("🚨", "ALERTA MÁXIMO — Ibirama"),
+}
+
+CALCULADO_EM = datetime(2026, 10, 1, 21, 30, tzinfo=UTC)  # 18:30 em Brasília
+
+
+def aviso_completo(numero_classe: int, nome: str = "Ibirama") -> Aviso:
+    indice = dict(indices_simulados())[numero_classe]
+    return Aviso(
+        ibge="4206900",
+        nome=nome,
+        indice=indice,
+        classe=numero_classe,
+        avisar=True,
+        nova_classe=numero_classe,
+        efr_mm=42.37,
+        rtotal_mm=18.5,
+        dia_alvo=D0,
+        calculado_em=CALCULADO_EM,
+    )
+
+
+@pytest.mark.parametrize("numero_classe", range(1, 8))
+def test_barra_colorida_por_classe(numero_classe):
+    assert barra(numero_classe) == BARRAS_ESPERADAS[numero_classe]
+    assert BARRAS_ESPERADAS[numero_classe] in texto_do_aviso(
+        aviso_completo(numero_classe), SITE_URL
+    )
+
+
+def test_ha_uma_cor_de_barra_por_classe():
+    assert len(CORES_DA_BARRA) == len(faixas_das_classes())
+
+
+@pytest.mark.parametrize("numero_classe", range(1, 8))
+def test_icone_e_titulo_por_faixa(numero_classe):
+    icone, titulo = ICONE_E_TITULO_ESPERADOS[numero_classe]
+    primeira_linha = texto_do_aviso(aviso_completo(numero_classe), SITE_URL).split("\n")[0]
+    assert primeira_linha == f"{icone} <b>{titulo}</b>"
+
+
+@pytest.mark.parametrize("numero_classe", range(1, 8))
+def test_segunda_linha_tem_nome_da_classe_e_posicao(numero_classe):
+    segunda = texto_do_aviso(aviso_completo(numero_classe), SITE_URL).split("\n")[1]
+    assert segunda == f"<b>Risco {nome_classe(numero_classe)}</b> · classe {numero_classe} de 7"
+
+
+@pytest.mark.parametrize("numero_classe", [1, 2, 3])
+def test_classes_sem_alerta_nao_dizem_que_podera_haver_risco(numero_classe):
+    texto = texto_do_aviso(aviso_completo(numero_classe), SITE_URL)
+    assert "poderá entrar em situação de risco" not in texto
+    assert "O que fazer" not in texto
+    assert "Condições normais para a chuva acumulada." in texto
+    assert "📅 01/10/2026, 18:30" in texto
+
+
+@pytest.mark.parametrize("numero_classe", [4, 5, 6, 7])
+def test_alerta_traz_chuva_validade_orientacoes_e_emergencia(numero_classe):
+    texto = texto_do_aviso(aviso_completo(numero_classe), SITE_URL)
+    assert "🌧 Chuva acumulada: 42,37 mm · ☔ Previsão 24 h: 18,50 mm" in texto
+    assert "📅 Válido para 01/10/2026 · cálculo às 18:30" in texto
+    assert "<b>O que fazer</b>" in texto
+    for orientacao in ORIENTACOES_POR_CLASSE[numero_classe]:
+        assert f"• {orientacao}" in texto
+    assert "• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>" in texto
+    assert f"🗺 Ver no mapa: {SITE_URL}" in texto
+    assert texto.endswith("<i>Sistema acadêmico, não emite alerta oficial.</i>")
+
+
+def test_orientacoes_por_classe():
+    assert len(ORIENTACOES_POR_CLASSE[4]) == 2
+    assert ORIENTACOES_POR_CLASSE[5][:2] == ORIENTACOES_POR_CLASSE[4]
+    assert len(ORIENTACOES_POR_CLASSE[5]) == 3
+    assert ORIENTACOES_POR_CLASSE[6] == ORIENTACOES_POR_CLASSE[7]
+    assert len(ORIENTACOES_POR_CLASSE[6]) == 2
+
+
+def test_alerta_sem_os_campos_do_calculo_omite_as_linhas():
+    texto = texto_do_aviso(aviso_de_teste(), SITE_URL)
+    assert "Chuva acumulada" not in texto
+    assert "Válido para" not in texto
+    assert "📊 Índice: <b>1,25</b>" in texto
+
+
+def test_sem_alerta_sem_data_omite_so_a_data():
+    aviso = aviso_de_teste(indice=0.5, classe_do_aviso=2)
+    texto = texto_do_aviso(aviso, SITE_URL)
+    assert "📊 Índice: <b>0,50</b>\n" in texto
+    assert "📅" not in texto
+
+
+def test_nome_do_municipio_e_url_saem_escapados():
+    texto = texto_do_aviso(aviso_completo(5, nome="A<b>&C"), "https://x.org/?a=1&b=<2>")
+    assert "A&lt;b&gt;&amp;C" in texto
+    assert "A<b>&C" not in texto
+    assert "https://x.org/?a=1&amp;b=&lt;2&gt;" in texto
+
+
+def test_status_escapa_o_nome_do_municipio():
+    texto = texto_do_status(
+        [("A<b>&C", None), ("D&E", IndiceAtual(1.25, 4, D0, CALCULADO_EM))], SITE_URL
+    )
+    assert "A&lt;b&gt;&amp;C" in texto
+    assert "D&amp;E" in texto
+
+
+def test_status_tem_um_bloco_por_municipio_e_link_e_ressalva_uma_vez():
+    situacoes = [
+        ("Ibirama", IndiceAtual(2.2, 5, D0, CALCULADO_EM)),
+        ("Dona Emma", IndiceAtual(0.33, 1, D0, CALCULADO_EM)),
+        ("Witmarsum", None),
+    ]
+    texto = texto_do_status(situacoes, SITE_URL)
+
+    assert "⚠️ <b>Ibirama</b>" in texto and "alto" in texto
+    assert BARRAS_ESPERADAS[5] in texto and "2,20" in texto
+    assert "ℹ️ <b>Dona Emma</b>" in texto and BARRAS_ESPERADAS[1] in texto
+    assert "<b>Witmarsum</b>: ainda sem cálculo" in texto
+    assert texto.count(SITE_URL) == 1
+    assert texto.count("não emite alerta oficial") == 1
+    assert texto.endswith("<i>Sistema acadêmico, não emite alerta oficial.</i>")
+
+
+def test_nenhuma_mensagem_passa_do_limite_do_telegram():
+    nome_longo = "Município " * 10
+    for numero_classe in range(1, 8):
+        assert len(texto_do_aviso(aviso_completo(numero_classe, nome_longo), SITE_URL)) <= 4096
+    situacoes = [
+        (nome_longo + str(i), IndiceAtual(3.9, 7, D0, CALCULADO_EM)) for i in range(6)
+    ]
+    assert len(texto_do_status(situacoes, SITE_URL)) <= 4096

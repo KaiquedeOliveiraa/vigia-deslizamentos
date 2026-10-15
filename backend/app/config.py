@@ -34,6 +34,10 @@ ATRIBUTO_POR_VARIAVEL_OPCIONAL = {
     "INMET_TOKEN": "inmet_token",
 }
 
+#: Liga o comando `/simular` do bot quando vale exatamente "1". Desligado por
+#: padrão: sem ela o bot se comporta como sempre.
+VARIAVEL_SIMULACAO = "VIGIA_SIMULACAO"
+
 
 class ConfiguracaoInvalidaError(Exception):
     """Configuração de município ou de ambiente mal formada ou incompleta."""
@@ -70,6 +74,7 @@ class Config:
     db_path: str
     log_path: str
     inmet_token: str | None = None
+    simulacao: bool = False
 
 
 def _identificador(item: dict, indice: int) -> str:
@@ -173,5 +178,7 @@ def carregar_env(ambiente: Mapping[str, str]) -> Config:
 
     for nome_variavel, atributo in ATRIBUTO_POR_VARIAVEL_OPCIONAL.items():
         valores[atributo] = ambiente.get(nome_variavel) or None
+
+    valores["simulacao"] = ambiente.get(VARIAVEL_SIMULACAO) == "1"
 
     return Config(**valores)

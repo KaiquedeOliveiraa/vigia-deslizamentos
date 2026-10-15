@@ -171,6 +171,17 @@ def test_execucao_completa_calcula_grava_publica_e_devolve_os_avisos():
     ]
 
 
+def test_aviso_leva_os_dados_do_d0_para_a_mensagem():
+    execucao, _, _ = executar([IBIRAMA], {"4206900": dados("4206900", 120.0)})
+
+    (aviso,) = execucao.avisos
+    d0 = execucao.resultado.municipios[0].dias[0]
+    assert aviso.efr_mm == d0.efr_mm == 0.0
+    assert aviso.rtotal_mm == d0.rtotal_mm == pytest.approx(120.0)
+    assert aviso.dia_alvo == D0
+    assert aviso.calculado_em == FIM_DA_EXECUCAO
+
+
 def test_json_publicado_e_valido_pelo_schema_do_contrato():
     _, publicacao, _ = executar(
         [IBIRAMA], {"4206900": dados("4206900", 120.0)}

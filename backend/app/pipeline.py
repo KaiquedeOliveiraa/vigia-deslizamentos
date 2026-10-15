@@ -96,7 +96,10 @@ def _coletar_todos(
 
 
 def _decidir_avisos(
-    conexao: sqlite3.Connection, municipios: list[Municipio], resultado: Resultado
+    conexao: sqlite3.Connection,
+    municipios: list[Municipio],
+    resultado: Resultado,
+    calculado_em: datetime,
 ) -> list[Aviso]:
     """Aplica a RN08 a cada município e devolve só o que tem algo a fazer.
 
@@ -107,14 +110,12 @@ def _decidir_avisos(
 
     Só o D0 entra na decisão: D1–D3 são previsão (RN06) e não disparam aviso.
     """
-    indice_por_ibge = {
-        item.ibge: item.dias[0].indice for item in resultado.municipios
-    }
-    classe_por_ibge = {item.ibge: item.dias[0].classe for item in resultado.municipios}
+    d0_por_ibge = {item.ibge: item.dias[0] for item in resultado.municipios}
 
     avisos: list[Aviso] = []
     for municipio in municipios:
-        indice_d0 = indice_por_ibge.get(municipio.ibge)
+        d0 = d0_por_ibge.get(municipio.ibge)
+        indice_d0 = d0.indice if d0 is not None else None
         ultima_classe = banco.ultima_classe_notificada(conexao, municipio.ibge)
         avisar, nova_classe = decidir(ultima_classe, indice_d0)
 
@@ -126,9 +127,13 @@ def _decidir_avisos(
                 ibge=municipio.ibge,
                 nome=municipio.nome,
                 indice=indice_d0,
-                classe=classe_por_ibge.get(municipio.ibge),
+                classe=d0.classe if d0 is not None else None,
                 avisar=avisar,
                 nova_classe=nova_classe,
+                efr_mm=d0.efr_mm if d0 is not None else None,
+                rtotal_mm=d0.rtotal_mm if d0 is not None else None,
+                dia_alvo=d0.dia_alvo if d0 is not None else None,
+                calculado_em=calculado_em if d0 is not None else None,
             )
         )
 
@@ -210,7 +215,7 @@ def executar_pipeline(
     except Exception:  # noqa: BLE001 — conferência nunca derruba a execução
         _log.exception("comparação com o INMET falhou; a execução segue")
 
-    avisos = _decidir_avisos(conexao, municipios, resultado)
+    avisos = _decidir_avisos(conexao, municipios, resultado, fim_da_execucao)
     _log.info(
         "execução de %s: %s município(s) com dados, %s sem dados, publicado=%s, "
         "%s aviso(s) a tratar",
