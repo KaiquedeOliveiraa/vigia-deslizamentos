@@ -22,6 +22,7 @@ from datetime import datetime
 from telegram.constants import ParseMode
 from telegram.error import Forbidden, TelegramError
 
+from app.bot.inscritos import InscritosIndisponiveisError, RepositorioInscritos
 from app.bot.mensagens import texto_do_aviso
 from app.bot.regra_aviso import Aviso
 from app.modelos import banco
@@ -37,7 +38,11 @@ def _exigir_fuso(nome: str, momento: datetime) -> None:
 
 
 async def _enviar_para_um_municipio(
-    bot, conexao: sqlite3.Connection, aviso: Aviso, site_url: str
+    bot,
+    inscritos: RepositorioInscritos,
+    chats: list[int],
+    aviso: Aviso,
+    site_url: str,
 ) -> tuple[int, int, int]:
     """Envia o aviso a cada inscrito do município.
 
@@ -48,7 +53,6 @@ async def _enviar_para_um_municipio(
     o próximo chat: um chat problemático não pode calar os demais.
     """
     texto = texto_do_aviso(aviso, site_url)
-    chats = banco.listar_inscritos(conexao, aviso.ibge)
 
     enviados = 0
     falhas_transitorias = 0
@@ -57,14 +61,14 @@ async def _enviar_para_um_municipio(
             await bot.send_message(chat_id=chat_id, text=texto, parse_mode=ParseMode.HTML)
         except Forbidden:
             _log.info(
-                "chat %s bloqueou o bot: apagando as inscrições dele (RNF05)", chat_id
+                "um chat de '%s' bloqueou o bot: apagando as inscrições dele (RNF05)",
+                aviso.ibge,
             )
-            banco.remover_inscricoes(conexao, chat_id)
+            inscritos.remover_chat(chat_id)
         except TelegramError as erro:
             falhas_transitorias += 1
             _log.warning(
-                "falha ao avisar o chat %s sobre '%s': %s",
-                chat_id,
+                "falha ao avisar um chat sobre '%s': %s",
                 aviso.ibge,
                 type(erro).__name__,
             )
@@ -77,6 +81,7 @@ async def _enviar_para_um_municipio(
 async def enviar_avisos(
     bot,
     conexao: sqlite3.Connection,
+    inscritos: RepositorioInscritos,
     avisos: list[Aviso],
     agora_utc: datetime,
     site_url: str,
@@ -95,9 +100,22 @@ async def enviar_avisos(
     notificação, e quem se inscrever durante o alerta recebe o aviso na próxima
     execução.
 
+    Os chats de todos os avisos com `avisar = True` são buscados antes do laço.
+    Se a fonte dos inscritos estiver indisponível, nada é enviado e nenhuma
+    classe é gravada (nem a dos avisos com `avisar = False`).
+
     Nunca propaga erro de um município para o seguinte.
     """
     _exigir_fuso("agora_utc", agora_utc)
+
+    try:
+        chats_por_ibge = {a.ibge: inscritos.listar(a.ibge) for a in avisos if a.avisar}
+    except InscritosIndisponiveisError as erro:
+        _log.error(
+            "inscritos indisponíveis (%s): nenhum aviso enviado e nenhuma classe gravada",
+            erro,
+        )
+        return
 
     for aviso in avisos:
         # Uma exceção inesperada num município não pode calar os seguintes. O
@@ -107,7 +125,15 @@ async def enviar_avisos(
         # ficariam sem gravar a classe e os inscritos do município que já
         # recebeu a mensagem a receberiam de novo na execução seguinte.
         try:
-            await _tratar_um_aviso(bot, conexao, aviso, agora_utc, site_url)
+            await _tratar_um_aviso(
+                bot,
+                conexao,
+                inscritos,
+                chats_por_ibge.get(aviso.ibge, []),
+                aviso,
+                agora_utc,
+                site_url,
+            )
         except Exception:  # noqa: BLE001 — ver comentário acima
             _log.exception(
                 "tratamento do aviso de '%s' falhou; seguindo para o próximo município",
@@ -116,7 +142,13 @@ async def enviar_avisos(
 
 
 async def _tratar_um_aviso(
-    bot, conexao: sqlite3.Connection, aviso: Aviso, agora_utc: datetime, site_url: str
+    bot,
+    conexao: sqlite3.Connection,
+    inscritos: RepositorioInscritos,
+    chats: list[int],
+    aviso: Aviso,
+    agora_utc: datetime,
+    site_url: str,
 ) -> None:
     """Envia (se for o caso) e grava a classe notificada de **um** município."""
     if not aviso.avisar:
@@ -126,7 +158,7 @@ async def _tratar_um_aviso(
         return
 
     tentativas, enviados, falhas = await _enviar_para_um_municipio(
-        bot, conexao, aviso, site_url
+        bot, inscritos, chats, aviso, site_url
     )
 
     if enviados > 0 or (tentativas > 0 and falhas == 0):

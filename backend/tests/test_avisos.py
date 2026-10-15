@@ -20,6 +20,7 @@ from telegram.constants import ParseMode
 from telegram.error import Forbidden, NetworkError, TelegramError
 
 from app.bot.avisos import enviar_avisos
+from app.bot.inscritos import InscritosIndisponiveisError, InscritosSqlite
 from app.bot.regra_aviso import Aviso
 from app.modelos import banco
 
@@ -69,8 +70,9 @@ def aviso(
     )
 
 
-def executar(bot, conn, avisos, agora=AGORA):
-    asyncio.run(enviar_avisos(bot, conn, avisos, agora, SITE_URL))
+def executar(bot, conn, avisos, agora=AGORA, inscritos=None):
+    inscritos = inscritos if inscritos is not None else InscritosSqlite(conn)
+    asyncio.run(enviar_avisos(bot, conn, inscritos, avisos, agora, SITE_URL))
 
 
 # --- envio --------------------------------------------------------------------
@@ -370,3 +372,73 @@ def test_erro_inesperado_na_gravacao_da_classe_nao_impede_o_proximo(caplog):
 
     assert banco.ultima_classe_notificada(conn, "4205100") == 5
     assert caplog.records
+
+
+# --- fonte de inscritos trocável e log sem chat_id ----------------------------
+
+
+class InscritosFalso:
+    def __init__(self, chats=None, erro=None):
+        self.chats = chats or {}
+        self.erro = erro
+        self.removidos: list[int] = []
+
+    def listar(self, ibge):
+        if self.erro is not None:
+            raise self.erro
+        return list(self.chats.get(ibge, []))
+
+    def remover_chat(self, chat_id):
+        self.removidos.append(chat_id)
+
+
+def test_inscritos_indisponiveis_nao_envia_nem_grava_classe(caplog):
+    conn = conexao()
+    banco.atualizar_ultima_classe_notificada(conn, "4205100", 5, AGORA)
+    bot = BotFalso()
+    repo = InscritosFalso(erro=InscritosIndisponiveisError("status 500"))
+
+    with caplog.at_level(logging.ERROR):
+        executar(
+            bot,
+            conn,
+            [
+                aviso(),
+                aviso(ibge="4205100", nome="Dona Emma", avisar=False, nova_classe=None),
+            ],
+            inscritos=repo,
+        )
+
+    assert bot.enviados == []
+    assert banco.ultima_classe_notificada(conn, "4206900") is None
+    assert banco.ultima_classe_notificada(conn, "4205100") == 5
+    assert caplog.records
+
+
+def test_forbidden_chama_remover_chat_do_repositorio():
+    conn = conexao()
+    bot = BotFalso(erros_por_chat={1: Forbidden("blocked")})
+    repo = InscritosFalso(chats={"4206900": [1, 2]})
+
+    executar(bot, conn, [aviso()], inscritos=repo)
+
+    assert repo.removidos == [1]
+    assert [chat for chat, _ in bot.enviados] == [2]
+
+
+def test_nenhuma_linha_de_log_contem_chat_id(caplog):
+    conn = conexao()
+    bot = BotFalso(
+        erros_por_chat={
+            987654321: Forbidden("blocked"),
+            123456789: NetworkError("timeout"),
+        }
+    )
+    repo = InscritosFalso(chats={"4206900": [987654321, 123456789]})
+
+    with caplog.at_level(logging.DEBUG):
+        executar(bot, conn, [aviso()], inscritos=repo)
+
+    assert caplog.records
+    assert "987654321" not in caplog.text
+    assert "123456789" not in caplog.text

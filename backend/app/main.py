@@ -40,6 +40,7 @@ from telegram.error import InvalidToken
 from app.bot.avisos import enviar_avisos
 from app.bot.bot import construir_aplicacao as construir_aplicacao_padrao
 from app.bot.bot import silenciar_url_com_token
+from app.bot.inscritos import InscritosSqlite
 from app.config import (
     Config,
     ConfiguracaoInvalidaError,
@@ -192,12 +193,22 @@ async def executar_ciclo_padrao(
     try:
         if bot is not None:
             await enviar_avisos(
-                bot, conexao, execucao.avisos, relogio(), config.site_url
+                bot,
+                conexao,
+                InscritosSqlite(conexao),
+                execucao.avisos,
+                relogio(),
+                config.site_url,
             )
         elif abrir_bot is not None:
             async with abrir_bot() as bot_do_envio:
                 await enviar_avisos(
-                    bot_do_envio, conexao, execucao.avisos, relogio(), config.site_url
+                    bot_do_envio,
+                    conexao,
+                    InscritosSqlite(conexao),
+                    execucao.avisos,
+                    relogio(),
+                    config.site_url,
                 )
         else:
             _log.warning(
