@@ -160,6 +160,18 @@ def test_variavel_de_ambiente_faltando_sai_com_dois_e_nomeia_a_variavel(tmp_path
     assert "TELEGRAM_TOKEN" in capsys.readouterr().err
 
 
+def test_worker_parcial_sai_com_codigo_2(tmp_path, capsys):
+    ambiente = ambiente_de_teste(tmp_path)
+    ambiente["VIGIA_WORKER_URL"] = "https://vigia-bot.exemplo.workers.dev"
+
+    codigo = modulo_main.main(
+        ["--uma-vez"], ambiente=ambiente, executar_ciclo=ciclo_falso(True)
+    )
+
+    assert codigo == 2
+    assert "VIGIA_WORKER_SEGREDO" in capsys.readouterr().err
+
+
 # --- log ----------------------------------------------------------------------
 
 
