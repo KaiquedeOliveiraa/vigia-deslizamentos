@@ -38,18 +38,35 @@ def _consultar(caminho: Path, sql: str) -> list:
 
 
 def test_checkpoint_deixa_tudo_no_arquivo_principal(tmp_path):
+    # Simula um WAL órfão, como o de um processo que caiu: copia o banco com a conexão ainda aberta.
     origem = tmp_path / "origem"
     origem.mkdir()
-    db = origem / "vigia.db"
-    _criar_banco(db)
+    copia = tmp_path / "copia"
+    copia.mkdir()
+    conexao = banco.abrir(origem / "vigia.db")
+    try:
+        conexao.execute(
+            "INSERT INTO indices (ibge, dia_alvo, calculado_em, indice, classe, efr_mm, rtotal_mm,"
+            " limiar_mm, n_membros, prob_pontuais, prob_esparsos, prob_generalizados) "
+            "VALUES ('3304557', '2026-10-15', '2026-10-15T06:00:00Z', 0.5, 'Baixo',"
+            " 75.0, 80.0, 150.0, 51, 0.1, 0.05, 0.01)"
+        )
+        conexao.commit()
+        for sufixo in ("", "-wal", "-shm"):
+            if (origem / f"vigia.db{sufixo}").exists():
+                shutil.copy(origem / f"vigia.db{sufixo}", copia / f"vigia.db{sufixo}")
+    finally:
+        conexao.close()
+    assert (copia / "vigia.db-wal").stat().st_size > 0
 
-    preparar(db)
+    preparar(copia / "vigia.db")
 
-    assert not (origem / "vigia.db-wal").exists()
-    outra = tmp_path / "outra"
-    outra.mkdir()
-    shutil.copy(db, outra / "vigia.db")
-    assert len(_consultar(outra / "vigia.db", "SELECT * FROM indices")) == 1
+    wal = copia / "vigia.db-wal"
+    assert not wal.exists() or wal.stat().st_size == 0
+    final = tmp_path / "final"
+    final.mkdir()
+    shutil.copy(copia / "vigia.db", final / "vigia.db")
+    assert len(_consultar(final / "vigia.db", "SELECT * FROM indices")) == 1
 
 
 def test_journal_mode_fica_delete(tmp_path):

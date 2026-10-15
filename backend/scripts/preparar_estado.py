@@ -42,6 +42,9 @@ def main(argv: list[str] | None = None) -> int:
     except EstadoComInscritosError as erro:
         print(f"commit bloqueado: {erro}", file=sys.stderr)
         return 1
+    except sqlite3.DatabaseError as erro:
+        print(f"banco inválido ou ilegível: {type(erro).__name__}", file=sys.stderr)
+        return 1
     return 0
 
 
