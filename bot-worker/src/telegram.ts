@@ -29,6 +29,7 @@ export async function enviarMensagem(
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(corpo),
+      signal: AbortSignal.timeout(10000),
     });
     if (!resposta.ok) console.error(`sendMessage falhou: status ${resposta.status}`);
   } catch (erro) {

@@ -21,6 +21,8 @@ type Envio = {
 let envios: Envio[];
 let botJson: BotJson | null;
 let statusTelegram: number;
+let sendMessageExpira = false;
+let sinaisSendMessage: Array<AbortSignal | null | undefined>;
 
 function urlDe(entrada: RequestInfo | URL): string {
   if (typeof entrada === "string") return entrada;
@@ -36,6 +38,8 @@ function simularRede() {
         : new Response(JSON.stringify(botJson), { status: 200 });
     }
     if (url.startsWith("https://api.telegram.org/") && url.endsWith("/sendMessage")) {
+      sinaisSendMessage.push(init?.signal);
+      if (sendMessageExpira) throw new DOMException("x", "TimeoutError");
       envios.push(JSON.parse(String(init?.body)) as Envio);
       return new Response("{}", { status: statusTelegram });
     }
@@ -74,6 +78,8 @@ beforeEach(async () => {
   envios = [];
   botJson = botJsonDeTeste();
   statusTelegram = 200;
+  sendMessageExpira = false;
+  sinaisSendMessage = [];
   await env.DB.prepare("DELETE FROM inscritos").run();
   simularRede();
 });
@@ -246,6 +252,19 @@ describe("POST /telegram", () => {
     const resposta = await enviar(mensagem("/status", 424242));
     expect(resposta.status).toBe(200);
     expect(erro).toHaveBeenCalled();
+    expect(JSON.stringify(erro.mock.calls)).not.toContain("424242");
+    expect(JSON.stringify(erro.mock.calls)).not.toContain(env.TELEGRAM_TOKEN);
+  });
+
+  it("sendMessage com timeout: usa sinal de cancelamento, responde 200 e o log não traz o chat_id", async () => {
+    sendMessageExpira = true;
+    const erro = vi.spyOn(console, "error").mockImplementation(() => {});
+    const resposta = await enviar(mensagem("/status", 424242));
+    expect(resposta.status).toBe(200);
+    expect(sinaisSendMessage).toHaveLength(1);
+    expect(sinaisSendMessage[0]).toBeInstanceOf(AbortSignal);
+    expect(erro).toHaveBeenCalled();
+    expect(JSON.stringify(erro.mock.calls)).toContain("TimeoutError");
     expect(JSON.stringify(erro.mock.calls)).not.toContain("424242");
     expect(JSON.stringify(erro.mock.calls)).not.toContain(env.TELEGRAM_TOKEN);
   });

@@ -10,10 +10,16 @@ const SCHEMA_VERSION_ESPERADA = 1;
 export async function carregarBotJson(url: string): Promise<BotJson | null> {
   try {
     const resposta = await fetch(url, { signal: AbortSignal.timeout(TEMPO_LIMITE_MS) });
-    if (resposta.status !== 200) return null;
+    if (resposta.status !== 200) {
+      console.error(`bot.json: status ${resposta.status}`);
+      return null;
+    }
     const dados = (await resposta.json()) as BotJson | null;
     if (dados === null || typeof dados !== "object") return null;
-    if (dados.schema_version !== SCHEMA_VERSION_ESPERADA) return null;
+    if (dados.schema_version !== SCHEMA_VERSION_ESPERADA) {
+      console.error("bot.json: schema_version inesperada");
+      return null;
+    }
     return dados;
   } catch {
     // Sem detalhes no log: só o fato da falha.
