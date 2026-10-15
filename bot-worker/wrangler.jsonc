@@ -6,7 +6,7 @@
     {
       "binding": "DB",
       "database_name": "vigia",
-      "database_id": "<preencher na Tarefa 10>",
+      "database_id": "96ee2822-7d3e-4672-9990-54a81005ee07",
       "migrations_dir": "migrations"
     }
   ],
