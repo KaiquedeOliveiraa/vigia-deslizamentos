@@ -13,13 +13,21 @@ from datetime import date, datetime, timedelta, timezone
 
 import pytest
 
+from app.bot.inscricao import OPCAO_TODOS
 from app.bot.mensagens import (
+    CABECALHO_DO_STATUS,
     CORES_DA_BARRA,
     ORIENTACOES_POR_CLASSE,
     RESSALVA_RN04,
+    SEPARADOR_DO_STATUS,
+    TEXTO_SEM_INSCRICAO,
     barra,
+    bloco_do_status,
+    rodape_do_status,
+    texto_boas_vindas,
     texto_do_aviso,
     texto_do_status,
+    texto_inscricao_confirmada,
 )
 from app.bot.regra_aviso import Aviso
 from app.bot.simulacao import indices_simulados
@@ -336,3 +344,55 @@ def test_nenhuma_mensagem_passa_do_limite_do_telegram():
         (nome_longo + str(i), IndiceAtual(3.9, 7, D0, CALCULADO_EM)) for i in range(6)
     ]
     assert len(texto_do_status(situacoes, SITE_URL)) <= 4096
+
+
+# --- textos do /start, da inscrição e do /status em partes --------------------
+
+
+def test_boas_vindas_sem_sugestao_orienta_os_comandos():
+    texto = texto_boas_vindas(None)
+
+    assert "/status" in texto
+    assert "/parar" in texto
+    assert f'"{OPCAO_TODOS}"' in texto
+
+
+def test_boas_vindas_com_sugestao_cita_o_municipio():
+    assert 'toque em "Ibirama"' in texto_boas_vindas("Ibirama")
+
+
+def test_boas_vindas_escapa_o_nome():
+    texto = texto_boas_vindas("A<B")
+
+    assert "A&lt;B" in texto
+    assert "A<B" not in texto
+
+
+def test_confirmacao_lista_os_nomes_e_traz_a_ressalva():
+    texto = texto_inscricao_confirmada(["Dona Emma", "Ibirama"])
+
+    assert texto.startswith("Pronto! Você vai receber avisos de: Dona Emma, Ibirama.")
+    assert RESSALVA_RN04 in texto
+
+
+def test_status_e_a_juncao_das_partes():
+    situacoes = [
+        ("Ibirama", None),
+        ("Dona Emma", IndiceAtual(
+            indice=1.25, classe=4, dia_alvo=D0,
+            calculado_em=datetime(2026, 10, 1, 12, 0, tzinfo=UTC),
+        )),
+    ]
+    blocos = [bloco_do_status(nome, atual) for nome, atual in situacoes]
+
+    assert texto_do_status(situacoes, SITE_URL) == (
+        CABECALHO_DO_STATUS
+        + SEPARADOR_DO_STATUS
+        + SEPARADOR_DO_STATUS.join(blocos)
+        + SEPARADOR_DO_STATUS
+        + rodape_do_status(SITE_URL)
+    )
+
+
+def test_status_sem_inscricao_e_o_texto_fixo():
+    assert texto_do_status([], SITE_URL) == TEXTO_SEM_INSCRICAO

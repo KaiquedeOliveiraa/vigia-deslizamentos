@@ -27,6 +27,7 @@ import html
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
+from app.bot.inscricao import OPCAO_TODOS
 from app.bot.regra_aviso import Aviso
 from app.classificacao.classes import (
     LIMIAR_ALERTA,
@@ -216,7 +217,48 @@ def texto_do_aviso(aviso: Aviso, site_url: str) -> str:
     return _texto_de_alerta(aviso, site_url)
 
 
-def _bloco_do_status(nome: str, atual: IndiceAtual | None) -> str:
+TEXTO_OPCAO_DESCONHECIDA = (
+    "Não reconheci essa opção. Use /start para ver a lista de municípios."
+)
+
+TEXTO_INSCRICOES_APAGADAS = (
+    "Suas inscrições foram apagadas. Use /start quando quiser voltar."
+)
+
+TEXTO_SEM_INSCRICAO = (
+    "Você ainda não tem municípios inscritos.\n\n"
+    "Use /start para escolher os municípios que quer acompanhar."
+)
+
+CABECALHO_DO_STATUS = "<b>Situação dos seus municípios</b>"
+SEPARADOR_DO_STATUS = "\n\n"
+
+
+def texto_boas_vindas(nome_sugerido: str | None) -> str:
+    """Resposta do `/start`, em HTML. Com `nome_sugerido`, cita o município."""
+    if nome_sugerido is None:
+        return (
+            "Olá! Escolha os municípios que quer acompanhar no VIGIA.\n\n"
+            f"Toque em um município ou em \"{OPCAO_TODOS}\". "
+            "Use /status para ver a situação e /parar para cancelar."
+        )
+    nome = html.escape(nome_sugerido)
+    return (
+        f"Olá! O link veio de {nome} — toque em \"{nome}\" "
+        f"para se inscrever só nele, ou em \"{OPCAO_TODOS}\" "
+        "para acompanhar todos.\n\n"
+        "Use /status para ver a situação e /parar para cancelar."
+    )
+
+
+def texto_inscricao_confirmada(nomes: list[str]) -> str:
+    """Confirmação da escolha no teclado, com a ressalva da RN04."""
+    lista = ", ".join(html.escape(nome) for nome in nomes)
+    return f"Pronto! Você vai receber avisos de: {lista}.\n\n{RESSALVA_RN04}"
+
+
+def bloco_do_status(nome: str, atual: IndiceAtual | None) -> str:
+    """Bloco de um município no `/status`."""
     if atual is None:
         return f"<b>{html.escape(nome)}</b>: ainda sem cálculo"
     icone, _ = _ICONE_E_TITULO_POR_CLASSE[atual.classe]
@@ -232,6 +274,11 @@ def _bloco_do_status(nome: str, atual: IndiceAtual | None) -> str:
     )
 
 
+def rodape_do_status(site_url: str) -> str:
+    """Rodapé do `/status`: link do mapa e ressalva curta."""
+    return f"🗺 Ver no mapa: {html.escape(site_url)}\n{RESSALVA_CURTA}"
+
+
 def texto_do_status(
     situacoes: list[tuple[str, IndiceAtual | None]], site_url: str
 ) -> str:
@@ -244,15 +291,13 @@ def texto_do_status(
     dia-alvo vai em cada bloco (RN11); o link e a ressalva da RN04, uma vez só,
     no fim.
 
-    Sem nenhuma inscrição, o texto orienta a usar `/start` e não exibe índice
-    nenhum, caso em que a ressalva da RN04 não se aplica.
+    Sem nenhuma inscrição, devolve `TEXTO_SEM_INSCRICAO`, sem índice nenhum, caso
+    em que a ressalva da RN04 não se aplica.
     """
     if not situacoes:
-        return (
-            "Você ainda não tem municípios inscritos.\n\n"
-            "Use /start para escolher os municípios que quer acompanhar."
-        )
+        return TEXTO_SEM_INSCRICAO
 
-    blocos = [_bloco_do_status(nome, atual) for nome, atual in situacoes]
-    rodape = f"🗺 Ver no mapa: {html.escape(site_url)}\n{RESSALVA_CURTA}"
-    return "\n\n".join(["<b>Situação dos seus municípios</b>", *blocos, rodape])
+    blocos = [bloco_do_status(nome, atual) for nome, atual in situacoes]
+    return SEPARADOR_DO_STATUS.join(
+        [CABECALHO_DO_STATUS, *blocos, rodape_do_status(site_url)]
+    )

@@ -32,7 +32,6 @@ from telegram.ext import (
 )
 
 from app.bot.inscricao import (
-    OPCAO_TODOS,
     inscrever_escolha,
     municipio_sugerido,
     opcoes_do_teclado,
@@ -40,7 +39,13 @@ from app.bot.inscricao import (
     situacoes_do_chat,
 )
 from app.bot import simulacao
-from app.bot.mensagens import RESSALVA_RN04, texto_do_status
+from app.bot.mensagens import (
+    TEXTO_INSCRICOES_APAGADAS,
+    TEXTO_OPCAO_DESCONHECIDA,
+    texto_boas_vindas,
+    texto_do_status,
+    texto_inscricao_confirmada,
+)
 from app.config import Config, Municipio
 
 _log = logging.getLogger(__name__)
@@ -80,20 +85,12 @@ async def comando_start(update: Update, contexto: ContextTypes.DEFAULT_TYPE) -> 
     argumento = contexto.args[0] if contexto.args else None
     sugerido = municipio_sugerido(municipios, argumento)
 
-    saudacao = (
-        "Olá! Escolha os municípios que quer acompanhar no VIGIA.\n\n"
-        f"Toque em um município ou em \"{OPCAO_TODOS}\". "
-        "Use /status para ver a situação e /parar para cancelar."
+    nome_sugerido = sugerido.nome if sugerido is not None else None
+    await update.message.reply_text(
+        texto_boas_vindas(nome_sugerido),
+        reply_markup=_teclado(municipios),
+        parse_mode=ParseMode.HTML,
     )
-    if sugerido is not None:
-        saudacao = (
-            f"Olá! O link veio de {sugerido.nome} — toque em \"{sugerido.nome}\" "
-            f"para se inscrever só nele, ou em \"{OPCAO_TODOS}\" "
-            "para acompanhar todos.\n\n"
-            "Use /status para ver a situação e /parar para cancelar."
-        )
-
-    await update.message.reply_text(saudacao, reply_markup=_teclado(municipios))
 
 
 async def escolha_do_teclado(update: Update, contexto: ContextTypes.DEFAULT_TYPE) -> None:
@@ -108,8 +105,9 @@ async def escolha_do_teclado(update: Update, contexto: ContextTypes.DEFAULT_TYPE
 
     if not inscritos:
         await update.message.reply_text(
-            "Não reconheci essa opção. Use /start para ver a lista de municípios.",
+            TEXTO_OPCAO_DESCONHECIDA,
             reply_markup=_teclado(municipios),
+            parse_mode=ParseMode.HTML,
         )
         return
 
@@ -117,9 +115,9 @@ async def escolha_do_teclado(update: Update, contexto: ContextTypes.DEFAULT_TYPE
         municipio.nome for municipio in municipios if municipio.ibge in inscritos
     ]
     await update.message.reply_text(
-        "Pronto! Você vai receber avisos de: " + ", ".join(nomes) + ".\n\n"
-        f"{RESSALVA_RN04}",
+        texto_inscricao_confirmada(nomes),
         reply_markup=ReplyKeyboardRemove(),
+        parse_mode=ParseMode.HTML,
     )
 
 
@@ -140,8 +138,9 @@ async def comando_parar(update: Update, contexto: ContextTypes.DEFAULT_TYPE) -> 
     conexao = contexto.bot_data[CHAVE_CONEXAO]
     parar(conexao, update.message.chat_id)
     await update.message.reply_text(
-        "Suas inscrições foram apagadas. Use /start quando quiser voltar.",
+        TEXTO_INSCRICOES_APAGADAS,
         reply_markup=ReplyKeyboardRemove(),
+        parse_mode=ParseMode.HTML,
     )
 
 

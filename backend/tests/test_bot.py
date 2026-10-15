@@ -193,6 +193,22 @@ def test_status_e_enviado_em_html():
     assert mensagem.parse_modes == [ParseMode.HTML]
 
 
+def test_respostas_do_start_escolha_e_parar_saem_em_html():
+    conn = conexao()
+    inicio = MensagemFalsa("/start")
+    escolha = MensagemFalsa("Ibirama")
+    desconhecida = MensagemFalsa("Blumenau")
+    parada = MensagemFalsa("/parar")
+
+    asyncio.run(modulo_bot.comando_start(UpdateFalso(inicio), ContextoFalso(conn)))
+    asyncio.run(modulo_bot.escolha_do_teclado(UpdateFalso(escolha), ContextoFalso(conn)))
+    asyncio.run(modulo_bot.escolha_do_teclado(UpdateFalso(desconhecida), ContextoFalso(conn)))
+    asyncio.run(modulo_bot.comando_parar(UpdateFalso(parada), ContextoFalso(conn)))
+
+    for mensagem in (inicio, escolha, desconhecida, parada):
+        assert mensagem.parse_modes == [ParseMode.HTML]
+
+
 def test_parar_apaga_as_inscricoes_do_chat():
     conn = conexao()
     banco.inscrever(conn, CHAT, "4206900", AGORA)
