@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { tradutor } from "../i18n";
-import { formatarCoord, formatarData, formatarDataHora, formatarHora, formatarIndice, formatarMm, formatarPercentual, formatarRazao, formatarVariacao } from "./formato";
+import { formatarCoord, formatarData, formatarDataHora, formatarHora, formatarIndice, formatarMm, formatarPercentual, formatarRazao, formatarVariacao, hojeEmBrasilia } from "./formato";
 
 describe("números", () => {
   it("usa vírgula decimal e as casas de cada grandeza (RN05)", () => {
@@ -33,6 +33,13 @@ describe("datas", () => {
     expect(formatarData("2026-09-29")).toBe("29/09/2026");
     expect(formatarData("2026-09-29", "curto")).toBe("29/09/26");
     expect(formatarData("2026-09-29", "dia")).toBe("29/09");
+  });
+});
+
+describe("hojeEmBrasilia", () => {
+  it("a data vira à meia-noite de Brasília (UTC−3), não à de Greenwich", () => {
+    expect(hojeEmBrasilia(new Date("2026-10-16T02:30:00Z"))).toBe("2026-10-15");
+    expect(hojeEmBrasilia(new Date("2026-10-16T03:30:00Z"))).toBe("2026-10-16");
   });
 });
 

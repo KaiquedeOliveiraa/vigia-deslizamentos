@@ -84,7 +84,12 @@ describe("destacar", () => {
 
 describe("dias de previsão", () => {
   it("rótulo hoje, +1d…", () => {
-    expect([0, 1, 2, 3].map(rotuloDia)).toEqual(["hoje", "+1d", "+2d", "+3d"]);
+    expect(rotuloDia("2026-10-16", "2026-10-16")).toBe("hoje");
+    expect(rotuloDia("2026-10-17", "2026-10-16")).toBe("+1d");
+    expect(rotuloDia("2026-10-19", "2026-10-16")).toBe("+3d");
+    expect(rotuloDia("2026-10-15", "2026-10-16")).toBe("ontem");
+    expect(rotuloDia("2026-10-14", "2026-10-16")).toBe("-2d");
+    expect(rotuloDia("2026-11-01", "2026-10-31")).toBe("+1d"); // virada de mês
   });
 
   it("avança e volta em ciclo", () => {

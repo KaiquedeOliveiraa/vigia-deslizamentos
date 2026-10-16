@@ -6,7 +6,7 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 ## Integrações e credenciais
 
-- 🔴 **Bot do Telegram.** Criar o bot no @BotFather e pôr o `TELEGRAM_TOKEN` nos secrets do GitHub e do Worker. Sem token o processo sai com código 2; com token inválido, código 3. Se o nome não for `VigiaDeslizamentosBot`, definir `PUBLIC_TELEGRAM_BOT` no build do site (hoje o link aponta para um bot que não existe).
+- 🔴 **Bot do Telegram.** Bot criado no @BotFather como `@VigiaDeslizamentosBot`, o mesmo nome do padrão de `PUBLIC_TELEGRAM_BOT`, então o link do site já aponta para ele. Falta o operador conferir o `TELEGRAM_TOKEN` nos secrets do GitHub e do Worker (e o `TELEGRAM_WEBHOOK_SEGREDO` no Worker). Sem token o processo sai com código 2; com token inválido, código 3.
 - ⚪ **Token do INMET + Tarefa 12.** Pedir o token por e-mail a `cadastro.act@inmet.gov.br` e preencher `INMET_TOKEN`. Com ele, confirmar com resposta real os campos `DT_MEDICAO`, `HR_MEDICAO`, `CHUVA` e o fuso UTC, que ainda são suposição ([ensemble.md §10](decisoes/ensemble.md)). Sem o token o sistema roda; só a conferência de chuva fica de fora.
 - ⚪ **Secret `TOKEN_DADOS` (PAT `vigia_publicacao`): renovar antes de expirar** — conferir a data em github.com/settings/personal-access-tokens; sem ele a publicação do `indices.json` falha com 401/403 e o run continua verde. Renovar antes de 03/01/2027.
 
@@ -18,8 +18,8 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 - ~~🔴 **Hospedagem do backend**~~ **Resolvida:** pipeline no GitHub Actions e bot no Cloudflare Worker (`bot-worker/`). A unidade systemd em `backend/deploy/vigia.service` segue como alternativa.
 - ⚪ **Commit do `indices.json` a cada execução.** São 4 commits e 4 deploys do Pages por dia na `main` (≈120 por mês). Decidir antes de ligar: aceitar, ou publicar numa branch `dados` com o site lendo dela via `PUBLIC_DADOS_URL`.
-- ⚪ **Atualizar `actions/checkout` e `actions/setup-node` do `pages.yml`** para versões com Node.js 24 e fixar o runner (`ubuntu-24.04`), como já foi feito no `pipeline.yml`.
-- ⚪ **CI só cobre o frontend.** `pages.yml` não roda o `pytest` do backend nem o axe-core, que o README exige antes de cada publicação.
+- ~~⚪ **Atualizar `actions/checkout` e `actions/setup-node` do `pages.yml`**~~ **Resolvida:** runner `ubuntu-24.04` e actions com Node.js 24 fixadas por SHA (inclusive `upload-pages-artifact` e `deploy-pages`).
+- ~~⚪ **CI só cobre o frontend.**~~ **Resolvida em parte:** o `ci.yml` roda o `pytest -W error` do backend e os testes do Worker em todo PR. O axe-core continua pendente (ver "Qualidade e testes").
 
 ## Metodologia e calibração
 
@@ -30,8 +30,8 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 ## Dados e documentação
 
-- ⚪ **Contatos:** só Ibirama está com `verificado: true` em `frontend/public/data/contatos.json`; os coordenadores dos demais municípios estão "a confirmar".
-- ⚪ **README:** tabela de códigos IBGE ainda "a preencher" (os códigos já estão em `backend/config/municipios.json`); grafia "Vitor Meirelles" × "Vitor Meireles"; a lista de tecnologias cita FastAPI e pandas/NumPy, que o código não usa.
+- ⚪ **Contatos:** o endereço de Ibirama foi corrigido (o antigo era de uma escola) e segue com `verificado: true` em `frontend/public/data/contatos.json`. Os outros cinco municípios têm dados preliminares, tirados de fontes oficiais, com `verificado: false`: falta confirmar por telefone com cada prefeitura (RN09), completar os campos `null` e trocar para `true`.
+- ⚪ **README:** completar a citação da RADIAN ("autoria e ano a completar"); o repositório da UFSC exige VPN.
 - ⚪ **Fixture de exemplo** `frontend/src/fixtures/indices.exemplo.json` ainda usa limiar 250 mm e a fonte antiga.
 
 ## Frontend
@@ -41,6 +41,7 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 - ⚪ **Contorno do município sem classe nos fundos detalhados:** `--cor-mun` vira `var(--surface-000)` (`MapaLeaflet.tsx`), e no tema escuro sobre o Satélite o contorno fica quase invisível.
 - ⚪ **Seletor de camadas da Simulação some abaixo de 900 px** (regra geral de `.layers` em `mapa.css`), como já acontecia no Monitoramento. Avaliar uma versão para celular.
 - ⚪ **Altura fixa do iframe da Defesa Civil** (760 px em `sc.css`): trocar por `min(80vh, 760px)` para não cortar em notebooks pequenos.
+- ~~⚪ **Rótulo "hoje" das previsões pela posição**~~ **Resolvida:** o rótulo (e o anúncio para leitor de tela) agora compara o `dia_alvo` com a data de Brasília; com o `indices.json` atrasado, o dia passado aparece como "ontem" ou "-Nd", e não como "hoje".
 
 ## Backend
 
@@ -49,15 +50,16 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 - ⚪ **`rodar_local.py` grava em `frontend/public/data/indices.json`**, o mesmo caminho que o bot publica na `main`. O arquivo não pode ir para o `.gitignore`; cuidado para não commitá-lo, e apagar a cópia local antes de um `git pull` depois da primeira publicação.
 - ⚪ **Recálculo do histórico quando o `limiar_mm` muda:** criar um comando ou aviso para não misturar limiares no gráfico de evolução.
 - ⚪ **Conferência de chuva com as estações da Defesa Civil**, no lugar ou ao lado do INMET (depende da autorização RN10).
+- ~~🔴 **Worker aceitava cabeçalho vazio quando o segredo não estava configurado**~~ **Resolvida:** sem `TELEGRAM_WEBHOOK_SEGREDO` (ou com ele vazio), `segredoConfere` recusa toda requisição, em vez de aceitar `X-Telegram-Bot-Api-Secret-Token` vazio.
 - ⚪ **Execução com o Worker indisponível termina verde:** o erro fica só no log. Avaliar um código de saída próprio ou um `::warning::` no workflow para avisar o operador.
 - ⚪ **Fixture de contrato do `bot.json`:** gerar o exemplo dos testes do Worker a partir de `montar_bot_json`, para um campo renomeado falhar nos dois lados.
 
 ## Qualidade e testes
 
-- ⚪ **Workflow `backend.yml`** com `pytest -W error` (a suíte é offline e leva ~3 s).
+- ~~⚪ **Workflow `backend.yml`**~~ **Resolvida:** o job `backend` do `ci.yml` roda o `pytest -W error`.
 - ⚪ **axe-core no `pages.yml`** sobre o `dist/`, como o README exige antes de cada publicação.
 - ⚪ **Teste de componente da Evolução:** dia mais próximo do ponteiro e navegação por ←/→ não têm teste.
-- ⚪ **O PR não roda CI:** `pages.yml` só dispara em push na `main`. Adicionar `pull_request` para os testes rodarem antes do merge.
+- ~~⚪ **O PR não roda CI**~~ **Resolvida:** o `ci.yml` roda frontend, backend e Worker em todo PR para a `main`.
 
 ## Documentação
 

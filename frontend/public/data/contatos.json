@@ -6,7 +6,7 @@
     "responsavel": null,
     "telefone": "(47) 98838-5645",
     "email": "defesacivil@ibirama.sc.gov.br",
-    "endereco": "Rua Prof. Gertrud Aichinger, 272 — Centro, Ibirama/SC, 89140-000",
+    "endereco": "R. L Müler, 309-237 — Centro, Ibirama/SC, 89140-000",
     "site": "www.defesacivilibirama.com.br"
   },
   {
@@ -14,7 +14,7 @@
     "nome": "Presidente Getúlio",
     "verificado": false,
     "responsavel": null,
-    "telefone": null,
+    "telefone": "(47) 99754-0438",
     "email": null,
     "endereco": null,
     "site": "pdc.presidentegetulio.sc.gov.br"
@@ -54,9 +54,9 @@
     "nome": "Vitor Meireles",
     "verificado": false,
     "responsavel": null,
-    "telefone": null,
-    "email": null,
-    "endereco": null,
+    "telefone": "(47) 3258-0211",
+    "email": "defesacivil@vitormeireles.sc.gov.br",
+    "endereco": "Rua Santa Catarina, 2266 — Centro, Vitor Meireles/SC, 89148-000",
     "site": "vitormeireles.sc.gov.br"
   }
 ]

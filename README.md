@@ -37,14 +37,14 @@ O escopo está **fechado** na sub-região do **Vale Norte**, dentro do Alto Vale
 
 | Município | Código IBGE | Observações |
 |-----------|-------------|-------------|
-| Dona Emma | *a preencher* | |
-| Ibirama | *a preencher* | |
-| José Boiteux | *a preencher* | |
-| Presidente Getúlio | *a preencher* | |
-| Vitor Meirelles | *a preencher* | |
-| Witmarsum | *a preencher* | |
+| Dona Emma | 4205100 | |
+| Ibirama | 4206900 | |
+| José Boiteux | 4209151 | |
+| Presidente Getúlio | 4214003 | |
+| Vitor Meireles | 4219358 | |
+| Witmarsum | 4219408 | |
 
-> Os códigos IBGE devem ser preenchidos a partir da [API de Localidades do IBGE](https://servicodados.ibge.gov.br/api/docs/localidades) e são a chave de identificação de município em todo o sistema (malha geográfica, parâmetros de cálculo e persistência).
+> Os códigos IBGE vieram da [API de Localidades do IBGE](https://servicodados.ibge.gov.br/api/docs/localidades), estão em `backend/config/municipios.json` e são a chave de identificação de município em todo o sistema (malha geográfica, parâmetros de cálculo e persistência).
 
 A arquitetura isola os parâmetros específicos de cada município (limites geográficos, limiar crítico, meia-vida da água no solo) da lógica central de coleta, processamento e visualização. Isso permite incorporar novos municípios por configuração, mas **a expansão para outras regiões não faz parte do escopo desta versão**.
 
@@ -345,8 +345,7 @@ Em todas as telas: menu, seletor PT/ES, acessibilidade e "Alertas no Telegram".
 - **Mapas:** Leaflet + OpenStreetMap
 - **Dados geográficos:** GeoJSON (malhas municipais do IBGE)
 - **Backend:** Python
-- **API:** FastAPI (opcional; o site lê o JSON exportado)
-- **Cálculo:** pandas / NumPy
+- **Cálculo:** Python (biblioteca padrão)
 - **Agendamento:** GitHub Actions (cron), às 3, 9, 15 e 21 UTC; APScheduler no modo serviço
 - **Bot:** Cloudflare Worker (TypeScript) por webhook para os comandos; python-telegram-bot para os avisos
 - **Banco de dados:** SQLite (índices e notificações, na branch `estado`) e Cloudflare D1 (inscritos)

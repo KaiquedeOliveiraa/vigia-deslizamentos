@@ -28,6 +28,10 @@ export function formatarCoord(lat: number, lon: number, traduzir = (s: string) =
 const FUSO = "America/Sao_Paulo";
 const dataBrasilia = new Intl.DateTimeFormat("pt-BR", { timeZone: FUSO, day: "2-digit", month: "2-digit", year: "numeric" });
 const horaBrasilia = new Intl.DateTimeFormat("pt-BR", { timeZone: FUSO, hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+const isoBrasilia = new Intl.DateTimeFormat("en-CA", { timeZone: FUSO, year: "numeric", month: "2-digit", day: "2-digit" });
+
+/** Data de hoje em Brasília, "YYYY-MM-DD" (mesmo formato do `dia_alvo`). */
+export const hojeEmBrasilia = (agora: Date = new Date()): string => isoBrasilia.format(agora);
 
 /** Hora de `gerado_em` (data-hora) em Brasília: "06:12". */
 export const formatarHora = (gerado_em: string): string => horaBrasilia.format(new Date(gerado_em));

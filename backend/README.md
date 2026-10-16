@@ -49,6 +49,20 @@ python -m venv .venv
 cp .env.exemplo .env                # preencha os valores
 ```
 
+### Dependências travadas
+
+O CI (`ci.yml`) e o pipeline (`pipeline.yml`) não instalam o projeto: instalam só as
+dependências, pelo `requirements.lock`, com versões fixas, hashes conferidos e apenas
+wheels (`pip install --only-binary :all: --require-hashes -r requirements.lock`).
+
+Sempre que mudar a lista de `dependencies` do `pyproject.toml`, regenere o lock dentro
+de `backend/` e commite o arquivo junto:
+
+```powershell
+py -m pip install uv
+py -m uv pip compile pyproject.toml --universal --python-version 3.12 --generate-hashes -o requirements.lock
+```
+
 ### Variáveis de ambiente
 
 Obrigatórias — a falta de qualquer uma faz o processo sair com código 2,
