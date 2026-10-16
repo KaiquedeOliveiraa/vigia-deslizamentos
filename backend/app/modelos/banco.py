@@ -98,7 +98,7 @@ def abrir(caminho: str | Path) -> sqlite3.Connection:
             )
 
         conexao.executescript(CAMINHO_SCHEMA.read_text(encoding="utf-8"))
-        conexao.execute(f"PRAGMA user_version = {VERSAO_SCHEMA}")
+        conexao.execute(f"PRAGMA user_version = {int(VERSAO_SCHEMA)}")
         conexao.commit()
     except BaseException:
         conexao.close()
