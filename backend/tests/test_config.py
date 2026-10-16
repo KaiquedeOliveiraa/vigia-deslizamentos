@@ -159,6 +159,71 @@ def test_carregar_env_sem_variavel_obrigatoria_levanta_erro_com_seu_nome_sem_vaz
     assert "segredo-de-outra-variavel-que-nao-pode-vazar" not in mensagem
 
 
+URL_WORKER = "https://vigia-bot.exemplo.workers.dev"
+SEGREDO_WORKER = "s3gr3d0-de-teste"
+
+
+def test_worker_url_sem_segredo_e_invalido():
+    ambiente = {**AMBIENTE_VALIDO, "VIGIA_WORKER_URL": URL_WORKER}
+
+    with pytest.raises(ConfiguracaoInvalidaError) as excinfo:
+        carregar_env(ambiente)
+
+    assert "VIGIA_WORKER_SEGREDO" in str(excinfo.value)
+
+
+def test_worker_segredo_sem_url_e_invalido():
+    ambiente = {**AMBIENTE_VALIDO, "VIGIA_WORKER_SEGREDO": SEGREDO_WORKER}
+
+    with pytest.raises(ConfiguracaoInvalidaError) as excinfo:
+        carregar_env(ambiente)
+
+    mensagem = str(excinfo.value)
+    assert "VIGIA_WORKER_URL" in mensagem
+    assert SEGREDO_WORKER not in mensagem
+
+
+def test_worker_url_vazia_com_segredo_e_invalido():
+    ambiente = {
+        **AMBIENTE_VALIDO,
+        "VIGIA_WORKER_URL": "",
+        "VIGIA_WORKER_SEGREDO": SEGREDO_WORKER,
+    }
+
+    with pytest.raises(ConfiguracaoInvalidaError) as excinfo:
+        carregar_env(ambiente)
+
+    assert "VIGIA_WORKER_URL" in str(excinfo.value)
+    assert SEGREDO_WORKER not in str(excinfo.value)
+
+
+def test_worker_completo_preenche_a_config():
+    ambiente = {
+        **AMBIENTE_VALIDO,
+        "VIGIA_WORKER_URL": URL_WORKER + "/",
+        "VIGIA_WORKER_SEGREDO": SEGREDO_WORKER,
+    }
+
+    config = carregar_env(ambiente)
+
+    assert config.worker_url == "https://vigia-bot.exemplo.workers.dev"
+    assert config.worker_segredo == SEGREDO_WORKER
+
+
+def test_sem_worker_os_campos_ficam_none():
+    config = carregar_env(AMBIENTE_VALIDO)
+
+    assert config.worker_url is None
+    assert config.worker_segredo is None
+    assert config.bot_json_path is None
+
+
+def test_bot_json_path_preenche_a_config():
+    config = carregar_env({**AMBIENTE_VALIDO, "BOT_JSON_PATH": "/var/dados/bot.json"})
+
+    assert config.bot_json_path == "/var/dados/bot.json"
+
+
 # --- docs/indices.schema.json --------------------------------------------------
 #
 # No vocabulário de formato do draft 2020-12, `format` é só anotação:

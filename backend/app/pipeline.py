@@ -20,7 +20,9 @@ Ordem e tolerância a falhas:
 5. exportação e publicação — falha aqui é registrada e **não** impede os avisos,
    inclusive se vier como exceção em vez de `False`;
 6. comparação de conferência com o INMET, que só escreve no log;
-7. decisão dos avisos pela RN08.
+7. decisão dos avisos pela RN08;
+8. gravação do `bot.json` (se configurado) — falha é registrada e não para a
+   execução.
 """
 
 from __future__ import annotations
@@ -30,11 +32,13 @@ import sqlite3
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from pathlib import Path
 
 from app.bot.regra_aviso import Aviso, decidir
 from app.calculo.agregacao import Resultado, calcular
 from app.coleta import inmet, open_meteo
 from app.config import Config, Municipio
+from app.exportacao.bot_json import montar_bot_json
 from app.exportacao.exportar import montar_indices, serializar
 from app.exportacao.publicar import publicar as publicar_indices
 from app.modelos import banco
@@ -96,7 +100,10 @@ def _coletar_todos(
 
 
 def _decidir_avisos(
-    conexao: sqlite3.Connection, municipios: list[Municipio], resultado: Resultado
+    conexao: sqlite3.Connection,
+    municipios: list[Municipio],
+    resultado: Resultado,
+    calculado_em: datetime,
 ) -> list[Aviso]:
     """Aplica a RN08 a cada município e devolve só o que tem algo a fazer.
 
@@ -107,14 +114,12 @@ def _decidir_avisos(
 
     Só o D0 entra na decisão: D1–D3 são previsão (RN06) e não disparam aviso.
     """
-    indice_por_ibge = {
-        item.ibge: item.dias[0].indice for item in resultado.municipios
-    }
-    classe_por_ibge = {item.ibge: item.dias[0].classe for item in resultado.municipios}
+    d0_por_ibge = {item.ibge: item.dias[0] for item in resultado.municipios}
 
     avisos: list[Aviso] = []
     for municipio in municipios:
-        indice_d0 = indice_por_ibge.get(municipio.ibge)
+        d0 = d0_por_ibge.get(municipio.ibge)
+        indice_d0 = d0.indice if d0 is not None else None
         ultima_classe = banco.ultima_classe_notificada(conexao, municipio.ibge)
         avisar, nova_classe = decidir(ultima_classe, indice_d0)
 
@@ -126,9 +131,13 @@ def _decidir_avisos(
                 ibge=municipio.ibge,
                 nome=municipio.nome,
                 indice=indice_d0,
-                classe=classe_por_ibge.get(municipio.ibge),
+                classe=d0.classe if d0 is not None else None,
                 avisar=avisar,
                 nova_classe=nova_classe,
+                efr_mm=d0.efr_mm if d0 is not None else None,
+                rtotal_mm=d0.rtotal_mm if d0 is not None else None,
+                dia_alvo=d0.dia_alvo if d0 is not None else None,
+                calculado_em=calculado_em if d0 is not None else None,
             )
         )
 
@@ -150,6 +159,24 @@ def _publicar_indices(
     }
     dados = montar_indices(resultado, municipios, historicos, gerado_em)
     return publicar(serializar(dados), config, http)
+
+
+def _gravar_bot_json(
+    municipios: list[Municipio],
+    conexao: sqlite3.Connection,
+    config: Config,
+    gerado_em: datetime,
+) -> None:
+    atuais = {
+        municipio.ibge: banco.indice_atual(conexao, municipio.ibge)
+        for municipio in municipios
+    }
+    dados = montar_bot_json(
+        municipios, atuais, config.site_url, config.simulacao, gerado_em
+    )
+    caminho = Path(config.bot_json_path)
+    caminho.parent.mkdir(parents=True, exist_ok=True)
+    caminho.write_bytes(serializar(dados))
 
 
 def executar_pipeline(
@@ -210,7 +237,16 @@ def executar_pipeline(
     except Exception:  # noqa: BLE001 — conferência nunca derruba a execução
         _log.exception("comparação com o INMET falhou; a execução segue")
 
-    avisos = _decidir_avisos(conexao, municipios, resultado)
+    avisos = _decidir_avisos(conexao, municipios, resultado, fim_da_execucao)
+
+    # Mesma razão da guarda da publicação: o `bot.json` é um extra do Worker e
+    # não pode custar os avisos que já estão decididos.
+    if config.bot_json_path is not None:
+        try:
+            _gravar_bot_json(municipios, conexao, config, fim_da_execucao)
+        except Exception:  # noqa: BLE001 — bot.json nunca impede os avisos
+            _log.exception("gravação do bot.json falhou; a execução segue")
+
     _log.info(
         "execução de %s: %s município(s) com dados, %s sem dados, publicado=%s, "
         "%s aviso(s) a tratar",

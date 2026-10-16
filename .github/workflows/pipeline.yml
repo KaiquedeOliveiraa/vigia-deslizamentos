@@ -1,0 +1,93 @@
+name: Pipeline
+
+on:
+  schedule:
+    # Os horários do HORAS_DO_CRON, no minuto 7 para fugir do pico de :00 do GitHub.
+    - cron: "7 3,9,15,21 * * *"
+  workflow_dispatch:
+
+# O estado (vigia.db e bot.json) é commitado na branch estado com o GITHUB_TOKEN.
+# O indices.json vai para a main pelo próprio pipeline, com o TOKEN_DADOS.
+permissions:
+  contents: write
+
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+
+jobs:
+  pipeline:
+    # Runner fixo: o ubuntu-latest migra para o Ubuntu 26 em 19/10/2026.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+
+      - name: Instalar o backend
+        working-directory: backend
+        run: pip install -e .
+
+      # Traz a branch estado para a pasta estado/; se ainda não existe, cria órfã.
+      - name: Restaurar o estado
+        run: |
+          set -euo pipefail
+          # 0: a branch existe; 2: não existe (cria órfã); outro código é erro
+          # de rede e falha o job, para não repetir avisos com um estado vazio.
+          codigo=0
+          git ls-remote --exit-code --heads origin estado > /dev/null || codigo=$?
+          if [ "$codigo" -eq 0 ]; then
+            git fetch --depth=1 origin estado
+            git worktree add estado FETCH_HEAD
+          elif [ "$codigo" -eq 2 ]; then
+            git worktree add --orphan -b estado estado
+          else
+            echo "Falha ao consultar a branch estado (código $codigo)." >&2
+            exit "$codigo"
+          fi
+
+      - name: Rodar o pipeline
+        working-directory: backend
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          GITHUB_TOKEN_DADOS: ${{ secrets.TOKEN_DADOS }}
+          VIGIA_WORKER_SEGREDO: ${{ secrets.VIGIA_WORKER_SEGREDO }}
+          INMET_TOKEN: ${{ secrets.INMET_TOKEN }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          VIGIA_WORKER_URL: ${{ vars.VIGIA_WORKER_URL }}
+          VIGIA_SIMULACAO: ${{ vars.VIGIA_SIMULACAO }}
+          GITHUB_REPO: ${{ github.repository }}
+          DB_PATH: ../estado/vigia.db
+          BOT_JSON_PATH: ../estado/bot.json
+          # Fora da estado/ e sem upload como artefato.
+          LOG_PATH: ${{ runner.temp }}/vigia.log
+        run: |
+          test -n "$VIGIA_WORKER_URL" || { echo "::error::VIGIA_WORKER_URL não configurada"; exit 1; }
+          python -m app.main --uma-vez
+
+      - name: Preparar o estado
+        working-directory: backend
+        run: python -m scripts.preparar_estado ../estado/vigia.db
+
+      - name: Gravar o estado na branch estado
+        working-directory: estado
+        run: |
+          set -euo pipefail
+          for arquivo in vigia.db bot.json; do
+            if [ -e "$arquivo" ]; then
+              git add "$arquivo"
+            fi
+          done
+          if git diff --cached --quiet; then
+            echo "Sem mudanças no estado."
+          else
+            git -c user.name="github-actions[bot]" \
+                -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+                commit -m "estado: execução de $(date -u +%Y-%m-%d)"
+            git push origin HEAD:estado
+          fi

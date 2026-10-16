@@ -32,7 +32,14 @@ VARIAVEIS_OBRIGATORIAS = tuple(ATRIBUTO_POR_VARIAVEL)
 #: ele, só a comparação de conferência da Tarefa 12 é pulada.
 ATRIBUTO_POR_VARIAVEL_OPCIONAL = {
     "INMET_TOKEN": "inmet_token",
+    "VIGIA_WORKER_URL": "worker_url",
+    "VIGIA_WORKER_SEGREDO": "worker_segredo",
+    "BOT_JSON_PATH": "bot_json_path",
 }
+
+#: Liga o comando `/simular` do bot quando vale exatamente "1". Desligado por
+#: padrão: sem ela o bot se comporta como sempre.
+VARIAVEL_SIMULACAO = "VIGIA_SIMULACAO"
 
 
 class ConfiguracaoInvalidaError(Exception):
@@ -70,6 +77,10 @@ class Config:
     db_path: str
     log_path: str
     inmet_token: str | None = None
+    simulacao: bool = False
+    worker_url: str | None = None
+    worker_segredo: str | None = None
+    bot_json_path: str | None = None
 
 
 def _identificador(item: dict, indice: int) -> str:
@@ -173,5 +184,20 @@ def carregar_env(ambiente: Mapping[str, str]) -> Config:
 
     for nome_variavel, atributo in ATRIBUTO_POR_VARIAVEL_OPCIONAL.items():
         valores[atributo] = ambiente.get(nome_variavel) or None
+
+    if valores["worker_url"] and not valores["worker_segredo"]:
+        raise ConfiguracaoInvalidaError(
+            "variável de ambiente ausente: 'VIGIA_WORKER_SEGREDO' "
+            "(obrigatória quando 'VIGIA_WORKER_URL' está definida)"
+        )
+    if valores["worker_segredo"] and not valores["worker_url"]:
+        raise ConfiguracaoInvalidaError(
+            "variável de ambiente ausente: 'VIGIA_WORKER_URL' "
+            "(obrigatória quando 'VIGIA_WORKER_SEGREDO' está definida)"
+        )
+    if valores["worker_url"]:
+        valores["worker_url"] = valores["worker_url"].rstrip("/")
+
+    valores["simulacao"] = ambiente.get(VARIAVEL_SIMULACAO) == "1"
 
     return Config(**valores)

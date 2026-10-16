@@ -1,0 +1,16 @@
+{
+  "name": "vigia-bot",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-22",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "vigia",
+      "database_id": "96ee2822-7d3e-4672-9990-54a81005ee07",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "BOT_JSON_URL": "https://raw.githubusercontent.com/KaiquedeOliveiraa/vigia-deslizamentos/estado/bot.json"
+  }
+}
