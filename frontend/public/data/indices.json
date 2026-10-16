@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "gerado_em": "2026-10-15T20:50:17.759261+00:00",
-  "dia_alvo_d0": "2026-10-15",
+  "gerado_em": "2026-10-16T12:29:55.407095+00:00",
+  "dia_alvo_d0": "2026-10-16",
   "municipios_sem_dados": [],
   "municipios": [
     {
@@ -12,27 +12,13 @@
       "mv_h": 24,
       "dias": [
         {
-          "dia_alvo": "2026-10-15",
-          "d": 0,
-          "indice": 0.17703462312926724,
-          "classe": 1,
-          "efr_mm": 6.379416107369549,
-          "rtotal_mm": 20.175777362020536,
-          "n_membros": 6,
-          "prob": {
-            "pontuais": 0.0,
-            "esparsos": 0.0,
-            "generalizados": 0.0
-          }
-        },
-        {
           "dia_alvo": "2026-10-16",
-          "d": 1,
-          "indice": 0.2239809453881139,
+          "d": 0,
+          "indice": 0.18889457738504445,
           "classe": 1,
-          "efr_mm": 22.98622650938226,
-          "rtotal_mm": 10.61091529883482,
-          "n_membros": 6,
+          "efr_mm": 18.8227672772286,
+          "rtotal_mm": 9.511419330528069,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -41,12 +27,12 @@
         },
         {
           "dia_alvo": "2026-10-17",
-          "d": 2,
-          "indice": 0.1179854347680721,
+          "d": 1,
+          "indice": 0.09923607151526646,
           "classe": 1,
-          "efr_mm": 17.697815215210817,
+          "efr_mm": 14.885410727289969,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -55,12 +41,26 @@
         },
         {
           "dia_alvo": "2026-10-18",
-          "d": 3,
-          "indice": 0.058833574750807145,
+          "d": 2,
+          "indice": 0.049458893124404324,
           "classe": 1,
-          "efr_mm": 8.82503621262107,
+          "efr_mm": 7.418833968660649,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-19",
+          "d": 3,
+          "indice": 0.02459884286761307,
+          "classe": 1,
+          "efr_mm": 3.6898264301419608,
+          "rtotal_mm": 0.0,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -68,12 +68,18 @@
           }
         }
       ],
-      "historico": [],
+      "historico": [
+        {
+          "dia_alvo": "2026-10-15",
+          "indice": 0.17703462312926724,
+          "classe": 1
+        }
+      ],
       "chuva_acum_mm": {
-        "24h": 21.3,
-        "48h": 24.9,
-        "72h": 35.0,
-        "96h": 36.5
+        "24h": 13.3,
+        "48h": 33.3,
+        "72h": 37.4,
+        "96h": 47.4
       }
     },
     {
@@ -84,27 +90,13 @@
       "mv_h": 24,
       "dias": [
         {
-          "dia_alvo": "2026-10-15",
-          "d": 0,
-          "indice": 0.2943169067776292,
-          "classe": 1,
-          "efr_mm": 20.73990861375039,
-          "rtotal_mm": 23.407627402893983,
-          "n_membros": 6,
-          "prob": {
-            "pontuais": 0.0,
-            "esparsos": 0.0,
-            "generalizados": 0.0
-          }
-        },
-        {
           "dia_alvo": "2026-10-16",
-          "d": 1,
-          "indice": 0.30206431401825007,
+          "d": 0,
+          "indice": 0.3277451085307858,
           "classe": 1,
-          "efr_mm": 38.90536278099762,
-          "rtotal_mm": 6.404284321739892,
-          "n_membros": 6,
+          "efr_mm": 38.06654310753264,
+          "rtotal_mm": 11.09522317208523,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -113,12 +105,12 @@
         },
         {
           "dia_alvo": "2026-10-17",
-          "d": 2,
-          "indice": 0.15575077580591565,
+          "d": 1,
+          "indice": 0.1651875074406645,
           "classe": 1,
-          "efr_mm": 23.362616370887345,
+          "efr_mm": 24.77812611609967,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -127,12 +119,26 @@
         },
         {
           "dia_alvo": "2026-10-18",
-          "d": 3,
-          "indice": 0.07779761293003233,
+          "d": 2,
+          "indice": 0.08251597874740674,
           "classe": 1,
-          "efr_mm": 11.66964193950485,
+          "efr_mm": 12.37739681211101,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-19",
+          "d": 3,
+          "indice": 0.041087618491443476,
+          "classe": 1,
+          "efr_mm": 6.163142773716522,
+          "rtotal_mm": 0.0,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -140,12 +146,18 @@
           }
         }
       ],
-      "historico": [],
+      "historico": [
+        {
+          "dia_alvo": "2026-10-15",
+          "indice": 0.2943169067776292,
+          "classe": 1
+        }
+      ],
       "chuva_acum_mm": {
-        "24h": 51.4,
-        "48h": 55.2,
-        "72h": 65.4,
-        "96h": 67.9
+        "24h": 15.5,
+        "48h": 64.9,
+        "72h": 68.6,
+        "96h": 79.6
       }
     },
     {
@@ -156,27 +168,13 @@
       "mv_h": 24,
       "dias": [
         {
-          "dia_alvo": "2026-10-15",
-          "d": 0,
-          "indice": 0.17986839635853083,
-          "classe": 1,
-          "efr_mm": 7.452826797549975,
-          "rtotal_mm": 19.527432656229653,
-          "n_membros": 6,
-          "prob": {
-            "pontuais": 0.0,
-            "esparsos": 0.0,
-            "generalizados": 0.0
-          }
-        },
-        {
           "dia_alvo": "2026-10-16",
-          "d": 1,
-          "indice": 0.1794042412318306,
+          "d": 0,
+          "indice": 0.22132509794347383,
           "classe": 1,
-          "efr_mm": 22.02882508274647,
-          "rtotal_mm": 4.881811102028123,
-          "n_membros": 6,
+          "efr_mm": 20.879304487023756,
+          "rtotal_mm": 12.31946020449732,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -185,12 +183,12 @@
         },
         {
           "dia_alvo": "2026-10-17",
-          "d": 2,
-          "indice": 0.09408135052345729,
+          "d": 1,
+          "indice": 0.1293698394429088,
           "classe": 1,
-          "efr_mm": 14.112202578518593,
+          "efr_mm": 19.405475916436323,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -199,12 +197,26 @@
         },
         {
           "dia_alvo": "2026-10-18",
-          "d": 3,
-          "indice": 0.0468637922856133,
+          "d": 2,
+          "indice": 0.06450803674533906,
           "classe": 1,
-          "efr_mm": 7.029568842841996,
+          "efr_mm": 9.67620551180086,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-19",
+          "d": 3,
+          "indice": 0.0321242007987463,
+          "classe": 1,
+          "efr_mm": 4.818630119811944,
+          "rtotal_mm": 0.0,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -212,12 +224,18 @@
           }
         }
       ],
-      "historico": [],
+      "historico": [
+        {
+          "dia_alvo": "2026-10-15",
+          "indice": 0.17986839635853083,
+          "classe": 1
+        }
+      ],
       "chuva_acum_mm": {
-        "24h": 23.0,
-        "48h": 26.4,
-        "72h": 37.6,
-        "96h": 40.1
+        "24h": 19.7,
+        "48h": 42.4,
+        "72h": 46.1,
+        "96h": 57.9
       }
     },
     {
@@ -228,27 +246,13 @@
       "mv_h": 24,
       "dias": [
         {
-          "dia_alvo": "2026-10-15",
-          "d": 0,
-          "indice": 0.17656340776607282,
-          "classe": 1,
-          "efr_mm": 6.2433069953531914,
-          "rtotal_mm": 20.24120416955773,
-          "n_membros": 6,
-          "prob": {
-            "pontuais": 0.0,
-            "esparsos": 0.0,
-            "generalizados": 0.0
-          }
-        },
-        {
           "dia_alvo": "2026-10-16",
-          "d": 1,
-          "indice": 0.23305364046297988,
+          "d": 0,
+          "indice": 0.20971956664390337,
           "classe": 1,
-          "efr_mm": 25.462086957856467,
-          "rtotal_mm": 9.495959111590523,
-          "n_membros": 6,
+          "efr_mm": 21.457884583322905,
+          "rtotal_mm": 10.000050413262604,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -257,12 +261,12 @@
         },
         {
           "dia_alvo": "2026-10-17",
-          "d": 2,
-          "indice": 0.1220517180929303,
+          "d": 1,
+          "indice": 0.1043547103855799,
           "classe": 1,
-          "efr_mm": 18.307757713939544,
+          "efr_mm": 15.653206557836985,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -271,12 +275,26 @@
         },
         {
           "dia_alvo": "2026-10-18",
-          "d": 3,
-          "indice": 0.060891735259303574,
+          "d": 2,
+          "indice": 0.05204323140562837,
           "classe": 1,
-          "efr_mm": 9.133760288895537,
+          "efr_mm": 7.8064847108442565,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-19",
+          "d": 3,
+          "indice": 0.025885406014829908,
+          "classe": 1,
+          "efr_mm": 3.882810902224487,
+          "rtotal_mm": 0.0,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -284,12 +302,18 @@
           }
         }
       ],
-      "historico": [],
+      "historico": [
+        {
+          "dia_alvo": "2026-10-15",
+          "indice": 0.17656340776607282,
+          "classe": 1
+        }
+      ],
       "chuva_acum_mm": {
-        "24h": 24.4,
-        "48h": 27.6,
-        "72h": 37.3,
-        "96h": 38.6
+        "24h": 13.4,
+        "48h": 36.2,
+        "72h": 39.8,
+        "96h": 49.6
       }
     },
     {
@@ -300,27 +324,13 @@
       "mv_h": 24,
       "dias": [
         {
-          "dia_alvo": "2026-10-15",
-          "d": 0,
-          "indice": 0.18332256376610043,
-          "classe": 1,
-          "efr_mm": 7.728485187520818,
-          "rtotal_mm": 19.76989937739425,
-          "n_membros": 6,
-          "prob": {
-            "pontuais": 0.0,
-            "esparsos": 0.0,
-            "generalizados": 0.0
-          }
-        },
-        {
           "dia_alvo": "2026-10-16",
-          "d": 1,
-          "indice": 0.20307260957054157,
+          "d": 0,
+          "indice": 0.23057344981080896,
           "classe": 1,
-          "efr_mm": 24.627369854130745,
-          "rtotal_mm": 5.833521581450495,
-          "n_membros": 6,
+          "efr_mm": 22.122896859498088,
+          "rtotal_mm": 12.463120612123257,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -329,12 +339,12 @@
         },
         {
           "dia_alvo": "2026-10-17",
-          "d": 2,
-          "indice": 0.10585600083056909,
+          "d": 1,
+          "indice": 0.12045806922455747,
           "classe": 1,
-          "efr_mm": 15.878400124585365,
+          "efr_mm": 18.06871038368362,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -343,12 +353,26 @@
         },
         {
           "dia_alvo": "2026-10-18",
-          "d": 3,
-          "indice": 0.05269783093341216,
+          "d": 2,
+          "indice": 0.05999886513040634,
           "classe": 1,
-          "efr_mm": 7.904674640011823,
+          "efr_mm": 8.999829769560952,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-19",
+          "d": 3,
+          "indice": 0.029872735848748656,
+          "classe": 1,
+          "efr_mm": 4.4809103773122985,
+          "rtotal_mm": 0.0,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -356,12 +380,18 @@
           }
         }
       ],
-      "historico": [],
+      "historico": [
+        {
+          "dia_alvo": "2026-10-15",
+          "indice": 0.18332256376610043,
+          "classe": 1
+        }
+      ],
       "chuva_acum_mm": {
-        "24h": 23.8,
-        "48h": 27.8,
-        "72h": 40.1,
-        "96h": 41.5
+        "24h": 16.9,
+        "48h": 40.8,
+        "72h": 46.3,
+        "96h": 56.7
       }
     },
     {
@@ -372,27 +402,13 @@
       "mv_h": 24,
       "dias": [
         {
-          "dia_alvo": "2026-10-15",
-          "d": 0,
-          "indice": 0.2021179876353282,
-          "classe": 1,
-          "efr_mm": 8.421063918930715,
-          "rtotal_mm": 21.896634226368512,
-          "n_membros": 6,
-          "prob": {
-            "pontuais": 0.0,
-            "esparsos": 0.0,
-            "generalizados": 0.0
-          }
-        },
-        {
           "dia_alvo": "2026-10-16",
-          "d": 1,
-          "indice": 0.2356304010378763,
+          "d": 0,
+          "indice": 0.25343770185276115,
           "classe": 1,
-          "efr_mm": 27.47522552263868,
-          "rtotal_mm": 7.869334633042769,
-          "n_membros": 6,
+          "efr_mm": 26.547872248380486,
+          "rtotal_mm": 11.467783029533686,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -401,12 +417,12 @@
         },
         {
           "dia_alvo": "2026-10-17",
-          "d": 2,
-          "indice": 0.12266760519030066,
+          "d": 1,
+          "indice": 0.13145065871464373,
           "classe": 1,
-          "efr_mm": 18.4001407785451,
+          "efr_mm": 19.71759880719656,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -415,12 +431,26 @@
         },
         {
           "dia_alvo": "2026-10-18",
-          "d": 3,
-          "indice": 0.06119065152672556,
+          "d": 2,
+          "indice": 0.06558217828889709,
           "classe": 1,
-          "efr_mm": 9.178597729008835,
+          "efr_mm": 9.837326743334565,
           "rtotal_mm": 0.0,
-          "n_membros": 6,
+          "n_membros": 5,
+          "prob": {
+            "pontuais": 0.0,
+            "esparsos": 0.0,
+            "generalizados": 0.0
+          }
+        },
+        {
+          "dia_alvo": "2026-10-19",
+          "d": 3,
+          "indice": 0.03262758883520258,
+          "classe": 1,
+          "efr_mm": 4.894138325280387,
+          "rtotal_mm": 0.0,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -428,12 +458,18 @@
           }
         }
       ],
-      "historico": [],
+      "historico": [
+        {
+          "dia_alvo": "2026-10-15",
+          "indice": 0.2021179876353282,
+          "classe": 1
+        }
+      ],
       "chuva_acum_mm": {
-        "24h": 24.6,
-        "48h": 29.2,
-        "72h": 39.8,
-        "96h": 41.7
+        "24h": 22.4,
+        "48h": 44.3,
+        "72h": 48.6,
+        "96h": 59.3
       }
     }
   ]
