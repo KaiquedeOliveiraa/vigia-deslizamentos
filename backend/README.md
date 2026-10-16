@@ -55,12 +55,14 @@ O CI (`ci.yml`) e o pipeline (`pipeline.yml`) não instalam o projeto: instalam 
 dependências, pelo `requirements.lock`, com versões fixas, hashes conferidos e apenas
 wheels (`pip install --only-binary :all: --require-hashes -r requirements.lock`).
 
-Sempre que mudar a lista de `dependencies` do `pyproject.toml`, regenere o lock dentro
-de `backend/` e commite o arquivo junto:
+O `requirements.lock` é exportado do `uv.lock`. Sempre que mudar a lista de
+`dependencies` do `pyproject.toml`, regenere os dois dentro de `backend/` e commite
+os arquivos juntos:
 
 ```powershell
 py -m pip install uv
-py -m uv pip compile pyproject.toml --universal --python-version 3.12 --generate-hashes -o requirements.lock
+py -m uv lock --python 3.12
+py -m uv export --frozen --format requirements.txt --no-emit-project -o requirements.lock
 ```
 
 ### Variáveis de ambiente
