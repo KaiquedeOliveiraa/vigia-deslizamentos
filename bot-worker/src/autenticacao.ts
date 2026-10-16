@@ -1,8 +1,8 @@
 const codificador = new TextEncoder();
 
-/** Comparação em tempo constante; `false` para `null` ou tamanho diferente. */
-export function segredoConfere(recebido: string | null, esperado: string): boolean {
-  if (recebido === null) return false;
+/** Comparação em tempo constante; `false` para `null`, segredo esperado vazio/ausente ou tamanho diferente. */
+export function segredoConfere(recebido: string | null, esperado: string | undefined): boolean {
+  if (recebido === null || !esperado) return false;
   const a = codificador.encode(recebido);
   const b = codificador.encode(esperado);
   if (a.byteLength !== b.byteLength) return false;
