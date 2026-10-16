@@ -28,9 +28,9 @@ export default function Previsoes({ lang, dias, d, aoMudar }: Props) {
     aoMudar(novo);
     const data = formatarData(dias[novo], "curto");
     const n = diasDesde(hoje, dias[novo]);
-    anunciar(
-      n === 0 ? t("Hoje, {N}", { N: data }) : n > 0 ? t("Previsão para {N}", { N: data }) : t("Dia {N}", { N: data }),
-    );
+    if (n === 0) anunciar(t("Hoje, {N}", { N: data }));
+    else if (n > 0) anunciar(t("Previsão para {N}", { N: data }));
+    else anunciar(t("Dia {N}", { N: data }));
   }
   const passo = (p: number) => ir(passoDia(d, p, dias.length));
   const avancarCalado = () => aoMudar(passoDia(d, 1, dias.length));
