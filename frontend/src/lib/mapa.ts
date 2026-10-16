@@ -79,8 +79,19 @@ export function destacar(nome: string, termo: string): [string, string, string] 
   return [letras.slice(0, inicio).join(""), letras.slice(inicio, fim).join(""), letras.slice(fim).join("")];
 }
 
-/** "hoje" no dia-alvo; "+1d", "+2d"… nas previsões. */
-export const rotuloDia = (d: number): string => (d === 0 ? "hoje" : `+${d}d`);
+/** Dias de `hoje` até `dia_alvo` (ambos "YYYY-MM-DD"): 0 hoje, 1 amanhã, −1 ontem. */
+export function diasDesde(hoje: string, dia_alvo: string): number {
+  const [a, b] = [hoje, dia_alvo].map((s) => Date.UTC(+s.slice(0, 4), +s.slice(5, 7) - 1, +s.slice(8, 10)));
+  return Math.round((b - a) / 86_400_000);
+}
+
+/** "hoje" quando o dia-alvo é a data atual; "ontem"; "+1d", "+2d"… adiante; "-2d"… para trás. */
+export function rotuloDia(dia_alvo: string, hoje: string): string {
+  const n = diasDesde(hoje, dia_alvo);
+  if (n === 0) return "hoje";
+  if (n === -1) return "ontem";
+  return n > 0 ? `+${n}d` : `${n}d`;
+}
 
 /** Dia seguinte (`passo` 1) ou anterior (−1), em ciclo entre `n` dias. */
 export const passoDia = (d: number, passo: number, n: number): number => (((d + passo) % n) + n) % n;

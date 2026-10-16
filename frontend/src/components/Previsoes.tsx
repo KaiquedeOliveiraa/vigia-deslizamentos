@@ -1,8 +1,8 @@
 import { ChevronsLeft, ChevronsRight, Pause, Play } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { tradutor } from "../i18n";
-import { formatarData } from "../lib/formato";
-import { passoDia, rotuloDia } from "../lib/mapa";
+import { formatarData, hojeEmBrasilia } from "../lib/formato";
+import { diasDesde, passoDia, rotuloDia } from "../lib/mapa";
 import type { Idioma } from "../lib/preferencias";
 import { anunciar } from "./anunciar";
 
@@ -21,12 +21,16 @@ export default function Previsoes({ lang, dias, d, aoMudar }: Props) {
   const t = tradutor(lang);
   const nome = useId();
   const [tocando, setTocando] = useState(false);
+  const [hoje] = useState(() => hojeEmBrasilia());
 
   // Só passos manuais são anunciados: na reprodução, o leitor de tela ouviria um dia a cada 1,1 s.
   function ir(novo: number) {
     aoMudar(novo);
     const data = formatarData(dias[novo], "curto");
-    anunciar(novo ? t("Previsão para {N}", { N: data }) : t("Hoje, {N}", { N: data }));
+    const n = diasDesde(hoje, dias[novo]);
+    anunciar(
+      n === 0 ? t("Hoje, {N}", { N: data }) : n > 0 ? t("Previsão para {N}", { N: data }) : t("Dia {N}", { N: data }),
+    );
   }
   const passo = (p: number) => ir(passoDia(d, p, dias.length));
   const avancarCalado = () => aoMudar(passoDia(d, 1, dias.length));
@@ -53,7 +57,7 @@ export default function Previsoes({ lang, dias, d, aoMudar }: Props) {
         <label key={dia} className={i === d ? "on" : undefined}>
           <input type="radio" name={nome} checked={i === d} onChange={() => ir(i)} />
           {formatarData(dia, "curto")}
-          <small>{t(rotuloDia(i))}</small>
+          <small>{t(rotuloDia(dia, hoje))}</small>
         </label>
       ))}
       <div className="ctl">
