@@ -154,7 +154,9 @@ def _publicar_indices(
     publicar: Callable[[bytes, Config, object], bool],
 ) -> bool:
     historicos = {
-        item.ibge: banco.historico(conexao, item.ibge, resultado.dia_alvo_d0)
+        item.ibge: banco.historico(
+            conexao, item.ibge, resultado.dia_alvo_d0, item.limiar_mm
+        )
         for item in resultado.municipios
     }
     dados = montar_indices(resultado, municipios, historicos, gerado_em)

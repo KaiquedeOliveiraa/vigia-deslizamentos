@@ -130,3 +130,19 @@ export function indicadores(indices: Indices): Indicadores {
 
 export const etiquetaChuva = (m: Municipio): string =>
   m.chuva_acum_mm["24h"] > 1 ? "choveu nas últimas 24h" : "sem chuva agora";
+
+// Interação da Evolução (Graficos.tsx): ponteiro e setas, sem DOM, para ter teste.
+
+/** Passo das setas: → avança, ← volta; outra tecla não move. */
+export const passoDaSeta = (tecla: string): -1 | 0 | 1 => (tecla === "ArrowRight" ? 1 : tecla === "ArrowLeft" ? -1 : 0);
+
+/** Posição de `xs` mais próxima de `x`; no empate fica a primeira. */
+export const indiceMaisProximo = (xs: readonly number[], x: number): number =>
+  xs.reduce((melhor, xi, i) => (Math.abs(xi - x) < Math.abs(xs[melhor] - x) ? i : melhor), 0);
+
+/** Dia em foco depois de uma seta: sem foco vai para o D0 (o último); depois anda sem sair do eixo. */
+export const focoAposSeta = (foco: number | null, passo: number, dias: number): number =>
+  foco === null ? dias - 1 : Math.min(Math.max(foco + passo, 0), dias - 1);
+
+/** Chip vizinho nas setas, dando a volta nas pontas. */
+export const vizinhoCiclico = (i: number, passo: number, total: number): number => (i + passo + total) % total;

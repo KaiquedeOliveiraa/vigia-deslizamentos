@@ -7,13 +7,17 @@ import {
   escala,
   etiquetaChuva,
   faixasClasse,
+  focoAposSeta,
+  indiceMaisProximo,
   indicadores,
   marcaClasse,
   marcasEvolucao,
   maxEvolucao,
   maxPluviometro,
+  passoDaSeta,
   serieMunicipio,
   variacoesDiarias,
+  vizinhoCiclico,
 } from "./graficos";
 
 const municipio = (
@@ -231,5 +235,37 @@ describe("faixasClasse", () => {
 
   it("acima de 3,40 a última faixa vai até o max", () => {
     expect(faixasClasse(4).at(-1)).toEqual({ numero: 7, de: 3.4, ate: 4 });
+  });
+});
+
+describe("interação da Evolução", () => {
+  it("passoDaSeta: só ← e → movem", () => {
+    expect(passoDaSeta("ArrowRight")).toBe(1);
+    expect(passoDaSeta("ArrowLeft")).toBe(-1);
+    expect(passoDaSeta("ArrowUp")).toBe(0);
+    expect(passoDaSeta("Enter")).toBe(0);
+  });
+
+  it("indiceMaisProximo: dia mais próximo do ponteiro, empate fica com o primeiro", () => {
+    const xs = [10, 20, 30, 40];
+    expect(indiceMaisProximo(xs, 0)).toBe(0);
+    expect(indiceMaisProximo(xs, 24)).toBe(1);
+    expect(indiceMaisProximo(xs, 26)).toBe(2);
+    expect(indiceMaisProximo(xs, 25)).toBe(1);
+    expect(indiceMaisProximo(xs, 999)).toBe(3);
+  });
+
+  it("focoAposSeta: sem foco vai ao D0; depois anda sem sair do eixo", () => {
+    expect(focoAposSeta(null, -1, 7)).toBe(6);
+    expect(focoAposSeta(null, 1, 7)).toBe(6);
+    expect(focoAposSeta(3, -1, 7)).toBe(2);
+    expect(focoAposSeta(0, -1, 7)).toBe(0);
+    expect(focoAposSeta(6, 1, 7)).toBe(6);
+  });
+
+  it("vizinhoCiclico: chips dão a volta nas pontas", () => {
+    expect(vizinhoCiclico(0, -1, 6)).toBe(5);
+    expect(vizinhoCiclico(5, 1, 6)).toBe(0);
+    expect(vizinhoCiclico(2, 1, 6)).toBe(3);
   });
 });
