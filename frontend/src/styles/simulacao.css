@@ -417,6 +417,14 @@
     align-self: flex-end;
   }
 
+  /* Na linha do "Agora | Simulado", à esquerda; acima do .maphd, que cobre a largura toda. */
+  .sim .layers-sel {
+    right: auto;
+    left: 12px;
+    top: 12px;
+    z-index: 6;
+  }
+
   .aviso {
     padding: 10px 12px;
     font-size: 12.5px;
