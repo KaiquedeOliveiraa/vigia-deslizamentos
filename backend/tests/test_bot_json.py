@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import date, datetime, timedelta, timezone
 from itertools import combinations
 from pathlib import Path
@@ -188,3 +189,24 @@ def test_resultado_e_serializavel(simulacao):
     dados = montar(simulacao=simulacao)
 
     assert json.loads(serializar(dados)) == dados
+
+
+#: Exemplo que os testes do Worker leem (`bot-worker/test/bot-json.test.ts`): sai
+#: de `montar_bot_json`, então um campo renomeado aqui quebra os dois lados.
+FIXTURE_DO_WORKER = (
+    Path(__file__).resolve().parents[2] / "bot-worker" / "test" / "fixtures" / "bot.exemplo.json"
+)
+
+
+def test_fixture_do_worker_igual_ao_montar_bot_json():
+    # Com a simulação ligada, para o Worker ver também o formato do objeto `simulacao`.
+    esperado = montar(simulacao=True)
+    if os.environ.get("VIGIA_REGERAR_FIXTURES") == "1":
+        FIXTURE_DO_WORKER.parent.mkdir(parents=True, exist_ok=True)
+        FIXTURE_DO_WORKER.write_bytes(serializar(esperado))
+
+    # Compara o JSON lido, não os bytes: o git pode trocar a quebra de linha no Windows.
+    assert json.loads(FIXTURE_DO_WORKER.read_text(encoding="utf-8")) == esperado, (
+        "bot.exemplo.json desatualizado: rode `VIGIA_REGERAR_FIXTURES=1 pytest "
+        "tests/test_bot_json.py` e commite o arquivo"
+    )
