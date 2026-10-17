@@ -6,12 +6,16 @@ import {
   coordenadas,
   escala,
   faixasClasse,
+  focoAposSeta,
+  indiceMaisProximo,
   marcaClasse,
   marcasEvolucao,
   maxEvolucao,
   maxPluviometro,
+  passoDaSeta,
   serieMunicipio,
   variacoesDiarias,
+  vizinhoCiclico,
   type Area,
 } from "../lib/graficos";
 import { sentido } from "../lib/texto";
@@ -53,10 +57,10 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
   const area = coords.length > 1 ? `${coords[0].x},${y(0)} ${pontos(coords)} ${coords.at(-1)!.x},${y(0)}` : "";
 
   function teclado(e: KeyboardEvent, i: number) {
-    const passo = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    const passo = passoDaSeta(e.key);
     if (!passo) return;
     e.preventDefault();
-    const j = (i + passo + municipios.length) % municipios.length;
+    const j = vizinhoCiclico(i, passo, municipios.length);
     chips.current[j]?.focus();
     aoSelecionar(municipios[j].ibge);
   }
@@ -65,14 +69,14 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
   function apontar(e: PointerEvent<SVGRectElement>) {
     const caixa = e.currentTarget.ownerSVGElement!.getBoundingClientRect();
     const x = ((e.clientX - caixa.left) / caixa.width) * largura;
-    setFoco(xs.reduce((melhor, xi, i) => (Math.abs(xi - x) < Math.abs(xs[melhor] - x) ? i : melhor), 0));
+    setFoco(indiceMaisProximo(xs, x));
   }
 
   function tecladoGrafico(e: KeyboardEvent) {
-    const passo = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    const passo = passoDaSeta(e.key);
     if (!passo) return;
     e.preventDefault();
-    setFoco((f) => (f === null ? eixo.length - 1 : Math.min(Math.max(f + passo, 0), eixo.length - 1)));
+    setFoco((f) => focoAposSeta(f, passo, eixo.length));
   }
 
   const diaFoco = foco === null ? null : eixo[foco];
