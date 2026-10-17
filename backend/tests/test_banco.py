@@ -16,6 +16,7 @@ from datetime import date, datetime, timezone
 import pytest
 
 from app.calculo.agregacao import Resultado, ResultadoDia, ResultadoMunicipio
+from app.classificacao.classes import classe as classificar
 from app.classificacao.probabilidades import Probabilidades
 from app.modelos import banco
 
@@ -183,6 +184,7 @@ def _inserir_calculo(
     calculado_em: str,
     indice: float,
     classe: int,
+    limiar_mm: float = 250,
 ) -> None:
     """Insere uma linha em `indices` direto por SQL, com literais.
 
@@ -192,8 +194,8 @@ def _inserir_calculo(
     conexao.execute(
         "INSERT INTO indices (ibge, dia_alvo, calculado_em, indice, classe, "
         "efr_mm, rtotal_mm, limiar_mm, n_membros, prob_pontuais, prob_esparsos, "
-        "prob_generalizados) VALUES (?, ?, ?, ?, ?, 0, 0, 250, 1, 0, 0, 0)",
-        (ibge, dia_alvo, calculado_em, indice, classe),
+        "prob_generalizados) VALUES (?, ?, ?, ?, ?, 0, 0, ?, 1, 0, 0, 0)",
+        (ibge, dia_alvo, calculado_em, indice, classe, limiar_mm),
     )
     conexao.commit()
 
@@ -203,7 +205,7 @@ def test_historico_pega_o_calculo_de_maior_calculado_em_do_mesmo_dia_alvo():
     _inserir_calculo(conexao, "4202404", "2026-09-30", "2026-09-30T06:00:00Z", 1.0, 4)
     _inserir_calculo(conexao, "4202404", "2026-09-30", "2026-09-30T12:00:00Z", 1.5, 5)
 
-    resultado = banco.historico(conexao, "4202404", date(2026, 10, 1))
+    resultado = banco.historico(conexao, "4202404", date(2026, 10, 1), 250)
 
     assert resultado == [banco.ItemHistorico(date(2026, 9, 30), 1.5, 5)]
 
@@ -214,7 +216,7 @@ def test_historico_ignora_dia_alvo_sem_nenhum_calculo():
     # 2026-09-29 não tem nenhuma linha: tem de ficar fora, sem buraco nem nulo
     _inserir_calculo(conexao, "4202404", "2026-09-30", "2026-09-30T06:00:00Z", 0.8, 3)
 
-    resultado = banco.historico(conexao, "4202404", date(2026, 10, 1), dias=3)
+    resultado = banco.historico(conexao, "4202404", date(2026, 10, 1), 250, dias=3)
 
     assert resultado == [
         banco.ItemHistorico(date(2026, 9, 28), 0.5, 2),
@@ -227,7 +229,7 @@ def test_historico_nao_inclui_d0():
     dia_alvo_d0 = date(2026, 10, 1)
     _inserir_calculo(conexao, "4202404", "2026-10-01", "2026-10-01T06:00:00Z", 1.0, 4)
 
-    resultado = banco.historico(conexao, "4202404", dia_alvo_d0)
+    resultado = banco.historico(conexao, "4202404", dia_alvo_d0, 250)
 
     assert resultado == []
 
@@ -237,7 +239,7 @@ def test_historico_nao_inclui_dia_futuro_ao_d0():
     dia_alvo_d0 = date(2026, 10, 1)
     _inserir_calculo(conexao, "4202404", "2026-10-02", "2026-10-01T06:00:00Z", 1.0, 4)
 
-    resultado = banco.historico(conexao, "4202404", dia_alvo_d0)
+    resultado = banco.historico(conexao, "4202404", dia_alvo_d0, 250)
 
     assert resultado == []
 
@@ -247,7 +249,7 @@ def test_historico_vai_do_mais_antigo_ao_mais_recente():
     _inserir_calculo(conexao, "4202404", "2026-09-29", "2026-09-29T06:00:00Z", 0.3, 2)
     _inserir_calculo(conexao, "4202404", "2026-09-30", "2026-09-30T06:00:00Z", 0.4, 2)
 
-    resultado = banco.historico(conexao, "4202404", date(2026, 10, 1))
+    resultado = banco.historico(conexao, "4202404", date(2026, 10, 1), 250)
 
     assert resultado == [
         banco.ItemHistorico(date(2026, 9, 29), 0.3, 2),
@@ -261,7 +263,7 @@ def test_historico_borda_d0_menos_15_entra_d0_menos_16_nao_entra():
     _inserir_calculo(conexao, "4202404", "2026-10-01", "2026-10-01T06:00:00Z", 0.1, 1)  # D0 - 15
     _inserir_calculo(conexao, "4202404", "2026-09-30", "2026-09-30T06:00:00Z", 0.2, 1)  # D0 - 16
 
-    resultado = banco.historico(conexao, "4202404", dia_alvo_d0)
+    resultado = banco.historico(conexao, "4202404", dia_alvo_d0, 250)
 
     assert resultado == [banco.ItemHistorico(date(2026, 10, 1), 0.1, 1)]
 
@@ -271,9 +273,33 @@ def test_historico_nao_mistura_municipios():
     _inserir_calculo(conexao, "4202404", "2026-09-30", "2026-09-30T06:00:00Z", 1.0, 4)
     _inserir_calculo(conexao, "4205407", "2026-09-30", "2026-09-30T06:00:00Z", 2.0, 6)
 
-    resultado = banco.historico(conexao, "4202404", date(2026, 10, 1))
+    resultado = banco.historico(conexao, "4202404", date(2026, 10, 1), 250)
 
     assert resultado == [banco.ItemHistorico(date(2026, 9, 30), 1.0, 4)]
+
+
+def test_historico_converte_linha_de_outro_limiar_para_o_limiar_atual():
+    conexao = _conexao()
+    # 0,6 com 250 mm equivale a 1,0 com 150 mm: a classe sobe de 2 para 4
+    _inserir_calculo(conexao, "4202404", "2026-09-29", "2026-09-29T06:00:00Z", 0.6, 2, limiar_mm=250)
+    _inserir_calculo(conexao, "4202404", "2026-09-30", "2026-09-30T06:00:00Z", 1.2, 4, limiar_mm=150)
+
+    resultado = banco.historico(conexao, "4202404", date(2026, 10, 1), 150)
+
+    assert [item.dia_alvo for item in resultado] == [date(2026, 9, 29), date(2026, 9, 30)]
+    assert resultado[0].indice == pytest.approx(1.0)
+    assert resultado[0].classe == classificar(1.0)
+    assert resultado[1] == banco.ItemHistorico(date(2026, 9, 30), 1.2, 4)
+
+
+def test_historico_no_mesmo_limiar_devolve_o_valor_gravado_sem_conta():
+    conexao = _conexao()
+    # 0,1 não é exato em binário: multiplicar e dividir poderia mudar o último dígito
+    _inserir_calculo(conexao, "4202404", "2026-09-30", "2026-09-30T06:00:00Z", 0.1, 1, limiar_mm=150)
+
+    resultado = banco.historico(conexao, "4202404", date(2026, 10, 1), 150)
+
+    assert resultado == [banco.ItemHistorico(date(2026, 9, 30), 0.1, 1)]
 
 
 # --- indice_atual -------------------------------------------------------------

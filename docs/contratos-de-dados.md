@@ -36,7 +36,7 @@ Gerado pelo Exportador a cada execução do pipeline e publicado por commit auto
 | `ibge`, `nome` | string | Como em `municipios.json` |
 | `limiar_mm`, `fonte_limiar`, `mv_h` | — | Parâmetros usados no cálculo |
 | `dias` | lista (D0–D3) | Resultado por dia-alvo (ver abaixo) |
-| `historico` | lista | Até 15 dias anteriores ao D0: `{dia_alvo, indice, classe}`, lidos da tabela `indices` (último cálculo de cada dia-alvo), do mais antigo para o mais recente; dia sem cálculo fica de fora (a tela mostra 7 por padrão) |
+| `historico` | lista | Até 15 dias anteriores ao D0: `{dia_alvo, indice, classe}`, lidos da tabela `indices` (último cálculo de cada dia-alvo), do mais antigo para o mais recente; dia sem cálculo fica de fora (a tela mostra 7 por padrão). Sempre no `limiar_mm` atual: um cálculo gravado com outro limiar é convertido (`indice × limiar_gravado / limiar_mm`, classe recalculada) |
 | `chuva_acum_mm` | objeto | `{"24h", "48h", "72h", "96h"}`: chuva acumulada até a última hora cheia da execução, calculada da série horária da própria execução, no ponto do município com o maior valor |
 
 **Item de `dias`**

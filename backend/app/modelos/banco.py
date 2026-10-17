@@ -21,6 +21,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from app.calculo.agregacao import Resultado
+from app.classificacao.classes import classe as classificar
 
 CAMINHO_SCHEMA = Path(__file__).resolve().parent / "schema.sql"
 
@@ -169,7 +170,11 @@ class ItemHistorico:
 
 
 def historico(
-    conexao: sqlite3.Connection, ibge: str, dia_alvo_d0: date, dias: int = 15
+    conexao: sqlite3.Connection,
+    ibge: str,
+    dia_alvo_d0: date,
+    limiar_mm: float,
+    dias: int = 15,
 ) -> list[ItemHistorico]:
     """Histórico de `ibge` nos `dias` dias-alvo anteriores a `dia_alvo_d0`.
 
@@ -178,14 +183,22 @@ def historico(
     um item por dia-alvo. A lista vem do mais antigo para o mais recente.
     `dia_alvo_d0` não entra (não é "anterior"), dia futuro a ele tampouco, e
     dia sem nenhum cálculo não aparece (não gera buraco nem linha nula).
+
+    Os itens saem no limiar atual (`limiar_mm`), para o gráfico de evolução não
+    mostrar saltos falsos quando o limiar do município muda. O limiar é um só
+    por município, então o índice é proporcional a `1 / limiar`: uma linha
+    calculada com outro limiar vira `indice × limiar_da_linha / limiar_mm`, com
+    a classe recalculada. Linha com o mesmo limiar sai como foi gravada.
+    Só a troca de limiar é tratada: mudar `mv_h` muda o EfR, que não se
+    converte por proporção.
     """
     inicio = (dia_alvo_d0 - timedelta(days=dias)).isoformat()
     fim = (dia_alvo_d0 - timedelta(days=1)).isoformat()
 
     linhas = conexao.execute(
         """
-        SELECT dia_alvo, indice, classe FROM (
-            SELECT dia_alvo, indice, classe,
+        SELECT dia_alvo, indice, classe, limiar_mm FROM (
+            SELECT dia_alvo, indice, classe, limiar_mm,
                    ROW_NUMBER() OVER (
                        PARTITION BY dia_alvo ORDER BY calculado_em DESC
                    ) AS posicao
@@ -198,10 +211,17 @@ def historico(
         (ibge, inicio, fim),
     ).fetchall()
 
-    return [
-        ItemHistorico(dia_alvo=date.fromisoformat(linha[0]), indice=linha[1], classe=linha[2])
-        for linha in linhas
-    ]
+    itens = []
+    for dia_alvo, indice, classe_gravada, limiar_da_linha in linhas:
+        if limiar_da_linha != limiar_mm:
+            indice = indice * limiar_da_linha / limiar_mm
+            classe_gravada = classificar(indice)
+        itens.append(
+            ItemHistorico(
+                dia_alvo=date.fromisoformat(dia_alvo), indice=indice, classe=classe_gravada
+            )
+        )
+    return itens
 
 
 @dataclass(frozen=True)
