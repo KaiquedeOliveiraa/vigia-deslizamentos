@@ -367,9 +367,23 @@
   bottom: 100px;
 }
 
-/* Camadas do mapa abaixo do "Agora | Simulado", que ocupa o canto superior direito. */
+/* Camadas do mapa embaixo, acima do zoom: no alto, os avisos (altura variável) as cobriam. */
 .sim .layers {
-  top: 72px;
+  top: auto;
+  bottom: 120px;
+}
+
+/* Até 1040 px a legenda aberta cobriria os botões: aqui já entra o select, no mesmo canto. */
+@media (max-width: 1040px) {
+  .sim .layers {
+    display: none;
+  }
+
+  .sim .layers-sel {
+    display: block;
+    top: auto;
+    bottom: 120px;
+  }
 }
 
 .snap {
@@ -417,12 +431,14 @@
     align-self: flex-end;
   }
 
-  /* Na linha do "Agora | Simulado", à esquerda; acima do .maphd, que cobre a largura toda. */
+  /* Na linha do "Agora | Simulado", à esquerda. Fica sob o .maphd (que tem pointer-events: none, então o
+     toque passa) e sob a legenda aberta, que o cobre em vez de ser coberta. */
   .sim .layers-sel {
     right: auto;
+    bottom: auto;
     left: 12px;
     top: 12px;
-    z-index: 6;
+    z-index: 3;
   }
 
   .aviso {

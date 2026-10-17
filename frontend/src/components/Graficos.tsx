@@ -1,4 +1,4 @@
-import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import type { T } from "../i18n";
 import { infoClasse, LIMIAR_ALERTA } from "../lib/classes";
 import { formatarData, formatarIndice, formatarMm, formatarNumero, formatarVariacao } from "../lib/formato";
@@ -40,6 +40,7 @@ interface PropsEvolucao {
  * Linha-guia com o valor de todos os municípios no dia apontado (mouse, ou ←/→ com o gráfico em foco). */
 export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsEvolucao) {
   const chips = useRef<(HTMLButtonElement | null)[]>([]);
+  const painel = useRef<HTMLDivElement>(null);
   const [foco, setFoco] = useState<number | null>(null);
   const { ibge } = destaque;
   const series = municipios.map((m) => ({ m, serie: serieMunicipio(m, eixo) }));
@@ -55,6 +56,12 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
   const ultimo = coords.at(-1);
   const deltaUltimo = deltas.at(-1) ?? null;
   const area = coords.length > 1 ? `${coords[0].x},${y(0)} ${pontos(coords)} ${coords.at(-1)!.x},${y(0)}` : "";
+
+  // No celular o gráfico rola na horizontal: abre no fim, com o D0 à vista, e não nos dias mais antigos.
+  useLayoutEffect(() => {
+    const el = painel.current;
+    if (el) el.scrollLeft = el.scrollWidth;
+  }, [eixo.length]);
 
   function teclado(e: KeyboardEvent, i: number) {
     const passo = passoDaSeta(e.key);
@@ -116,6 +123,7 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
         ))}
       </div>
       <div
+        ref={painel}
         className="evo-svg"
         id="evo-painel"
         role="tabpanel"
