@@ -268,9 +268,12 @@
   align-items: flex-start;
   gap: 6px;
   z-index: 4;
+  /* Janela baixa: a legenda aberta para abaixo do zoom (16 + 88 + 16 px); o cartão rola. */
+  max-height: calc(100% - 120px - 120px);
 }
 
 .leg .lockb {
+  flex: none;
   width: 32px;
   height: 32px;
   display: grid;
@@ -318,6 +321,8 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-float);
+  min-height: 0;
+  overflow-y: auto;
 }
 
 [data-theme="contraste"] .leg .card {
@@ -663,6 +668,7 @@
 
   .leg {
     bottom: 76px;
+    max-height: calc(100% - 76px - 120px);
   }
 }
 

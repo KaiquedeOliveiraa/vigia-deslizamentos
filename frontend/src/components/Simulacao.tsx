@@ -209,7 +209,7 @@ export default function Simulacao({ lang }: { lang: Idioma }) {
         </p>
       </aside>
       <Mapa ref={mapa} lang={lang} valores={valores} selecionado={ibge} onSelecionar={escolher}>
-        <div className="maphd">
+        <div className="maphd" ref={medirTopo}>
           {r && (
             <div className="avisos">
               {r.avisos.map((a) => (
@@ -234,6 +234,14 @@ export default function Simulacao({ lang }: { lang: Idioma }) {
       </Mapa>
     </div>
   );
+}
+
+/** Altura do topo do mapa (avisos e "Agora | Simulado") em `--maphd-h`, para a legenda aberta parar abaixo dele. */
+function medirTopo(el: HTMLDivElement | null) {
+  if (!el) return;
+  const obs = new ResizeObserver(() => el.parentElement?.style.setProperty("--maphd-h", `${el.offsetHeight}px`));
+  obs.observe(el);
+  return () => obs.disconnect();
 }
 
 function CaixaAviso({ tipo, titulo, texto }: Aviso) {

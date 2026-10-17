@@ -365,6 +365,13 @@
 
 .sim .leg {
   bottom: 100px;
+  /* Para abaixo do topo do mapa (16 px + avisos, medidos em Simulacao.tsx, + 12 px). Sem espaço, fica com
+     200 px e, aberta, passa por cima dos avisos: senão o cartão some e os botões dela ficam sob o aviso. */
+  max-height: max(200px, calc(100% - 100px - 28px - var(--maphd-h, 72px)));
+}
+
+.sim .leg.open {
+  z-index: 6;
 }
 
 /* Camadas do mapa embaixo, acima do zoom: no alto, os avisos (altura variável) as cobriam. */
@@ -449,5 +456,6 @@
 
   .sim .leg {
     bottom: 90px;
+    max-height: max(200px, calc(100% - 90px - 24px - var(--maphd-h, 130px)));
   }
 }

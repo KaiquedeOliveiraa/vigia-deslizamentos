@@ -101,6 +101,7 @@ astro-island {
   border-radius: var(--radius-md);
   background: var(--nav-800);
   white-space: nowrap;
+  min-width: 0;
 }
 
 .region .lbl {
@@ -110,10 +111,14 @@ astro-island {
 .region strong {
   font-weight: 600;
   font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* Quem cede espaço é a região (reticências), não o botão. */
 .hdr .tghdr {
   margin-left: auto;
+  flex-shrink: 0;
 }
 
 .hdr .status {
@@ -781,6 +786,24 @@ astro-island {
 }
 
 /* ---------- celular ---------- */
+/* Entre 901 e 1220 px os itens não cabem numa linha: sai a região (como no celular) e, mais estreito, o
+   texto do Telegram. Antes o carimbo passava da tela e o botão encolhia sob o próprio texto. */
+@media (max-width: 1220px) {
+  .hdr .region {
+    display: none;
+  }
+}
+
+@media (max-width: 1040px) {
+  .hdr .tghdr > span:not(.tgdisc) {
+    display: none;
+  }
+
+  .hbtn.tghdr {
+    padding: 0;
+  }
+}
+
 @media (max-width: 900px) {
   .app {
     grid-template-columns: minmax(0, 1fr);
@@ -799,14 +822,8 @@ astro-island {
     padding: 8px 12px;
   }
 
-  .hdr .region,
-  .hdr .tghdr > span:not(.tgdisc),
   .brand small {
     display: none;
-  }
-
-  .hbtn.tghdr {
-    padding: 0;
   }
 
   /* RN11: o carimbo continua visível, numa segunda linha. */
