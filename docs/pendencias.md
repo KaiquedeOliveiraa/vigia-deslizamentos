@@ -32,15 +32,15 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 - ⚪ **Contatos:** o endereço de Ibirama foi corrigido (o antigo era de uma escola) e segue com `verificado: true` em `frontend/public/data/contatos.json`. Os outros cinco municípios têm dados preliminares, tirados de fontes oficiais, com `verificado: false`: falta confirmar por telefone com cada prefeitura (RN09), completar os campos `null` e trocar para `true`.
 - ⚪ **README:** completar a citação da RADIAN ("autoria e ano a completar"); o repositório da UFSC exige VPN.
-- ⚪ **Fixture de exemplo** `frontend/src/fixtures/indices.exemplo.json` ainda usa limiar 250 mm e a fonte antiga.
+- ~~⚪ **Fixture de exemplo**~~ **Resolvida:** `indices.exemplo.json` usa o limiar de 150 mm e a fonte nova, com índice e classe recalculados.
 
 ## Frontend
 
 - ⚪ **Conferência visual dos gráficos novos da tela Dados** (linha-guia, dica, mini-gráficos, pluviômetro) com histórico de vários dias. Também: rótulo do último ponto perto da linha de ALERTA e seletor de camadas da Simulação com avisos abertos em telas largas.
-- ⚪ **Período maior que o histórico:** com menos dias de histórico que o período escolhido (5/7/15), o eixo mostra dias vazios. Avisar "histórico de N dias" ou desabilitar o período.
-- ⚪ **Contorno do município sem classe nos fundos detalhados:** `--cor-mun` vira `var(--surface-000)` (`MapaLeaflet.tsx`), e no tema escuro sobre o Satélite o contorno fica quase invisível.
+- ~~⚪ **Período maior que o histórico**~~ **Resolvida:** a tela Dados avisa "Por enquanto há histórico de N dias" quando o período escolhido é maior (`diasComDados` em `graficos.ts`).
+- ~~⚪ **Contorno do município sem classe nos fundos detalhados**~~ **Resolvida:** sem classe, o contorno usa `--muted`, que contrasta nos dois temas; o preenchimento segue `--surface-000`.
 - ⚪ **Seletor de camadas da Simulação some abaixo de 900 px** (regra geral de `.layers` em `mapa.css`), como já acontecia no Monitoramento. Avaliar uma versão para celular.
-- ⚪ **Altura fixa do iframe da Defesa Civil** (760 px em `sc.css`): trocar por `min(80vh, 760px)` para não cortar em notebooks pequenos.
+- ~~⚪ **Altura fixa do iframe da Defesa Civil**~~ **Resolvida:** `height: min(80vh, 760px)` em `sc.css`.
 - ~~⚪ **Rótulo "hoje" das previsões pela posição**~~ **Resolvida:** o rótulo (e o anúncio para leitor de tela) agora compara o `dia_alvo` com a data de Brasília; com o `indices.json` atrasado, o dia passado aparece como "ontem" ou "-Nd", e não como "hoje".
 
 ## Backend
@@ -63,4 +63,4 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 ## Documentação
 
-- ⚪ Documentar no `backend/README.md` o `scripts.rodar_local` e o `frontend/.env.development.local` com `PUBLIC_DADOS_URL=data/`, para ver dados reais no `npm run dev` (por padrão o dev mostra os dados de exemplo).
+- ~~⚪ Documentar o `scripts.rodar_local`~~ **Resolvida:** seção "Execução local, sem bot e sem publicar" no `backend/README.md`, com o `frontend/.env.development.local`.

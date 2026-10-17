@@ -103,7 +103,7 @@ describe("valoresDoDia", () => {
   it("índice de cada município no dia d; sem dados → null", () => {
     const indices = { ...(exemplo as Indices), municipios_sem_dados: ["4205100"] };
     const v = valoresDoDia(indices, 1);
-    expect(v["4206900"]?.indice).toBeCloseTo(0.8812);
+    expect(v["4206900"]?.indice).toBeCloseTo(1.4687);
     expect(v["4205100"]).toBeNull();
     const dia = indices.municipios.find((m) => m.ibge === "4206900")?.dias.find((x) => x.d === 0);
     expect(valoresDoDia(indices, 0)["4206900"]).toEqual({ indice: dia?.indice, classe: dia?.classe });

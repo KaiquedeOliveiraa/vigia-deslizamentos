@@ -215,6 +215,27 @@ reiniciar a cada 10 s só poluiria o journal.
 > sudo systemctl start vigia
 > ```
 
+### Execução local, sem bot e sem publicar
+
+```bash
+.venv/bin/python -m scripts.rodar_local
+```
+
+Roda coleta, cálculo, gravação no SQLite e conferência com o INMET, mas não
+envia avisos (só os conta no log) nem faz commit: grava o `indices.json` em
+`frontend/public/data/`. `TELEGRAM_TOKEN` e `GITHUB_TOKEN_DADOS` precisam existir
+no `.env`, mas qualquer valor serve.
+
+Para o `npm run dev` do site ler esse arquivo em vez dos dados de exemplo, crie
+`frontend/.env.development.local` (já ignorado pelo git) com:
+
+```bash
+PUBLIC_DADOS_URL=data/
+```
+
+> Esse `indices.json` local ocupa o mesmo caminho do que o pipeline publica na
+> `main`. Não o commite, e apague a cópia local antes de um `git pull`.
+
 ### Gerar o `estacoes.json`
 
 ```bash

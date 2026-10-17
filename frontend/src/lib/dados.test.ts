@@ -22,7 +22,7 @@ describe("lerIndices", () => {
   it("JSON válido → objeto tipado", () => {
     const r = lerIndices(indices);
     expect(r.ok).toBe(true);
-    if (r.ok) expect(r.dados.municipios[0].dias[0].indice).toBeCloseTo(1.3448);
+    if (r.ok) expect(r.dados.municipios[0].dias[0].indice).toBeCloseTo(2.2413);
   });
 
   it("schema_version desconhecido → erro, sem dados parciais", () => {
