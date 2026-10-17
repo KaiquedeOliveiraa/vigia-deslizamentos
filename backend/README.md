@@ -266,6 +266,14 @@ Os testes marcados `rede` ficam fora da suíte padrão (`addopts` em
 `pyproject.toml`). Todo o resto roda com fixtures de respostas reais e dublês de
 cliente HTTP: nenhum teste da suíte padrão abre conexão.
 
+`bot-worker/test/fixtures/bot.exemplo.json` é gerado a partir de
+`montar_bot_json` e lido pelos testes do Worker. Ao mudar o `bot.json`, regenere
+e commite o arquivo:
+
+```bash
+VIGIA_REGERAR_FIXTURES=1 .venv/bin/python -m pytest tests/test_bot_json.py
+```
+
 ## Implantação em servidor próprio (systemd)
 
 Opcional: a produção atual roda no Actions e no Worker. Esta é a alternativa com

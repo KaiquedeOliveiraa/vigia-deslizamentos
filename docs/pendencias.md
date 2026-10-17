@@ -8,7 +8,7 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 - 🔴 **Bot do Telegram.** Bot criado no @BotFather como `@VigiaDeslizamentosBot`, o mesmo nome do padrão de `PUBLIC_TELEGRAM_BOT`, então o link do site já aponta para ele. Falta o operador conferir o `TELEGRAM_TOKEN` nos secrets do GitHub e do Worker (e o `TELEGRAM_WEBHOOK_SEGREDO` no Worker). Sem token o processo sai com código 2; com token inválido, código 3.
 - ⚪ **Token do INMET + Tarefa 12.** Pedir o token por e-mail a `cadastro.act@inmet.gov.br` e preencher `INMET_TOKEN`. Com ele, confirmar com resposta real os campos `DT_MEDICAO`, `HR_MEDICAO`, `CHUVA` e o fuso UTC, que ainda são suposição ([ensemble.md §10](decisoes/ensemble.md)). Sem o token o sistema roda; só a conferência de chuva fica de fora.
-- ⚪ **Secret `TOKEN_DADOS` (PAT `vigia_publicacao`): renovar antes de expirar** — conferir a data em github.com/settings/personal-access-tokens; sem ele a publicação do `indices.json` falha com 401/403 e o run continua verde. Renovar antes de 03/01/2027.
+- ⚪ **Secret `TOKEN_DADOS` (PAT `vigia_publicacao`): renovar antes de expirar** — conferir a data em github.com/settings/personal-access-tokens; sem ele a publicação do `indices.json` falha com 401/403; o run continua verde, mas o erro aparece como aviso no resumo. Renovar antes de 03/01/2027.
 
 ## Autorizações externas
 
@@ -25,7 +25,7 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 - 🔴 **Validar o limiar provisório de 150 mm.** Foi reduzido de 250 mm para a simulação mostrar mudança de classe, mas ele muda o índice real (≈ +67%) e a frequência de avisos do bot. A equipe decidiu mantê-lo e confirmar o valor com o responsável técnico antes do deploy.
 - 🔴 **Validar os pesos fixos do ensemble** ([ensemble.md §5](decisoes/ensemble.md)), que não são calibrados.
-- ⚪ **Bancos já existentes:** o histórico gravado com o limiar de 250 mm se mistura com o novo e cria saltos falsos no gráfico de evolução. Limpar ou recalcular a tabela `indices` ao trocar o limiar.
+- ~~⚪ **Bancos já existentes**~~ **Resolvida:** `banco.historico()` converte cada cálculo para o limiar atual (`indice × limiar_gravado / limiar_mm`, classe recalculada), sem alterar o banco. Vale para qualquer troca futura de limiar; troca de `mv_h` não é coberta.
 - ⚪ **Atraso de disponibilização dos modelos** foi medido uma vez só. Acompanhar por alguns dias e ajustar os horários do agendador se preciso.
 
 ## Dados e documentação
@@ -36,29 +36,29 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 ## Frontend
 
-- ⚪ **Conferência visual dos gráficos novos da tela Dados** (linha-guia, dica, mini-gráficos, pluviômetro) com histórico de vários dias. Também: rótulo do último ponto perto da linha de ALERTA e seletor de camadas da Simulação com avisos abertos em telas largas.
+- ~~⚪ **Conferência visual dos gráficos novos da tela Dados**~~ **Resolvida:** conferido com 15 dias em 1366 e 375 px, claro e escuro. Duas correções: no celular a Evolução abre rolada até o D0, e as camadas da Simulação foram para baixo, acima do zoom, porque os avisos as cobriam entre 920 e ~1600 px (até 1040 px viram o select, para a legenda aberta não cobri-las).
 - ~~⚪ **Período maior que o histórico**~~ **Resolvida:** a tela Dados avisa "Por enquanto há histórico de N dias" quando o período escolhido é maior (`diasComDados` em `graficos.ts`).
 - ~~⚪ **Contorno do município sem classe nos fundos detalhados**~~ **Resolvida:** sem classe, o contorno usa `--muted`, que contrasta nos dois temas; o preenchimento segue `--surface-000`.
-- ⚪ **Seletor de camadas da Simulação some abaixo de 900 px** (regra geral de `.layers` em `mapa.css`), como já acontecia no Monitoramento. Avaliar uma versão para celular.
+- ~~⚪ **Seletor de camadas some abaixo de 900 px**~~ **Resolvida:** no Monitoramento e na Simulação os botões viram um `<select>` nativo abaixo de 900 px.
 - ~~⚪ **Altura fixa do iframe da Defesa Civil**~~ **Resolvida:** `height: min(80vh, 760px)` em `sc.css`.
 - ~~⚪ **Rótulo "hoje" das previsões pela posição**~~ **Resolvida:** o rótulo (e o anúncio para leitor de tela) agora compara o `dia_alvo` com a data de Brasília; com o `indices.json` atrasado, o dia passado aparece como "ontem" ou "-Nd", e não como "hoje".
 
 ## Backend
 
-- 🔴 **Remover o comando `/simular` do bot antes do deploy.** Existe só para demonstração (liga com `VIGIA_SIMULACAO=1`). Apagar `app/bot/simulacao.py`, `tests/test_simulacao.py`, o `comando_simular` e o registro dele em `app/bot/bot.py`, a variável `VIGIA_SIMULACAO` (`app/config.py`, `.env.exemplo`, `backend/README.md`, a variável do workflow `pipeline.yml`), o campo `simulacao` do `bot.json` (`app/exportacao/bot_json.py` e o contrato em `docs/contratos-de-dados.md`) e a parte do `/simular` no Worker (`bot-worker/`). Opcional: os campos de chuva e horário do `Aviso` (`app/bot/regra_aviso.py`) aceitam `None` só por causa dela. `faixas_das_classes` fica: a barra de cores das mensagens reais também a usa.
+- 🔴 **Remover o comando `/simular` do bot antes do deploy.** Existe só para demonstração (liga com `VIGIA_SIMULACAO=1`). Apagar `app/bot/simulacao.py`, `tests/test_simulacao.py`, o `comando_simular` e o registro dele em `app/bot/bot.py`, a variável `VIGIA_SIMULACAO` (`app/config.py`, `.env.exemplo`, `backend/README.md`, a variável do workflow `pipeline.yml`), o campo `simulacao` do `bot.json` (`app/exportacao/bot_json.py`, o contrato em `docs/contratos-de-dados.md` e o `simulacao=True` de `test_fixture_do_worker_igual_ao_montar_bot_json`, regenerando `bot-worker/test/fixtures/bot.exemplo.json` com `VIGIA_REGERAR_FIXTURES=1`) e a parte do `/simular` no Worker (`bot-worker/`). Opcional: os campos de chuva e horário do `Aviso` (`app/bot/regra_aviso.py`) aceitam `None` só por causa dela. `faixas_das_classes` fica: a barra de cores das mensagens reais também a usa.
 
 - ⚪ **`rodar_local.py` grava em `frontend/public/data/indices.json`**, o mesmo caminho que o bot publica na `main`. O arquivo não pode ir para o `.gitignore`; cuidado para não commitá-lo, e apagar a cópia local antes de um `git pull` depois da primeira publicação.
-- ⚪ **Recálculo do histórico quando o `limiar_mm` muda:** criar um comando ou aviso para não misturar limiares no gráfico de evolução.
+- ~~⚪ **Recálculo do histórico quando o `limiar_mm` muda**~~ **Resolvida:** a conversão é automática na leitura (ver "Bancos já existentes").
 - ⚪ **Conferência de chuva com as estações da Defesa Civil**, no lugar ou ao lado do INMET (depende da autorização RN10).
 - ~~🔴 **Worker aceitava cabeçalho vazio quando o segredo não estava configurado**~~ **Resolvida:** sem `TELEGRAM_WEBHOOK_SEGREDO` (ou com ele vazio), `segredoConfere` recusa toda requisição, em vez de aceitar `X-Telegram-Bot-Api-Secret-Token` vazio.
-- ⚪ **Execução com o Worker indisponível termina verde:** o erro fica só no log. Avaliar um código de saída próprio ou um `::warning::` no workflow para avisar o operador.
-- ⚪ **Fixture de contrato do `bot.json`:** gerar o exemplo dos testes do Worker a partir de `montar_bot_json`, para um campo renomeado falhar nos dois lados.
+- ~~⚪ **Execução com o Worker indisponível termina verde**~~ **Resolvida:** a etapa "Avisar erros registrados no log" do `pipeline.yml` transforma as linhas ERROR do log em avisos no resumo do run. O job continua verde de propósito, para o estado ser gravado.
+- ~~⚪ **Fixture de contrato do `bot.json`**~~ **Resolvida:** `bot-worker/test/fixtures/bot.exemplo.json` sai de `montar_bot_json` (teste `test_fixture_do_worker_igual_ao_montar_bot_json`); o Worker confere o formato no `tsc` e nos testes. Para regenerar: `VIGIA_REGERAR_FIXTURES=1 pytest tests/test_bot_json.py`.
 
 ## Qualidade e testes
 
 - ~~⚪ **Workflow `backend.yml`**~~ **Resolvida:** o job `backend` do `ci.yml` roda o `pytest -W error`.
 - ⚪ **axe-core no `pages.yml`** sobre o `dist/`, como o README exige antes de cada publicação.
-- ⚪ **Teste de componente da Evolução:** dia mais próximo do ponteiro e navegação por ←/→ não têm teste.
+- ~~⚪ **Teste de componente da Evolução**~~ **Resolvida:** ponteiro e setas viraram funções puras em `lib/graficos.ts` (`indiceMaisProximo`, `focoAposSeta`, `vizinhoCiclico`, `passoDaSeta`), com teste.
 - ~~⚪ **O PR não roda CI**~~ **Resolvida:** o `ci.yml` roda frontend, backend e Worker em todo PR para a `main`.
 
 ## Documentação
