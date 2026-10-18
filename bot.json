@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gerado_em": "2026-10-18T13:11:59Z",
+  "gerado_em": "2026-10-18T18:02:35Z",
   "municipios": [
     {
       "ibge": "4205100",
@@ -53,12 +53,12 @@
   "status": {
     "cabecalho": "<b>Situação dos seus municípios</b>\n\n",
     "blocos": {
-      "4205100": "ℹ️ <b>Dona Emma</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,06</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 10:11",
-      "4206900": "ℹ️ <b>Ibirama</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,08</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 10:11",
-      "4209151": "ℹ️ <b>José Boiteux</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,08</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 10:11",
-      "4214003": "ℹ️ <b>Presidente Getúlio</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,06</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 10:11",
-      "4219358": "ℹ️ <b>Vitor Meireles</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,07</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 10:11",
-      "4219408": "ℹ️ <b>Witmarsum</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,08</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 10:11"
+      "4205100": "ℹ️ <b>Dona Emma</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,06</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 15:02",
+      "4206900": "ℹ️ <b>Ibirama</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,08</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 15:02",
+      "4209151": "ℹ️ <b>José Boiteux</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,08</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 15:02",
+      "4214003": "ℹ️ <b>Presidente Getúlio</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,06</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 15:02",
+      "4219358": "ℹ️ <b>Vitor Meireles</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,07</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 15:02",
+      "4219408": "ℹ️ <b>Witmarsum</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,08</b>\n📅 Válido para 18/10/2026 · cálculo de 18/10/2026 15:02"
     },
     "separador": "\n\n",
     "rodape": "\n\n🗺 Ver no mapa: https://kaiquedeoliveiraa.github.io/vigia-deslizamentos/\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
