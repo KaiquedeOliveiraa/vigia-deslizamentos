@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "gerado_em": "2026-10-18T13:11:59.129764+00:00",
+  "gerado_em": "2026-10-18T18:02:35.971455+00:00",
   "dia_alvo_d0": "2026-10-18",
   "municipios_sem_dados": [],
   "municipios": [
@@ -14,11 +14,11 @@
         {
           "dia_alvo": "2026-10-18",
           "d": 0,
-          "indice": 0.056884725202830444,
+          "indice": 0.05688472520283046,
           "classe": 1,
-          "efr_mm": 8.532708780424565,
+          "efr_mm": 8.532708780424567,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -32,7 +32,7 @@
           "classe": 1,
           "efr_mm": 4.246763836023921,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -44,9 +44,9 @@
           "d": 2,
           "indice": 0.013986919979671556,
           "classe": 1,
-          "efr_mm": 2.0980379969507332,
+          "efr_mm": 2.0980379969507337,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -56,11 +56,11 @@
         {
           "dia_alvo": "2026-10-21",
           "d": 3,
-          "indice": 0.012597911448208642,
+          "indice": 0.012430757486277713,
           "classe": 1,
           "efr_mm": 0.9962993058108038,
-          "rtotal_mm": 0.8933874114204924,
-          "n_membros": 4,
+          "rtotal_mm": 0.8683143171308533,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -87,9 +87,9 @@
       ],
       "chuva_acum_mm": {
         "24h": 0.0,
-        "48h": 2.8000000000000003,
-        "72h": 17.3,
-        "96h": 37.4
+        "48h": 1.8,
+        "72h": 16.6,
+        "96h": 36.9
       }
     },
     {
@@ -104,9 +104,9 @@
           "d": 0,
           "indice": 0.08233681032459912,
           "classe": 1,
-          "efr_mm": 12.350521548689866,
+          "efr_mm": 12.350521548689867,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -118,9 +118,9 @@
           "d": 1,
           "indice": 0.04099803428003966,
           "classe": 1,
-          "efr_mm": 6.149705142005948,
+          "efr_mm": 6.149705142005949,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -134,7 +134,7 @@
           "classe": 1,
           "efr_mm": 3.0456408190498525,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -144,11 +144,11 @@
         {
           "dia_alvo": "2026-10-21",
           "d": 3,
-          "indice": 0.013786233910994677,
+          "indice": 0.013387029176800649,
           "classe": 1,
-          "efr_mm": 1.4712413809389555,
-          "rtotal_mm": 0.5966937057102462,
-          "n_membros": 4,
+          "efr_mm": 1.4712413809389553,
+          "rtotal_mm": 0.5368129955811418,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -175,9 +175,9 @@
       ],
       "chuva_acum_mm": {
         "24h": 0.0,
-        "48h": 2.4,
-        "72h": 18.1,
-        "96h": 67.5
+        "48h": 1.3,
+        "72h": 16.4,
+        "96h": 67.4
       }
     },
     {
@@ -190,11 +190,11 @@
         {
           "dia_alvo": "2026-10-18",
           "d": 0,
-          "indice": 0.07840839316898807,
+          "indice": 0.07840839316898805,
           "classe": 1,
           "efr_mm": 11.761258975348209,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -204,11 +204,11 @@
         {
           "dia_alvo": "2026-10-19",
           "d": 1,
-          "indice": 0.03907437901057078,
+          "indice": 0.03907437901057079,
           "classe": 1,
           "efr_mm": 5.861156851585618,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -222,7 +222,7 @@
           "classe": 1,
           "efr_mm": 2.9054971736513617,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -232,11 +232,11 @@
         {
           "dia_alvo": "2026-10-21",
           "d": 3,
-          "indice": 0.015632196918634277,
+          "indice": 0.013789569052302827,
           "classe": 1,
           "efr_mm": 1.3974652036988555,
-          "rtotal_mm": 0.9473643340962865,
-          "n_membros": 4,
+          "rtotal_mm": 0.6709701541465685,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -263,9 +263,9 @@
       ],
       "chuva_acum_mm": {
         "24h": 0.0,
-        "48h": 6.0,
-        "72h": 26.0,
-        "96h": 48.9
+        "48h": 3.5,
+        "72h": 24.8,
+        "96h": 47.7
       }
     },
     {
@@ -278,11 +278,11 @@
         {
           "dia_alvo": "2026-10-18",
           "d": 0,
-          "indice": 0.06031881943092329,
+          "indice": 0.0603188194309233,
           "classe": 1,
-          "efr_mm": 9.047822914638495,
+          "efr_mm": 9.047822914638493,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -296,7 +296,7 @@
           "classe": 1,
           "efr_mm": 4.503480004121606,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -306,11 +306,11 @@
         {
           "dia_alvo": "2026-10-20",
           "d": 2,
-          "indice": 0.014837052219501478,
+          "indice": 0.01483705221950148,
           "classe": 1,
-          "efr_mm": 2.2255578329252215,
+          "efr_mm": 2.225557832925222,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -320,11 +320,11 @@
         {
           "dia_alvo": "2026-10-21",
           "d": 3,
-          "indice": 0.008473954874339294,
+          "indice": 0.012102473204470039,
           "classe": 1,
           "efr_mm": 1.0654631613302232,
-          "rtotal_mm": 0.2056300698206712,
-          "n_membros": 4,
+          "rtotal_mm": 0.7499078193402825,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -351,9 +351,9 @@
       ],
       "chuva_acum_mm": {
         "24h": 0.0,
-        "48h": 3.5,
-        "72h": 17.8,
-        "96h": 40.6
+        "48h": 2.8000000000000003,
+        "72h": 16.7,
+        "96h": 40.5
       }
     },
     {
@@ -368,9 +368,9 @@
           "d": 0,
           "indice": 0.06542593770240357,
           "classe": 1,
-          "efr_mm": 9.813890655360533,
+          "efr_mm": 9.813890655360535,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -382,9 +382,9 @@
           "d": 1,
           "indice": 0.03258627213474726,
           "classe": 1,
-          "efr_mm": 4.88794082021209,
+          "efr_mm": 4.887940820212089,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -394,11 +394,11 @@
         {
           "dia_alvo": "2026-10-20",
           "d": 2,
-          "indice": 0.016143410020250295,
+          "indice": 0.0161434100202503,
           "classe": 1,
-          "efr_mm": 2.4215115030375443,
+          "efr_mm": 2.4215115030375447,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -408,11 +408,11 @@
         {
           "dia_alvo": "2026-10-21",
           "d": 3,
-          "indice": 0.014706029629436266,
+          "indice": 0.01343729525205776,
           "classe": 1,
-          "efr_mm": 1.147279970677811,
-          "rtotal_mm": 1.058624473737629,
-          "n_membros": 4,
+          "efr_mm": 1.1472799706778112,
+          "rtotal_mm": 0.8683143171308533,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -439,9 +439,9 @@
       ],
       "chuva_acum_mm": {
         "24h": 0.0,
-        "48h": 2.2,
-        "72h": 20.1,
-        "96h": 44.1
+        "48h": 0.7,
+        "72h": 19.2,
+        "96h": 42.6
       }
     },
     {
@@ -458,7 +458,7 @@
           "classe": 1,
           "efr_mm": 11.711239766342548,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -472,7 +472,7 @@
           "classe": 1,
           "efr_mm": 5.83109483678438,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -482,11 +482,11 @@
         {
           "dia_alvo": "2026-10-20",
           "d": 2,
-          "indice": 0.019243398044835623,
+          "indice": 0.01924339804483562,
           "classe": 1,
           "efr_mm": 2.8865097067253433,
           "rtotal_mm": 0.0,
-          "n_membros": 4,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -496,11 +496,11 @@
         {
           "dia_alvo": "2026-10-21",
           "d": 3,
-          "indice": 0.014577626892019574,
+          "indice": 0.015302731348596553,
           "classe": 1,
-          "efr_mm": 1.3876265525617726,
-          "rtotal_mm": 0.7990174812411635,
-          "n_membros": 4,
+          "efr_mm": 1.3876265525617728,
+          "rtotal_mm": 0.9077831497277103,
+          "n_membros": 5,
           "prob": {
             "pontuais": 0.0,
             "esparsos": 0.0,
@@ -527,9 +527,9 @@
       ],
       "chuva_acum_mm": {
         "24h": 0.0,
-        "48h": 4.7,
-        "72h": 27.9,
-        "96h": 49.9
+        "48h": 1.5,
+        "72h": 26.2,
+        "96h": 49.0
       }
     }
   ]
