@@ -176,8 +176,8 @@
   .est .mapwrap {
     flex: none;
     height: 62vh;
-    height: 62dvh;
-    min-height: 380px;
+    /* Cabe na área visível do conteúdo (container em estrutura.css): controles do mapa à vista. */
+    height: max(150px, min(62dvh, 100cqh));
   }
 
   .est .side.r {

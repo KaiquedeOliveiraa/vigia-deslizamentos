@@ -202,6 +202,7 @@ export default function Simulacao({ lang }: { lang: Idioma }) {
           </button>
         </div>
         {r && <Resultado t={t} atual={r.d0} simulado={r.s} efr={r.d0.efr_mm} efrSimulada={r.s.chuva_efetiva_mm} limiar={r.m.limiar_mm} />}
+        {r && <Avisos lista={r.avisos} onde="no-painel" />}
         <p className="disc">
           {t("Simulação com a mesma equação do índice: (chuva efetiva + chuva informada) ÷ limiar. Não altera os dados reais e não dispara alertas.")}{" "}
           {t("Sistema de")} <b>{t("apoio à decisão")}</b>
@@ -210,13 +211,7 @@ export default function Simulacao({ lang }: { lang: Idioma }) {
       </aside>
       <Mapa ref={mapa} lang={lang} valores={valores} selecionado={ibge} onSelecionar={escolher}>
         <div className="maphd" ref={medirTopo}>
-          {r && (
-            <div className="avisos">
-              {r.avisos.map((a) => (
-                <CaixaAviso key={a.titulo} {...a} />
-              ))}
-            </div>
-          )}
+          {r && <Avisos lista={r.avisos} onde="no-mapa" />}
           <div className="seg" role="group" aria-label={t("Mostrar no mapa")}>
             <button type="button" aria-pressed={ver === "agora"} onClick={() => setVer("agora")}>
               {t("Agora")}
@@ -242,6 +237,17 @@ function medirTopo(el: HTMLDivElement | null) {
   const obs = new ResizeObserver(() => el.parentElement?.style.setProperty("--maphd-h", `${el.offsetHeight}px`));
   obs.observe(el);
   return () => obs.disconnect();
+}
+
+/** Os avisos ficam sobre o mapa; abaixo de 900 px, no painel (simulacao.css): no mapa pequeno cobriam quase tudo. */
+function Avisos({ lista, onde }: { lista: Aviso[]; onde: "no-mapa" | "no-painel" }) {
+  return (
+    <div className={`avisos ${onde}`}>
+      {lista.map((a) => (
+        <CaixaAviso key={a.titulo} {...a} />
+      ))}
+    </div>
+  );
 }
 
 function CaixaAviso({ tipo, titulo, texto }: Aviso) {

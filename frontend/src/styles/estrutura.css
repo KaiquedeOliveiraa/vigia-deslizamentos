@@ -17,6 +17,10 @@ astro-island {
   grid-row: 3;
   min-height: 0;
   overflow: auto;
+  /* relative: textos .sr-only (absolute) ficam presos aqui, senão esticam a página (Contatos em janela baixa).
+     isolate: controles do mapa (busca, z 6) não passam por cima do rail expandido. */
+  position: relative;
+  isolation: isolate;
 }
 
 #conteudo:focus {
@@ -398,6 +402,21 @@ astro-island {
   padding: 10px 0;
 }
 
+/* Janela baixa (notebook com zoom): itens menores para o rail não esticar a página. */
+@media (min-width: 901px) and (max-height: 560px) {
+  .rail .navlist {
+    padding: 4px 0;
+  }
+
+  .rail .item {
+    height: 44px;
+  }
+
+  .rail .foot {
+    padding: 4px 0;
+  }
+}
+
 /* ---------- painéis laterais ---------- */
 .side {
   background: var(--surface-000);
@@ -508,12 +527,20 @@ astro-island {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 }
 
+/* Quem rola é o conteúdo: o X (absolute no <dialog>) fica visível em telas baixas. */
+.dlg[open] {
+  display: flex;
+  overflow: hidden;
+}
+
 .dlg::backdrop {
   background: rgba(6, 20, 34, 0.6);
 }
 
 .dlg-box {
-  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
 }
@@ -786,9 +813,9 @@ astro-island {
 }
 
 /* ---------- celular ---------- */
-/* Entre 901 e 1220 px os itens não cabem numa linha: sai a região (como no celular) e, mais estreito, o
+/* Entre 901 e 1260 px os itens não cabem numa linha: sai a região (como no celular) e, mais estreito, o
    texto do Telegram. Antes o carimbo passava da tela e o botão encolhia sob o próprio texto. */
-@media (max-width: 1220px) {
+@media (max-width: 1260px) {
   .hdr .region {
     display: none;
   }
@@ -826,10 +853,9 @@ astro-island {
     display: none;
   }
 
-  /* RN11: o carimbo continua visível, numa segunda linha. */
-  .hdr .status {
-    flex-basis: 100%;
-    white-space: normal;
+  /* Os mapas medem a área visível do conteúdo (100cqh), já sem cabeçalho, aviso de dados e barra inferior. */
+  #conteudo {
+    container-type: size;
   }
 
   .faixa-aviso {
@@ -900,8 +926,17 @@ astro-island {
   }
 }
 
+/* RN11: abaixo de 680 px o carimbo continua visível, numa segunda linha. */
+@media (max-width: 680px) {
+  .hdr .status {
+    flex-basis: 100%;
+    white-space: normal;
+  }
+}
+
 @media (max-width: 760px) {
-  .dlg {
+  .dlg,
+  .dlg.acc {
     width: 100%;
     max-height: 92%;
     margin: auto 0 0;
@@ -910,6 +945,11 @@ astro-island {
 
   .dlg-box {
     grid-template-columns: 1fr;
+  }
+
+  /* Uma coluna: o conteúdo rola por baixo do X. */
+  .dlg-x {
+    background: var(--surface-000);
   }
 
   .tgm-prev {

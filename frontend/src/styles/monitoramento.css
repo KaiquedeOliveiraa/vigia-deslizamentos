@@ -158,8 +158,8 @@
   .mon .mapwrap {
     flex: none;
     height: 62vh;
-    height: 62dvh;
-    min-height: 380px;
+    /* Cabe na área visível do conteúdo (container em estrutura.css): controles do mapa à vista. */
+    height: max(150px, min(62dvh, 100cqh));
   }
 
   .side.r {
@@ -170,5 +170,13 @@
     left: 72px;
     right: auto;
     bottom: 22px;
+  }
+}
+
+/* Celular deitado: as Previsões ocupam a direita (mapa.css). */
+@media (max-width: 900px) and (max-height: 500px) {
+  .resumo {
+    right: 216px;
+    bottom: 16px;
   }
 }

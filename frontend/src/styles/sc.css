@@ -139,7 +139,8 @@
 
   .frame .area {
     height: 70vh;
-    height: 70dvh;
+    /* Menor que a tela: sobra onde arrastar para rolar a página (o mapa embutido captura o toque). */
+    height: max(150px, min(70dvh, 100cqh - 60px));
   }
 
   .frame .fallback {

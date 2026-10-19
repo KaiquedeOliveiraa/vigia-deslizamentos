@@ -223,6 +223,15 @@
   font-weight: 600;
 }
 
+/* Ligar e mandar e-mail são a ação principal da página: alvo de toque de 44 px. */
+@media (pointer: coarse) {
+  .cc dd a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
 .cc .pend-t {
   color: var(--muted);
   font-style: italic;
