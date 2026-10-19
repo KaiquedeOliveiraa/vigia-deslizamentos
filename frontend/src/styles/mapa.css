@@ -101,24 +101,6 @@
   text-shadow: 0 0 3px #000, 0 0 2px #000;
 }
 
-/* Alto contraste vale em qualquer fundo: cor quase sólida e borda preta. */
-[data-theme="contraste"] .mapa[data-fundo]:not([data-fundo="neutro"]) .mun {
-  fill-opacity: 0.85;
-  stroke: #000;
-  stroke-width: 2.5px;
-  filter: none;
-}
-
-[data-theme="contraste"] .mapa .mun {
-  stroke: #000;
-  stroke-width: 2.5px;
-}
-
-[data-theme="contraste"] .hatch {
-  stroke: #000;
-  stroke-width: 2.6;
-}
-
 /* Rótulos: tooltips permanentes do Leaflet no centro de cada polígono */
 .mapa .leaflet-tooltip.mlabel {
   display: flex;
@@ -180,10 +162,6 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-float);
-}
-
-[data-theme="contraste"] .float {
-  border-width: 2px;
 }
 
 .zoom {
@@ -258,6 +236,11 @@
 }
 
 
+/* Com a busca aberta a legenda some: as duas ficam no canto esquerdo e se sobrepunham. */
+.mapwrap:has(.busca.open) .leg {
+  display: none;
+}
+
 /* Legenda recolhível */
 .leg {
   position: absolute;
@@ -328,10 +311,6 @@
   box-shadow: var(--shadow-float);
   min-height: 0;
   overflow-y: auto;
-}
-
-[data-theme="contraste"] .leg .card {
-  border-width: 2px;
 }
 
 .leg.open .strip {
@@ -461,7 +440,7 @@
 }
 
 .busca .box {
-  width: min(280px, calc(100vw - 32px));
+  width: min(320px, calc(100vw - 32px));
   background: var(--surface-000);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -508,6 +487,15 @@
 .busca li:hover,
 .busca li.hi {
   background: var(--surface-050);
+}
+
+/* Nome e classe numa linha só: quebrados em duas, a lista ficava alta e confusa. */
+.busca li > span:not(.num, .swi) {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .busca li small {
@@ -745,7 +733,7 @@
     padding: 0 8px;
   }
 
-  /* O resumo quebra em duas linhas; a faixa, menor, cabe numa só e não cobre os botões das Previsões. */
+  /* O resumo quebra em duas linhas; a faixa, menor, fica entre ele e os botões das Previsões, sem cobri-los. */
   .dayflag {
     bottom: 84px;
     padding: 5px 8px;

@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import { useId, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { tradutor } from "../i18n";
 import { infoClasse, SEM_DADOS } from "../lib/classes";
 import { formatarIndice } from "../lib/formato";
@@ -45,6 +45,11 @@ export default function Busca({ lang, municipios, aoEscolher }: Props) {
   const lupa = useRef<HTMLButtonElement>(null);
   const resultados = buscar([...municipios], termo);
   const opcao = (i: number) => `${base}-op-${i}`;
+
+  // A lista rola junto com as setas: em tela baixa ela mostra poucas linhas.
+  useEffect(() => {
+    if (aberta) document.getElementById(`${base}-op-${ativo}`)?.scrollIntoView({ block: "nearest" });
+  }, [aberta, ativo, base]);
 
   function alternar() {
     setAberta(!aberta);

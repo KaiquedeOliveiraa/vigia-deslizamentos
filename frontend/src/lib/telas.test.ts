@@ -2,11 +2,12 @@ import { describe, expect, it } from "vitest";
 import { TELAS, rota, rotaComEstado } from "./telas";
 
 describe("rota", () => {
-  it("monta o caminho com a base do site e o prefixo /es", () => {
+  it("monta o caminho com a base do site e o prefixo /es ou /en", () => {
     expect(rota("", "pt", "/vigia-deslizamentos")).toBe("/vigia-deslizamentos/");
     expect(rota("simulacao", "pt", "/vigia-deslizamentos/")).toBe("/vigia-deslizamentos/simulacao/");
     expect(rota("", "es", "/vigia-deslizamentos/")).toBe("/vigia-deslizamentos/es/");
     expect(rota("contatos", "es", "/")).toBe("/es/contatos/");
+    expect(rota("dados", "en", "/vigia-deslizamentos/")).toBe("/vigia-deslizamentos/en/dados/");
   });
 });
 

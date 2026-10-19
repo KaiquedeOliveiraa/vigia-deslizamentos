@@ -1,5 +1,5 @@
 import "../styles/contatos.css";
-import { Bell, Copy, ExternalLink, Mail, MapPin, Phone, Route, User } from "lucide-react";
+import { Bell, Copy, ExternalLink, Globe, Mail, MapPin, Phone, Route, User } from "lucide-react";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { tradutor } from "../i18n";
 import { filtrarContatos, hrefSite, hrefTelefone, urlComoChegar } from "../lib/contatos";
@@ -158,6 +158,20 @@ export default function Contatos({ lang, municipios }: Props) {
                     <span className="sr-only">{t("Endereço")}</span>
                   </dt>
                   <dd>{c.endereco}</dd>
+                </>
+              )}
+              {/* Com telefone, o botão do site dá lugar ao "Copiar telefone": o site fica na lista. */}
+              {c.telefone && c.site && (
+                <>
+                  <dt>
+                    <Globe aria-hidden="true" />
+                    <span className="sr-only">{t("Site da prefeitura")}</span>
+                  </dt>
+                  <dd>
+                    <a href={hrefSite(c.site)} target="_blank" rel="noopener" aria-label={t("Site da prefeitura de {M} (abre em nova aba)", { M: c.nome })}>
+                      {c.site}
+                    </a>
+                  </dd>
                 </>
               )}
             </dl>

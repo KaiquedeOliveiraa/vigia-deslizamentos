@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { tradutor } from "../i18n";
+import { atributoLang, tradutor } from "../i18n";
 import {
   aplicarPreferencias,
   lerPreferencias,
@@ -26,13 +26,16 @@ type Opcao<K extends keyof Preferencias> = [Preferencias[K], string];
 const IDIOMAS: Opcao<"lang">[] = [
   ["pt", "Português"],
   ["es", "Español"],
+  ["en", "English"],
 ];
 const TEMAS: Opcao<"theme">[] = [
-  ["auto", "Automático"],
   ["light", "Claro"],
   ["dark", "Escuro"],
-  ["contraste", "Alto contraste"],
 ];
+
+/** Sem tema escolhido ("auto"), o botão marcado é o que o sistema está usando. */
+const temaEmUso = (tema: Preferencias["theme"], sistemaEscuro: boolean): Preferencias["theme"] =>
+  tema !== "auto" ? tema : sistemaEscuro ? "dark" : "light";
 const PALETAS: Opcao<"pal">[] = [
   ["geo", "GeoRisk"],
   ["acc", "Acessível (daltonismo)"],
@@ -42,10 +45,18 @@ const PALETAS: Opcao<"pal">[] = [
 export default function PainelAcessibilidade({ lang, tela, aberto, aoFechar }: Props) {
   const t = tradutor(lang);
   const [pref, setPref] = useState<Preferencias>({ ...PADRAO, lang });
+  const [sistemaEscuro, setSistemaEscuro] = useState(false);
 
   // Relê ao abrir: a outra porta de entrada (menu ou cabeçalho) ou a legenda podem ter mudado algo.
   useEffect(() => {
-    if (aberto) setPref({ ...lerPreferencias(), lang, pal: paletaAplicada(document.documentElement) });
+    if (!aberto) return;
+    setPref({ ...lerPreferencias(), lang, pal: paletaAplicada(document.documentElement) });
+    // Com o painel aberto e nada escolhido, acompanha o sistema se ele trocar de tema.
+    const sistema = matchMedia("(prefers-color-scheme: dark)");
+    const atualizar = () => setSistemaEscuro(sistema.matches);
+    atualizar();
+    sistema.addEventListener("change", atualizar);
+    return () => sistema.removeEventListener("change", atualizar);
   }, [aberto, lang]);
 
   function escolher<K extends keyof Preferencias>(chave: K, valor: Preferencias[K], rotulo: string) {
@@ -66,8 +77,8 @@ export default function PainelAcessibilidade({ lang, tela, aberto, aoFechar }: P
         <button
           key={valor}
           type="button"
-          lang={chave === "lang" ? (valor === "es" ? "es" : "pt-BR") : undefined}
-          aria-pressed={pref[chave] === valor}
+          lang={chave === "lang" ? atributoLang(valor as Idioma) : undefined}
+          aria-pressed={(chave === "theme" ? temaEmUso(pref.theme, sistemaEscuro) : pref[chave]) === valor}
           data-foco-inicial={chave === "lang" && pref.lang === valor ? "" : undefined}
           onClick={() => escolher(chave, valor, nome)}
         >
@@ -88,7 +99,7 @@ export default function PainelAcessibilidade({ lang, tela, aberto, aoFechar }: P
         <div className="acc-row">
           <span className="lbl">{t("Tema")}</span>
           {grupo("theme", t("Tema"), TEMAS)}
-          <p>{t("Alto contraste: melhor leitura sob sol forte. Escuro: para ambientes com pouca luz.")}</p>
+          <p>{t("Escuro: para ambientes com pouca luz.")}</p>
         </div>
         <div className="acc-row">
           <span className="lbl">{t("Cores do mapa")}</span>

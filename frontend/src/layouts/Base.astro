@@ -7,7 +7,7 @@ import Menu from "../components/Menu";
 import { atributoLang, idioma, tradutor } from "../i18n";
 import { urlDados } from "../lib/config";
 import { MONITORADOS } from "../lib/municipios";
-import { CHAVE } from "../lib/preferencias";
+import { CHAVE, IDIOMAS } from "../lib/preferencias";
 import { TELAS, rota } from "../lib/telas";
 
 interface Props {
@@ -21,7 +21,6 @@ const t = tradutor(lang);
 const atual = TELAS.find((x) => x.rota === tela);
 if (!atual) throw new Error(`Base.astro: tela desconhecida "${tela}"`);
 const { nome } = atual;
-const outroLang = lang === "es" ? "pt" : "es";
 // O script inline do <head> roda antes da pintura: idioma lembrado (vai para a outra versão da página),
 // tema e paleta, com as mesmas regras de lerPreferencias/aplicarPreferencias (src/lib/preferencias.ts).
 
@@ -42,14 +41,13 @@ const municipios = MONITORADOS.map((m) => m.nome);
     <link rel="preload" href={urlDados("indices.json")} as="fetch" crossorigin />
     <link rel="stylesheet" href={FONTES} media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href={FONTES} /></noscript>
-    <link rel="alternate" hreflang="pt-BR" href={rota(tela, "pt")} />
-    <link rel="alternate" hreflang="es" href={rota(tela, "es")} />
-    <script is:inline define:vars={{ chave: CHAVE, lang, outra: rota(tela, outroLang) }}>
+    {IDIOMAS.map((l) => <link rel="alternate" hreflang={atributoLang(l)} href={rota(tela, l)} />)}
+    <script is:inline define:vars={{ chave: CHAVE, lang, rotas: Object.fromEntries(IDIOMAS.map((l) => [l, rota(tela, l)])) }}>
       try {
         var p = JSON.parse(localStorage.getItem(chave) || "{}") || {};
-        if ((p.lang === "pt" || p.lang === "es") && p.lang !== lang) location.replace(outra + location.search + location.hash);
+        if (rotas[p.lang] && p.lang !== lang) location.replace(rotas[p.lang] + location.search + location.hash);
         var d = document.documentElement;
-        if (["light", "dark", "contraste"].indexOf(p.theme) >= 0) d.setAttribute("data-theme", p.theme);
+        if (["light", "dark"].indexOf(p.theme) >= 0) d.setAttribute("data-theme", p.theme);
         if (p.pal === "acc") d.classList.replace("pal-geo", "pal-acc");
       } catch (e) {}
     </script>

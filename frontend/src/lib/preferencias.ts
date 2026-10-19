@@ -1,7 +1,10 @@
 // Preferências do usuário (RF13), guardadas no navegador quando ele deixa.
 
-export type Idioma = "pt" | "es";
-export type Tema = "auto" | "light" | "dark" | "contraste";
+export type Idioma = "pt" | "es" | "en";
+/** Ordem do seletor de idioma; o português fica na raiz do site, os outros em /es/ e /en/. */
+export const IDIOMAS: readonly Idioma[] = ["pt", "es", "en"];
+/** "auto" = nada escolhido ainda: segue o tema do sistema. */
+export type Tema = "auto" | "light" | "dark";
 export type Paleta = "geo" | "acc";
 
 export interface Preferencias {
@@ -16,8 +19,8 @@ export const CHAVE = "vigia-pref";
 export const PADRAO: Preferencias = { lang: "pt", theme: "auto", pal: "geo" };
 
 const VALIDOS: { [K in keyof Preferencias]: readonly Preferencias[K][] } = {
-  lang: ["pt", "es"],
-  theme: ["auto", "light", "dark", "contraste"],
+  lang: IDIOMAS,
+  theme: ["auto", "light", "dark"],
   pal: ["geo", "acc"],
 };
 

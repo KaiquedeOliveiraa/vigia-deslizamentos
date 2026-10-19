@@ -168,12 +168,6 @@ astro-island {
   background: var(--nav-700);
 }
 
-/* No alto contraste o --nav-700 é claro (borda): o hover escurece e acende a borda. */
-[data-theme="contraste"] .hbtn:hover {
-  background: var(--nav-900);
-  border-color: var(--on-nav);
-}
-
 .hbtn.a11yb {
   padding: 0;
 }
@@ -813,9 +807,9 @@ astro-island {
 }
 
 /* ---------- celular ---------- */
-/* Entre 901 e 1260 px os itens não cabem numa linha: sai a região (como no celular) e, mais estreito, o
+/* Entre 901 e 1300 px os itens não cabem numa linha: sai a região (como no celular) e, mais estreito, o
    texto do Telegram. Antes o carimbo passava da tela e o botão encolhia sob o próprio texto. */
-@media (max-width: 1260px) {
+@media (max-width: 1300px) {
   .hdr .region {
     display: none;
   }
@@ -966,14 +960,28 @@ astro-island {
   }
 }
 
+/* Com PT, ES e EN o globo não cabe na primeira linha. */
+@media (max-width: 420px) {
+  .lang .lg {
+    display: none;
+  }
+}
+
 @media (max-width: 380px) {
   .hdr {
     gap: 6px 4px;
     padding: 8px 10px;
   }
 
-  .lang .lg {
+  /* Com PT, ES e EN a primeira linha não cabia (o botão de acessibilidade descia): sai o círculo da marca e os
+     idiomas estreitam um pouco (40 px, acima do mínimo de 24 px). */
+  .brand .mark {
     display: none;
+  }
+
+  .lang a {
+    min-width: 40px;
+    padding: 0 4px;
   }
 }
 
