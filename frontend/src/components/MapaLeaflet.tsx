@@ -95,7 +95,8 @@ function Municipio({ t, feicao, pos, valor, selecionado, onSelecionar }: PropsMu
     const cor = n ? infoClasse(n).cor : valor === null ? SEM_DADOS.cor : "var(--surface-000)";
     el.style.fill = cor;
     // Nos fundos detalhados (Satélite, Ruas, Relevo) a cor vira contorno: mapa.css usa --cor-mun no stroke.
-    el.style.setProperty("--cor-mun", cor);
+    // Sem classe, --surface-000 some sobre o Satélite no tema escuro; --muted contrasta nos dois temas.
+    el.style.setProperty("--cor-mun", n || valor === null ? cor : "var(--muted)");
     h.style.fill = n && infoClasse(n).hachura ? `url(#${id(n)})` : "none";
     // Sem role (mapa só de contexto), aria-label num <path> é proibido.
     if (interativo) {

@@ -225,6 +225,7 @@
 "chuva efetiva máxima ({M})": "lluvia efectiva máxima ({M})",
 "pico da semana ({M}, {N})": "pico de la semana ({M}, {N})",
 "Evolução do índice — {M}": "Evolución del índice — {M}",
+"Por enquanto há histórico de {N} dias; os demais aparecem vazios.": "Por ahora hay historial de {N} días; los demás aparecen vacíos.",
 "Evolução do índice — últimos {N} dias": "Evolución del índice — últimos {N} días",
 "diário · {N}": "diario · {N}",
 "Pontos coloridos pela classe do dia. Linhas cinzas: demais municípios. Acima da linha tracejada o município está em alerta.": "Puntos coloreados por la clase del día. Líneas grises: demás municipios. Por encima de la línea discontinua el municipio está en alerta.",

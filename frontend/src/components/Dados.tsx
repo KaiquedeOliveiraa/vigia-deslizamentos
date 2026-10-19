@@ -14,7 +14,7 @@ import {
   formatarPercentual,
   formatarVariacao,
 } from "../lib/formato";
-import { diasEixo, etiquetaChuva, indicadores, serieMunicipio, variacoesDiarias } from "../lib/graficos";
+import { diasComDados, diasEixo, etiquetaChuva, indicadores, serieMunicipio, variacoesDiarias } from "../lib/graficos";
 import { municipioInicial, variaveis } from "../lib/monitoramento";
 import type { Idioma } from "../lib/preferencias";
 import { tendencia } from "../lib/texto";
@@ -60,6 +60,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
   const { comDados: municipios, semDados } = separarPorDados(indices, nomes);
   const destaque = municipios.find((m) => m.ibge === ibge);
   const eixo = diasEixo(indices.dia_alvo_d0, periodo);
+  const comHistorico = diasComDados(indices, eixo);
   const k = indicadores(indices);
 
   const selecionar = (novo: string) => {
@@ -77,6 +78,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
           <span className="lbl">{t("Dados da análise · dia-alvo {N}", { N: formatarData(indices.dia_alvo_d0) })}</span>
           <h1>{titulo}</h1>
           <p>{t("Mesmos dados do mapa, com a chuva acumulada e a evolução do índice nos últimos {N} dias.", { N: String(periodo) })}</p>
+          {comHistorico < periodo && <p>{t("Por enquanto há histórico de {N} dias; os demais aparecem vazios.", { N: String(comHistorico) })}</p>}
         </div>
         <div className="seg" role="group" aria-label={t("Período")}>
           {PERIODOS.map((p) => (
