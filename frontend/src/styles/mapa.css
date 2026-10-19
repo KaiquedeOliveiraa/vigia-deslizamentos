@@ -242,6 +242,21 @@
   font-weight: 600;
 }
 
+/* Versão de celular das camadas: só aparece abaixo de 900 px. 16px evita o zoom do iOS ao tocar. */
+.layers-sel {
+  display: none;
+  right: 16px;
+  top: 16px;
+  z-index: 4;
+  min-height: 44px;
+  max-width: 140px;
+  padding: 0 12px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
 
 /* Legenda recolhível */
 .leg {
@@ -631,6 +646,10 @@
 
   .layers {
     display: none;
+  }
+
+  .layers-sel {
+    display: block;
   }
 
   .mapa .leaflet-tooltip.mlabel {

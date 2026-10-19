@@ -1,4 +1,4 @@
-import { useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import type { T } from "../i18n";
 import { infoClasse, LIMIAR_ALERTA } from "../lib/classes";
 import { formatarData, formatarIndice, formatarMm, formatarNumero, formatarVariacao } from "../lib/formato";
@@ -6,12 +6,16 @@ import {
   coordenadas,
   escala,
   faixasClasse,
+  focoAposSeta,
+  indiceMaisProximo,
   marcaClasse,
   marcasEvolucao,
   maxEvolucao,
   maxPluviometro,
+  passoDaSeta,
   serieMunicipio,
   variacoesDiarias,
+  vizinhoCiclico,
   type Area,
 } from "../lib/graficos";
 import { sentido } from "../lib/texto";
@@ -36,6 +40,7 @@ interface PropsEvolucao {
  * Linha-guia com o valor de todos os municípios no dia apontado (mouse, ou ←/→ com o gráfico em foco). */
 export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsEvolucao) {
   const chips = useRef<(HTMLButtonElement | null)[]>([]);
+  const painel = useRef<HTMLDivElement>(null);
   const [foco, setFoco] = useState<number | null>(null);
   const { ibge } = destaque;
   const series = municipios.map((m) => ({ m, serie: serieMunicipio(m, eixo) }));
@@ -52,11 +57,17 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
   const deltaUltimo = deltas.at(-1) ?? null;
   const area = coords.length > 1 ? `${coords[0].x},${y(0)} ${pontos(coords)} ${coords.at(-1)!.x},${y(0)}` : "";
 
+  // No celular o gráfico rola na horizontal: abre no fim, com o D0 à vista, e não nos dias mais antigos.
+  useLayoutEffect(() => {
+    const el = painel.current;
+    if (el) el.scrollLeft = el.scrollWidth;
+  }, [eixo.length]);
+
   function teclado(e: KeyboardEvent, i: number) {
-    const passo = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    const passo = passoDaSeta(e.key);
     if (!passo) return;
     e.preventDefault();
-    const j = (i + passo + municipios.length) % municipios.length;
+    const j = vizinhoCiclico(i, passo, municipios.length);
     chips.current[j]?.focus();
     aoSelecionar(municipios[j].ibge);
   }
@@ -65,14 +76,14 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
   function apontar(e: PointerEvent<SVGRectElement>) {
     const caixa = e.currentTarget.ownerSVGElement!.getBoundingClientRect();
     const x = ((e.clientX - caixa.left) / caixa.width) * largura;
-    setFoco(xs.reduce((melhor, xi, i) => (Math.abs(xi - x) < Math.abs(xs[melhor] - x) ? i : melhor), 0));
+    setFoco(indiceMaisProximo(xs, x));
   }
 
   function tecladoGrafico(e: KeyboardEvent) {
-    const passo = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    const passo = passoDaSeta(e.key);
     if (!passo) return;
     e.preventDefault();
-    setFoco((f) => (f === null ? eixo.length - 1 : Math.min(Math.max(f + passo, 0), eixo.length - 1)));
+    setFoco((f) => focoAposSeta(f, passo, eixo.length));
   }
 
   const diaFoco = foco === null ? null : eixo[foco];
@@ -112,6 +123,7 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
         ))}
       </div>
       <div
+        ref={painel}
         className="evo-svg"
         id="evo-painel"
         role="tabpanel"
