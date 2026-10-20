@@ -11,6 +11,7 @@ import pytest
 from app.config import (
     Config,
     ConfiguracaoInvalidaError,
+    Microrregiao,
     Municipio,
     Ponto,
     carregar_env,
@@ -377,3 +378,42 @@ def test_schema_rejeita_gerado_em_mal_formado():
 
     with pytest.raises(jsonschema.ValidationError):
         _validador_estrito(schema).validate(exemplo)
+
+
+def _um_municipio(**extra):
+    base = {
+        "ibge": "4206900",
+        "nome": "Ibirama",
+        "limiar_mm": 150,
+        "fonte_limiar": "x",
+        "mv_h": 24,
+        "pontos": [{"lat": -27.0, "lon": -49.5}],
+    }
+    base.update(extra)
+    return base
+
+
+def test_microrregiao_e_opcional(tmp_path):
+    caminho = tmp_path / "m.json"
+    caminho.write_text(json.dumps([_um_municipio()]), encoding="utf-8")
+    assert carregar_municipios(caminho)[0].microrregiao is None
+
+
+def test_microrregiao_lida_quando_presente(tmp_path):
+    caminho = tmp_path / "m.json"
+    caminho.write_text(
+        json.dumps([_um_municipio(microrregiao={"codigo": "42011", "nome": "Rio do Sul"})]),
+        encoding="utf-8",
+    )
+    assert carregar_municipios(caminho)[0].microrregiao == Microrregiao("42011", "Rio do Sul")
+
+
+@pytest.mark.parametrize(
+    "valor",
+    [{"codigo": "4201", "nome": "Rio do Sul"}, {"codigo": "42011", "nome": ""}, "42011"],
+)
+def test_microrregiao_invalida(tmp_path, valor):
+    caminho = tmp_path / "m.json"
+    caminho.write_text(json.dumps([_um_municipio(microrregiao=valor)]), encoding="utf-8")
+    with pytest.raises(ConfiguracaoInvalidaError, match="microrregiao"):
+        carregar_municipios(caminho)
