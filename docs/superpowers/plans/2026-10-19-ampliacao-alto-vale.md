@@ -52,14 +52,9 @@
 
 - [ ] **Passo 1: escrever os testes que falham**
 
-Acrescente ao fim de `backend/tests/test_config.py`:
+Acrescente `Microrregiao` ao import de `app.config` que já existe no topo de `backend/tests/test_config.py` (`json`, `pytest` e `ConfiguracaoInvalidaError` já estão importados) e, ao fim do arquivo:
 
 ```python
-import json as _json
-
-from app.config import Microrregiao
-
-
 def _um_municipio(**extra):
     base = {
         "ibge": "4206900",
@@ -75,14 +70,14 @@ def _um_municipio(**extra):
 
 def test_microrregiao_e_opcional(tmp_path):
     caminho = tmp_path / "m.json"
-    caminho.write_text(_json.dumps([_um_municipio()]), encoding="utf-8")
+    caminho.write_text(json.dumps([_um_municipio()]), encoding="utf-8")
     assert carregar_municipios(caminho)[0].microrregiao is None
 
 
 def test_microrregiao_lida_quando_presente(tmp_path):
     caminho = tmp_path / "m.json"
     caminho.write_text(
-        _json.dumps([_um_municipio(microrregiao={"codigo": "42011", "nome": "Rio do Sul"})]),
+        json.dumps([_um_municipio(microrregiao={"codigo": "42011", "nome": "Rio do Sul"})]),
         encoding="utf-8",
     )
     assert carregar_municipios(caminho)[0].microrregiao == Microrregiao("42011", "Rio do Sul")
@@ -94,12 +89,10 @@ def test_microrregiao_lida_quando_presente(tmp_path):
 )
 def test_microrregiao_invalida(tmp_path, valor):
     caminho = tmp_path / "m.json"
-    caminho.write_text(_json.dumps([_um_municipio(microrregiao=valor)]), encoding="utf-8")
+    caminho.write_text(json.dumps([_um_municipio(microrregiao=valor)]), encoding="utf-8")
     with pytest.raises(ConfiguracaoInvalidaError, match="microrregiao"):
         carregar_municipios(caminho)
 ```
-
-Confira se `pytest` e `ConfiguracaoInvalidaError` já estão importados no topo do arquivo; se não, acrescente `import pytest` e `from app.config import ConfiguracaoInvalidaError`.
 
 - [ ] **Passo 2: rodar e ver falhar**
 
@@ -177,6 +170,7 @@ git commit -m "feat(backend): microrregião opcional no municipios.json"
   - `ponto_do_municipio(ibge: str, geometria: dict) -> dict`, devolvendo `{"lat": float, "lon": float}`
   - `chave_de_ordem(item: dict) -> tuple[str, str]`
   - `mesclar(atuais: list[dict], ibge_por_micro: list[tuple[dict, list[dict]]], geometrias: dict[str, dict]) -> list[dict]`
+  - `formatar(itens: list[dict]) -> str`: JSON no formato do arquivo atual (`pontos` e `microrregiao` numa linha)
   - `main(argv: list[str] | None = None) -> int`
 
 - [ ] **Passo 1: escrever os testes que falham**
@@ -200,6 +194,7 @@ from scripts.gerar_municipios import (
     centroide,
     chave_de_ordem,
     dentro,
+    formatar,
     mesclar,
     ponto_do_municipio,
 )
@@ -293,6 +288,22 @@ def test_mescla_falha_com_microrregiao_vazia():
         mesclar([], [(RIO_DO_SUL, [])], {})
 
 
+def test_mescla_falha_sem_geometria_com_o_codigo_na_mensagem():
+    with pytest.raises(ValueError, match="4209003"):
+        mesclar([], [(RIO_DO_SUL, [{"id": 4209003, "nome": "Lontras"}])], {})
+
+
+def test_formatar_mantem_o_formato_do_arquivo():
+    texto = formatar([dict(ATUAL, microrregiao={"codigo": "42011", "nome": "Rio do Sul"})])
+    assert '    "pontos": [{"lat": -27.0181, "lon": -49.5286}],
+' in texto
+    assert texto.endswith('    "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
+  }
+]
+')
+    assert json.loads(texto)[0]["ibge"] == "4206900"
+
+
 def test_mescla_mantem_o_nome_atual_e_avisa(caplog):
     with caplog.at_level(logging.WARNING):
         resultado = mesclar([dict(ATUAL)], [(RIO_DO_SUL, [{"id": 4206900, "nome": "Ibirama (novo)"}])], {})
@@ -300,16 +311,34 @@ def test_mescla_mantem_o_nome_atual_e_avisa(caplog):
     assert "Ibirama (novo)" in caplog.text
 
 
+# Os 6 de antes da ampliação, campo a campo (sem `microrregiao`): não podem mudar.
+SEIS_ORIGINAIS = {
+    "4205100": ("Dona Emma", -26.9887, -49.7781),
+    "4206900": ("Ibirama", -27.0181, -49.5286),
+    "4209151": ("José Boiteux", -26.8595, -49.6463),
+    "4214003": ("Presidente Getúlio", -27.0626, -49.7144),
+    "4219358": ("Vitor Meireles", -26.8264, -49.8452),
+    "4219408": ("Witmarsum", -26.9373, -49.8417),
+}
+
+
 def test_arquivo_versionado_tem_os_27_e_os_6_atuais_intactos():
-    dados = json.loads((RAIZ / "backend" / "config" / "municipios.json").read_text(encoding="utf-8"))
+    texto = (RAIZ / "backend" / "config" / "municipios.json").read_text(encoding="utf-8")
+    dados = json.loads(texto)
+    assert texto == formatar(dados)
     assert len(dados) == 27
     assert dados == sorted(dados, key=chave_de_ordem)
     por_ibge = {m["ibge"]: m for m in dados}
     assert {m["microrregiao"]["codigo"] for m in dados} == {"42011", "42014"}
-    seis = {"4205100", "4206900", "4209151", "4214003", "4219358", "4219408"}
-    assert seis <= set(por_ibge)
-    for ibge in seis:
-        assert por_ibge[ibge]["fonte_limiar"] == FONTE_LIMIAR_PROVISORIA
+    for ibge, (nome, lat, lon) in SEIS_ORIGINAIS.items():
+        assert {k: v for k, v in por_ibge[ibge].items() if k != "microrregiao"} == {
+            "ibge": ibge,
+            "nome": nome,
+            "limiar_mm": 150,
+            "fonte_limiar": FONTE_LIMIAR_PROVISORIA,
+            "mv_h": 24,
+            "pontos": [{"lat": lat, "lon": lon}],
+        }
 ```
 
 - [ ] **Passo 2: rodar e ver falhar**
@@ -440,6 +469,8 @@ def mesclar(
                     )
                 por_ibge[ibge]["microrregiao"] = microrregiao
                 continue
+            if ibge not in geometrias:
+                raise ValueError(f"município {ibge}: sem contorno na malha {COMMIT_MALHA}")
             por_ibge[ibge] = {
                 "ibge": ibge,
                 "nome": bruto["nome"],
@@ -453,6 +484,27 @@ def mesclar(
     if faltando:
         raise ValueError(f"município(s) do arquivo fora da resposta do IBGE: {faltando}")
     return sorted(por_ibge.values(), key=chave_de_ordem)
+
+
+def formatar(itens: list[dict]) -> str:
+    """JSON igual ao formato do arquivo à mão: um campo por linha, `pontos` e `microrregiao` numa só."""
+    def valor(chave, v):
+        if chave in ("pontos", "microrregiao"):
+            return json.dumps(v, ensure_ascii=False, separators=(", ", ": "))
+        return json.dumps(v, ensure_ascii=False)
+
+    blocos = [
+        "  {
+" + ",
+".join(f"    {json.dumps(k)}: {valor(k, v)}" for k, v in item.items()) + "
+  }"
+        for item in itens
+    ]
+    return "[
+" + ",
+".join(blocos) + "
+]
+"
 
 
 def _buscar(http: requests.Session, url: str):
@@ -479,9 +531,7 @@ def main(argv: list[str] | None = None) -> int:
 
     geometrias = {f["properties"]["id"]: f["geometry"] for f in malha["features"]}
     itens = mesclar(atuais, ibge_por_micro, geometrias)
-    Path(argumentos.saida).write_text(
-        json.dumps(itens, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    Path(argumentos.saida).write_text(formatar(itens), encoding="utf-8")
     print(f"{len(itens)} município(s) gravado(s) em {argumentos.saida}")
     return 0
 
@@ -500,7 +550,7 @@ Rode `cd backend && python -m pytest -W error tests/test_gerar_municipios.py -q 
 
 Rode `cd backend && python -m scripts.gerar_municipios`. A saída esperada é `27 município(s) gravado(s) em .../municipios.json`.
 
-Confira com `git diff backend/config/municipios.json`. Os 6 atuais só podem ganhar a linha `microrregiao` e mudar de posição; ponto, limiar e fonte ficam iguais.
+Antes de gerar, confira que o formato do arquivo é preservado: `python -c "import json;from scripts.gerar_municipios import formatar;t=open('config/municipios.json',encoding='utf-8').read();assert formatar(json.loads(t))==t"` não pode falhar. Depois de gerar, confira com `git diff backend/config/municipios.json`: os 6 atuais só podem ganhar a linha `microrregiao` (e a vírgula no fim da linha de `pontos`) e mudar de posição.
 
 - [ ] **Passo 6: corrigir os testes que contavam 6**
 
@@ -536,7 +586,7 @@ Se `atuais_de_teste()` criar valores só para alguns municípios, confira que el
 
 - [ ] **Passo 7: rodar a suíte inteira**
 
-Rode `cd backend && python -m pytest -W error -q`. Tudo passa, inclusive `test_arquivo_versionado_tem_os_27_e_os_6_atuais_intactos`. O teste de fixture do Worker pode falhar porque o `bot.json` agora tem 27 municípios; se falhar, regenere com `VIGIA_REGERAR_FIXTURES=1 python -m pytest tests/test_bot_json.py -q` e rode a suíte de novo.
+Rode `cd backend && python -m pytest -W error -q`. Primeiro regenere a fixture do Worker, que **vai** falhar porque o `bot.json` agora tem 27 municípios: `VIGIA_REGERAR_FIXTURES=1 python -m pytest tests/test_bot_json.py -q`. Depois rode a suíte inteira. Tudo passa, inclusive `test_arquivo_versionado_tem_os_27_e_os_6_atuais_intactos`. Rode também `cd ../bot-worker && npm test && npm run typecheck`: o Worker aceita a fixture maior sem mudança.
 
 - [ ] **Passo 8: commit**
 
@@ -773,7 +823,14 @@ def test_partes_do_status_divide_entre_blocos():
     assert partes[0].startswith(CABECALHO_DO_STATUS)
     assert partes[-1].endswith(rodape_do_status("https://x"))
     assert LIMITE_MENSAGEM_TELEGRAM == 4096
+
+
+def test_partes_do_status_bloco_maior_que_o_limite_e_erro():
+    with pytest.raises(ValueError, match="bloco"):
+        partes_do_status([("M" * 300, None)], "https://x", limite=100)
 ```
+
+Acrescente `import pytest` no topo, se ainda não houver.
 
 Importe também `texto_do_status`, `TEXTO_SEM_INSCRICAO`, `bloco_do_status`, `CABECALHO_DO_STATUS` e `rodape_do_status`, se ainda não estiverem importados.
 
@@ -812,6 +869,8 @@ def partes_do_status(
     atual, vazia = cabecalho, True
     for nome, situacao in situacoes:
         bloco = bloco_do_status(nome, situacao)
+        if _tamanho(cabecalho + bloco + rodape) > limite:
+            raise ValueError(f"bloco de {nome!r} sozinho passa do limite de {limite}")
         junto = atual + bloco if vazia else atual + SEPARADOR_DO_STATUS + bloco
         if not vazia and _tamanho(junto) + _tamanho(rodape) > limite:
             partes.append(atual)
@@ -899,7 +958,7 @@ def test_retry_after_espera_e_reenvia(monkeypatch):
     monkeypatch.setattr(modulo_avisos, "_dormir", dormir)
     conn = conexao()
     inscritos = InscritosSqlite(conn)
-    inscritos.inscrever(10, "4206900", AGORA)
+    banco.inscrever(conn, 10, "4206900", AGORA)
     bot = BotQueLimitaUmaVez()
 
     asyncio.run(enviar_avisos(bot, conn, inscritos, [aviso()], AGORA, SITE_URL))
@@ -908,8 +967,6 @@ def test_retry_after_espera_e_reenvia(monkeypatch):
     assert 3 in esperas
     assert banco.ultima_classe_notificada(conn, "4206900") == 4
 ```
-
-Confira os nomes reais da API de `InscritosSqlite` (método de inscrição) e da leitura da última classe notificada em `app.modelos.banco`, olhando os testes vizinhos do arquivo, e ajuste as duas chamadas para os mesmos nomes que eles usam.
 
 - [ ] **Passo 2: rodar e ver falhar**
 
@@ -949,14 +1006,19 @@ async def _enviar(bot, chat_id: int, texto: str) -> None:
         await bot.send_message(chat_id=chat_id, text=texto, parse_mode=ParseMode.HTML)
     except RetryAfter as erro:
         await _dormir(_segundos_de_espera(erro))
-        await bot.send_message(chat_id=chat_id, text=texto, parse_mode=ParseMode.HTML)
+        try:
+            await bot.send_message(chat_id=chat_id, text=texto, parse_mode=ParseMode.HTML)
+        except TelegramError as segundo:
+            # A especificação pede erro (vira aviso no resumo do Actions); o laço trata como transitória.
+            _log.error("aviso não entregue após esperar o limite do Telegram: %s", type(segundo).__name__)
+            raise
 ```
 
 Em `_enviar_para_um_municipio`:
 - troque `await bot.send_message(...)` por `await _enviar(bot, chat_id, texto)`;
 - no início do corpo do `for`, antes do `try`, acrescente `await _dormir(PAUSA_ENTRE_ENVIOS_S)`.
 
-O `except TelegramError` que já existe continua pegando a segunda falha, porque `RetryAfter` herda de `TelegramError`, e a registra como transitória.
+O `except TelegramError` que já existe no laço continua pegando a segunda falha (registrada antes como erro em `_enviar`) e a conta como transitória.
 
 - [ ] **Passo 4: deixar os testes antigos rápidos**
 
@@ -1032,15 +1094,17 @@ Em `test/apoio.ts`:
 ```ts
 export function botJsonComGrupos(): BotJson {
   const bot = botJsonDeTeste();
-  bot.municipios.push({ ibge: "4208500", nome: "Ituporanga" });
+  bot.municipios.push({ ibge: "4208500", nome: "Ituporanga" }, { ibge: "4212700", nome: "Petrolândia" });
   bot.textos.inscricao_confirmada["4208500"] = "Inscrito em Ituporanga.";
+  bot.textos.inscricao_confirmada["4212700"] = "Inscrito em Petrolândia.";
+  bot.status.blocos["4212700"] = "Petrolândia: baixo";
   bot.textos.boas_vindas_sugerido["4208500"] = "Bem-vindo ao VIGIA. Quer Ituporanga?";
   bot.status.blocos["4208500"] = "Ituporanga: baixo";
   bot.textos.opcao_voltar = "Voltar";
   bot.textos.boas_vindas_grupos = "Escolha a região.";
   bot.grupos = [
     { nome: "Região de Rio do Sul", municipios: ["4208203", "4128104"], opcao_todos: "Todos da Região de Rio do Sul", escolha: "Municípios de Rio do Sul.", confirmacao: "Inscrito na região de Rio do Sul." },
-    { nome: "Região de Ituporanga", municipios: ["4208500"], opcao_todos: "Todos da Região de Ituporanga", escolha: "Municípios de Ituporanga.", confirmacao: "Inscrito na região de Ituporanga." },
+    { nome: "Região de Ituporanga", municipios: ["4208500", "4212700"], opcao_todos: "Todos da Região de Ituporanga", escolha: "Municípios de Ituporanga.", confirmacao: "Inscrito na região de Ituporanga." },
   ];
   return bot;
 }
@@ -1089,9 +1153,9 @@ describe("com grupos", () => {
     expect((await ibgesDoChat(env.DB, CHAT)).sort()).toEqual(["4128104", "4208203"]);
   });
 
-  it("Todos inscreve nos três", async () => {
+  it("Todos inscreve em todos", async () => {
     await enviar(mensagem("Todos"));
-    expect((await ibgesDoChat(env.DB, CHAT)).sort()).toEqual(["4128104", "4208203", "4208500"]);
+    expect((await ibgesDoChat(env.DB, CHAT)).sort()).toEqual(["4128104", "4208203", "4208500", "4212700"]);
   });
 
   it("Voltar e opção desconhecida mostram as regiões", async () => {
@@ -1103,8 +1167,8 @@ describe("com grupos", () => {
   });
 
   it("nome digitado sem acento e em minúsculas inscreve", async () => {
-    await enviar(mensagem("  ituporanga "));
-    expect(await ibgesDoChat(env.DB, CHAT)).toEqual(["4208500"]);
+    await enviar(mensagem("  PETROLANDIA "));
+    expect(await ibgesDoChat(env.DB, CHAT)).toEqual(["4212700"]);
   });
 
   it("inscrito antigo continua com os seus", async () => {
@@ -1138,7 +1202,42 @@ it("partesDoStatus corta só entre blocos e respeita o limite", () => {
   expect(partes.at(-1)!.endsWith(bot.status.rodape)).toBe(true);
   for (let i = 0; i < 27; i++) expect(partes.join("")).toContain(`Bloco ${i} `);
 });
+
+it("partesDoStatus com uma parte é igual ao textoDoStatus", () => {
+  const bot = botJsonDeTeste();
+  const ibges = bot.municipios.map((m) => m.ibge);
+  expect(partesDoStatus(bot, ibges)).toEqual([textoDoStatus(bot, ibges)]);
+});
+
+it("partesDoStatus: bloco sozinho maior que o limite é erro", () => {
+  const bot = botJsonDeTeste();
+  expect(() => partesDoStatus(bot, [bot.municipios[0]!.ibge], 10)).toThrow(/bloco/);
+});
+
+describe("fixture real (gerada pelo backend com os 27)", () => {
+  const real = fixtureReal as unknown as BotJson;
+
+  it("/status de quem assina os 27: partes de até 4096 e nenhum bloco cortado", () => {
+    const ibges = real.municipios.map((m) => m.ibge);
+    const partes = partesDoStatus(real, ibges);
+    expect(partes.every((p) => p.length <= 4096)).toBe(true);
+    const juntas = partes.join("");
+    for (const ibge of ibges) expect(juntas).toContain(real.status.blocos[ibge]!);
+  });
+
+  it("rótulos de botão únicos pela normalizarNome do Worker", () => {
+    const rotulos = [
+      ...real.municipios.map((m) => m.nome),
+      real.textos.opcao_todos,
+      real.textos.opcao_voltar ?? "",
+      ...(real.grupos ?? []).flatMap((g) => [g.nome, g.opcao_todos]),
+    ].map(normalizarNome);
+    expect(new Set(rotulos).size).toBe(rotulos.length);
+  });
+});
 ```
+
+Importe no topo: `import fixtureReal from "./fixtures/bot.exemplo.json";` (o `resolveJsonModule` já está ligado) e `textoDoStatus` de `../src/telegram`.
 
 - [ ] **Passo 3: rodar e ver falhar**
 
@@ -1214,6 +1313,12 @@ export function partesDoStatus(bot: BotJson, ibges: string[], limite = LIMITE_ME
   partes.push(atual + rodape);
   return partes;
 }
+```
+
+E, no começo do `for`, antes de calcular `junto`:
+
+```ts
+    if (cabecalho.length + bloco.length + rodape.length > limite) throw new Error(`bloco sozinho passa do limite de ${limite}`);
 ```
 
 - [ ] **Passo 5: implementar o fluxo**
@@ -1329,12 +1434,11 @@ Em `frontend/scripts/gerar-geojson.mjs`:
 - troque a linha `const MONITORADOS = [...]` por:
 
 ```js
-import { readFileSync } from "node:fs";
 const CONFIG = new URL("../../backend/config/municipios.json", import.meta.url);
 const MONITORADOS = JSON.parse(readFileSync(CONFIG, "utf-8")).map((m) => m.ibge);
 ```
 
-Junte o `readFileSync` ao `import { writeFileSync }` que já existe. Depois de `if (nucleo.length !== MONITORADOS.length) throw ...`, acrescente:
+(Em vez da linha `import { readFileSync }` separada, troque o `import { writeFileSync } from "node:fs";` que já existe por `import { readFileSync, writeFileSync } from "node:fs";`.) Depois de `if (nucleo.length !== MONITORADOS.length) throw ...`, acrescente:
 
 ```js
 const multi = nucleo.filter((f) => f.geometry.type !== "Polygon").map((f) => f.properties.id);
@@ -1435,7 +1539,7 @@ Se no desktop o zoom inicial ficar acima de 8,5 e os 27 rótulos se sobrepuserem
 
 ```bash
 git add frontend/src/lib/mapa.ts frontend/src/lib/mapa.test.ts frontend/src/components/MapaLeaflet.tsx frontend/src/styles/mapa.css
-git commit -m "feat(frontend): de longe, só os rótulos do selecionado e dos em alerta"
+git commit -m "feat(frontend): de longe, só os rótulos do selecionado e dos em alerta" -m "Nomes dos vizinhos (contexto) passam a sumir de longe também no Monitoramento e na Simulação, como já acontecia em Estações."
 ```
 
 ---
@@ -1557,7 +1661,21 @@ Um trecho de um dia só vira um polígono degenerado, uma linha vertical. Isso �
               )}
 ```
 
-O `leitura` passa a ter só o destaque: `series.filter(({ m }) => m.ibge === ibge)` em vez de todos. Ajuste o `sort`, que deixa de ser necessário.
+Troque a definição de `leitura` por (só o destaque, sem ordenação):
+
+```tsx
+  const leitura =
+    diaFoco === null
+      ? []
+      : series
+          .filter(({ m }) => m.ibge === ibge)
+          .flatMap(({ m, serie }) => {
+            const p = serie.find((q) => q.dia_alvo === diaFoco);
+            return p ? [{ m, p }] : [];
+          });
+```
+
+E troque a condição do "sem dados" por `{leitura.length === 0 && !(foco !== null && faixa[foco]) && <span className="vazio">{t("sem dados")}</span>}`. No `.map` da lista, só o ramo `m.ibge === ibge` sobra: apague o ramo `: (<li key={m.ibge}>…</li>)` e deixe o `li.eu`.
 
 7. Logo antes da `<div className="sr-only">` da tabela, acrescente o comentário `{/* Só o município em destaque: a faixa dos demais é visual (ver a legenda). */}`.
 8. Atualize o comentário do componente: "Evolução do índice (RF06): faixas das classes, linha de alerta, faixa mínimo–máximo dos demais municípios e o destaque."
@@ -1586,9 +1704,13 @@ Troque as regras de `.evo .pick button` (perto das linhas 188, 198 e 719) por re
 }
 ```
 
-Apague `.evo .pick button[aria-selected="true"]`. Confira se a legenda do gráfico está em `Dados.tsx` ou no próprio componente (procure `"↑/↓ mudança de classe"`) e acrescente lá um item com `t("faixa: mínimo e máximo dos demais municípios")`.
+Apague `.evo .pick button[aria-selected="true"]`.
 
-9. Em `es.json` e `en.json`, acrescente:
+Em `frontend/src/components/Dados.tsx` (perto das linhas 124 a 136):
+- troque `t("Pontos coloridos pela classe do dia. Linhas cinzas: demais municípios. Acima da linha tracejada o município está em alerta.")` por `t("Pontos coloridos pela classe do dia. Faixa cinza: mínimo e máximo dos demais municípios. Acima da linha tracejada o município está em alerta.")`;
+- dentro da `<div className="legend2">`, depois do `<span>` de "↑/↓ mudança de classe", acrescente `<span>{t("faixa: mínimo e máximo dos demais municípios")}</span>`.
+
+9. Em `es.json` e `en.json`, remova a chave antiga `"Pontos coloridos pela classe do dia. Linhas cinzas: demais municípios. Acima da linha tracejada o município está em alerta."` e acrescente a nova: ES `"Puntos coloreados por la clase del día. Franja gris: mínimo y máximo de los demás municipios. Por encima de la línea discontinua el municipio está en alerta."`, EN `"Points colored by the day's class. Gray band: minimum and maximum of the other municipalities. Above the dashed line the municipality is on alert."`. Acrescente também:
    - `"demais municípios": "demás municipios"` (ES) e `"other municipalities"` (EN)
    - `"faixa: mínimo e máximo dos demais municípios": "franja: mínimo y máximo de los demás municipios"` (ES) e `"band: minimum and maximum of the other municipalities"` (EN)
 
@@ -1599,7 +1721,7 @@ Rode `cd frontend && npm test && npm run typecheck && npm run build`. Tudo passa
 - [ ] **Passo 6: commit**
 
 ```bash
-git add frontend/src/lib/graficos.ts frontend/src/lib/graficos.test.ts frontend/src/components/Graficos.tsx frontend/src/styles/dados.css frontend/src/i18n/es.json frontend/src/i18n/en.json
+git add frontend/src/lib/graficos.ts frontend/src/lib/graficos.test.ts frontend/src/components/Graficos.tsx frontend/src/components/Dados.tsx frontend/src/styles/dados.css frontend/src/i18n/es.json frontend/src/i18n/en.json
 git commit -m "feat(frontend): Evolução com faixa dos demais municípios e seletor no lugar das abas"
 ```
 
@@ -1618,15 +1740,29 @@ git commit -m "feat(frontend): Evolução com faixa dos demais municípios e sel
 
 - [ ] **Passo 1: histórico por município**
 
-Em `Dados.tsx`:
-- troque `const comHistorico = diasComDados(indices, eixo);` por `const comHistorico = serieMunicipio(destaque, eixo).length;`. Confirme que `destaque` já está definido antes dessa linha; se não estiver, mova a linha para depois dele;
+Em `graficos.ts`, troque `diasComDados` (que contava dias de qualquer município) por uma função do município em destaque, e troque o teste dela em `graficos.test.ts`:
+
+```ts
+/** Dias do `eixo` com ponto no município: menor que o período quando o histórico dele ainda é curto. */
+export const diasComDadosDe = (m: Municipio, eixo: readonly string[]): number => serieMunicipio(m, eixo).length;
+```
+
+```ts
+it("diasComDadosDe conta só os dias do município", () => {
+  const m = { ibge: "A", nome: "A", historico: [{ dia_alvo: "2026-10-01", indice: 0.1, classe: 1 }], dias: [] } as unknown as Municipio;
+  expect(diasComDadosDe(m, ["2026-10-01", "2026-10-02"])).toBe(1);
+});
+```
+
+Em `Dados.tsx` (`destaque` vem de `municipios.find(...)` e pode ser `undefined`):
+- troque `const comHistorico = diasComDados(indices, eixo);` por `const comHistorico = destaque ? diasComDadosDe(destaque, eixo) : periodo;`, depois da linha que define `destaque`;
 - troque o parágrafo por:
 
 ```tsx
-{comHistorico < periodo && <p>{t("Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.", { N: String(comHistorico), M: destaque.nome })}</p>}
+{destaque && comHistorico < periodo && <p>{t("Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.", { N: String(comHistorico), M: destaque.nome })}</p>}
 ```
 
-Se `diasComDados` ficar sem uso, apague a função de `graficos.ts`, o teste dela e o import em `Dados.tsx`.
+- troque o import de `diasComDados` por `diasComDadosDe`.
 
 - [ ] **Passo 2: cabeçalho, janela do Telegram e Estações**
 
@@ -1641,7 +1777,7 @@ Se `diasComDados` ficar sem uso, apague a função de `graficos.ts`, o teste del
           </div>
 ```
 
-  Se a prop `municipios` ficar sem uso, remova-a do componente e de quem o chama (procure por `<JanelaTelegram`).
+  A prop `municipios` de `JanelaTelegram` fica sem uso: remova-a da interface do componente e das chamadas em `BannerTelegram.tsx` (perto da linha 27), `Cabecalho.tsx` (perto da linha 125) e `Monitoramento.tsx` (perto da linha 109). Se `BannerTelegram` também só recebia `municipios` para repassar, remova a prop dele e de quem o chama. Em `Monitoramento.tsx`, apague `LISTA_NOMES` (perto da linha 25) se ficar sem uso. Rode `npm run typecheck` para achar qualquer chamada esquecida.
 - Em `Estacoes.tsx`, troque o texto da linha 56 por: `"Estações automáticas do INMET na região e em volta dela. Cada uma mostra a distância até o centro do município de referência; algumas ficam dentro dos municípios monitorados. Toque num pin ou na lista para localizar."`
 
 - [ ] **Passo 3: dicionários**
@@ -1743,7 +1879,7 @@ git commit -m "docs: Alto Vale com 27 municípios, estações regeneradas e praz
 
 - [ ] **Passo 1: execução local medida**
 
-Rode `cd backend && time python -m scripts.rodar_local`. Leia antes o `backend/README.md`, seção "Execução local, sem bot e sem publicar", para os parâmetros. Confira que saem 27 municípios em `indices.json`, ou a lista em `municipios_sem_dados`. Anote o tempo; o critério é menos de 10 minutos.
+Rode `cd backend && time python -m scripts.rodar_local`. Leia antes o `backend/README.md`, seção "Execução local, sem bot e sem publicar", para os parâmetros. Confira que saem 27 municípios em `indices.json`, ou a lista em `municipios_sem_dados`. Anote o tempo; o critério é menos de 10 minutos. O script grava o `frontend/public/data/indices.json` versionado: use-o no Passo 2 e depois desfaça com `git checkout -- frontend/public/data/indices.json`, antes de qualquer commit.
 
 - [ ] **Passo 2: navegador**
 
