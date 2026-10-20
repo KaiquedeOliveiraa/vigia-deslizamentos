@@ -152,3 +152,9 @@ export const municipiosMonitorados = (feicoes: readonly FeicaoMunicipio[]): { ib
     .filter((f) => f.properties.monitorado)
     .map(({ properties: { ibge, nome } }) => ({ ibge, nome }))
     .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+
+/** Classes do rótulo: de longe (zoom < 8,5) só aparecem o selecionado e os em alerta (mapa.css). */
+export const classesDoRotulo = (selecionado: boolean, valor: Valor): { sel: boolean; alerta: boolean } => ({
+  sel: selecionado,
+  alerta: valor ? emAlerta(valor.indice) : false,
+});

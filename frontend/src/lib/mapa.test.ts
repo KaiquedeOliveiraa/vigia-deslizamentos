@@ -4,7 +4,7 @@ import exemplo from "../fixtures/indices.exemplo.json";
 import geojsonBruto from "../data/municipios.geojson?raw";
 import { FEICOES } from "./municipios";
 import type { Indices } from "./tipos";
-import { destacar, limites, municipiosMonitorados, valoresDoDia, mensagemSelecao, passoDia, posicoes, rotuloAria, rotuloDia, type FeicaoMunicipio } from "./mapa";
+import { classesDoRotulo, destacar, limites, municipiosMonitorados, valoresDoDia, mensagemSelecao, passoDia, posicoes, rotuloAria, rotuloDia, type FeicaoMunicipio } from "./mapa";
 
 const pt = tradutor("pt");
 const es = tradutor("es");
@@ -123,5 +123,14 @@ describe("municipiosMonitorados", () => {
     expect(lista).toHaveLength(27);
     expect(lista[0]).toEqual({ ibge: "4200200", nome: "Agrolândia" });
     expect(lista.map((m) => m.nome)).toEqual([...lista.map((m) => m.nome)].sort((a, b) => a.localeCompare(b, "pt-BR")));
+  });
+});
+
+describe("classesDoRotulo", () => {
+  it("selecionado e alerta (índice ≥ 1)", () => {
+    expect(classesDoRotulo(true, { indice: 0.2, classe: 1 })).toEqual({ sel: true, alerta: false });
+    expect(classesDoRotulo(false, { indice: 1.0, classe: 4 })).toEqual({ sel: false, alerta: true });
+    expect(classesDoRotulo(false, null)).toEqual({ sel: false, alerta: false });
+    expect(classesDoRotulo(false, undefined)).toEqual({ sel: false, alerta: false });
   });
 });
