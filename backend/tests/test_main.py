@@ -138,13 +138,9 @@ def test_uma_vez_recebe_a_config_do_ambiente_e_os_municipios_da_configuracao(tmp
     (config, municipios, agora_utc) = chamadas[0]
     assert config.site_url == "https://vigia.exemplo.org"
     assert config.db_path == str(tmp_path / "vigia.db")
-    assert {municipio.ibge for municipio in municipios} == {
-        "4205100",
-        "4206900",
-        "4209151",
-        "4214003",
-        "4219358",
-        "4219408",
+    assert len({municipio.ibge for municipio in municipios}) == 27
+    assert {"4205100", "4206900", "4209151", "4214003", "4219358", "4219408"} <= {
+        municipio.ibge for municipio in municipios
     }
     assert agora_utc.tzinfo is not None
 
@@ -472,9 +468,9 @@ def test_ciclo_completo_em_arquivo_grava_o_banco_e_a_classe_notificada(
     )
 
     assert execucao.publicado is True
-    # Seis municípios x quatro dias-alvo, gravados pela conexão da thread e
+    # 27 municípios x quatro dias-alvo, gravados pela conexão da thread e
     # legíveis pela do loop — é o WAL que permite isso.
-    assert conexao_do_loop.execute("SELECT COUNT(*) FROM indices").fetchone()[0] == 24
+    assert conexao_do_loop.execute("SELECT COUNT(*) FROM indices").fetchone()[0] == 108
     assert len(enviados) == 1
     assert "Ibirama" in enviados[0][1]
     assert banco.ultima_classe_notificada(conexao_do_loop, "4206900") == 4

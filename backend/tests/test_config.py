@@ -29,9 +29,9 @@ CAMINHO_SCHEMA = RAIZ_BACKEND.parent / "docs" / "indices.schema.json"
 def test_carregar_municipios_retorna_todos_os_municipios_configurados():
     municipios = carregar_municipios(CAMINHO_MUNICIPIOS)
 
-    assert len(municipios) == 6
+    assert len(municipios) == 27
     ibges = {municipio.ibge for municipio in municipios}
-    assert len(ibges) == 6  # nenhum código repetido
+    assert len(ibges) == 27  # nenhum código repetido
 
     for municipio in municipios:
         assert isinstance(municipio, Municipio)

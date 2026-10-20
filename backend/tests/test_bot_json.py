@@ -85,7 +85,7 @@ def test_campos_da_raiz_e_ordem_dos_municipios():
     assert dados["municipios"] == [
         {"ibge": m.ibge, "nome": m.nome} for m in MUNICIPIOS
     ]
-    assert len(MUNICIPIOS) == 6
+    assert len(MUNICIPIOS) == 27
 
 
 def test_gerado_em_com_outro_fuso_e_convertido_para_utc():
@@ -125,13 +125,15 @@ def test_campos_fixos_do_status():
     }
 
 
-def test_status_bate_com_texto_do_status_nas_63_combinacoes():
+def test_status_bate_com_texto_do_status_em_todas_as_combinacoes_de_6():
+    # Combinações dos 6 primeiros: 2^27 com a lista toda nunca terminaria.
+    seis = MUNICIPIOS[:6]
     atuais = atuais_de_teste()
     status = montar(atuais=atuais)["status"]
     total = 0
 
-    for tamanho in range(1, len(MUNICIPIOS) + 1):
-        for subconjunto in combinations(MUNICIPIOS, tamanho):
+    for tamanho in range(1, len(seis) + 1):
+        for subconjunto in combinations(seis, tamanho):
             total += 1
             situacoes = [(m.nome, atuais[m.ibge]) for m in subconjunto]
             montado = (

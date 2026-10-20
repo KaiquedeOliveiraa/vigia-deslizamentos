@@ -3,6 +3,30 @@
   "gerado_em": "2026-10-15T14:30:05Z",
   "municipios": [
     {
+      "ibge": "4200200",
+      "nome": "Agrolândia"
+    },
+    {
+      "ibge": "4200309",
+      "nome": "Agronômica"
+    },
+    {
+      "ibge": "4201802",
+      "nome": "Atalanta"
+    },
+    {
+      "ibge": "4201901",
+      "nome": "Aurora"
+    },
+    {
+      "ibge": "4202859",
+      "nome": "Braço do Trombudo"
+    },
+    {
+      "ibge": "4204194",
+      "nome": "Chapadão do Lageado"
+    },
+    {
       "ibge": "4205100",
       "nome": "Dona Emma"
     },
@@ -11,12 +35,72 @@
       "nome": "Ibirama"
     },
     {
+      "ibge": "4207403",
+      "nome": "Imbuia"
+    },
+    {
+      "ibge": "4208500",
+      "nome": "Ituporanga"
+    },
+    {
       "ibge": "4209151",
       "nome": "José Boiteux"
     },
     {
+      "ibge": "4209508",
+      "nome": "Laurentino"
+    },
+    {
+      "ibge": "4209904",
+      "nome": "Lontras"
+    },
+    {
+      "ibge": "4210852",
+      "nome": "Mirim Doce"
+    },
+    {
+      "ibge": "4212700",
+      "nome": "Petrolândia"
+    },
+    {
+      "ibge": "4213708",
+      "nome": "Pouso Redondo"
+    },
+    {
       "ibge": "4214003",
       "nome": "Presidente Getúlio"
+    },
+    {
+      "ibge": "4214102",
+      "nome": "Presidente Nereu"
+    },
+    {
+      "ibge": "4214508",
+      "nome": "Rio do Campo"
+    },
+    {
+      "ibge": "4214607",
+      "nome": "Rio do Oeste"
+    },
+    {
+      "ibge": "4214805",
+      "nome": "Rio do Sul"
+    },
+    {
+      "ibge": "4215307",
+      "nome": "Salete"
+    },
+    {
+      "ibge": "4217808",
+      "nome": "Taió"
+    },
+    {
+      "ibge": "4218608",
+      "nome": "Trombudo Central"
+    },
+    {
+      "ibge": "4219200",
+      "nome": "Vidal Ramos"
     },
     {
       "ibge": "4219358",
@@ -31,34 +115,97 @@
     "opcao_todos": "Todos",
     "boas_vindas": "Olá! Escolha os municípios que quer acompanhar no VIGIA.\n\nToque em um município ou em \"Todos\". Use /status para ver a situação e /parar para cancelar.",
     "boas_vindas_sugerido": {
+      "4200200": "Olá! O link veio de Agrolândia — toque em \"Agrolândia\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4200309": "Olá! O link veio de Agronômica — toque em \"Agronômica\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4201802": "Olá! O link veio de Atalanta — toque em \"Atalanta\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4201901": "Olá! O link veio de Aurora — toque em \"Aurora\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4202859": "Olá! O link veio de Braço do Trombudo — toque em \"Braço do Trombudo\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4204194": "Olá! O link veio de Chapadão do Lageado — toque em \"Chapadão do Lageado\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
       "4205100": "Olá! O link veio de Dona Emma — toque em \"Dona Emma\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
       "4206900": "Olá! O link veio de Ibirama — toque em \"Ibirama\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4207403": "Olá! O link veio de Imbuia — toque em \"Imbuia\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4208500": "Olá! O link veio de Ituporanga — toque em \"Ituporanga\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
       "4209151": "Olá! O link veio de José Boiteux — toque em \"José Boiteux\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4209508": "Olá! O link veio de Laurentino — toque em \"Laurentino\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4209904": "Olá! O link veio de Lontras — toque em \"Lontras\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4210852": "Olá! O link veio de Mirim Doce — toque em \"Mirim Doce\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4212700": "Olá! O link veio de Petrolândia — toque em \"Petrolândia\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4213708": "Olá! O link veio de Pouso Redondo — toque em \"Pouso Redondo\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
       "4214003": "Olá! O link veio de Presidente Getúlio — toque em \"Presidente Getúlio\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4214102": "Olá! O link veio de Presidente Nereu — toque em \"Presidente Nereu\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4214508": "Olá! O link veio de Rio do Campo — toque em \"Rio do Campo\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4214607": "Olá! O link veio de Rio do Oeste — toque em \"Rio do Oeste\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4214805": "Olá! O link veio de Rio do Sul — toque em \"Rio do Sul\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4215307": "Olá! O link veio de Salete — toque em \"Salete\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4217808": "Olá! O link veio de Taió — toque em \"Taió\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4218608": "Olá! O link veio de Trombudo Central — toque em \"Trombudo Central\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
+      "4219200": "Olá! O link veio de Vidal Ramos — toque em \"Vidal Ramos\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
       "4219358": "Olá! O link veio de Vitor Meireles — toque em \"Vitor Meireles\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar.",
       "4219408": "Olá! O link veio de Witmarsum — toque em \"Witmarsum\" para se inscrever só nele, ou em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar."
     },
     "inscricao_confirmada": {
+      "4200200": "Pronto! Você vai receber avisos de: Agrolândia.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4200309": "Pronto! Você vai receber avisos de: Agronômica.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4201802": "Pronto! Você vai receber avisos de: Atalanta.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4201901": "Pronto! Você vai receber avisos de: Aurora.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4202859": "Pronto! Você vai receber avisos de: Braço do Trombudo.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4204194": "Pronto! Você vai receber avisos de: Chapadão do Lageado.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
       "4205100": "Pronto! Você vai receber avisos de: Dona Emma.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
       "4206900": "Pronto! Você vai receber avisos de: Ibirama.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4207403": "Pronto! Você vai receber avisos de: Imbuia.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4208500": "Pronto! Você vai receber avisos de: Ituporanga.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
       "4209151": "Pronto! Você vai receber avisos de: José Boiteux.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4209508": "Pronto! Você vai receber avisos de: Laurentino.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4209904": "Pronto! Você vai receber avisos de: Lontras.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4210852": "Pronto! Você vai receber avisos de: Mirim Doce.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4212700": "Pronto! Você vai receber avisos de: Petrolândia.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4213708": "Pronto! Você vai receber avisos de: Pouso Redondo.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
       "4214003": "Pronto! Você vai receber avisos de: Presidente Getúlio.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4214102": "Pronto! Você vai receber avisos de: Presidente Nereu.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4214508": "Pronto! Você vai receber avisos de: Rio do Campo.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4214607": "Pronto! Você vai receber avisos de: Rio do Oeste.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4214805": "Pronto! Você vai receber avisos de: Rio do Sul.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4215307": "Pronto! Você vai receber avisos de: Salete.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4217808": "Pronto! Você vai receber avisos de: Taió.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4218608": "Pronto! Você vai receber avisos de: Trombudo Central.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+      "4219200": "Pronto! Você vai receber avisos de: Vidal Ramos.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
       "4219358": "Pronto! Você vai receber avisos de: Vitor Meireles.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
       "4219408": "Pronto! Você vai receber avisos de: Witmarsum.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil."
     },
-    "inscricao_confirmada_todos": "Pronto! Você vai receber avisos de: Dona Emma, Ibirama, José Boiteux, Presidente Getúlio, Vitor Meireles, Witmarsum.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
+    "inscricao_confirmada_todos": "Pronto! Você vai receber avisos de: Agrolândia, Agronômica, Atalanta, Aurora, Braço do Trombudo, Chapadão do Lageado, Dona Emma, Ibirama, Imbuia, Ituporanga, José Boiteux, Laurentino, Lontras, Mirim Doce, Petrolândia, Pouso Redondo, Presidente Getúlio, Presidente Nereu, Rio do Campo, Rio do Oeste, Rio do Sul, Salete, Taió, Trombudo Central, Vidal Ramos, Vitor Meireles, Witmarsum.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
     "opcao_desconhecida": "Não reconheci essa opção. Use /start para ver a lista de municípios.",
     "inscricoes_apagadas": "Suas inscrições foram apagadas. Use /start quando quiser voltar."
   },
   "status": {
     "cabecalho": "<b>Situação dos seus municípios</b>\n\n",
     "blocos": {
-      "4205100": "ℹ️ <b>Dona Emma</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4200200": "ℹ️ <b>Agrolândia</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>0,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4200309": "<b>Agronômica</b>: ainda sem cálculo",
+      "4201802": "ℹ️ <b>Atalanta</b> · Risco baixo\n🟩🟩🟩⬜⬜⬜⬜ classe 3 de 7 · Índice <b>2,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4201901": "<b>Aurora</b>: ainda sem cálculo",
+      "4202859": "⚠️ <b>Braço do Trombudo</b> · Risco alto\n🟩🟩🟩🟨🟧⬜⬜ classe 5 de 7 · Índice <b>4,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4204194": "<b>Chapadão do Lageado</b>: ainda sem cálculo",
+      "4205100": "ℹ️ <b>Dona Emma</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>6,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
       "4206900": "<b>Ibirama</b>: ainda sem cálculo",
-      "4209151": "ℹ️ <b>José Boiteux</b> · Risco baixo\n🟩🟩🟩⬜⬜⬜⬜ classe 3 de 7 · Índice <b>2,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
-      "4214003": "<b>Presidente Getúlio</b>: ainda sem cálculo",
-      "4219358": "⚠️ <b>Vitor Meireles</b> · Risco alto\n🟩🟩🟩🟨🟧⬜⬜ classe 5 de 7 · Índice <b>4,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
-      "4219408": "<b>Witmarsum</b>: ainda sem cálculo"
+      "4207403": "ℹ️ <b>Imbuia</b> · Risco baixo\n🟩🟩🟩⬜⬜⬜⬜ classe 3 de 7 · Índice <b>8,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4208500": "<b>Ituporanga</b>: ainda sem cálculo",
+      "4209151": "⚠️ <b>José Boiteux</b> · Risco alto\n🟩🟩🟩🟨🟧⬜⬜ classe 5 de 7 · Índice <b>10,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4209508": "<b>Laurentino</b>: ainda sem cálculo",
+      "4209904": "ℹ️ <b>Lontras</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>12,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4210852": "<b>Mirim Doce</b>: ainda sem cálculo",
+      "4212700": "ℹ️ <b>Petrolândia</b> · Risco baixo\n🟩🟩🟩⬜⬜⬜⬜ classe 3 de 7 · Índice <b>14,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4213708": "<b>Pouso Redondo</b>: ainda sem cálculo",
+      "4214003": "⚠️ <b>Presidente Getúlio</b> · Risco alto\n🟩🟩🟩🟨🟧⬜⬜ classe 5 de 7 · Índice <b>16,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4214102": "<b>Presidente Nereu</b>: ainda sem cálculo",
+      "4214508": "ℹ️ <b>Rio do Campo</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>18,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4214607": "<b>Rio do Oeste</b>: ainda sem cálculo",
+      "4214805": "ℹ️ <b>Rio do Sul</b> · Risco baixo\n🟩🟩🟩⬜⬜⬜⬜ classe 3 de 7 · Índice <b>20,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4215307": "<b>Salete</b>: ainda sem cálculo",
+      "4217808": "⚠️ <b>Taió</b> · Risco alto\n🟩🟩🟩🟨🟧⬜⬜ classe 5 de 7 · Índice <b>22,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4218608": "<b>Trombudo Central</b>: ainda sem cálculo",
+      "4219200": "ℹ️ <b>Vidal Ramos</b> · Risco extremamente baixo\n🟩⬜⬜⬜⬜⬜⬜ classe 1 de 7 · Índice <b>24,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00",
+      "4219358": "<b>Vitor Meireles</b>: ainda sem cálculo",
+      "4219408": "ℹ️ <b>Witmarsum</b> · Risco baixo\n🟩🟩🟩⬜⬜⬜⬜ classe 3 de 7 · Índice <b>26,40</b>\n📅 Válido para 15/10/2026 · cálculo de 15/10/2026 09:00"
     },
     "separador": "\n\n",
     "rodape": "\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
@@ -66,6 +213,60 @@
   },
   "simulacao": {
     "mensagens": {
+      "4200200": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Agrolândia — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Agrolândia — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Agrolândia — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Agrolândia</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Agrolândia</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Agrolândia</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Agrolândia</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4200309": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Agronômica — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Agronômica — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Agronômica — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Agronômica</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Agronômica</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Agronômica</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Agronômica</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4201802": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Atalanta — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Atalanta — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Atalanta — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Atalanta</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Atalanta</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Atalanta</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Atalanta</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4201901": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Aurora — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Aurora — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Aurora — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Aurora</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Aurora</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Aurora</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Aurora</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4202859": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Braço do Trombudo — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Braço do Trombudo — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Braço do Trombudo — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Braço do Trombudo</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Braço do Trombudo</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Braço do Trombudo</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Braço do Trombudo</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4204194": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Chapadão do Lageado — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Chapadão do Lageado — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Chapadão do Lageado — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Chapadão do Lageado</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Chapadão do Lageado</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Chapadão do Lageado</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Chapadão do Lageado</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
       "4205100": [
         "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Dona Emma — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
         "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Dona Emma — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
@@ -84,6 +285,24 @@
         "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Ibirama</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
         "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Ibirama</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
       ],
+      "4207403": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Imbuia — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Imbuia — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Imbuia — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Imbuia</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Imbuia</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Imbuia</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Imbuia</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4208500": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Ituporanga — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Ituporanga — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Ituporanga — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Ituporanga</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Ituporanga</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Ituporanga</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Ituporanga</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
       "4209151": [
         "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>José Boiteux — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
         "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>José Boiteux — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
@@ -93,6 +312,51 @@
         "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — José Boiteux</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
         "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — José Boiteux</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
       ],
+      "4209508": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Laurentino — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Laurentino — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Laurentino — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Laurentino</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Laurentino</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Laurentino</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Laurentino</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4209904": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Lontras — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Lontras — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Lontras — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Lontras</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Lontras</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Lontras</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Lontras</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4210852": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Mirim Doce — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Mirim Doce — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Mirim Doce — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Mirim Doce</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Mirim Doce</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Mirim Doce</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Mirim Doce</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4212700": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Petrolândia — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Petrolândia — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Petrolândia — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Petrolândia</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Petrolândia</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Petrolândia</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Petrolândia</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4213708": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Pouso Redondo — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Pouso Redondo — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Pouso Redondo — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Pouso Redondo</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Pouso Redondo</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Pouso Redondo</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Pouso Redondo</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
       "4214003": [
         "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Presidente Getúlio — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
         "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Presidente Getúlio — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
@@ -101,6 +365,78 @@
         "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Presidente Getúlio</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
         "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Presidente Getúlio</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
         "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Presidente Getúlio</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4214102": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Presidente Nereu — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Presidente Nereu — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Presidente Nereu — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Presidente Nereu</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Presidente Nereu</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Presidente Nereu</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Presidente Nereu</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4214508": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Rio do Campo — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Rio do Campo — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Rio do Campo — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Rio do Campo</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Rio do Campo</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Rio do Campo</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Rio do Campo</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4214607": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Rio do Oeste — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Rio do Oeste — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Rio do Oeste — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Rio do Oeste</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Rio do Oeste</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Rio do Oeste</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Rio do Oeste</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4214805": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Rio do Sul — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Rio do Sul — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Rio do Sul — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Rio do Sul</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Rio do Sul</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Rio do Sul</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Rio do Sul</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4215307": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Salete — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Salete — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Salete — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Salete</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Salete</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Salete</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Salete</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4217808": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Taió — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Taió — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Taió — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Taió</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Taió</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Taió</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Taió</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4218608": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Trombudo Central — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Trombudo Central — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Trombudo Central — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Trombudo Central</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Trombudo Central</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Trombudo Central</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Trombudo Central</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
+      ],
+      "4219200": [
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Vidal Ramos — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Vidal Ramos — sem alerta</b>\n<b>Risco muito baixo</b> · classe 2 de 7\n🟩🟩⬜⬜⬜⬜⬜\n📊 Índice: <b>0,55</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Vidal Ramos — sem alerta</b>\n<b>Risco baixo</b> · classe 3 de 7\n🟩🟩🟩⬜⬜⬜⬜\n📊 Índice: <b>0,85</b>\nCondições normais para a chuva acumulada.",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ATENÇÃO — Vidal Ramos</b>\n<b>Risco moderado</b> · classe 4 de 7\n🟩🟩🟩🟨⬜⬜⬜\n\n📊 Índice: <b>1,40</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n⚠️ <b>ALERTA — Vidal Ramos</b>\n<b>Risco alto</b> · classe 5 de 7\n🟩🟩🟩🟨🟧⬜⬜\n\n📊 Índice: <b>2,20</b>\n\n<b>O que fazer</b>\n• Fique atento a sinais de movimento do terreno: rachaduras em paredes ou no chão, árvores e postes inclinados, portas e janelas emperrando.\n• Acompanhe as atualizações da Defesa Civil.\n• Se mora em encosta ou perto de barranco, combine com a família um plano para sair rapidamente.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA — Vidal Ramos</b>\n<b>Risco muito alto</b> · classe 6 de 7\n🟩🟩🟩🟨🟧🟥⬜\n\n📊 Índice: <b>3,00</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>",
+        "🧪 <b>SIMULAÇÃO</b>\n🚨 <b>ALERTA MÁXIMO — Vidal Ramos</b>\n<b>Risco extremamente alto</b> · classe 7 de 7\n🟩🟩🟩🟨🟧🟥🟪\n\n📊 Índice: <b>3,90</b>\n\n<b>O que fazer</b>\n• Se mora em encosta ou perto de barranco e notar rachaduras, árvores ou postes inclinados ou água barrenta saindo do terreno, saia do local e vá para um lugar seguro.\n• Siga as orientações da Defesa Civil.\n• Emergência: Defesa Civil <b>199</b> · Bombeiros <b>193</b>\n\n🗺 Ver no mapa: https://vigia.exemplo.org\n<i>Sistema acadêmico, não emite alerta oficial.</i>"
       ],
       "4219358": [
         "🧪 <b>SIMULAÇÃO</b>\nℹ️ <b>Vitor Meireles — sem alerta</b>\n<b>Risco extremamente baixo</b> · classe 1 de 7\n🟩⬜⬜⬜⬜⬜⬜\n📊 Índice: <b>0,20</b>\nCondições normais para a chuva acumulada.",
@@ -122,7 +458,7 @@
       ]
     },
     "fim": "🧪 Fim da simulação: 7 classes enviadas.",
-    "municipio_invalido": "🧪 <b>SIMULAÇÃO</b>\nMunicípio \"{entrada}\" não encontrado.\n\nMunicípios válidos:\n• Dona Emma\n• Ibirama\n• José Boiteux\n• Presidente Getúlio\n• Vitor Meireles\n• Witmarsum",
+    "municipio_invalido": "🧪 <b>SIMULAÇÃO</b>\nMunicípio \"{entrada}\" não encontrado.\n\nMunicípios válidos:\n• Agrolândia\n• Agronômica\n• Atalanta\n• Aurora\n• Braço do Trombudo\n• Chapadão do Lageado\n• Dona Emma\n• Ibirama\n• Imbuia\n• Ituporanga\n• José Boiteux\n• Laurentino\n• Lontras\n• Mirim Doce\n• Petrolândia\n• Pouso Redondo\n• Presidente Getúlio\n• Presidente Nereu\n• Rio do Campo\n• Rio do Oeste\n• Rio do Sul\n• Salete\n• Taió\n• Trombudo Central\n• Vidal Ramos\n• Vitor Meireles\n• Witmarsum",
     "pausa_s": 1.0
   }
 }
