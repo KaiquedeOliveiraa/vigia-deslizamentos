@@ -15,6 +15,7 @@ import pytest
 
 from app.bot.inscricao import OPCAO_TODOS
 from app.bot.mensagens import (
+    LIMITE_MENSAGEM_TELEGRAM,
     CABECALHO_DO_STATUS,
     CORES_DA_BARRA,
     ORIENTACOES_POR_CLASSE,
@@ -23,6 +24,7 @@ from app.bot.mensagens import (
     TEXTO_SEM_INSCRICAO,
     barra,
     bloco_do_status,
+    partes_do_status,
     rodape_do_status,
     texto_boas_vindas,
     texto_do_aviso,
@@ -396,3 +398,34 @@ def test_status_e_a_juncao_das_partes():
 
 def test_status_sem_inscricao_e_o_texto_fixo():
     assert texto_do_status([], SITE_URL) == TEXTO_SEM_INSCRICAO
+
+
+def _utf16(texto: str) -> int:
+    return len(texto.encode("utf-16-le")) // 2
+
+
+def test_partes_do_status_curto_e_igual_ao_texto():
+    situacoes = [("Ibirama", None), ("Witmarsum", None)]
+    assert partes_do_status(situacoes, "https://x") == [texto_do_status(situacoes, "https://x")]
+
+
+def test_partes_do_status_sem_inscricao():
+    assert partes_do_status([], "https://x") == [TEXTO_SEM_INSCRICAO]
+
+
+def test_partes_do_status_divide_entre_blocos():
+    situacoes = [(f"Município {i}", None) for i in range(27)]
+    partes = partes_do_status(situacoes, "https://x", limite=200)
+    assert len(partes) > 1
+    assert all(_utf16(p) <= 200 for p in partes)
+    blocos = [bloco_do_status(nome, None) for nome, _ in situacoes]
+    juntas = "".join(partes)
+    assert [juntas.find(b) for b in blocos] == sorted(juntas.find(b) for b in blocos)
+    assert partes[0].startswith(CABECALHO_DO_STATUS)
+    assert partes[-1].endswith(rodape_do_status("https://x"))
+    assert LIMITE_MENSAGEM_TELEGRAM == 4096
+
+
+def test_partes_do_status_bloco_maior_que_o_limite_e_erro():
+    with pytest.raises(ValueError, match="bloco"):
+        partes_do_status([("M" * 300, None)], "https://x", limite=100)

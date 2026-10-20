@@ -42,8 +42,8 @@ from app.bot import simulacao
 from app.bot.mensagens import (
     TEXTO_INSCRICOES_APAGADAS,
     TEXTO_OPCAO_DESCONHECIDA,
+    partes_do_status,
     texto_boas_vindas,
-    texto_do_status,
     texto_inscricao_confirmada,
 )
 from app.config import Config, Municipio
@@ -128,9 +128,8 @@ async def comando_status(update: Update, contexto: ContextTypes.DEFAULT_TYPE) ->
     conexao = contexto.bot_data[CHAVE_CONEXAO]
 
     situacoes = situacoes_do_chat(conexao, municipios, update.message.chat_id)
-    await update.message.reply_text(
-        texto_do_status(situacoes, config.site_url), parse_mode=ParseMode.HTML
-    )
+    for parte in partes_do_status(situacoes, config.site_url):
+        await update.message.reply_text(parte, parse_mode=ParseMode.HTML)
 
 
 async def comando_parar(update: Update, contexto: ContextTypes.DEFAULT_TYPE) -> None:

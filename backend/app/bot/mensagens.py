@@ -331,3 +331,42 @@ def texto_do_status(
     return SEPARADOR_DO_STATUS.join(
         [CABECALHO_DO_STATUS, *blocos, rodape_do_status(site_url)]
     )
+
+
+#: Limite do Telegram, em unidades UTF-16 (emoji conta 2).
+LIMITE_MENSAGEM_TELEGRAM = 4096
+
+
+def _tamanho(texto: str) -> int:
+    return len(texto.encode("utf-16-le")) // 2
+
+
+def partes_do_status(
+    situacoes: list[tuple[str, IndiceAtual | None]],
+    site_url: str,
+    limite: int = LIMITE_MENSAGEM_TELEGRAM,
+) -> list[str]:
+    """`texto_do_status` em mensagens de até `limite`, cortando só entre blocos.
+
+    Conta o HTML bruto, o que superestima (as tags somem no Telegram), ou seja,
+    é seguro. O cabeçalho vai na primeira parte e o rodapé na última.
+    """
+    if not situacoes:
+        return [TEXTO_SEM_INSCRICAO]
+    cabecalho = CABECALHO_DO_STATUS + SEPARADOR_DO_STATUS
+    rodape = SEPARADOR_DO_STATUS + rodape_do_status(site_url)
+    partes: list[str] = []
+    atual, vazia = cabecalho, True
+    for nome, situacao in situacoes:
+        bloco = bloco_do_status(nome, situacao)
+        if _tamanho(cabecalho + bloco + rodape) > limite:
+            raise ValueError(f"bloco de {nome!r} sozinho passa do limite de {limite}")
+        junto = atual + bloco if vazia else atual + SEPARADOR_DO_STATUS + bloco
+        if not vazia and _tamanho(junto) + _tamanho(rodape) > limite:
+            partes.append(atual)
+            atual = bloco
+        else:
+            atual = junto
+        vazia = False
+    partes.append(atual + rodape)
+    return partes
