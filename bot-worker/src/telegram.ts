@@ -1,6 +1,7 @@
+import { tecladoInicial } from "./teclados";
 import type { BotJson, Env } from "./tipos";
 
-export type Teclado = "municipios" | "remover" | "nenhum";
+export type Teclado = "municipios" | "remover" | "nenhum" | { linhas: string[][] };
 
 /** Envia uma mensagem HTML. Nunca levanta: falhas vão ao log só com status ou tipo do erro. */
 export async function enviarMensagem(
@@ -11,12 +12,10 @@ export async function enviarMensagem(
   bot?: BotJson,
 ): Promise<void> {
   const corpo: Record<string, unknown> = { chat_id: chatId, text: texto, parse_mode: "HTML" };
-  if (teclado === "municipios" && bot) {
+  const linhas = typeof teclado === "object" ? teclado.linhas : teclado === "municipios" && bot ? tecladoInicial(bot) : null;
+  if (linhas) {
     corpo.reply_markup = {
-      keyboard: [
-        ...bot.municipios.map((m) => [{ text: m.nome }]),
-        [{ text: bot.textos.opcao_todos }],
-      ],
+      keyboard: linhas.map((l) => l.map((text) => ({ text }))),
       resize_keyboard: true,
       one_time_keyboard: true,
     };
@@ -71,4 +70,32 @@ export function textoDoStatus(bot: BotJson, ibges: string[]): string {
     .map((m) => bot.status.blocos[m.ibge]!);
   if (blocos.length === 0) return bot.status.sem_inscricao;
   return bot.status.cabecalho + blocos.join(bot.status.separador) + bot.status.rodape;
+}
+
+export const LIMITE_MENSAGEM_TELEGRAM = 4096;
+
+/** `/status` em mensagens de até `limite` (comprimento JS do HTML bruto: superestima, é seguro). */
+export function partesDoStatus(bot: BotJson, ibges: string[], limite = LIMITE_MENSAGEM_TELEGRAM): string[] {
+  const inscritos = new Set(ibges);
+  const blocos = bot.municipios
+    .filter((m) => inscritos.has(m.ibge) && bot.status.blocos[m.ibge] !== undefined)
+    .map((m) => bot.status.blocos[m.ibge]!);
+  if (blocos.length === 0) return [bot.status.sem_inscricao];
+  const { cabecalho, separador, rodape } = bot.status;
+  const partes: string[] = [];
+  let atual = cabecalho;
+  let vazia = true;
+  for (const bloco of blocos) {
+    if (cabecalho.length + bloco.length + rodape.length > limite) throw new Error(`bloco sozinho passa do limite de ${limite}`);
+    const junto = vazia ? atual + bloco : atual + separador + bloco;
+    if (!vazia && junto.length + rodape.length > limite) {
+      partes.push(atual);
+      atual = bloco;
+    } else {
+      atual = junto;
+    }
+    vazia = false;
+  }
+  partes.push(atual + rodape);
+  return partes;
 }
