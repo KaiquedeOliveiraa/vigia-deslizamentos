@@ -1,12 +1,13 @@
-// Gera src/data/municipios.geojson: os 6 municípios monitorados e os vizinhos que encostam neles,
+// Gera src/data/municipios.geojson: os municípios de backend/config/municipios.json e os vizinhos que encostam neles,
 // a partir da malha municipal do IBGE (mesma fonte do scripts/geo.py do protótipo).
 // Uso: npm run gerar:geojson
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 // Fixada num commit do tbrugz/geodata-br para a saída ser reprodutível (master em 2026-10-03).
 const COMMIT = "c39dfb040bfd466fe2a476bafed00749c5c42f16";
 const FONTE = `https://raw.githubusercontent.com/tbrugz/geodata-br/${COMMIT}/geojson/geojs-42-mun.json`;
-const MONITORADOS = ["4219358", "4209151", "4219408", "4205100", "4214003", "4206900"];
+const CONFIG = new URL("../../backend/config/municipios.json", import.meta.url);
+const MONITORADOS = JSON.parse(readFileSync(CONFIG, "utf-8")).map((m) => m.ibge);
 const TOLERANCIA = 0.01; // graus; mesmo buffer do protótipo para decidir quem é vizinho
 const SAIDA = new URL("../src/data/municipios.geojson", import.meta.url);
 
@@ -20,6 +21,8 @@ const celula = (x, y) => `${Math.floor(x / TOLERANCIA)},${Math.floor(y / TOLERAN
 
 const nucleo = malha.features.filter((f) => MONITORADOS.includes(f.properties.id));
 if (nucleo.length !== MONITORADOS.length) throw new Error("Algum código IBGE monitorado não está na malha");
+const multi = nucleo.filter((f) => f.geometry.type !== "Polygon").map((f) => f.properties.id);
+if (multi.length) throw new Error(`Monitorado sem Polygon simples (o mapa não trata MultiPolygon): ${multi.join(", ")}`);
 
 // Grade dos vértices do núcleo: um município é vizinho se algum vértice dele fica a até TOLERANCIA de um vértice do núcleo.
 const grade = new Map();
