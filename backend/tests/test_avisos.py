@@ -13,12 +13,15 @@ from __future__ import annotations
 import asyncio
 import logging
 import sqlite3
-from datetime import datetime, timezone
+import warnings
+from datetime import datetime, timedelta, timezone
 
 import pytest
 from telegram.constants import ParseMode
-from telegram.error import Forbidden, NetworkError, TelegramError
+from telegram.error import Forbidden, NetworkError, RetryAfter, TelegramError
+from telegram.warnings import PTBDeprecationWarning
 
+from app.bot import avisos as modulo_avisos
 from app.bot.avisos import enviar_avisos
 from app.bot.inscritos import InscritosIndisponiveisError, InscritosSqlite
 from app.bot.regra_aviso import Aviso
@@ -27,6 +30,14 @@ from app.modelos import banco
 UTC = timezone.utc
 AGORA = datetime(2026, 10, 1, 21, 0, tzinfo=UTC)
 SITE_URL = "https://vigia.exemplo.org"
+
+
+@pytest.fixture(autouse=True)
+def sem_espera(monkeypatch):
+    async def nada(_segundos):
+        return None
+
+    monkeypatch.setattr(modulo_avisos, "_dormir", nada)
 
 
 class BotFalso:
@@ -456,3 +467,41 @@ def test_erro_inesperado_ao_listar_inscritos_nao_propaga(caplog):
     assert banco.ultima_classe_notificada(conn, "4206900") is None
     assert banco.ultima_classe_notificada(conn, "4205100") is None
     assert caplog.records
+
+
+def _retry_after(segundos: int) -> RetryAfter:
+    # A 22.x avisa que retry_after vai virar timedelta; com -W error isso viraria erro.
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", PTBDeprecationWarning)
+        return RetryAfter(timedelta(seconds=segundos))
+
+
+class BotQueLimitaUmaVez(BotFalso):
+    def __init__(self):
+        super().__init__()
+        self.limitou = False
+
+    async def send_message(self, chat_id, text, parse_mode=None, **_):
+        if not self.limitou:
+            self.limitou = True
+            raise _retry_after(3)
+        await super().send_message(chat_id, text, parse_mode)
+
+
+def test_retry_after_espera_e_reenvia(monkeypatch):
+    esperas: list[float] = []
+
+    async def dormir(segundos):
+        esperas.append(segundos)
+
+    monkeypatch.setattr(modulo_avisos, "_dormir", dormir)
+    conn = conexao()
+    inscritos = InscritosSqlite(conn)
+    banco.inscrever(conn, 10, "4206900", AGORA)
+    bot = BotQueLimitaUmaVez()
+
+    asyncio.run(enviar_avisos(bot, conn, inscritos, [aviso()], AGORA, SITE_URL))
+
+    assert [c for c, _ in bot.enviados] == [10]
+    assert 3 in esperas
+    assert banco.ultima_classe_notificada(conn, "4206900") == 4

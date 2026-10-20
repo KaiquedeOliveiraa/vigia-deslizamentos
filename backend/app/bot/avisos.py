@@ -15,12 +15,15 @@ que o plano registra.
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import sqlite3
-from datetime import datetime
+import warnings
+from datetime import datetime, timedelta
 
 from telegram.constants import ParseMode
-from telegram.error import Forbidden, TelegramError
+from telegram.error import Forbidden, RetryAfter, TelegramError
+from telegram.warnings import PTBDeprecationWarning
 
 from app.bot.inscritos import InscritosIndisponiveisError, RepositorioInscritos
 from app.bot.mensagens import texto_do_aviso
@@ -28,6 +31,35 @@ from app.bot.regra_aviso import Aviso
 from app.modelos import banco
 
 _log = logging.getLogger(__name__)
+
+#: Espaço mínimo entre dois envios: o Telegram aceita ~30 msg/s no total.
+PAUSA_ENTRE_ENVIOS_S = 0.05
+#: Teto da espera pedida pelo Telegram num 429.
+ESPERA_MAXIMA_S = 60
+
+_dormir = asyncio.sleep
+
+
+def _segundos_de_espera(erro: RetryAfter) -> float:
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", PTBDeprecationWarning)
+        espera = erro.retry_after
+    segundos = espera.total_seconds() if isinstance(espera, timedelta) else float(espera)
+    return min(max(segundos, 0.0), ESPERA_MAXIMA_S)
+
+
+async def _enviar(bot, chat_id: int, texto: str) -> None:
+    """Envia; num 429 espera o que o Telegram pediu e tenta uma vez mais."""
+    try:
+        await bot.send_message(chat_id=chat_id, text=texto, parse_mode=ParseMode.HTML)
+    except RetryAfter as erro:
+        await _dormir(_segundos_de_espera(erro))
+        try:
+            await bot.send_message(chat_id=chat_id, text=texto, parse_mode=ParseMode.HTML)
+        except TelegramError as segundo:
+            # A especificação pede erro (vira aviso no resumo do Actions); o laço trata como transitória.
+            _log.error("aviso não entregue após esperar o limite do Telegram: %s", type(segundo).__name__)
+            raise
 
 
 def _exigir_fuso(nome: str, momento: datetime) -> None:
@@ -57,8 +89,9 @@ async def _enviar_para_um_municipio(
     enviados = 0
     falhas_transitorias = 0
     for chat_id in chats:
+        await _dormir(PAUSA_ENTRE_ENVIOS_S)
         try:
-            await bot.send_message(chat_id=chat_id, text=texto, parse_mode=ParseMode.HTML)
+            await _enviar(bot, chat_id, texto)
         except Forbidden:
             _log.info(
                 "um chat de '%s' bloqueou o bot: apagando as inscrições dele (RNF05)",
