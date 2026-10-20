@@ -121,7 +121,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
                 <span className="tag">{t("diário · {N}", { N: formatarHora(indices.gerado_em) })}</span>
               </div>
               <p className="sub">
-                {t("Pontos coloridos pela classe do dia. Linhas cinzas: demais municípios. Acima da linha tracejada o município está em alerta.")}
+                {t("Pontos coloridos pela classe do dia. Faixa cinza: mínimo e máximo dos demais municípios. Acima da linha tracejada o município está em alerta.")}
               </p>
               <div className="legend2" aria-hidden="true">
                 <span className="trend up">
@@ -133,6 +133,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
                   {t("descendo")}
                 </span>
                 <span>{t("↑/↓ mudança de classe")}</span>
+                <span>{t("faixa: mínimo e máximo dos demais municípios")}</span>
               </div>
               <Evolucao t={t} municipios={municipios} destaque={destaque} eixo={eixo} aoSelecionar={selecionar} />
               {semDados.length > 0 && (

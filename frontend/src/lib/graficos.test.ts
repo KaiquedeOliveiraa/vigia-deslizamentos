@@ -17,7 +17,7 @@ import {
   passoDaSeta,
   serieMunicipio,
   variacoesDiarias,
-  vizinhoCiclico,
+  faixaDosDemais,
 } from "./graficos";
 
 const municipio = (
@@ -262,10 +262,18 @@ describe("interação da Evolução", () => {
     expect(focoAposSeta(0, -1, 7)).toBe(0);
     expect(focoAposSeta(6, 1, 7)).toBe(6);
   });
+});
 
-  it("vizinhoCiclico: chips dão a volta nas pontas", () => {
-    expect(vizinhoCiclico(0, -1, 6)).toBe(5);
-    expect(vizinhoCiclico(5, 1, 6)).toBe(0);
-    expect(vizinhoCiclico(2, 1, 6)).toBe(3);
+describe("faixaDosDemais", () => {
+  it("mínimo e máximo por dia só com quem tem dado; menos de 2 vira null", () => {
+    const eixo = ["2026-10-01", "2026-10-02"];
+    const mk = (ibge: string, hist: [string, number][]) =>
+      ({ ibge, nome: ibge, historico: hist.map(([dia_alvo, indice]) => ({ dia_alvo, indice, classe: 1 })), dias: [] }) as unknown as Municipio;
+    const ms = [
+      mk("A", [["2026-10-01", 0.5], ["2026-10-02", 0.9]]),
+      mk("B", [["2026-10-01", 0.2], ["2026-10-02", 0.4]]),
+      mk("C", [["2026-10-01", 0.7]]),
+    ];
+    expect(faixaDosDemais(ms, "A", eixo)).toEqual([{ min: 0.2, max: 0.7 }, null]);
   });
 });

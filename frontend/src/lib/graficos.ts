@@ -144,5 +144,11 @@ export const indiceMaisProximo = (xs: readonly number[], x: number): number =>
 export const focoAposSeta = (foco: number | null, passo: number, dias: number): number =>
   foco === null ? dias - 1 : Math.min(Math.max(foco + passo, 0), dias - 1);
 
-/** Chip vizinho nas setas, dando a volta nas pontas. */
-export const vizinhoCiclico = (i: number, passo: number, total: number): number => (i + passo + total) % total;
+/** Faixa dos demais municípios por dia do eixo (mín–máx de quem tem dado); `null` com menos de 2. */
+export function faixaDosDemais(municipios: Municipio[], destaque: string, eixo: readonly string[]): ({ min: number; max: number } | null)[] {
+  const series = municipios.filter((m) => m.ibge !== destaque).map((m) => serieMunicipio(m, eixo));
+  return eixo.map((dia) => {
+    const valores = series.flatMap((s) => s.filter((p) => p.dia_alvo === dia).map((p) => p.indice));
+    return valores.length < 2 ? null : { min: Math.min(...valores), max: Math.max(...valores) };
+  });
+}
