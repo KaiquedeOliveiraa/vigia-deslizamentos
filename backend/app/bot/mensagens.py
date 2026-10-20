@@ -234,6 +234,36 @@ CABECALHO_DO_STATUS = "<b>Situação dos seus municípios</b>"
 SEPARADOR_DO_STATUS = "\n\n"
 
 
+#: Botão que volta do teclado de uma região para o das regiões.
+OPCAO_VOLTAR = "Voltar"
+
+
+def rotulo_do_grupo(nome_micro: str) -> str:
+    """Botão da região. "Região de" evita colidir com o município homônimo (Rio do Sul)."""
+    return f"Região de {nome_micro}"
+
+
+def opcao_todos_do_grupo(nome_micro: str) -> str:
+    return f"Todos da {rotulo_do_grupo(nome_micro)}"
+
+
+def texto_escolha_do_grupo(nome_micro: str) -> str:
+    rotulo = html.escape(rotulo_do_grupo(nome_micro))
+    return (
+        f"Municípios da {rotulo}. Toque em um deles, em "
+        f"\"{html.escape(opcao_todos_do_grupo(nome_micro))}\" ou em \"{OPCAO_VOLTAR}\"."
+    )
+
+
+def texto_boas_vindas_grupos() -> str:
+    """`/start` sem município quando o teclado é por região."""
+    return (
+        "Olá! Escolha a sua região para ver os municípios, "
+        f"ou toque em \"{OPCAO_TODOS}\" para acompanhar todos.\n\n"
+        "Use /status para ver a situação e /parar para cancelar."
+    )
+
+
 def texto_boas_vindas(nome_sugerido: str | None) -> str:
     """Resposta do `/start`, em HTML. Com `nome_sugerido`, cita o município."""
     if nome_sugerido is None:

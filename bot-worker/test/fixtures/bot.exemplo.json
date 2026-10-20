@@ -174,7 +174,9 @@
     },
     "inscricao_confirmada_todos": "Pronto! Você vai receber avisos de: Agrolândia, Agronômica, Atalanta, Aurora, Braço do Trombudo, Chapadão do Lageado, Dona Emma, Ibirama, Imbuia, Ituporanga, José Boiteux, Laurentino, Lontras, Mirim Doce, Petrolândia, Pouso Redondo, Presidente Getúlio, Presidente Nereu, Rio do Campo, Rio do Oeste, Rio do Sul, Salete, Taió, Trombudo Central, Vidal Ramos, Vitor Meireles, Witmarsum.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil.",
     "opcao_desconhecida": "Não reconheci essa opção. Use /start para ver a lista de municípios.",
-    "inscricoes_apagadas": "Suas inscrições foram apagadas. Use /start quando quiser voltar."
+    "inscricoes_apagadas": "Suas inscrições foram apagadas. Use /start quando quiser voltar.",
+    "opcao_voltar": "Voltar",
+    "boas_vindas_grupos": "Olá! Escolha a sua região para ver os municípios, ou toque em \"Todos\" para acompanhar todos.\n\nUse /status para ver a situação e /parar para cancelar."
   },
   "status": {
     "cabecalho": "<b>Situação dos seus municípios</b>\n\n",
@@ -460,5 +462,50 @@
     "fim": "🧪 Fim da simulação: 7 classes enviadas.",
     "municipio_invalido": "🧪 <b>SIMULAÇÃO</b>\nMunicípio \"{entrada}\" não encontrado.\n\nMunicípios válidos:\n• Agrolândia\n• Agronômica\n• Atalanta\n• Aurora\n• Braço do Trombudo\n• Chapadão do Lageado\n• Dona Emma\n• Ibirama\n• Imbuia\n• Ituporanga\n• José Boiteux\n• Laurentino\n• Lontras\n• Mirim Doce\n• Petrolândia\n• Pouso Redondo\n• Presidente Getúlio\n• Presidente Nereu\n• Rio do Campo\n• Rio do Oeste\n• Rio do Sul\n• Salete\n• Taió\n• Trombudo Central\n• Vidal Ramos\n• Vitor Meireles\n• Witmarsum",
     "pausa_s": 1.0
-  }
+  },
+  "grupos": [
+    {
+      "nome": "Região de Rio do Sul",
+      "municipios": [
+        "4200309",
+        "4201901",
+        "4202859",
+        "4205100",
+        "4206900",
+        "4209151",
+        "4209508",
+        "4209904",
+        "4210852",
+        "4213708",
+        "4214003",
+        "4214102",
+        "4214508",
+        "4214607",
+        "4214805",
+        "4215307",
+        "4217808",
+        "4218608",
+        "4219358",
+        "4219408"
+      ],
+      "opcao_todos": "Todos da Região de Rio do Sul",
+      "escolha": "Municípios da Região de Rio do Sul. Toque em um deles, em \"Todos da Região de Rio do Sul\" ou em \"Voltar\".",
+      "confirmacao": "Pronto! Você vai receber avisos de: Agronômica, Aurora, Braço do Trombudo, Dona Emma, Ibirama, José Boiteux, Laurentino, Lontras, Mirim Doce, Pouso Redondo, Presidente Getúlio, Presidente Nereu, Rio do Campo, Rio do Oeste, Rio do Sul, Salete, Taió, Trombudo Central, Vitor Meireles, Witmarsum.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil."
+    },
+    {
+      "nome": "Região de Ituporanga",
+      "municipios": [
+        "4200200",
+        "4201802",
+        "4204194",
+        "4207403",
+        "4208500",
+        "4212700",
+        "4219200"
+      ],
+      "opcao_todos": "Todos da Região de Ituporanga",
+      "escolha": "Municípios da Região de Ituporanga. Toque em um deles, em \"Todos da Região de Ituporanga\" ou em \"Voltar\".",
+      "confirmacao": "Pronto! Você vai receber avisos de: Agrolândia, Atalanta, Chapadão do Lageado, Imbuia, Ituporanga, Petrolândia, Vidal Ramos.\n\nO VIGIA é um sistema acadêmico e não emite alerta oficial: em caso de emergência, procure a Defesa Civil."
+    }
+  ]
 }

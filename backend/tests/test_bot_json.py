@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import dataclasses
 import json
 import os
+import unicodedata
 from datetime import date, datetime, timedelta, timezone
 from itertools import combinations
 from pathlib import Path
@@ -12,6 +14,7 @@ import pytest
 
 from app.bot.inscricao import OPCAO_TODOS
 from app.bot.mensagens import (
+    OPCAO_VOLTAR,
     CABECALHO_DO_STATUS,
     SEPARADOR_DO_STATUS,
     TEXTO_INSCRICOES_APAGADAS,
@@ -20,6 +23,7 @@ from app.bot.mensagens import (
     bloco_do_status,
     rodape_do_status,
     texto_boas_vindas,
+    texto_boas_vindas_grupos,
     texto_do_status,
     texto_inscricao_confirmada,
 )
@@ -78,6 +82,7 @@ def test_campos_da_raiz_e_ordem_dos_municipios():
         "textos",
         "status",
         "simulacao",
+        "grupos",
     }
     assert SCHEMA_VERSION_BOT_JSON == 1
     assert dados["schema_version"] == 1
@@ -212,3 +217,46 @@ def test_fixture_do_worker_igual_ao_montar_bot_json():
         "bot.exemplo.json desatualizado: rode `VIGIA_REGERAR_FIXTURES=1 pytest "
         "tests/test_bot_json.py` e commite o arquivo"
     )
+
+
+def _norm(texto: str) -> str:
+    sem = "".join(c for c in unicodedata.normalize("NFD", texto) if unicodedata.category(c) != "Mn")
+    return " ".join(sem.lower().split())
+
+
+def test_grupos_na_ordem_do_codigo_da_microrregiao():
+    dados = montar()
+    grupos = dados["grupos"]
+    assert [g["nome"] for g in grupos] == ["Região de Rio do Sul", "Região de Ituporanga"]
+    assert sum(len(g["municipios"]) for g in grupos) == 27
+    ordem = [m["ibge"] for m in dados["municipios"]]
+    for g in grupos:
+        assert g["municipios"] == [i for i in ordem if i in set(g["municipios"])]
+        assert g["opcao_todos"] == f"Todos da {g['nome']}"
+
+
+def test_textos_de_grupo():
+    dados = montar()
+    assert dados["textos"]["opcao_voltar"] == OPCAO_VOLTAR
+    assert dados["textos"]["boas_vindas_grupos"] == texto_boas_vindas_grupos()
+    ituporanga = dados["grupos"][1]
+    nomes = {m["ibge"]: m["nome"] for m in dados["municipios"]}
+    assert ituporanga["confirmacao"] == texto_inscricao_confirmada([nomes[i] for i in ituporanga["municipios"]])
+
+
+def test_rotulos_de_botao_unicos_no_bot_json_inteiro():
+    dados = montar()
+    rotulos = [m["nome"] for m in dados["municipios"]]
+    rotulos += [dados["textos"]["opcao_todos"], dados["textos"]["opcao_voltar"]]
+    for g in dados["grupos"]:
+        rotulos += [g["nome"], g["opcao_todos"]]
+    normalizados = [_norm(r) for r in rotulos]
+    assert len(normalizados) == len(set(normalizados))
+
+
+def test_sem_microrregiao_nao_ha_grupos():
+    sem = [dataclasses.replace(m, microrregiao=None) for m in MUNICIPIOS]
+    dados = montar_bot_json(sem, {m.ibge: None for m in sem}, SITE, False, GERADO_EM)
+    assert "grupos" not in dados
+    assert "opcao_voltar" not in dados["textos"]
+    assert "boas_vindas_grupos" not in dados["textos"]
