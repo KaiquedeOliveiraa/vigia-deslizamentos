@@ -313,7 +313,7 @@ Em todas as telas: menu, seletor PT/ES, acessibilidade e "Alertas no Telegram".
 **Alertas e preferências**
 - **RF11** — Levar o usuário ao bot do Telegram, onde ele escolhe os municípios (`/start`), consulta a situação (`/status`) e cancela (`/parar`).
 - **RF12** — Enviar aviso aos inscritos quando um município atingir índice ≥ 1,00.
-- **RF13** — Oferecer português e espanhol, tema automático/claro/escuro/alto contraste e paleta de cores para daltonismo, lembrando a escolha do usuário.
+- **RF13** — Oferecer português, espanhol e inglês, tema claro ou escuro (sem escolha, segue o sistema) e paleta de cores para daltonismo, lembrando a escolha do usuário.
 
 ### Requisitos não funcionais
 

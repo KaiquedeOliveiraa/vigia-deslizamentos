@@ -40,6 +40,15 @@ a {
   outline-offset: 2px;
 }
 
+/* iOS amplia a página ao focar campo com fonte menor que 16 px. */
+@media (max-width: 900px) {
+  input:not([type="range"], [type="checkbox"], [type="radio"]),
+  select,
+  textarea {
+    font-size: max(16px, 1em) !important;
+  }
+}
+
 .sr-only {
   position: absolute !important;
   width: 1px;

@@ -12,6 +12,7 @@ describe("números", () => {
   it("coordenadas com hemisfério e quatro casas", () => {
     expect(formatarCoord(-27.0007, -49.5212)).toBe("27,0007° S, 49,5212° O");
     expect(formatarCoord(1.5, 2.25)).toBe("1,5000° N, 2,2500° L");
+    expect(formatarCoord(-27.0007, -49.5212, tradutor("en"))).toBe("27,0007° S, 49,5212° W");
   });
 
   it("letras do hemisfério traduzidas: leste é E em espanhol", () => {

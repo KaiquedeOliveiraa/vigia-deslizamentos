@@ -537,6 +537,14 @@
   white-space: nowrap;
 }
 
+/* Em tela estreita a tabela rola na horizontal: o nome do município fica fixo à esquerda. */
+.tab tr > :first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--surface-000);
+}
+
 .tab tbody th,
 .tab td {
   padding: 11px 12px;
@@ -584,7 +592,7 @@
 }
 
 .tab tbody tr.sd:hover > * {
-  background: none;
+  background: var(--surface-000);
 }
 
 .tab tbody tr.sd th {

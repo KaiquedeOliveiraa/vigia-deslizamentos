@@ -10,7 +10,7 @@ import {
   RadioTower,
   type LucideIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { tradutor } from "../i18n";
 import type { Idioma } from "../lib/preferencias";
 import { TELAS, rota } from "../lib/telas";
@@ -37,9 +37,24 @@ export default function Menu({ lang, tela }: Props) {
   const t = tradutor(lang);
   const [expandido, setExpandido] = useState(false);
   const [acessibilidade, setAcessibilidade] = useState(false);
+  const nav = useRef<HTMLElement>(null);
+
+  // Expandido, o rail cobre o conteúdo: Esc ou um clique fora recolhe.
+  useEffect(() => {
+    if (!expandido) return;
+    // Com um diálogo aberto, o Esc fecha só ele.
+    const tecla = (e: KeyboardEvent) => e.key === "Escape" && !document.querySelector("dialog[open]") && setExpandido(false);
+    const clique = (e: PointerEvent) => !nav.current?.contains(e.target as Node) && setExpandido(false);
+    document.addEventListener("keydown", tecla);
+    document.addEventListener("pointerdown", clique);
+    return () => {
+      document.removeEventListener("keydown", tecla);
+      document.removeEventListener("pointerdown", clique);
+    };
+  }, [expandido]);
 
   return (
-    <nav className={`rail${expandido ? " aberto" : ""}`} aria-label={t("Navegação principal")}>
+    <nav ref={nav} className={`rail${expandido ? " aberto" : ""}`} aria-label={t("Navegação principal")}>
       <div className="top">
         <button
           type="button"

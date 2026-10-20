@@ -1,6 +1,6 @@
 import { Globe, PersonStanding, TriangleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
-import { tradutor } from "../i18n";
+import { atributoLang, tradutor } from "../i18n";
 import { carregar, desatualizado, lerIndices, type Resultado } from "../lib/dados";
 import { formatarData, formatarDataHora, formatarHora } from "../lib/formato";
 import { lerPreferencias, salvarPreferencias, type Idioma } from "../lib/preferencias";
@@ -19,6 +19,7 @@ interface Props {
 const IDIOMAS: [Idioma, string, string][] = [
   ["pt", "PT", "Português"],
   ["es", "ES", "Español"],
+  ["en", "EN", "English"],
 ];
 
 const REAVALIAR_MS = 60_000;
@@ -69,8 +70,8 @@ export default function Cabecalho({ lang, tela, municipios }: Props) {
             <a
               key={valor}
               href={rota(tela, valor)}
-              hrefLang={valor === "es" ? "es" : "pt-BR"}
-              lang={valor === "es" ? "es" : "pt-BR"}
+              hrefLang={atributoLang(valor)}
+              lang={atributoLang(valor)}
               aria-current={valor === lang ? "true" : undefined}
               onClick={(e) => {
                 e.currentTarget.href = rotaComEstado(tela, valor, location);
@@ -84,7 +85,7 @@ export default function Cabecalho({ lang, tela, municipios }: Props) {
         <button
           type="button"
           className="hbtn a11yb"
-          aria-label={t("Acessibilidade: tema, contraste e cores")}
+          aria-label={t("Acessibilidade: tema e cores")}
           onClick={() => setAcessibilidade(true)}
         >
           <PersonStanding aria-hidden="true" />

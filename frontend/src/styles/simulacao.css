@@ -100,7 +100,9 @@
 }
 
 @media (pointer: coarse) {
-  .presets button {
+  .presets button,
+  .fld select,
+  .fld input[type="number"] {
     min-height: 44px;
   }
 }
@@ -298,6 +300,10 @@
   gap: 8px;
 }
 
+.avisos.no-painel {
+  display: none;
+}
+
 .aviso {
   display: flex;
   gap: 12px;
@@ -365,7 +371,11 @@
 
 .sim .leg {
   bottom: 100px;
+  /* Para abaixo do topo do mapa (16 px + avisos, medidos em Simulacao.tsx, + 12 px). Sem espaço, fica com
+     200 px e, aberta, passa por cima dos avisos (mapa.css): senão o cartão some e os botões ficam sob o aviso. */
+  max-height: max(200px, calc(100% - 100px - 28px - var(--maphd-h, 72px)));
 }
+
 
 /* Camadas do mapa embaixo, acima do zoom: no alto, os avisos (altura variável) as cobriam. */
 .sim .layers {
@@ -383,6 +393,23 @@
     display: block;
     top: auto;
     bottom: 120px;
+  }
+}
+
+/* Até 1100 px, com o "Agora | Simulado" ao lado, os avisos ficavam estreitos e altos (cobriam metade do mapa):
+   o botão vai para cima e os avisos ocupam a largura toda. */
+@media (max-width: 1100px) {
+  .maphd {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .maphd .seg {
+    align-self: flex-end;
+  }
+
+  .avisos {
+    max-width: none;
   }
 }
 
@@ -415,20 +442,13 @@
   .sim .mapwrap {
     flex: none;
     height: 70vh;
-    height: 70dvh;
-    min-height: 420px;
+    height: max(150px, min(70dvh, 100cqh));
   }
 
   .maphd {
     left: 12px;
     right: 12px;
     top: 12px;
-    flex-direction: column-reverse;
-    align-items: stretch;
-  }
-
-  .maphd .seg {
-    align-self: flex-end;
   }
 
   /* Na linha do "Agora | Simulado", à esquerda. Fica sob o .maphd (que tem pointer-events: none, então o
@@ -447,7 +467,33 @@
     line-height: 17px;
   }
 
+  .avisos.no-mapa {
+    display: none;
+  }
+
+  .avisos.no-painel {
+    display: flex;
+    max-width: none;
+  }
+
   .sim .leg {
     bottom: 90px;
+    max-height: max(200px, calc(100% - 90px - 24px - var(--maphd-h, 130px)));
+  }
+}
+
+/* Celular deitado: mapa de ~200 px. Zoom some (pinça faz o mesmo) e a legenda vai para o canto direito, sob o
+   "Agora | Simulado", longe das camadas e do cartão do cenário. */
+@media (max-width: 900px) and (max-height: 500px) {
+  .sim .zoom {
+    display: none;
+  }
+
+  .sim .leg {
+    left: auto;
+    right: 12px;
+    bottom: 12px;
+    align-items: flex-end;
+    max-height: calc(100% - 68px);
   }
 }

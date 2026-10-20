@@ -1,16 +1,26 @@
 import { describe, expect, it } from "vitest";
 import { marcaClasse } from "../lib/graficos";
 import { TELAS } from "../lib/telas";
+import EN from "./en.json";
 import ES from "./es.json";
 import { RE_CLASSE, tradutor } from "./index";
 
 const pt = tradutor("pt");
 const es = tradutor("es");
+const en = tradutor("en");
 
 describe("t", () => {
   it("frase exata", () => {
     expect(es("Alertas no Telegram")).toBe("Alertas en Telegram");
     expect(pt("Alertas no Telegram")).toBe("Alertas no Telegram");
+    expect(en("Alertas no Telegram")).toBe("Alerts on Telegram");
+  });
+
+  it("inglês: marcadores e classe traduzida", () => {
+    expect(en("{M}: índice {N}, classe {C}", { M: "Ibirama", N: "1,34", C: "muito alto" })).toBe(
+      "Ibirama: index 1,34, class very high",
+    );
+    expect(en(marcaClasse(2, 7)!)).toBe("↑ extremely high");
   });
 
   it("substitui os marcadores na ordem, em PT e em ES", () => {
@@ -57,6 +67,13 @@ describe("dicionário", () => {
       .flatMap((codigo) => [...codigo.matchAll(/\bt\("([^"]+)"/g)].map((m) => m[1]))
       .filter((frase) => !(frase in ES));
     expect(faltando).toEqual([]);
+  });
+
+  it("en.json tem as mesmas frases de es.json, com os mesmos marcadores", () => {
+    expect(Object.keys(EN).sort()).toEqual(Object.keys(ES).sort());
+    const marcas = (s: string) => (s.match(/\{[MCN]\}/g) ?? []).sort();
+    const divergentes = Object.entries(EN as Record<string, string>).filter(([pt, en]) => marcas(pt).join() !== marcas(en).join());
+    expect(divergentes).toEqual([]);
   });
 
   it("nomes e rótulos curtos das telas existem em es.json", () => {

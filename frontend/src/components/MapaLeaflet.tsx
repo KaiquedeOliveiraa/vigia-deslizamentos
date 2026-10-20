@@ -105,8 +105,11 @@ function Municipio({ t, feicao, pos, valor, selecionado, onSelecionar }: PropsMu
     }
     el.classList.toggle("sel", selecionado);
     if (selecionado) {
+      // bringToFront move o <path> no DOM e o foco do teclado (Enter no município) se perderia.
+      const comFoco = document.activeElement === el;
       fundo.current?.bringToFront();
       hachura.current?.bringToFront();
+      if (comFoco) el.focus();
     }
   }, [t, nome, valor, n, selecionado, interativo]);
 

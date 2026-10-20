@@ -191,7 +191,8 @@ function Tabela({ t, municipios, semDados, ibge, eixo, aoSelecionar }: PropsTabe
         <h2 id="tab-t">{t("Índice por município")}</h2>
         <span className="tag">{t("clique numa linha para ver acima")}</span>
       </div>
-      <div className="rolagem">
+      {/* Rola na horizontal em telas estreitas: focável para quem usa teclado. */}
+      <div className="rolagem" tabIndex={0} role="region" aria-labelledby="tab-t">
         <table className="tab">
           <thead>
             <tr>

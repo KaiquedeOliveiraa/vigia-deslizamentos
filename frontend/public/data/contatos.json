@@ -12,7 +12,7 @@
   {
     "ibge": "4214003",
     "nome": "Presidente Getúlio",
-    "verificado": false,
+    "verificado": true,
     "responsavel": null,
     "telefone": "(47) 99754-0438",
     "email": null,

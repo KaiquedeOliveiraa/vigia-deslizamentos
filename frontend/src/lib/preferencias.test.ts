@@ -32,8 +32,11 @@ describe("lerPreferencias", () => {
   });
 
   it("valores guardados válidos são usados; inválidos ou JSON quebrado voltam ao padrão", () => {
-    const ok = memoria({ [CHAVE]: JSON.stringify({ lang: "es", theme: "contraste", pal: "acc" }) });
-    expect(lerPreferencias(() => ok)).toEqual({ lang: "es", theme: "contraste", pal: "acc" });
+    const ok = memoria({ [CHAVE]: JSON.stringify({ lang: "en", theme: "light", pal: "acc" }) });
+    expect(lerPreferencias(() => ok)).toEqual({ lang: "en", theme: "light", pal: "acc" });
+    // Alto contraste saiu: quem o tinha guardado volta ao tema do sistema.
+    const antigo = memoria({ [CHAVE]: JSON.stringify({ lang: "es", theme: "contraste", pal: "geo" }) });
+    expect(lerPreferencias(() => antigo)).toEqual({ lang: "es", theme: "auto", pal: "geo" });
     const ruim = memoria({ [CHAVE]: JSON.stringify({ lang: "fr", theme: "dark" }) });
     expect(lerPreferencias(() => ruim)).toEqual({ lang: "pt", theme: "dark", pal: "geo" });
     expect(lerPreferencias(() => memoria({ [CHAVE]: "{" }))).toEqual(PADRAO);
