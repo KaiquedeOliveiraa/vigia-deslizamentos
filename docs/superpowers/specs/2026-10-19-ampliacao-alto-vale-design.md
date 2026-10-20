@@ -202,6 +202,12 @@ Todos sem rede (pytest em `-W error` e vitest).
    - reverter primeiro o `municipios.json` e o GeoJSON, e só depois o Worker; o `bot.json` sem `grupos` já cai no comportamento de hoje;
    - as linhas do D1 e do `vigia.db` para os 21 não têm efeito: o `/status` e os avisos ignoram municípios fora do `bot.json`.
 
+## Decidido para as próximas partes
+
+- A tela Estações vira **"Áreas de risco"**: setores do SGB (parte 3) e ocorrências do Atlas/S2iD (parte 2) no mapa. As estações do INMET passam a uma camada que se pode desligar.
+- Nesta parte, a tela Estações só recebe a correção de texto (seção 2). O `estacoes.json` continua sendo gerado, porque a comparação de 24 h do pipeline usa as estações.
+- Pluviômetros do Cemaden (PED, com cadastro, até 12 requisições por minuto e citação obrigatória) ficam para um item próprio, depois.
+
 ## Fora do escopo
 
 - Limiar validado por município ou por região.
