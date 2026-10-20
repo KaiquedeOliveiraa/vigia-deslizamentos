@@ -5,7 +5,7 @@ import { MapContainer, Marker, Polygon, TileLayer, Tooltip, useMap } from "react
 import { tradutor, type T } from "../i18n";
 import { CLASSES, infoClasse, SEM_DADOS } from "../lib/classes";
 import { formatarIndice } from "../lib/formato";
-import { CAMADA_NEUTRA, classesDoRotulo, limites, posicoes, rotuloAria, type Camada, type FeicaoMunicipio, type LatLon, type Valor } from "../lib/mapa";
+import { CAMADA_NEUTRA, classesDoRotulo, limites, posicoes, rotulosDeLonge, rotuloAria, type Camada, type FeicaoMunicipio, type LatLon, type Valor } from "../lib/mapa";
 import { FEICOES } from "../lib/municipios";
 import Camadas from "./Camadas";
 import type { Pino, PropsMapa } from "./Mapa";
@@ -218,10 +218,11 @@ export default function MapaLeaflet({
     },
   }));
 
-  // "longe" abaixo do zoom 8,5: com o mapa afastado (celular), os nomes dos municípios se sobrepõem.
+  // "longe" = no enquadramento inicial (varia por tela) ou mais afastado: os nomes dos municípios se sobrepõem.
   useEffect(() => {
     if (!mapa) return;
-    const marcar = () => mapa.getContainer().classList.toggle("longe", mapa.getZoom() < 8.5);
+    const zoomInicial = mapa.getZoom();
+    const marcar = () => mapa.getContainer().classList.toggle("longe", rotulosDeLonge(mapa.getZoom(), zoomInicial));
     marcar();
     mapa.on("zoomend", marcar);
     return () => {

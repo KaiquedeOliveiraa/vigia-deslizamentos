@@ -4,7 +4,7 @@ import exemplo from "../fixtures/indices.exemplo.json";
 import geojsonBruto from "../data/municipios.geojson?raw";
 import { FEICOES } from "./municipios";
 import type { Indices } from "./tipos";
-import { classesDoRotulo, destacar, limites, municipiosMonitorados, valoresDoDia, mensagemSelecao, passoDia, posicoes, rotuloAria, rotuloDia, type FeicaoMunicipio } from "./mapa";
+import { classesDoRotulo, destacar, limites, municipiosMonitorados, valoresDoDia, mensagemSelecao, passoDia, posicoes, rotuloAria, rotuloDia, rotulosDeLonge, type FeicaoMunicipio } from "./mapa";
 
 const pt = tradutor("pt");
 const es = tradutor("es");
@@ -132,5 +132,13 @@ describe("classesDoRotulo", () => {
     expect(classesDoRotulo(false, { indice: 1.0, classe: 4 })).toEqual({ sel: false, alerta: true });
     expect(classesDoRotulo(false, null)).toEqual({ sel: false, alerta: false });
     expect(classesDoRotulo(false, undefined)).toEqual({ sel: false, alerta: false });
+  });
+});
+
+describe("rotulosDeLonge", () => {
+  it("longe até 1 passo acima do enquadramento inicial", () => {
+    expect(rotulosDeLonge(9.5, 9.5)).toBe(true);
+    expect(rotulosDeLonge(10.5, 9.5)).toBe(false);
+    expect(rotulosDeLonge(9, 9.5)).toBe(true);
   });
 });

@@ -153,7 +153,13 @@ export const municipiosMonitorados = (feicoes: readonly FeicaoMunicipio[]): { ib
     .map(({ properties: { ibge, nome } }) => ({ ibge, nome }))
     .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
 
-/** Classes do rótulo: de longe (zoom < 8,5) só aparecem o selecionado e os em alerta (mapa.css). */
+/** Passos de zoom acima do enquadramento inicial a partir dos quais todos os nomes aparecem. */
+export const PASSOS_PARA_TODOS_OS_ROTULOS = 1;
+
+/** "Longe" = ainda no enquadramento de abertura (ou mais afastado): só selecionado e em alerta (mapa.css). */
+export const rotulosDeLonge = (zoom: number, zoomInicial: number): boolean => zoom < zoomInicial + PASSOS_PARA_TODOS_OS_ROTULOS;
+
+/** Classes do rótulo: de longe (ver rotulosDeLonge) só aparecem o selecionado e os em alerta (mapa.css). */
 export const classesDoRotulo = (selecionado: boolean, valor: Valor): { sel: boolean; alerta: boolean } => ({
   sel: selecionado,
   alerta: valor ? emAlerta(valor.indice) : false,
