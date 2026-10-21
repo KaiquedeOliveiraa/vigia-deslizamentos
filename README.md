@@ -37,33 +37,33 @@ O escopo está **fechado** no **Alto Vale do Itajaí** (SC), nas microrregiões 
 
 | Município | Código IBGE | Observações |
 |-----------|-------------|-------------|
-|  | 4200200 | Região de 42014 Ituporanga |
-| Agronômica 42011 | 4200309 | Região de do Sul |
-|  | 4201802 | Região de 42014 Ituporanga |
-| Aurora 42011 | 4201901 | Região de do Sul |
-| Braço do Trombudo 42011 | 4202859 | Região de do Sul |
-| Chapadão do | 4204194 | Região de 42014 Ituporanga |
-| Dona Emma 42011 | 4205100 | Região de do Sul |
-| Ibirama 42011 | 4206900 | Região de do Sul |
-|  | 4207403 | Região de 42014 Ituporanga |
-|  | 4208500 | Região de 42014 Ituporanga |
-| José Boiteux 42011 | 4209151 | Região de do Sul |
-| Laurentino 42011 | 4209508 | Região de do Sul |
-| Lontras 42011 | 4209904 | Região de do Sul |
-| Mirim Doce 42011 | 4210852 | Região de do Sul |
-|  | 4212700 | Região de 42014 Ituporanga |
-| Pouso Redondo 42011 | 4213708 | Região de do Sul |
-| Presidente Getúlio 42011 | 4214003 | Região de do Sul |
-| Presidente Nereu 42011 | 4214102 | Região de do Sul |
-| Rio do Campo 42011 | 4214508 | Região de do Sul |
-| Rio do Oeste 42011 | 4214607 | Região de do Sul |
-| Rio do Sul 42011 | 4214805 | Região de do Sul |
-| Salete 42011 | 4215307 | Região de do Sul |
-| Taió 42011 | 4217808 | Região de do Sul |
-| Trombudo Central 42011 | 4218608 | Região de do Sul |
-| Vidal | 4219200 | Região de 42014 Ituporanga |
-| Vitor Meireles 42011 | 4219358 | Região de do Sul |
-| Witmarsum 42011 | 4219408 | Região de do Sul |
+| Agrolândia | 4200200 | Região de Ituporanga |
+| Agronômica | 4200309 | Região de Rio do Sul |
+| Atalanta | 4201802 | Região de Ituporanga |
+| Aurora | 4201901 | Região de Rio do Sul |
+| Braço do Trombudo | 4202859 | Região de Rio do Sul |
+| Chapadão do Lageado | 4204194 | Região de Ituporanga |
+| Dona Emma | 4205100 | Região de Rio do Sul |
+| Ibirama | 4206900 | Região de Rio do Sul |
+| Imbuia | 4207403 | Região de Ituporanga |
+| Ituporanga | 4208500 | Região de Ituporanga |
+| José Boiteux | 4209151 | Região de Rio do Sul |
+| Laurentino | 4209508 | Região de Rio do Sul |
+| Lontras | 4209904 | Região de Rio do Sul |
+| Mirim Doce | 4210852 | Região de Rio do Sul |
+| Petrolândia | 4212700 | Região de Ituporanga |
+| Pouso Redondo | 4213708 | Região de Rio do Sul |
+| Presidente Getúlio | 4214003 | Região de Rio do Sul |
+| Presidente Nereu | 4214102 | Região de Rio do Sul |
+| Rio do Campo | 4214508 | Região de Rio do Sul |
+| Rio do Oeste | 4214607 | Região de Rio do Sul |
+| Rio do Sul | 4214805 | Região de Rio do Sul |
+| Salete | 4215307 | Região de Rio do Sul |
+| Taió | 4217808 | Região de Rio do Sul |
+| Trombudo Central | 4218608 | Região de Rio do Sul |
+| Vidal Ramos | 4219200 | Região de Ituporanga |
+| Vitor Meireles | 4219358 | Região de Rio do Sul |
+| Witmarsum | 4219408 | Região de Rio do Sul |
 
 > Os códigos IBGE vieram da [API de Localidades do IBGE](https://servicodados.ibge.gov.br/api/docs/localidades), estão em `backend/config/municipios.json` e são a chave de identificação de município em todo o sistema (malha geográfica, parâmetros de cálculo e persistência).
 

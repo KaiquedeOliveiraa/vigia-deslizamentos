@@ -426,7 +426,7 @@ README já atribui ao INMET ("comparação e validação... na região", não po
 município), mas significa, na prática, que a condicional "quando houver
 estação no município" da Tarefa 12 dificilmente será satisfeita de forma
 literal — recomenda-se um raio de corte generoso (ex.: 80–100 km) ou aceitar
-que a comparação fica desabilitada para os seis municípios até que a rede de
+que a comparação fica desabilitada para os seis municípios (análise original, com 6 municípios) até que a rede de
 estações mude. Evidência: `evidencia-tarefa-0/inmet_estacoes_T.json` (mesmo
 arquivo, filtrado por `SG_ESTADO == "SC"`, com haversine correto).
 

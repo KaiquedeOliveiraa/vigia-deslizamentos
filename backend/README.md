@@ -178,7 +178,9 @@ recebendo erro.
 ### Serviço (bot + agendador)
 
 Alternativa ao Actions e ao Worker, para uso local ou em um servidor próprio.
-O bot local em Python mostra um botão por município, sem as regiões; o teclado por região é do Worker.
+
+O bot local em Python mostra um botão por município, sem as regiões; o teclado
+por região é do Worker.
 
 ```bash
 .venv/bin/python -m app.main
@@ -246,11 +248,11 @@ PUBLIC_DADOS_URL=data/
 Roda uma vez, e de novo quando a rede de estações do INMET mudar. O arquivo
 gerado é versionado no repositório.
 
-O campo chama-se `ibge_referencia`, não `ibge`: quase nenhuma estação automática do
-INMET fica dentro de um dos 27 municípios (só A863 Ituporanga e A861 Rio do
-Campo ficam) e a resposta do INMET não traz código IBGE
-nenhum. É o município **mais próximo** dentro do raio de corte, e `distancia_km` registra a distância real — estação de
-referência regional, não local. O contrato
+O campo chama-se `ibge_referencia`, não `ibge`: só duas estações ficam dentro de
+municípios monitorados (A863 Ituporanga e A861 Rio do Campo) e a resposta do
+INMET não traz código IBGE nenhum. É o município **mais próximo** dentro do raio
+de corte, e `distancia_km` registra a distância real — estação de referência
+regional, não local. O contrato
 ([docs/contratos-de-dados.md](../docs/contratos-de-dados.md)) traz a regra de
 leitura para o site.
 
