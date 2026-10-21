@@ -12,7 +12,7 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 ## Autorizações externas
 
-- 🟡 **Defesa Civil de SC (RN10).** O mapa oficial em iframe já funciona (`PUBLIC_SC_IFRAME=true`), mas só pode ir para produção com autorização. Pedir junto o uso da API GraphQL de `monitoramento.defesacivil.sc.gov.br`, que tem estação dentro de cada um dos 6 municípios (o INMET mais próximo fica a ~30 km) e pode substituir o INMET na conferência de chuva.
+- 🟡 **Defesa Civil de SC (RN10).** O mapa oficial em iframe já funciona (`PUBLIC_SC_IFRAME=true`), mas só pode ir para produção com autorização. Pedir junto o uso da API GraphQL de `monitoramento.defesacivil.sc.gov.br`, que tem estação dentro de cada município (o INMET só tem duas estações dentro dos 27) e pode substituir o INMET na conferência de chuva.
 
 ## Infraestrutura e deploy
 
@@ -53,6 +53,13 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 - ~~🔴 **Worker aceitava cabeçalho vazio quando o segredo não estava configurado**~~ **Resolvida:** sem `TELEGRAM_WEBHOOK_SEGREDO` (ou com ele vazio), `segredoConfere` recusa toda requisição, em vez de aceitar `X-Telegram-Bot-Api-Secret-Token` vazio.
 - ~~⚪ **Execução com o Worker indisponível termina verde**~~ **Resolvida:** a etapa "Avisar erros registrados no log" do `pipeline.yml` transforma as linhas ERROR do log em avisos no resumo do run. O job continua verde de propósito, para o estado ser gravado.
 - ~~⚪ **Fixture de contrato do `bot.json`**~~ **Resolvida:** `bot-worker/test/fixtures/bot.exemplo.json` sai de `montar_bot_json` (teste `test_fixture_do_worker_igual_ao_montar_bot_json`); o Worker confere o formato no `tsc` e nos testes. Para regenerar: `VIGIA_REGERAR_FIXTURES=1 pytest tests/test_bot_json.py`.
+
+## Ampliação para os 27 municípios
+
+- ⚪ **Limiar dos 27 municípios:** todos com 150 mm provisório; validar com o time, por município ou por região.
+- ⚪ **Contatos dos 21 municípios novos:** levantar e confirmar com cada prefeitura (RN09).
+- ⚪ **Prazo total de coleta:** com o Open-Meteo degradado, 111 chamadas × até 92 s podem passar do `timeout-minutes: 60`; limitar o tempo total da coleta e marcar os restantes como sem dados.
+- ⚪ **Avisos agrupados por chat:** se quem segue os 27 receber mensagens demais num evento regional, juntar os avisos de uma execução numa só mensagem.
 
 ## Qualidade e testes
 

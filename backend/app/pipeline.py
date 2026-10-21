@@ -70,7 +70,7 @@ def _coletar_todos(
 
     `except Exception` aqui é deliberado: a coleta fala com a rede e com corpos
     de resposta de terceiros, e uma exceção inesperada num município não pode
-    custar a execução dos outros cinco. O erro vai para o log com o município
+    custar a execução dos outros. O erro vai para o log com o município
     identificado. Os outros quatro do backend têm a mesma forma — absorver uma
     falha cuja alternativa seria perder um aviso ou uma execução inteira — e
     estão em `executar_pipeline` (publicação), `app.bot.avisos.enviar_avisos`
@@ -110,7 +110,7 @@ def _decidir_avisos(
     Entram na lista os municípios que geram mensagem (`avisar = True`) e os que
     precisam de uma gravação de estado — sair de alerta zera a classe, e isso
     tem de ser persistido mesmo sem mensagem. Município em que nada muda fica de
-    fora, para não gastar uma escrita por execução em cada um dos seis.
+    fora, para não gastar uma escrita por execução em cada um dos 27.
 
     Só o D0 entra na decisão: D1–D3 são previsão (RN06) e não disparam aviso.
     """
