@@ -12,6 +12,8 @@ import {
   lerIndices,
   lerOcorrencias,
   ocorrenciasDoMunicipio,
+  resumoOcorrencias,
+  TIPO_DESLIZAMENTO,
   separarPorDados,
 } from "./dados";
 import type { Indices } from "./tipos";
@@ -182,5 +184,16 @@ describe("carregar", () => {
     const r2 = await carregar("indices.json", lerIndices, async () => new Response("<html>"));
     expect(r1.ok).toBe(false);
     expect(r2.ok).toBe(false);
+  });
+});
+
+describe("resumoOcorrencias", () => {
+  const oc = (data: string, tipo: string) => ({ ibge: "1", data, tipo, descricao: "", fonte: "" });
+  it("lista vazia", () => {
+    expect(resumoOcorrencias([])).toEqual({ deslizamentos: 0, outros: 0, desde: null });
+  });
+  it("conta deslizamentos e outros, desde = mais antiga", () => {
+    const r = resumoOcorrencias([oc("2010-05-01", TIPO_DESLIZAMENTO), oc("1999-02-03", "Enxurrada"), oc("2020-01-01", TIPO_DESLIZAMENTO)]);
+    expect(r).toEqual({ deslizamentos: 2, outros: 1, desde: "1999-02-03" });
   });
 });

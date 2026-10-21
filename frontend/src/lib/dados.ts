@@ -111,3 +111,12 @@ export async function carregar<T>(
     return erro(`${arquivo}: ${e instanceof Error ? e.message : String(e)}`);
   }
 }
+
+export const TIPO_DESLIZAMENTO = "Movimento de massa";
+
+export const resumoOcorrencias = (lista: Ocorrencia[]): { deslizamentos: number; outros: number; desde: string | null } => {
+  const deslizamentos = lista.filter((o) => o.tipo === TIPO_DESLIZAMENTO).length;
+  // datas AAAA-MM-DD ordenam como texto
+  const desde = lista.reduce<string | null>((m, o) => (m === null || o.data < m ? o.data : m), null);
+  return { deslizamentos, outros: lista.length - deslizamentos, desde };
+};

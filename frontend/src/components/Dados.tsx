@@ -1,9 +1,9 @@
 import "../styles/dados.css";
-import { ArrowDown, ArrowRight, ArrowUp, Calculator, ChartLine, ClipboardList, Droplet, MapIcon } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUp, Calculator, ChartLine, ClipboardList, Droplet, MapIcon, TriangleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 import { tradutor, type T } from "../i18n";
 import { emAlerta, infoClasse, LIMIAR_ALERTA } from "../lib/classes";
-import { carregar, lerIndices, lerOcorrencias, ocorrenciasDoMunicipio, separarPorDados, type NomeMunicipio, type Resultado } from "../lib/dados";
+import { carregar, lerIndices, lerOcorrencias, ocorrenciasDoMunicipio, resumoOcorrencias, separarPorDados, TIPO_DESLIZAMENTO, type NomeMunicipio, type Resultado } from "../lib/dados";
 import {
   formatarData,
   formatarDataHora,
@@ -311,6 +311,13 @@ function Detalhes({ t, municipio, gerado_em }: { t: T; municipio: Municipio; ger
   );
 }
 
+function contador(t: T, lista: Ocorrencia[]) {
+  const { deslizamentos, outros, desde } = resumoOcorrencias(lista);
+  const d = deslizamentos === 1 ? t("1 deslizamento") : t("{N} deslizamentos", { N: String(deslizamentos) });
+  const o = outros === 1 ? t("1 outro evento de chuva") : t("{N} outros eventos de chuva", { N: String(outros) });
+  return t("{N} e {N} registrados desde {N}.", { N: [d, o, String(desde?.slice(0, 4))] });
+}
+
 function Ocorrencias({ t, municipio, ocorrencias }: { t: T; municipio: Municipio; ocorrencias?: Resultado<Ocorrencia[]> }) {
   const lista = ocorrencias?.ok ? ocorrenciasDoMunicipio(ocorrencias.dados, municipio.ibge) : [];
   return (
@@ -323,19 +330,29 @@ function Ocorrencias({ t, municipio, ocorrencias }: { t: T; municipio: Municipio
       {ocorrencias && !ocorrencias.ok && <p className="sub">{t("Não foi possível carregar os dados.")}</p>}
       {ocorrencias?.ok && lista.length === 0 && <p className="sub">{t("Nenhuma ocorrência registrada")}</p>}
       {lista.length > 0 && (
-        <ul className="ocs">
-          {lista.map((o) => (
-            <li key={`${o.data}-${o.tipo}-${o.descricao}`}>
-              <span className="lbl">
-                <time dateTime={o.data}>{formatarData(o.data)}</time> · {o.tipo}
-              </span>
-              <p>{o.descricao}</p>
-              <span className="note">
-                {t("Fonte:")} {o.fonte}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <>
+          <p className="sub">{contador(t, lista)}</p>
+          <div className="ocs-rol" tabIndex={0} role="region" aria-labelledby="oc-t">
+            <ul className="ocs">
+              {lista.map((o) => {
+                const desl = o.tipo === TIPO_DESLIZAMENTO;
+                return (
+                  <li key={`${o.data}-${o.tipo}-${o.descricao}`} className={desl ? "desl" : undefined}>
+                    <span className="lbl">
+                      <time dateTime={o.data}>{formatarData(o.data)}</time> · {desl && <TriangleAlert aria-hidden="true" />}
+                      {t(o.tipo)}
+                    </span>
+                    <p>{o.descricao}</p>
+                    <span className="note">
+                      {t("Fonte:")} {o.fonte}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <p className="note">{t("Fonte: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Só eventos ligados a chuva.")}</p>
+        </>
       )}
     </section>
   );
