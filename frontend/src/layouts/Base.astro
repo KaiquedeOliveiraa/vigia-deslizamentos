@@ -6,7 +6,6 @@ import Cabecalho from "../components/Cabecalho";
 import Menu from "../components/Menu";
 import { atributoLang, idioma, tradutor } from "../i18n";
 import { urlDados } from "../lib/config";
-import { MONITORADOS } from "../lib/municipios";
 import { CHAVE, IDIOMAS } from "../lib/preferencias";
 import { TELAS, rota } from "../lib/telas";
 
@@ -26,7 +25,6 @@ const { nome } = atual;
 
 const FONTES = "https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap";
 
-const municipios = MONITORADOS.map((m) => m.nome);
 ---
 <!doctype html>
 <html lang={atributoLang(lang)} class="pal-geo">
@@ -56,7 +54,7 @@ const municipios = MONITORADOS.map((m) => m.nome);
     <div class="app">
       <a class="skip" href="#conteudo">{t("Pular para o conteúdo")}</a>
       <Menu client:load lang={lang} tela={tela} />
-      <Cabecalho client:load lang={lang} tela={tela} municipios={municipios} />
+      <Cabecalho client:load lang={lang} tela={tela} />
       <main id="conteudo" tabindex="-1">
         <slot />
       </main>

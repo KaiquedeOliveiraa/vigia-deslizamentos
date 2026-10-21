@@ -56,6 +56,8 @@ async def _enviar(bot, chat_id: int, texto: str) -> None:
         await _dormir(_segundos_de_espera(erro))
         try:
             await bot.send_message(chat_id=chat_id, text=texto, parse_mode=ParseMode.HTML)
+        except Forbidden:
+            raise
         except TelegramError as segundo:
             # A especificação pede erro (vira aviso no resumo do Actions); o laço trata como transitória.
             _log.error("aviso não entregue após esperar o limite do Telegram: %s", type(segundo).__name__)

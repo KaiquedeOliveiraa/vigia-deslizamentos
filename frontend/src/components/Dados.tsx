@@ -61,7 +61,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
   const destaque = municipios.find((m) => m.ibge === ibge);
   const eixo = diasEixo(indices.dia_alvo_d0, periodo);
   const comHistorico = destaque ? diasComDadosDe(destaque, eixo) : periodo;
-    const k = indicadores(indices);
+  const k = indicadores(indices);
 
   const selecionar = (novo: string) => {
     setIbge(novo);
@@ -78,7 +78,13 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
           <span className="lbl">{t("Dados da análise · dia-alvo {N}", { N: formatarData(indices.dia_alvo_d0) })}</span>
           <h1>{titulo}</h1>
           <p>{t("Mesmos dados do mapa, com a chuva acumulada e a evolução do índice nos últimos {N} dias.", { N: String(periodo) })}</p>
-          {destaque && comHistorico < periodo && <p>{t("Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.", { N: String(comHistorico), M: destaque.nome })}</p>}
+          {destaque && comHistorico < periodo && (
+            <p>
+              {comHistorico === 1
+                ? t("Por enquanto há histórico de 1 dia para {M}; os demais aparecem vazios.", { M: destaque.nome })
+                : t("Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.", { N: String(comHistorico), M: destaque.nome })}
+            </p>
+          )}
         </div>
         <div className="seg" role="group" aria-label={t("Período")}>
           {PERIODOS.map((p) => (

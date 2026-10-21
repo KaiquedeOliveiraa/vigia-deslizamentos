@@ -13,7 +13,6 @@ interface Props {
   lang: Idioma;
   /** Rota da tela atual, para o seletor PT | ES. */
   tela: string;
-  municipios: readonly string[];
 }
 
 const IDIOMAS: [Idioma, string, string][] = [
@@ -25,7 +24,7 @@ const IDIOMAS: [Idioma, string, string][] = [
 const REAVALIAR_MS = 60_000;
 
 /** Marca, região, Telegram, idioma, acessibilidade e o carimbo dia-alvo/atualização (RN11, RN12). */
-export default function Cabecalho({ lang, tela, municipios }: Props) {
+export default function Cabecalho({ lang, tela }: Props) {
   const t = tradutor(lang);
   const [telegram, setTelegram] = useState(false);
   const [acessibilidade, setAcessibilidade] = useState(false);

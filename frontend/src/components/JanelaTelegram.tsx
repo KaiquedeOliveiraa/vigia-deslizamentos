@@ -11,7 +11,6 @@ interface Props {
   lang: Idioma;
   aberto: boolean;
   aoFechar: () => void;
-  /** Nomes dos municípios monitorados, para a prévia do teclado do bot. */
   /** Aberta do painel de um município: o link leva `?start=<ibge>`. */
   ibge?: string;
 }

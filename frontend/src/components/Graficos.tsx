@@ -114,6 +114,7 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
       <div
         ref={painel}
         className="evo-svg"
+        role="group"
         aria-label={rotulo}
         tabIndex={0}
         onKeyDown={tecladoGrafico}

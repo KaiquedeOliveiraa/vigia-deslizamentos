@@ -505,3 +505,29 @@ def test_retry_after_espera_e_reenvia(monkeypatch):
     assert [c for c, _ in bot.enviados] == [10]
     assert 3 in esperas
     assert banco.ultima_classe_notificada(conn, "4206900") == 4
+
+
+def test_retry_after_seguido_de_forbidden_remove_o_chat_sem_log_de_erro(caplog):
+    class BotLimitaDepoisBloqueia(BotFalso):
+        def __init__(self):
+            super().__init__()
+            self.chamadas = 0
+
+        async def send_message(self, chat_id, text, parse_mode=None, **_):
+            self.chamadas += 1
+            if self.chamadas == 1:
+                raise _retry_after(1)
+            raise Forbidden("bot was blocked by the user")
+
+    conn = conexao()
+    banco.inscrever(conn, 1, "4206900", AGORA)
+    banco.inscrever(conn, 1, "4205100", AGORA)
+    bot = BotLimitaDepoisBloqueia()
+
+    with caplog.at_level(logging.DEBUG):
+        executar(bot, conn, [aviso()])
+
+    assert banco.listar_inscritos(conn, "4206900") == []
+    assert banco.listar_inscritos(conn, "4205100") == []
+    assert not [r for r in caplog.records if r.levelno >= logging.ERROR]
+    assert banco.ultima_classe_notificada(conn, "4206900") == 4

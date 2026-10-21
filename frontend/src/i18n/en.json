@@ -457,6 +457,7 @@
 "Mapa das estações de monitoramento. Use Tab para percorrer as estações e Enter para selecionar.": "Map of the monitoring stations. Use Tab to move between stations and Enter to select.",
 "Fonte: cadastro de estações automáticas do INMET. A distância é medida até o centro do município mais próximo de cada estação.": "Source: INMET automatic station registry. The distance is measured to the center of the municipality closest to each station.",
 "Alto Vale do Itajaí, SC": "Alto Vale do Itajaí, SC",
+"Por enquanto há histórico de 1 dia para {M}; os demais aparecem vazios.": "For now there is 1 day of history for {M}; the other days are empty.",
 "Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.": "For now there are {N} days of history for {M}; the other days are empty.",
 "Região de Rio do Sul": "Rio do Sul region",
 "Região de Ituporanga": "Ituporanga region",
