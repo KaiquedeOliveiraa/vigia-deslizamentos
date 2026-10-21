@@ -63,7 +63,7 @@ def converter_data(texto: str) -> str | None:
 def _numero(texto: str | None) -> int:
     try:
         return int(float((texto or "").strip().replace(",", ".")))
-    except ValueError:
+    except (ValueError, OverflowError):
         return 0
 
 

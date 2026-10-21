@@ -60,6 +60,7 @@ def test_resumo_danos_com_numeros():
 def test_resumo_danos_aceita_decimal():
     assert "1 morto" in resumo_danos(linha(DH_MORTOS="1.0"))
     assert "1 desabrigado" in resumo_danos(linha(DH_DESABRIGADOS="1,0"))
+    assert resumo_danos(linha(DH_MORTOS="1e400")) == "Registrado no S2iD · sem danos humanos ou materiais registrados"
 
 
 def test_ocorrencia_de():

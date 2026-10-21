@@ -337,7 +337,7 @@ function Ocorrencias({ t, municipio, ocorrencias }: { t: T; municipio: Municipio
               {lista.map((o) => {
                 const desl = o.tipo === TIPO_DESLIZAMENTO;
                 return (
-                  <li key={`${o.data}-${o.tipo}-${o.descricao}`} className={desl ? "desl" : undefined}>
+                  <li key={o.fonte} className={desl ? "desl" : undefined}>
                     <span className="lbl">
                       <time dateTime={o.data}>{formatarData(o.data)}</time> · {desl && <TriangleAlert aria-hidden="true" />}
                       {t(o.tipo)}
@@ -351,8 +351,10 @@ function Ocorrencias({ t, municipio, ocorrencias }: { t: T; municipio: Municipio
               })}
             </ul>
           </div>
-          <p className="note">{t("Fonte: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Só eventos ligados a chuva.")}</p>
         </>
+      )}
+      {ocorrencias?.ok && (
+        <p className="note">{t("Fonte: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Só eventos ligados a chuva.")}</p>
       )}
     </section>
   );

@@ -2,29 +2,29 @@
   {
     "ibge": "4206900",
     "data": "2023-10-05",
-    "tipo": "deslizamento",
+    "tipo": "Movimento de massa",
     "descricao": "Deslizamento de encosta na área urbana após chuva persistente; via interditada.",
-    "fonte": "Defesa Civil de Ibirama"
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-EXEMPLO-1"
   },
   {
     "ibge": "4206900",
     "data": "2023-10-06",
-    "tipo": "decreto de emergência",
+    "tipo": "Chuva intensa",
     "descricao": "Situação de emergência decretada por chuvas intensas.",
-    "fonte": "S2iD"
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-EXEMPLO-2"
   },
   {
     "ibge": "4214003",
     "data": "2020-12-17",
-    "tipo": "deslizamento",
+    "tipo": "Movimento de massa",
     "descricao": "Movimentos de massa e enxurrada após chuva extrema na madrugada.",
-    "fonte": "S2iD"
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-EXEMPLO-3"
   },
   {
     "ibge": "4209151",
     "data": "2022-11-30",
-    "tipo": "deslizamento",
+    "tipo": "Movimento de massa",
     "descricao": "Queda de barreira em estrada do interior.",
-    "fonte": "Defesa Civil de SC"
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-EXEMPLO-4"
   }
 ]
