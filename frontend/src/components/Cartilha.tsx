@@ -263,7 +263,7 @@ export default function Cartilha({ lang, municipios }: Props) {
       </section>
 
       <div className="tgwrap">
-        <BannerTelegram lang={lang} municipios={municipios} />
+        <BannerTelegram lang={lang} />
       </div>
 
       <p className="fonte">

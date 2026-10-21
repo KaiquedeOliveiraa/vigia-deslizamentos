@@ -19,7 +19,6 @@
 "Contatos": "Contactos",
 "Acessibilidade": "Accesibilidad",
 "Região": "Región",
-"Vale Norte — Alto Vale do Itajaí, SC": "Vale Norte — Alto Vale do Itajaí, SC",
 "Alertas no Telegram": "Alertas en Telegram",
 "PT": "PT",
 "ES": "ES",
@@ -222,7 +221,6 @@
 "chuva efetiva máxima ({M})": "lluvia efectiva máxima ({M})",
 "pico da semana ({M}, {N})": "pico de la semana ({M}, {N})",
 "Evolução do índice — {M}": "Evolución del índice — {M}",
-"Por enquanto há histórico de {N} dias; os demais aparecem vazios.": "Por ahora hay historial de {N} días; los demás aparecen vacíos.",
 "Evolução do índice — últimos {N} dias": "Evolución del índice — últimos {N} días",
 "diário · {N}": "diario · {N}",
 "Pontos coloridos pela classe do dia. Faixa cinza: mínimo e máximo dos demais municípios. Acima da linha tracejada o município está em alerta.": "Puntos coloreados por la clase del día. Franja gris: mínimo y máximo de los demás municipios. Por encima de la línea discontinua el municipio está en alerta.",
@@ -457,6 +455,10 @@
 "Nenhuma ocorrência registrada": "Ninguna ocurrencia registrada",
 "a {N} km de {M}": "a {N} km de {M}",
 "Mapa das estações de monitoramento. Use Tab para percorrer as estações e Enter para selecionar.": "Mapa de las estaciones de monitoreo. Use Tab para recorrer las estaciones y Enter para seleccionar.",
-"Estações automáticas do INMET mais próximas dos municípios monitorados. Nenhuma fica dentro deles: cada uma mostra a distância até o município de referência. Toque num pin ou na lista para localizar.": "Estaciones automáticas del INMET más cercanas a los municipios monitoreados. Ninguna está dentro de ellos: cada una muestra la distancia al municipio de referencia. Toque un pin o la lista para ubicarla.",
-"Fonte: cadastro de estações automáticas do INMET. A distância é medida até o centro do município mais próximo de cada estação.": "Fuente: catastro de estaciones automáticas del INMET. La distancia se mide hasta el centro del municipio más cercano a cada estación."
+"Fonte: cadastro de estações automáticas do INMET. A distância é medida até o centro do município mais próximo de cada estação.": "Fuente: catastro de estaciones automáticas del INMET. La distancia se mide hasta el centro del municipio más cercano a cada estación.",
+"Alto Vale do Itajaí, SC": "Alto Vale do Itajaí, SC",
+"Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.": "Por ahora hay historial de {N} días para {M}; los demás aparecen vacíos.",
+"Região de Rio do Sul": "Región de Rio do Sul",
+"Região de Ituporanga": "Región de Ituporanga",
+"Estações automáticas do INMET na região e em volta dela. Cada uma mostra a distância até o centro do município de referência; algumas ficam dentro dos municípios monitorados. Toque num pin ou na lista para localizar.": "Estaciones automáticas del INMET en la región y alrededor. Cada una muestra la distancia al centro del municipio de referencia; algunas están dentro de los municipios monitoreados. Toque un pin o la lista para ubicarla."
 }

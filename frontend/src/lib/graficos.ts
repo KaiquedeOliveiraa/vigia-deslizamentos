@@ -90,9 +90,8 @@ export function serieMunicipio(m: Municipio, eixo: readonly string[]): Historico
   return pontos.filter((p) => eixo.includes(p.dia_alvo));
 }
 
-/** Dias do `eixo` com ponto em algum município: menor que o período quando o histórico ainda é curto. */
-export const diasComDados = (indices: Indices, eixo: readonly string[]): number =>
-  new Set(indices.municipios.flatMap((m) => serieMunicipio(m, eixo).map((p) => p.dia_alvo))).size;
+/** Dias do `eixo` com ponto no município: menor que o período quando o histórico dele ainda é curto. */
+export const diasComDadosDe = (m: Municipio, eixo: readonly string[]): number => serieMunicipio(m, eixo).length;
 
 /** Variação de cada ponto para o anterior, só quando o anterior é o dia anterior (senão `null`), como `tendencia`. */
 export const variacoesDiarias = (serie: readonly Ponto[]): (number | null)[] =>

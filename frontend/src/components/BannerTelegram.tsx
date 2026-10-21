@@ -6,11 +6,10 @@ import JanelaTelegram, { DiscoTelegram } from "./JanelaTelegram";
 
 interface Props {
   lang: Idioma;
-  municipios: readonly string[];
 }
 
 /** Porta de entrada do Telegram na Cartilha e em Contatos. */
-export default function BannerTelegram({ lang, municipios }: Props) {
+export default function BannerTelegram({ lang }: Props) {
   const t = tradutor(lang);
   const [aberto, setAberto] = useState(false);
   return (
@@ -24,7 +23,7 @@ export default function BannerTelegram({ lang, municipios }: Props) {
         <Bell aria-hidden="true" />
         {t("Quero receber")}
       </button>
-      <JanelaTelegram lang={lang} aberto={aberto} aoFechar={() => setAberto(false)} municipios={municipios} />
+      <JanelaTelegram lang={lang} aberto={aberto} aoFechar={() => setAberto(false)} />
     </div>
   );
 }

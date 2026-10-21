@@ -86,7 +86,7 @@ export default function Contatos({ lang, municipios }: Props) {
         ))}
       </ul>
 
-      <BannerTelegram lang={lang} municipios={municipios.map((m) => m.nome)} />
+      <BannerTelegram lang={lang} />
 
       <div className="filtro">
         <label className="lbl" htmlFor="filtro-municipio">

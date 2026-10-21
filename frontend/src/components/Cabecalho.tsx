@@ -53,7 +53,7 @@ export default function Cabecalho({ lang, tela, municipios }: Props) {
         </div>
         <div className="region">
           <span className="lbl">{t("Região")}</span>
-          <strong>{t("Vale Norte — Alto Vale do Itajaí, SC")}</strong>
+          <strong>{t("Alto Vale do Itajaí, SC")}</strong>
         </div>
         <button
           type="button"
@@ -122,7 +122,7 @@ export default function Cabecalho({ lang, tela, municipios }: Props) {
           {t("Não foi possível carregar os dados.")}
         </div>
       )}
-      <JanelaTelegram lang={lang} aberto={telegram} aoFechar={() => setTelegram(false)} municipios={municipios} />
+      <JanelaTelegram lang={lang} aberto={telegram} aoFechar={() => setTelegram(false)} />
       <PainelAcessibilidade lang={lang} tela={tela} aberto={acessibilidade} aoFechar={() => setAcessibilidade(false)} />
     </>
   );
