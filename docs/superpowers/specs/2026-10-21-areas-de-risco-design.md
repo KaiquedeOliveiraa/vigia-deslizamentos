@@ -102,7 +102,7 @@ Medição de 2026-10-21 nos 27 municípios:
 - **Redirecionamento:**
   - em `astro.config.mjs`, `redirects` com o **destino incluindo o `base`**: `"/estacoes": "/vigia-deslizamentos/areas-de-risco/"`, e o mesmo para `/es/estacoes` e `/en/estacoes`;
   - motivo: medido no Astro 7.3.5, um destino sem o `base` gera um link que dá 404 no GitHub Pages;
-  - um teste confere o HTML gerado no build;
+  - o HTML gerado é conferido no build, numa checagem manual com grep no `dist`;
   - a página de redirecionamento perde `?query` e `#âncora`, o que é aceitável para links antigos.
 
 **`MapaLeaflet`/`Mapa`** (trabalho novo; hoje o componente só desenha os municípios e pinos de um tipo):
@@ -193,7 +193,7 @@ Medição de 2026-10-21 nos 27 municípios:
   - ordenação da lista;
   - leitura e escrita de `?municipio=`/`?setor=`, ignorando valores inválidos e com o setor implicando o município;
   - a regra de setores individuais.
-- **Build:** a página de redirecionamento aponta para `/vigia-deslizamentos/…/areas-de-risco/` nos 3 idiomas.
+- **Build (checagem manual):** a página de redirecionamento aponta para `/vigia-deslizamentos/…/areas-de-risco/` nos 3 idiomas.
 - **i18n:** paridade das chaves, com as chaves antigas de Estações removidas.
 - **Navegador:**
   - PT, ES e EN, a 320, 390 e 1366 px;

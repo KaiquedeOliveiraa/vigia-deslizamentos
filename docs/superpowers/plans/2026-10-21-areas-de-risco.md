@@ -144,6 +144,59 @@ def test_gerar_ordena_e_recusa_id_repetido():
     assert gerar([bruta(cd_geocmu="9999999")], {"4206900"}) == []
 
 
+def test_aviso_de_telefone(caplog):
+    import logging
+    with caplog.at_level(logging.WARNING):
+        feicao_de(bruta(local="Rua A, tel (47) 99999-1234"))
+    assert "telefone ou CPF" in caplog.text
+
+
+def test_feicao_sem_campos_obrigatorios_e_descartada():
+    sem = bruta()
+    del sem["properties"]["num_setor"]
+    assert feicao_de(sem) is None
+    assert tipo_de({"tipolo_g1": None, "tipolo_g2": 3}) is None
+
+
+class _Resposta:
+    def __init__(self, status, dados):
+        self.status_code, self._dados = status, dados
+
+    def json(self):
+        return self._dados
+
+
+class _Sessao:
+    def __init__(self, respostas):
+        self.respostas = list(respostas)
+
+    def get(self, *_a, **_k):
+        return self.respostas.pop(0)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        return False
+
+
+def test_main_falha_com_contagem_diferente(monkeypatch, tmp_path):
+    import scripts.gerar_setores_risco as g
+    monkeypatch.setattr(g.requests, "Session", lambda: _Sessao([_Resposta(200, {"count": 2}), _Resposta(200, {"type": "FeatureCollection", "features": [bruta()]})]))
+    with pytest.raises(RuntimeError, match="incompleta"):
+        g.main(["--saida", str(tmp_path / "x.geojson")])
+
+
+def test_main_falha_com_http_e_com_error(monkeypatch, tmp_path):
+    import scripts.gerar_setores_risco as g
+    monkeypatch.setattr(g.requests, "Session", lambda: _Sessao([_Resposta(500, {})]))
+    with pytest.raises(RuntimeError, match="HTTP 500"):
+        g.main(["--saida", str(tmp_path / "x.geojson")])
+    monkeypatch.setattr(g.requests, "Session", lambda: _Sessao([_Resposta(200, {"error": {"code": 400}})]))
+    with pytest.raises(RuntimeError, match="SGB"):
+        g.main(["--saida", str(tmp_path / "x.geojson")])
+
+
 def test_arquivo_versionado():
     d = json.loads((RAIZ / "frontend" / "public" / "data" / "setores_risco.geojson").read_text(encoding="utf-8"))
     ibges = {m["ibge"] for m in json.loads((RAIZ / "backend" / "config" / "municipios.json").read_text(encoding="utf-8"))}
@@ -231,7 +284,8 @@ def data_de(epoch_ms) -> str | None:
 
 def tipo_de(props: dict) -> str | None:
     for i in range(1, 6):
-        rotulo = (props.get(f"tipolo_g{i}") or "").strip()
+        valor = props.get(f"tipolo_g{i}")
+        rotulo = valor.strip() if isinstance(valor, str) else ""
         if rotulo in TIPOS:
             return TIPOS[rotulo]
     return None
@@ -260,11 +314,15 @@ def centro_do_setor(geometria: dict) -> list[float]:
 
 
 def feicao_de(bruta: dict) -> dict | None:
-    p = bruta["properties"]
+    p = bruta.get("properties") or {}
+    if not isinstance(p.get("num_setor"), str) or not isinstance(p.get("cd_geocmu"), str) or not bruta.get("geometry"):
+        _log.warning("feição do SGB sem num_setor, cd_geocmu ou geometria, descartada")
+        return None
     tipo = tipo_de(p)
     if tipo is None:
         return None
-    grau = GRAUS.get((p.get("grau_risco") or "").strip())
+    grau_bruto = p.get("grau_risco")
+    grau = GRAUS.get(grau_bruto.strip() if isinstance(grau_bruto, str) else "")
     if grau is None:
         _log.warning("setor %s: grau desconhecido %r, descartado", p.get("num_setor"), p.get("grau_risco"))
         return None
@@ -526,7 +584,8 @@ export function lerSetores(json: unknown): Resultado<ColecaoSetores> {
     if (
       !p || !aneis || typeof p.id !== "string" || typeof p.ibge !== "string" ||
       !TIPOS.has(p.tipo as string) || !GRAUS.has(p.grau as string) ||
-      !Array.isArray(centro) || centro.length !== 2
+      !Array.isArray(centro) || centro.length !== 2 || !centro.every(Number.isFinite) ||
+      setores.some((s) => s.id === p.id)
     )
       continue;
     setores.push({
@@ -647,6 +706,8 @@ git commit -m "feat(frontend): leitura dos setores do SGB, resumos e seleção n
   pinosVisiveis?: boolean;
   /** Nome acessível do mapa nesta tela (padrão: o de hoje). */
   rotuloMapa?: string;
+  /** Nome acessível de cada município nesta tela (padrão: rotuloAria com o índice). */
+  rotuloMunicipio?: (ibge: string, nome: string) => string;
 ```
 
   - em `lib/mapa.ts`: `export function pontoInterno(feicao: FeicaoMunicipio): LatLon`, o ponto interno do maior anel, que serve para o marcador do município.
@@ -716,14 +777,16 @@ Em `mapa.css`:
 .setor-marca.alto i { border-radius: 50%; background: var(--setor-alto); }
 .setor-marca.muito_alto i { transform: rotate(45deg); background: var(--setor-muito-alto); }
 .setor-marca.sel i { box-shadow: 0 0 0 3px var(--ink); }
-.setor-conta { display: grid; place-items: center; min-width: 28px; height: 28px; padding: 0 6px; border-radius: 14px; background: var(--setor-muito-alto); color: #fff; font: 700 13px/1 var(--font-mono); border: 2px solid var(--surface-000); }
+/* Contagem de setores do município: fundo neutro (conta altos e muito altos), contraste de pelo menos 4,5:1 nos dois temas. */
+.setor-conta { display: grid; place-items: center; min-width: 28px; height: 28px; padding: 0 6px; border-radius: 14px; background: var(--ink); color: var(--surface-000); font: 700 13px/1 var(--font-mono); border: 2px solid var(--surface-000); }
 .mapa .setor { stroke-width: 2; fill-opacity: 0.35; }
 .mapa .setor.alto { stroke: var(--setor-alto); fill: var(--setor-alto); }
-.mapa .setor.muito_alto { stroke: var(--setor-muito-alto); fill: url(#hachura-setor); }
+.mapa .setor.muito_alto { stroke: var(--setor-muito-alto); }
+/* O fill url(#hachura-setor) vai inline no elemento (como as hachuras das classes), não aqui. */
 .mapa .setor.sel { stroke-width: 4; }
 ```
 
-Os ícones são `divIcon` de 44×44 com a forma de 14 px no centro: a área de toque é o ícone inteiro, que é maior que o mínimo de 24 px e chega a 44 px no toque. Dentro do `<Hachuras>`, acrescente um `<pattern id="hachura-setor">` com linhas na cor `var(--setor-muito-alto)`, no mesmo formato das hachuras de classe.
+Os ícones são `divIcon` de 44×44 com a forma de 14 px no centro: a área de toque é o ícone inteiro, que é maior que o mínimo de 24 px e chega a 44 px no toque. Dentro do `<Hachuras>`, que fica no SVG do overlayPane, o mesmo dos polígonos de setor, acrescente um `<pattern id="hachura-setor">` com linhas na cor `var(--setor-muito-alto)`, no mesmo formato das hachuras de classe.
 
 - [ ] **Passo 4: renderização em `MapaLeaflet.tsx`**
 
@@ -738,27 +801,37 @@ Os ícones são `divIcon` de 44×44 com a forma de 14 px no centro: a área de t
   CONTAGENS(setores).map(({ ibge, n, pos }) => (
     <Marker key={`c-${ibge}`} position={pos} keyboard={false}
       icon={divIcon({ className: "", html: `<span class="setor-conta" aria-hidden="true">${n}</span>`, iconSize: [44, 44], iconAnchor: [22, 22] })}
-      eventHandlers={{ click: () => onSelecionarRef.current?.(ibge) }} />
+      eventHandlers={{ click: () => onSelecionar?.(ibge) }} />
   ))}
 {setores.length > 0 && setoresIndividuais &&
   setores.map((s) =>
     longeAtual ? (
       <Marker key={s.id} position={[s.centro[1], s.centro[0]]} keyboard={false} zIndexOffset={s.id === setorSelecionado ? 1000 : 0}
         icon={divIcon({ className: `setor-marca ${s.grau}${s.id === setorSelecionado ? " sel" : ""}`, html: "<i></i>", iconSize: [44, 44], iconAnchor: [22, 22] })}
-        eventHandlers={{ click: () => onSelecionarSetorRef.current?.(s.id) }} />
+        eventHandlers={{ click: () => onSelecionarSetor?.(s.id) }} />
     ) : (
       <Polygon key={s.id} positions={s.aneis} className={`setor ${s.grau}${s.id === setorSelecionado ? " sel" : ""}`}
-        eventHandlers={{ click: () => onSelecionarSetorRef.current?.(s.id) }} />
+        eventHandlers={{ click: () => onSelecionarSetor?.(s.id) }}
+        ref={(p) => { if (p && s.grau === "muito_alto") (p.getElement() as SVGPathElement | undefined)?.style.setProperty("fill", "url(#hachura-setor)"); }} />
     ),
   )}
 ```
 
-   - `CONTAGENS` é um `useMemo` que agrupa os setores por `ibge` e usa `pontoInterno` da feição do município (procure em `MONITORADOS`).
-   - `longeAtual` é um `useState` atualizado no mesmo `marcar()` do efeito de zoom.
-   - Os marcadores têm `keyboard={false}`. Depois de montar, ponha `aria-hidden="true"` e `tabindex="-1"` no elemento de cada marcador e polígono de setor (num efeito que roda quando `setores`, `setoresIndividuais` ou `longeAtual` mudam): o caminho por teclado é a lista do painel.
+   - `CONTAGENS`:
+     - no nível do módulo, `const PONTO_INTERNO = new Map(MONITORADOS.map(({ feicao }) => [feicao.properties.ibge, pontoInterno(feicao)]));`;
+     - no componente, `const contagens = useMemo(() => { const n = new Map<string, number>(); for (const s of setores) n.set(s.ibge, (n.get(s.ibge) ?? 0) + 1); return [...n].flatMap(([ibge, total]) => { const pos = PONTO_INTERNO.get(ibge); return pos ? [{ ibge, n: total, pos }] : []; }); }, [setores]);`;
+     - no JSX, use `contagens.map(...)` no lugar de `CONTAGENS(setores).map(...)`.
+   - Os `divIcon` dos marcadores ficam em cache de módulo por chave (`${grau}|${sel}` e `conta|${n}`), para o DOM não ser recriado a cada render.
+   - `longeAtual` é um `useState` atualizado no mesmo `marcar()` do efeito de zoom. O `onLonge` é chamado ali direto, sem ref, porque o `setLonge` da tela é estável.
+   - **Fora do Tab e do leitor de tela:** os marcadores têm `keyboard={false}`.
+     - O `divIcon` da contagem usa `className: "setor-conta-icone"` e html `<span class="setor-conta">`; o dos setores, `className: "setor-marca …"`.
+     - Num efeito com dependências `[mapa, setores, setoresIndividuais, longeAtual, setorSelecionado, selecionado]`, ponha `aria-hidden="true"` e `tabindex="-1"` em cada `.leaflet-marker-icon.setor-conta-icone`, cada `.leaflet-marker-icon.setor-marca` e cada `path.setor` do overlayPane.
+   - **Ordem no SVG:** o `Municipio` selecionado chama `bringToFront()` no preenchimento opaco, o que cobre os polígonos de setor. No mesmo efeito, rode `mapa.getPanes().overlayPane.querySelectorAll("path.setor").forEach((el) => el.parentNode?.appendChild(el))`, para os setores voltarem para cima.
+   - **Nome acessível do município:** em `Municipio`, quando `rotuloMunicipio` vier preenchida, use `rotuloMunicipio(ibge, nome)` no lugar de `rotuloAria(t, nome, valor)`. Repasse a prop do `MapaLeaflet` para cada `Municipio`.
    - As classes de `Polygon` só valem na criação. Para refletir a seleção, troque a `key` incluindo `sel` (`key={`${s.id}${sel ? "-s" : ""}`}`) ou faça um efeito que alterna a classe no elemento. Use a `key`, que é mais simples.
-6. **Setor selecionado:** num efeito, quando `setorSelecionado` mudar e o setor existir, chame `mapa.fitBounds(L.polygon(setor.aneis).getBounds(), { maxZoom: 16, padding: [32, 32] })`. Importe `polygon` de "leaflet".
-7. **Pinos:** renderize só se `pinosVisiveis`.
+6. **Município selecionado** (só quando `setores.length > 0`): num efeito, quando `selecionado` mudar e não houver setor selecionado, faça `mapa.fitBounds(limites([feicao]), { padding: [24, 24] })` com a feição do município, tirada de `MONITORADOS`. As outras telas não passam `setores` e não são afetadas.
+7. **Setor selecionado:** num efeito, quando `setorSelecionado` mudar e o setor existir, chame `mapa.fitBounds(L.polygon(setor.aneis).getBounds(), { maxZoom: 16, padding: [32, 32] })`. Importe `polygon` de "leaflet".
+8. **Pinos:** renderize só se `pinosVisiveis`.
 
 - [ ] **Passo 5: verificar**
 
@@ -789,7 +862,10 @@ git commit -m "feat(frontend): camada de setores do SGB no mapa (marcador por mu
 3. O carregamento passa para dentro do componente: `const [ocorrencias, setOcorrencias] = useState<Resultado<Ocorrencia[]>>(); useEffect(() => { carregar("ocorrencias.json", lerOcorrencias).then(setOcorrencias); }, []);`.
 4. Logo abaixo do título do cartão, acrescente a frase `t("Inclui eventos de chuva que não são deslizamento (enxurrada, inundação, alagamento, chuva intensa).")`.
 5. Os imports (`ClipboardList`, `TriangleAlert`, `formatarData`, `lerOcorrencias`, `ocorrenciasDoMunicipio`, `resumoOcorrencias`, `TIPO_DESLIZAMENTO`, `Ocorrencia`, `Resultado`, `carregar`) vão junto.
-6. O CSS do cartão (`.ocs`, `.ocs-rol`, `.desl`) está em `dados.css`. Mova essas regras para um arquivo novo, `frontend/src/styles/ocorrencias.css`, importado no topo de `Ocorrencias.tsx` com `import "../styles/ocorrencias.css";`, e tire-as de `dados.css`.
+6. **CSS:** o cartão depende de regras que estão em `dados.css`, um arquivo que só a tela Dados importa:
+   - as genéricas `.card`, `.card .ch`, `.card .ch h2`, `.card .ch > svg` e `.card .sub` (perto das linhas 85 a 140) vão para `frontend/src/styles/cartao.css`, importado por `Dados.tsx` e por `Ocorrencias.tsx`;
+   - as do cartão (`.ocs`, `.ocs-rol`, `.desl`) vão para `frontend/src/styles/ocorrencias.css`, importado por `Ocorrencias.tsx`;
+   - as duas saem de `dados.css`. A tela Dados continua com a mesma aparência.
 
 - [ ] **Passo 2: Dados.tsx**
 
@@ -816,7 +892,7 @@ Em `es.json` e `en.json`:
 Rode `npm test && npm run typecheck && npm run build`. O link aponta para uma rota que só passa a existir na Tarefa 5; o build não quebra por isso.
 
 ```bash
-git add frontend/src/components/Ocorrencias.tsx frontend/src/components/Dados.tsx frontend/src/styles/ocorrencias.css frontend/src/styles/dados.css frontend/src/i18n/es.json frontend/src/i18n/en.json
+git add frontend/src/components/Ocorrencias.tsx frontend/src/components/Dados.tsx frontend/src/styles/ocorrencias.css frontend/src/styles/cartao.css frontend/src/styles/dados.css frontend/src/i18n/es.json frontend/src/i18n/en.json
 git commit -m "refactor(frontend): cartão de ocorrências num componente próprio; Dados aponta para Áreas de risco"
 ```
 
@@ -910,10 +986,22 @@ Implemente o componente seguindo a especificação, seções 2 e 3, com esta est
 - **Estado:** `carga` (setores), `estacoes` (o `carregar("estacoes.json", lerEstacoes)` de hoje), `municipio`, `setor`, `inmet` (boolean, padrão false), `longe` (boolean, padrão true).
 - **Carregamento:** ao carregar os setores, `lerSelecao(location.search, setores, IBGES)`, onde `IBGES = new Set(MONITORADOS.map((m) => m.ibge))` de `../lib/municipios`.
 - **Seleção:**
+  - escolher um município, no mapa ou na lista, limpa o `setor`;
+  - escolher um setor define também o `municipio` dele;
+  - em todo estado diferente de `regiao` há um botão "Ver toda a região" que limpa os dois;
   - toda mudança chama `history.replaceState(null, "", location.pathname + escreverSelecao(location.search, sel) + location.hash)`;
   - chama também `anunciar(...)` com o nome do município ou com o tipo e o grau do setor;
-  - e faz `tituloPainel.current?.focus()` (o título do painel tem `tabIndex={-1}`).
-- **Mapa:** `<Mapa lang valores={{}} selecionado={municipio} onSelecionar={escolherMunicipio} setores={setores} setorSelecionado={setor} onSelecionarSetor={escolherSetor} setoresIndividuais={mostrarSetoresIndividuais(!!municipio, longe)} onLonge={setLonge} pinos={pinosInmet} pinosVisiveis={inmet} rotuloMapa={t("Mapa dos setores de risco geológico. Use a lista ao lado para percorrer os setores.")} camadas={false}>`.
+  - e faz `tituloPainel.current?.focus()` (o título do painel tem `tabIndex={-1}`);
+  - **exceção:** a seleção inicial, lida da URL ao carregar, não anuncia, não move o foco e não rola a página. Use um ref `inicial` que fica falso depois da primeira aplicação.
+- **Camada INMET:**
+  - o `estacoes.json` é carregado só na primeira vez que a camada é ligada;
+  - se o carregamento falhar, o botão volta a desligado e aparece a nota `t("Não foi possível carregar as estações do INMET.")`;
+  - ligar a camada não muda o enquadramento.
+- **Mapa:** `<Mapa lang valores={{}} selecionado={municipio} onSelecionar={escolherMunicipio} setores={setores} setorSelecionado={setor} onSelecionarSetor={escolherSetor} setoresIndividuais={mostrarSetoresIndividuais(!!municipio, longe)} onLonge={setLonge} pinos={pinosInmet} pinosVisiveis={inmet} rotuloMapa={t("Mapa dos setores de risco geológico. Use a lista ao lado para percorrer os setores.")} rotuloMunicipio={(ibge, nome) => rotuloSetoresMunicipio(t, nome, contagemPorIbge.get(ibge) ?? 0)} camadas={false}>`.
+  - `rotuloSetoresMunicipio(t, nome, n)` é uma função pura em `lib/areas.ts`, com teste. Ela devolve:
+    - com 0 setores: `t("{M}: nenhum setor mapeado pelo SGB", { M })`;
+    - com 1: `t("{M}: 1 setor de risco geológico", { M })`;
+    - com mais: `t("{M}: {N} setores de risco geológico", { M, N })`.
 - **Dentro do mapa:**
   - uma legenda (forma do círculo e do losango com `ROTULO_GRAU`, o marcador de contagem, "Risco geológico mapeado pelo SGB");
   - um botão `aria-pressed` "Estações do INMET" que alterna `inmet`. Os pinos são montados como em `Estacoes.tsx` hoje (copie a montagem de `pinos` e o `balao`).
@@ -924,7 +1012,7 @@ Implemente o componente seguindo a especificação, seções 2 e 3, com esta est
     - `erro`: `t("Não foi possível carregar os setores de risco.")`, mais o `<Ocorrencias>` se houver município;
     - `regiao`: o resumo, "Mapeamentos de {N} a {N}", a lista `porMunicipio` (botões) e `<details>` com os municípios sem setores;
     - `municipio`: o resumo do município, a lista de setores (botões `aria-pressed`, mostrando `t(ROTULO_TIPO[s.tipo])`, `t(ROTULO_GRAU[s.grau])` e `s.local`), ou a mensagem de "mapeamento parcial" quando não há setores; depois o `<Ocorrencias t ibge nome>` e o link para Monitoramento com `?municipio=`;
-    - `setor`: título com `<span className={`setor-marca ${s.grau}`}><i/></span>`, tipo e grau; os campos (`local`, `descricao` e `recomendacao` com `lang="pt-BR"` e, se `lang !== "pt"`, a nota `t("texto original do SGB, em português")`); "pessoas" e "moradias" com "não informado" quando nulos; "Mapeado em {N}" (`formatarData`) ou "data não informada"; a fonte com link `https://geoportal.sgb.gov.br/`; o botão "Voltar para {M}", que limpa o setor e devolve o foco ao botão do setor (guarde um `ref` por id).
+    - `setor`: título com `<span className={`setor-marca ${s.grau}`}><i/></span>`, tipo e grau; os campos (`local`, `descricao` e `recomendacao` com `lang="pt-BR"` e, se `lang !== "pt"`, a nota `t("texto original do SGB, em português")`); "pessoas" e "moradias" com "não informado" quando nulos; "Mapeado em {N}" (`formatarData`) ou "data não informada"; a fonte com link `https://geoportal.sgb.gov.br/`; o botão "Voltar para {M}", que limpa o setor e devolve o foco ao botão do setor (guarde um `ref` por id). Esse foco acontece depois do novo render, com `requestAnimationFrame`, e nesse caso substitui o foco no título.
 - **Plurais:** use chaves separadas para 1 ("1 setor", "1 pessoa").
 - **Celular:** depois de qualquer seleção, `painel.current?.scrollIntoView({ block: "start", behavior: "smooth" })` quando `matchMedia("(max-width: 900px)").matches`.
 
@@ -947,6 +1035,39 @@ Acrescente em `es.json` e `en.json` (mesmas chaves) **todas** as frases literais
   - "risco geológico alto" → "riesgo geológico alto" / "high geological risk"
   - "risco geológico muito alto" → "riesgo geológico muy alto" / "very high geological risk"
 - **Faixa de segurança:** ES "Mapeo parcial del SGB: fuera de los sectores también puede haber riesgo. Esto es el terreno, no la alerta de lluvia de hoy. En peligro, llame al 199.", EN "Partial SGB mapping: there may be risk outside the sectors too. This is the terrain, not today's rain alert. In danger, call 199."
+- **Demais frases da tela** (PT → ES / EN; marcadores `{N}` e `{M}` iguais nas três):
+  - "{N} setores de risco geológico em {N} dos {N} municípios" → "{N} sectores de riesgo geológico en {N} de los {N} municipios" / "{N} geological risk sectors in {N} of the {N} municipalities"
+  - "{N} pessoas nos setores mapeados" → "{N} personas en los sectores mapeados" / "{N} people in the mapped sectors"
+  - "1 pessoa nos setores mapeados" → "1 persona en los sectores mapeados" / "1 person in the mapped sectors"
+  - "{M}: {N} setores ({N} risco muito alto, {N} alto)" → "{M}: {N} sectores ({N} riesgo muy alto, {N} alto)" / "{M}: {N} sectors ({N} very high risk, {N} high)"
+  - "{M}: 1 setor" → "{M}: 1 sector" / "{M}: 1 sector"
+  - "Mapeamentos de {N} a {N}" → "Mapeos de {N} a {N}" / "Mapped between {N} and {N}"
+  - "Sem setores mapeados:" → "Sin sectores mapeados:" / "No mapped sectors:"
+  - "O SGB não mapeou setores em {M}. O mapeamento é parcial: isso não significa que não haja risco." → "El SGB no mapeó sectores en {M}. El mapeo es parcial: eso no significa que no haya riesgo." / "SGB has not mapped sectors in {M}. The mapping is partial: this does not mean there is no risk."
+  - "Ver o índice de {M} em Monitoramento" → "Ver el índice de {M} en Monitoreo" / "See the index for {M} in Monitoring"
+  - "Ver toda a região" → "Ver toda la región" / "See the whole region"
+  - "Voltar para {M}" → "Volver a {M}" / "Back to {M}"
+  - "não informado" → "no informado" / "not reported"
+  - "data não informada" → "fecha no informada" / "date not reported"
+  - "Mapeado em {N}" → "Mapeado el {N}" / "Mapped on {N}"
+  - "Recomendação do SGB" → "Recomendación del SGB" / "SGB recommendation"
+  - "Pessoas" → "Personas" / "People"
+  - "Moradias" → "Viviendas" / "Homes"
+  - "Local" → "Lugar" / "Location"
+  - "Descrição de campo" → "Descripción de campo" / "Field description"
+  - "texto original do SGB, em português" → "texto original del SGB, en portugués" / "original SGB text, in Portuguese"
+  - "Risco geológico mapeado pelo SGB" → "Riesgo geológico mapeado por el SGB" / "Geological risk mapped by SGB"
+  - "número de setores do município" → "número de sectores del municipio" / "number of sectors in the municipality"
+  - "Estações do INMET" → "Estaciones del INMET" / "INMET stations"
+  - "Carregando os setores…" → "Cargando los sectores…" / "Loading sectors…"
+  - "Não foi possível carregar os setores de risco." → "No se pudieron cargar los sectores de riesgo." / "Risk sectors could not be loaded."
+  - "Não foi possível carregar as estações do INMET." → "No se pudieron cargar las estaciones del INMET." / "INMET stations could not be loaded."
+  - "Mapa dos setores de risco geológico. Use a lista ao lado para percorrer os setores." → "Mapa de los sectores de riesgo geológico. Use la lista al lado para recorrer los sectores." / "Map of geological risk sectors. Use the list beside it to go through the sectors."
+  - "{M}: nenhum setor mapeado pelo SGB" → "{M}: ningún sector mapeado por el SGB" / "{M}: no sector mapped by SGB"
+  - "{M}: 1 setor de risco geológico" → "{M}: 1 sector de riesgo geológico" / "{M}: 1 geological risk sector"
+  - "{M}: {N} setores de risco geológico" → "{M}: {N} sectores de riesgo geológico" / "{M}: {N} geological risk sectors"
+  - "Fonte: Serviço Geológico do Brasil (SGB), setorização de riscos geológicos." → "Fuente: Servicio Geológico de Brasil (SGB), sectorización de riesgos geológicos." / "Source: Geological Survey of Brazil (SGB), geological risk sectorization."
+- **Confira à mão:** frases com `t(` quebrado em várias linhas escapam do teste automático. As 6 chaves dinâmicas de `ROTULO_TIPO` e `ROTULO_GRAU` também precisam estar no dicionário.
 - **Remover** de ambos: "Estações", "VIGIA · Estações", "Tela Estações" e o parágrafo longo da tela Estações. As frases que a camada INMET ainda usa ficam: "Estações de monitoramento", os textos de distância e "INMET".
 
 - [ ] **Passo 5: verificar o build e o redirecionamento**
@@ -957,7 +1078,7 @@ Rode `npm test && npm run typecheck && npm run build`, depois:
 grep -o 'url=[^"]*' dist/estacoes/index.html dist/es/estacoes/index.html dist/en/estacoes/index.html
 ```
 
-O esperado é `url=/vigia-deslizamentos/areas-de-risco/`, `…/es/areas-de-risco/` e `…/en/areas-de-risco/`. Se o caminho dos arquivos no `dist` for outro, procure com `ls dist`.
+Esta conferência é manual, porque o projeto não tem teste automatizado do `dist`, e depende do `npm run build` ter rodado antes. O esperado é `url=/vigia-deslizamentos/areas-de-risco/`, `…/es/areas-de-risco/` e `…/en/areas-de-risco/`. Se o caminho dos arquivos no `dist` for outro, procure com `ls dist`.
 
 - [ ] **Passo 6: conferir no navegador**
 
