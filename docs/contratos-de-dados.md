@@ -75,6 +75,35 @@ Histórico de ocorrências, gerado por `backend/scripts/gerar_ocorrencias.py` a 
 | `descricao` | string | Resumo dos danos, em português |
 | `fonte` | string | Origem do registro |
 
+## `frontend/public/data/setores_risco.geojson`
+
+Gerado por `backend/scripts/gerar_setores_risco.py` a partir do serviço público do SGB. Só setores de movimento de massa. Textos do SGB em português.
+
+```
+{ "type": "FeatureCollection",
+  "fonte": "Serviço Geológico do Brasil (SGB), setorização de riscos geológicos",
+  "gerado_em": "AAAA-MM-DDTHH:MM:SSZ",
+  "features": [ { "type": "Feature",
+    "geometry": Polygon | MultiPolygon (lon, lat; WGS84),
+    "properties": {
+      "id": string, "ibge": string, "centro": [lon, lat],
+      "local": string | null,
+      "tipo": "deslizamento" | "rastejo" | "corrida_massa" | "queda",
+      "grau": "alto" | "muito_alto",
+      "descricao": string | null, "recomendacao": string | null,
+      "pessoas": int | null, "moradias": int | null,
+      "data": "AAAA-MM-DD" | null } } ] }
+```
+
+| Campo | Código | Significado |
+|---|---|---|
+| `tipo` | `deslizamento` | Deslizamento |
+| `tipo` | `rastejo` | Rastejo |
+| `tipo` | `corrida_massa` | Corrida de massa |
+| `tipo` | `queda` | Queda, tombamento ou rolamento |
+| `grau` | `alto` | Risco geológico alto |
+| `grau` | `muito_alto` | Risco geológico muito alto |
+
 ## `frontend/public/data/estacoes.json`
 
 Estações automáticas do INMET na região, geradas uma vez por script (`backend/scripts/gerar_estacoes.py`) e versionadas. A raiz é uma lista de objetos:
