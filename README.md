@@ -192,7 +192,7 @@ O pipeline é executado de forma agendada, **a cada 6 horas**, após a disponibi
 | Fonte | Tipo de dado | Papel no sistema |
 |-------|--------------|------------------|
 | **[CPRM / GeoSGB](https://geosgb.cprm.gov.br/)** | Cartas de suscetibilidade a movimentos de massa | Camada informativa de suscetibilidade do terreno. Disponibilizado via WMS/WFS e shapefile — será baixado uma vez, convertido para GeoJSON e versionado, **sem integração automatizada**. |
-| **Defesa Civil (municipal/estadual) e [S2iD](https://s2id.mi.gov.br/)** | Histórico de ocorrências e decretos de emergência | Levantamento manual, para compor a base histórica de ocorrências dos 27 municípios. |
+| **[Atlas Digital de Desastres](https://atlasdigital.mdr.gov.br/) (MIDR/Sedec, registros do S2iD)** | Histórico de ocorrências ligadas a chuva, 1991–2025 | Gerado por `backend/scripts/gerar_ocorrencias.py` e versionado; atualizar quando o Atlas publicar versão nova. |
 
 ### Fontes fora do escopo do projeto
 

@@ -65,14 +65,14 @@ Para cada membro (rodada × modelo), calcula-se o subíndice em cada ponto do mu
 
 ## `frontend/public/data/ocorrencias.json`
 
-Histórico de ocorrências, levantado manualmente (Defesa Civil e S2iD) e versionado. A raiz é uma lista de objetos:
+Histórico de ocorrências, gerado por `backend/scripts/gerar_ocorrencias.py` a partir do Atlas Digital de Desastres (1991–2025), só com eventos ligados a chuva, e versionado. A raiz é uma lista de objetos:
 
 | Campo | Tipo | Descrição |
 |---|---|---|
 | `ibge` | string | Município |
 | `data` | data | Data da ocorrência |
-| `tipo` | string | Ex.: "deslizamento", "decreto de emergência" |
-| `descricao` | string | Resumo curto |
+| `tipo` | string | "Movimento de massa", "Enxurrada", "Inundação", "Alagamento" ou "Chuva intensa" |
+| `descricao` | string | Resumo dos danos, em português |
 | `fonte` | string | Origem do registro |
 
 ## `frontend/public/data/estacoes.json`

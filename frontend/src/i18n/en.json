@@ -461,5 +461,16 @@
 "Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.": "For now there are {N} days of history for {M}; the other days are empty.",
 "Região de Rio do Sul": "Rio do Sul region",
 "Região de Ituporanga": "Ituporanga region",
-"Estações automáticas do INMET na região e em volta dela. Cada uma mostra a distância até o centro do município de referência; algumas ficam dentro dos municípios monitorados. Toque num pin ou na lista para localizar.": "INMET automatic stations in and around the region. Each one shows the distance to the center of its reference municipality; some are inside the monitored municipalities. Tap a pin or the list to locate one."
+"Estações automáticas do INMET na região e em volta dela. Cada uma mostra a distância até o centro do município de referência; algumas ficam dentro dos municípios monitorados. Toque num pin ou na lista para localizar.": "INMET automatic stations in and around the region. Each one shows the distance to the center of its reference municipality; some are inside the monitored municipalities. Tap a pin or the list to locate one.",
+"Movimento de massa": "Landslide (mass movement)",
+"Enxurrada": "Flash flood",
+"Inundação": "River flood",
+"Alagamento": "Urban flooding",
+"Chuva intensa": "Heavy rain",
+"{N} deslizamentos": "{N} landslides",
+"1 deslizamento": "1 landslide",
+"{N} outros eventos de chuva": "{N} other rain events",
+"1 outro evento de chuva": "1 other rain event",
+"{N} e {N} registrados desde {N}.": "{N} and {N} recorded since {N}.",
+"Fonte: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Só eventos ligados a chuva.": "Source: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Rain-related events only."
 }

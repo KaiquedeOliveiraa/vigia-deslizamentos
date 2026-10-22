@@ -1,1 +1,3908 @@
-[]
+[
+  {
+    "ibge": "4200200",
+    "data": "2025-12-31",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 10 desalojados · 10 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-13214-20251231"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2025-12-31",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-12100-20251231"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2025-12-30",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-12200-20251230"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2025-12-24",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-13214-20251224"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2025-11-18",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-13214-20251118"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2025-10-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-12200-20251003"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2025-08-27",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201802-13214-20250827"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2025-08-27",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-13214-20250827"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2025-08-27",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-13214-20250827"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2025-08-27",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-11321-20250827"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2025-06-26",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-13214-20250626"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2025-06-23",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4207403-13214-20250623"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2025-06-23",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-13214-20250623"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2025-02-27",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 3 desalojados · 14 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-13214-20250227"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2025-02-17",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 4 desalojados · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-12200-20250217"
+  },
+  {
+    "ibge": "4219358",
+    "data": "2025-02-17",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219358-13214-20250217"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2025-02-15",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 50 desalojados · 20 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-12200-20250215"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2025-02-15",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 20 desabrigados · 34 desalojados · 20 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-12200-20250215"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2025-02-15",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 40 desalojados · 15 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-13214-20250215"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2025-01-31",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 9 desalojados · 30 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-12200-20250131"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2025-01-29",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 4 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-13214-20250129"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2025-01-28",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201802-13214-20250128"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2024-10-11",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-13214-20241011"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2024-07-14",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 10 desabrigados · 1 desalojado · 4 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-13214-20240714"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2024-07-08",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 255 desabrigados · 195 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-13214-20240708"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2024-07-07",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 16 desalojados · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-13214-20240707"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2024-07-03",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-11321-20240703"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2024-05-20",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 77 desabrigados · 150 desalojados · 30 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-13214-20240520"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2024-05-19",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 483 desabrigados · 2712 desalojados · 1101 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-13214-20240519"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2024-05-19",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 35 desabrigados · 25 desalojados · 9 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-13214-20240519"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2024-05-18",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-12300-20240518"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2024-05-18",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 6 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-13214-20240518"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2024-05-18",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 50 desabrigados · 11 desalojados · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214003-13214-20240518"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2024-05-15",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209904-13214-20240515"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2024-03-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-13214-20240304"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2024-02-14",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-11331-20240214"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2024-01-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 188 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-12200-20240128"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2024-01-18",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-13214-20240118"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2023-12-03",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4207403-13214-20231203"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2023-12-02",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 24 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-12200-20231202"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2023-11-18",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 227 desabrigados · 2138 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209508-13214-20231118"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2023-11-18",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 317 desabrigados · 1600 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-13214-20231118"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2023-11-17",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 300 desabrigados · 700 desalojados · 2500 casas danificadas · 500 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-13214-20231117"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2023-11-17",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 7 desabrigados · 82 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201802-13214-20231117"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2023-11-17",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 8 desabrigados · 125 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4212700-13214-20231117"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2023-11-17",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 51 desabrigados · 2000 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-13214-20231117"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2023-11-17",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4215307-13214-20231117"
+  },
+  {
+    "ibge": "4218608",
+    "data": "2023-11-17",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 63 desabrigados · 1100 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4218608-13214-20231117"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2023-11-17",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 31 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219200-13214-20231117"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2023-11-16",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 226 desabrigados · 983 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-13214-20231116"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2023-11-16",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 254 desabrigados · 500 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-13214-20231116"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2023-11-16",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 80 desabrigados · 233 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-13214-20231116"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2023-11-16",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 52 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-13214-20231116"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2023-11-16",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 20 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-13214-20231116"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2023-11-16",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 21 desabrigados · 30 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-13214-20231116"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2023-11-16",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4207403-13214-20231116"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2023-11-16",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 63 desabrigados · 2082 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-13214-20231116"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2023-11-16",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 339 desabrigados · 2060 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209904-13214-20231116"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2023-11-16",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 139 desabrigados · 890 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214003-13214-20231116"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2023-11-16",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 1838 desabrigados · 18969 desalojados · 23 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-13214-20231116"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2023-11-16",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219408-11321-20231116"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2023-10-12",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 22 desabrigados · 126 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-13214-20231012"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2023-10-09",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219408-11321-20231009"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2023-10-08",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 4 desabrigados · 18 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201802-13214-20231008"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2023-10-08",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-13214-20231008"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2023-10-08",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 5 desabrigados · 3 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214508-13214-20231008"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2023-10-08",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 5 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219200-13214-20231008"
+  },
+  {
+    "ibge": "4219358",
+    "data": "2023-10-08",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 63 desabrigados · 164 desalojados · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219358-13214-20231008"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2023-10-07",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 19 desabrigados · 300 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-13214-20231007"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2023-10-07",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 32 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4212700-13214-20231007"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2023-10-06",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4207403-13214-20231006"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2023-10-06",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 14 desabrigados · 52 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209151-13214-20231006"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2023-10-06",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 16 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4215307-13214-20231006"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2023-10-06",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 8 desabrigados · 7 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219408-13214-20231006"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2023-10-05",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 138 desabrigados · 659 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-13214-20231005"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2023-10-05",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 116 desabrigados · 500 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-13214-20231005"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2023-10-05",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 11 desabrigados · 94 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-13214-20231005"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2023-10-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 12 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-13214-20231004"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2023-10-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 61 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-13214-20231004"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2023-10-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4207403-13214-20231004"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2023-10-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 252 desabrigados · 1018 desalojados · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209904-13214-20231004"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2023-10-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 4 desabrigados · 335 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-13214-20231004"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2023-10-04",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 16 desabrigados · 50 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-12100-20231004"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2023-10-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 191 desabrigados · 681 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214003-13214-20231004"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2023-10-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-13214-20231004"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2023-10-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 296 desabrigados · 3316 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-13214-20231004"
+  },
+  {
+    "ibge": "4218608",
+    "data": "2023-10-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 33 desabrigados · 174 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4218608-13214-20231004"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2023-09-27",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-11321-20230927"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2023-09-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 3 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-13214-20230904"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2023-08-19",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219408-11321-20230819"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2023-07-13",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 9 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12100-20230713"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2023-07-12",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 2 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-13214-20230712"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2023-07-12",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 30 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219408-12200-20230712"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2023-07-11",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-12100-20230711"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2023-07-11",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-11321-20230711"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2023-03-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 6 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-12200-20230308"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2023-03-08",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12300-20230308"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2023-03-03",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 5 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209151-13214-20230303"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2023-02-10",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12300-20230210"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2023-02-02",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-12200-20230202"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2023-02-02",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 10 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-12200-20230202"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2023-02-02",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 217 desalojados · 3 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-12200-20230202"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2023-02-02",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 110 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-12200-20230202"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2023-02-02",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12300-20230202"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2023-01-29",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-11331-20230129"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2023-01-19",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-11332-20230119"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2023-01-17",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-13214-20230117"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2023-01-17",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-12200-20230117"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2023-01-12",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-12200-20230112"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2023-01-12",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 26 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-12200-20230112"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2023-01-12",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 12 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4212700-12200-20230112"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2023-01-11",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-12200-20230111"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2023-01-10",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-13214-20230110"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2023-01-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-12200-20230103"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2022-12-04",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 5 desabrigados · 15 desalojados · 5 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-12200-20221204"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2022-12-04",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 28 desalojados · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4212700-12200-20221204"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2022-10-14",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · 15 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219408-12300-20221014"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2022-10-13",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 14 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-12100-20221013"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2022-10-12",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 3 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209151-13214-20221012"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2022-10-11",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-12100-20221011"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2022-10-11",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 10 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-12100-20221011"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2022-10-10",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 84 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12100-20221010"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2022-08-18",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-12200-20220818"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2022-08-18",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219408-12300-20220818"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2022-08-10",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-12200-20220810"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2022-06-22",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-12200-20220622"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2022-06-22",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-12200-20220622"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2022-06-22",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-13214-20220622"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2022-06-22",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 91 desalojados · 24 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-12100-20220622"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2022-06-22",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 84 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-13214-20220622"
+  },
+  {
+    "ibge": "4218608",
+    "data": "2022-06-22",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4218608-12100-20220622"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2022-05-05",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 3 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-12200-20220505"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2022-05-05",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 137 desabrigados · 1388 desalojados · 347 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209508-12100-20220505"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2022-05-05",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-12100-20220505"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2022-05-04",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 51 desabrigados · 156 desalojados · 16 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-12100-20220504"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2022-05-04",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 4 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201802-12200-20220504"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2022-05-04",
+    "tipo": "Movimento de massa",
+    "descricao": "Reconhecido pela União · 3 desabrigados · 2 desalojados · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-11321-20220504"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2022-05-04",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · 5 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-11321-20220504"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2022-05-04",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209151-12100-20220504"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2022-05-04",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 20 desabrigados · 49 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214003-12100-20220504"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2022-05-04",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-12200-20220504"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2022-05-04",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214508-12100-20220504"
+  },
+  {
+    "ibge": "4218608",
+    "data": "2022-05-04",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 26 desabrigados · 62 desalojados · 65 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4218608-12100-20220504"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2022-05-03",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · 2 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-12300-20220503"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2022-05-03",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209904-12100-20220503"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2022-05-03",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 447 desabrigados · 2300 desalojados · 2392 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12100-20220503"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2022-05-03",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4215307-12100-20220503"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2022-05-03",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 67 desabrigados · 169 desalojados · 60 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-12100-20220503"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2022-05-02",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 20 desalojados · 3 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-12100-20220502"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2022-05-02",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 4 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-12100-20220502"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2022-05-02",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 89 desabrigados · 800 desalojados · 350 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-13214-20220502"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2022-03-24",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209151-12200-20220324"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2022-03-08",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 5 desalojados · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-13214-20220308"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2022-03-08",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 58 desalojados · 17 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209508-12200-20220308"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2022-03-08",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · 20 desabrigados · 4 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12300-20220308"
+  },
+  {
+    "ibge": "4218608",
+    "data": "2022-03-08",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4218608-13214-20220308"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2022-03-06",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 5 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4207403-12200-20220306"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2022-03-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-12200-20220301"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2022-03-01",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-12300-20220301"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2022-02-17",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 7 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214508-12200-20220217"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2022-01-27",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-13214-20220127"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2022-01-16",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-12200-20220116"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2022-01-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-13214-20220104"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2021-12-20",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-11332-20211211"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2021-12-02",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-12300-20211018"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2021-09-22",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12200-20210917"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2021-09-21",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-12300-20210917"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2021-09-21",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-12100-20210917"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2021-07-01",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-13214-20210627"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2021-05-14",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · 7 desabrigados · 11 desalojados · 1 casa danificada · 4 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-11321-20210512"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2021-02-16",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-12200-20210128"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2021-02-12",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-13214-20210124"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2021-02-05",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-12300-20210202"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2021-02-02",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-12200-20210127"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2021-01-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-12200-20210124"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2021-01-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214508-12200-20210124"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2021-01-26",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 15 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-12200-20210124"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2020-12-20",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 6 desalojados · 27 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209904-12200-20201216"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2020-12-19",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 20 desalojados · 20 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219200-13214-20201216"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2020-12-18",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 1 morto · 4 desabrigados · 86 desalojados · 200 casas danificadas · 10 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-12200-20201217"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2020-12-17",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 25 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-12200-20201217"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2020-12-17",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 12 mortos · 171 desabrigados · 1600 desalojados · 41 casas danificadas · 80 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214003-12200-20201216"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2020-12-17",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 2 mortos · 52 desabrigados · 76 desalojados · 33 casas danificadas · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12200-20201216"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2020-01-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-12200-20200127"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2019-06-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214508-12200-20190601"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2019-05-31",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 158 desabrigados · 48 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12100-20190531"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2019-03-07",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-12100-20190307"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2019-03-06",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 1 morto · 5 desabrigados · 147 desalojados · 6 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-12200-20190306"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2019-03-06",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 49 desalojados · 4 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201802-12200-20190306"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2018-12-21",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-11321-20181221"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2018-12-18",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-12200-20181218"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2018-11-30",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-12200-20181130"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2018-10-19",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-11331-20181019"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2018-10-10",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-12200-20181010"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2018-10-09",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-12200-20181009"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2018-09-04",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 19 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12100-20180904"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2018-09-03",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-12100-20180903"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2018-04-13",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-13214-20180413"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2018-03-31",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 5 desabrigados · 20 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4212700-12200-20180331"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2018-03-30",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 35 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-12200-20180330"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2018-03-24",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-13214-20180324"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2018-03-19",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-12200-20180319"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2018-02-26",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 12 desalojados · 67 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-13214-20180226"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2018-01-17",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 12 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4215307-13214-20180117"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2018-01-17",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219408-12200-20180117"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2018-01-16",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 2 desalojados · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-12200-20180116"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2017-12-20",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-12200-20171220"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2017-11-17",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219408-12300-20171117"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2017-11-16",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-12200-20171116"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2017-06-07",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 132 desabrigados · 1200 desalojados · 325 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-13214-20170607"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2017-06-06",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 3 desalojados · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-13214-20170606"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2017-06-06",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-11331-20170606"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2017-06-05",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 40 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201802-13214-20170605"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2017-06-05",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 98 desabrigados · 140 desalojados · 6 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-13214-20170605"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2017-06-05",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 92 desabrigados · 700 desalojados · 211 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209508-12100-20170605"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2017-06-05",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 329 desabrigados · 752 desalojados · 160 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209904-13214-20170605"
+  },
+  {
+    "ibge": "4218608",
+    "data": "2017-06-05",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 13 desabrigados · 320 desalojados · 115 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4218608-12100-20170605"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2017-06-04",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 50 desabrigados · 388 desalojados · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-12200-20170604"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2017-06-04",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-12200-20170604"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2017-06-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 96 desabrigados · 105 desalojados · 7 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-13214-20170604"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2017-06-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 15 desalojados · 6 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4212700-13214-20170604"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2017-06-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 40 desabrigados · 500 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-13214-20170604"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2017-06-04",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 7 desalojados · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219200-13214-20170604"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2017-06-01",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 1090 desabrigados · 14632 desalojados · 6161 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12100-20170601"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2017-06-01",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219408-12300-20170601"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2017-05-31",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 106 desabrigados · 240 desalojados · 95 casas danificadas · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-12100-20170531"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2017-05-31",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · 5 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-12300-20170531"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2017-05-30",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 5 desabrigados · 12 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-12100-20170530"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2017-05-28",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-12300-20170528"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2017-05-26",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-12200-20170526"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2017-01-29",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-12200-20170129"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2017-01-09",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 850 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4207403-13214-20170109"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2017-01-09",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-13214-20170109"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2016-12-31",
+    "tipo": "Movimento de massa",
+    "descricao": "Reconhecido pela União · 25 desalojados · 7 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-11321-20161231"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2016-12-29",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4212700-12200-20161229"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2016-12-28",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4207403-12300-20161228"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2016-08-20",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · 8 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-11321-20160820"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2016-08-20",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 2 desalojados · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209508-12200-20160820"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2016-07-13",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-12200-20160713"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2016-04-10",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 84 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-13214-20160410"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2016-03-10",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-12200-20160310"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2016-03-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-12200-20160303"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2016-02-25",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 98 desalojados · 51 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-12200-20160225"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2016-02-25",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 4 desabrigados · 55 desalojados · 55 casas danificadas · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-13214-20160225"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2016-01-13",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 50 desalojados · 50 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214508-12200-20160113"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2016-01-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 20 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4207403-12200-20151226"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2015-11-23",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 4 desabrigados · 4 desalojados · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-12100-20151022"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2015-11-03",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4212700-12200-20151027"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2015-10-29",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 25 desabrigados · 150 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214508-12200-20151023"
+  },
+  {
+    "ibge": "4218608",
+    "data": "2015-10-29",
+    "tipo": "Alagamento",
+    "descricao": "Reconhecido pela União · 5 desabrigados · 114 desalojados · 45 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4218608-12300-20151022"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2015-10-28",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 32 desalojados · 15 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201802-13214-20151023"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2015-10-28",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 15 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4207403-13214-20151028"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2015-10-28",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 79 desabrigados · 250 desalojados · 3 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-13214-20151021"
+  },
+  {
+    "ibge": "4219358",
+    "data": "2015-10-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 162 desalojados · 108 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219358-12200-20151022"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2015-10-27",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 1 morto · 186 desabrigados · 1200 desalojados · 114 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209904-13214-20151022"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2015-10-27",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219200-13214-20151021"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2015-10-26",
+    "tipo": "Movimento de massa",
+    "descricao": "Reconhecido pela União · 14 desalojados · 36 casas danificadas · 3 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-11321-20151026"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2015-10-26",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 10 desalojados · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209151-12100-20151026"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2015-10-26",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 12 desalojados · 12 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-12200-20151022"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2015-10-26",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 3 desalojados · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-12200-20151023"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2015-10-26",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 3 desabrigados · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4215307-13214-20151022"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2015-10-25",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 136 desabrigados · 1475 desalojados · 286 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209508-12100-20151023"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2015-10-25",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 206 desabrigados · 2800 desalojados · 730 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-12100-20151023"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2015-10-23",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 268 desalojados · 250 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-13214-20151021"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2015-10-23",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-13214-20151015"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2015-10-23",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 45 desalojados · 10 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-12200-20151022"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2015-10-23",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 200 desabrigados · 1550 desalojados · 320 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-13214-20151023"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2015-10-23",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 1 morto · 866 desabrigados · 17636 desalojados · 4626 casas danificadas · 3 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12100-20151023"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2015-10-22",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 200 desabrigados · 482 desalojados · 964 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214003-12200-20151022"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2015-10-21",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 121 desabrigados · 350 desalojados · 160 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-12100-20151021"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2015-10-21",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 84 desabrigados · 210 desalojados · 27 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-12200-20151021"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2015-10-19",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · 52 desabrigados · 1300 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-13214-20151018"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2015-10-05",
+    "tipo": "Chuva intensa",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-13214-20150925"
+  },
+  {
+    "ibge": "4219358",
+    "data": "2015-10-02",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219358-12200-20150926"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2015-09-29",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 40 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219200-12200-20150918"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2015-09-23",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201802-12200-20150917"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2015-07-30",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-12200-20150723"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2015-01-16",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 7 desabrigados · 7 desalojados · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-12200-20150108"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2015-01-15",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 18 desabrigados · 35 desalojados · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-12200-20150108"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2014-12-30",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201802-12200-20141226"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2014-12-29",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 210 desalojados · 51 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-12200-20141226"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2014-10-17",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 52 desalojados · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209508-12200-20141001"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2014-10-16",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 39 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-12200-20141001"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2014-10-10",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 2 desabrigados · 5 desalojados · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-12200-20141001"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2014-10-10",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 88 desabrigados · 678 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12100-20141001"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2014-10-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 10 desabrigados · 500 desalojados · 10 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-12200-20141002"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2014-07-25",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 210 desabrigados · 369 desalojados · 163 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-12100-20140628"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2014-07-21",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 1 morto · 508 desabrigados · 6498 desalojados · 2166 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12100-20140629"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2014-07-15",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 128 desabrigados · 1300 desalojados · 180 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-12200-20140629"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2014-07-07",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 188 desabrigados · 574 desalojados · 185 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209508-12100-20140629"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2014-06-20",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · 30 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-11321-20140606"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2014-06-20",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 20 desabrigados · 800 desalojados · 10 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-12200-20140609"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2014-06-20",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 16 desabrigados · 340 desalojados · 545 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-12100-20140609"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2014-06-18",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 38 desalojados · 10 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209508-12200-20140608"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2014-06-16",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 150 desalojados · 50 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214508-12200-20140608"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2014-06-13",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 120 desabrigados · 3618 desalojados · 937 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214003-12200-20140608"
+  },
+  {
+    "ibge": "4219358",
+    "data": "2014-06-13",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 141 desalojados · 164 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219358-12200-20140608"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2014-06-11",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 151 desabrigados · 1016 desalojados · 389 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12100-20140609"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2014-06-10",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 54 desalojados · 54 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-12200-20140608"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2014-06-10",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 4 desabrigados · 35 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209151-12100-20140608"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2014-06-09",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 7 desabrigados · 234 desalojados · 5 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4215307-12100-20140608"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2014-03-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 2 desabrigados · 450 desalojados · 100 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-12200-20140318"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2014-03-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 25 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4207403-12200-20140318"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2014-01-17",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-12300-20140113"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2013-10-22",
+    "tipo": "Alagamento",
+    "descricao": "Reconhecido pela União · 30 desabrigados · 60 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214508-12300-20130922"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2013-10-04",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4210852-12300-20130922"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2013-10-04",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219200-12200-20130920"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2013-10-03",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 112 desabrigados · 1204 desalojados · 160 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4217808-12100-20130923"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2013-10-02",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 356 desabrigados · 1012 desalojados · 68 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209904-13214-20130922"
+  },
+  {
+    "ibge": "4218608",
+    "data": "2013-10-02",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 5 desabrigados · 192 desalojados · 15 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4218608-13214-20130922"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2013-10-01",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 130 desabrigados · 563 desalojados · 231 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200309-12100-20130922"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2013-10-01",
+    "tipo": "Movimento de massa",
+    "descricao": "Reconhecido pela União · 25 desabrigados · 5 desalojados · 6 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4206900-11321-20130921"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2013-10-01",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 12 desabrigados · 5 desalojados · 3 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4215307-12100-20130923"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2013-09-30",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4204194-12200-20130923"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2013-09-30",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 20 desabrigados · 130 desalojados · 35 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219408-12100-20130920"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2013-09-27",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 186 desabrigados · 1650 desalojados · 284 casas danificadas · 12 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4209508-12100-20130923"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2013-09-27",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 3 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214102-12200-20130922"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2013-09-27",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 220 desabrigados · 1600 desalojados · 300 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214607-12100-20130923"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2013-09-26",
+    "tipo": "Chuva intensa",
+    "descricao": "Reconhecido pela União · 150 desalojados · 29 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4200200-13214-20130921"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2013-09-26",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 14 desabrigados · 711 desalojados · 6 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201901-12200-20130922"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2013-09-26",
+    "tipo": "Alagamento",
+    "descricao": "Reconhecido pela União · 50 desalojados · 40 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4205100-12300-20130922"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2013-09-26",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 79 desabrigados · 243 desalojados · 9 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4208500-12200-20130922"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2013-09-26",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 690 desabrigados · 8010 desalojados · 2143 casas danificadas · 25 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214805-12100-20130923"
+  },
+  {
+    "ibge": "4219358",
+    "data": "2013-09-26",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 324 desalojados · 108 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4219358-12200-20130922"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2013-09-24",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 65 desalojados · 3 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4213708-12200-20130922"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2013-09-23",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4201802-12100-20130923"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2013-09-23",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4202859-12100-20130923"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2013-09-23",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4212700-12100-20130923"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2013-09-21",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 208 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-F-4214003-12200-20130920"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2012-02-09",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 5 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4204194-12200-20120209"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4200200-12100-20110912"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4201802-12100-20110912"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4201901-12100-20110912"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4205100-12100-20110912"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4209904-12100-20110912"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4210852-12100-20110912"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4213708-12100-20110912"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214102-12100-20110912"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214508-12100-20110912"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214607-12100-20110912"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214805-12100-20110912"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4217808-12100-20110912"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2011-09-12",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4219408-12100-20110912"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2011-09-09",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 250 desabrigados · 1030 desalojados · 250 casas danificadas · 19 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4200309-12100-20110909"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2011-09-09",
+    "tipo": "Movimento de massa",
+    "descricao": "Reconhecido pela União · 5 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4205100-11321-20110909"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2011-09-09",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 1 morto · 197 desabrigados · 2132 desalojados · 345 casas danificadas · 6 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209508-12200-20110909"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2011-09-09",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 28 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4212700-12200-20110909"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2011-09-09",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 95 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214508-12200-20110909"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2011-09-09",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 680 desabrigados · 1650 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214607-12200-20110909"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2011-09-08",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 117 desabrigados · 1143 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4201901-12100-20110908"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2011-09-08",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 5 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4202859-12200-20110908"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2011-09-08",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 33 desabrigados · 184 desalojados · 81 casas danificadas · 10 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4206900-12100-20110908"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2011-09-08",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 2 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209151-12200-20110908"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2011-09-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 15 desabrigados · 20 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4210852-12200-20110908"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2011-09-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 159 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4213708-12200-20110908"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2011-09-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 9 desabrigados · 20 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214102-12200-20110908"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2011-09-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 2 mortos · 2580 desabrigados · 10320 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214805-12200-20110908"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2011-09-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 55 desabrigados · 3235 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4217808-12200-20110908"
+  },
+  {
+    "ibge": "4218608",
+    "data": "2011-09-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 104 desabrigados · 1284 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4218608-12200-20110908"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2011-09-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 28 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4219200-12200-20110908"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2011-09-06",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 500 desabrigados · 7000 desalojados · 450 casas danificadas · 29 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214003-12100-20110906"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2011-08-31",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4215307-12200-20110831"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2011-08-30",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 69 desabrigados · 14 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4200309-12100-20110830"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2011-08-30",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4205100-12200-20110830"
+  },
+  {
+    "ibge": "4219358",
+    "data": "2011-08-30",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 20 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4219358-12200-20110830"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2011-08-11",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4204194-12200-20110811"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2011-08-10",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · 4 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4206900-11321-20110810"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2011-08-10",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4212700-12200-20110810"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2011-08-09",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4200200-12200-20110809"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2011-08-09",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 44 desabrigados · 40 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4200309-12100-20110809"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2011-08-09",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 86 desalojados · 4 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209508-12200-20110809"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2011-08-09",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 32 desalojados · 12 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209904-12100-20110809"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2011-08-09",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214102-12200-20110809"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2011-08-09",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 28 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214805-12200-20110809"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2011-08-06",
+    "tipo": "Inundação",
+    "descricao": "Reconhecido pela União · 2 mortos · 328 desabrigados · 1521 desalojados · 516 casas danificadas · 23 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4208500-12100-20110806"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2011-03-24",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209904-12200-20110324"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2011-02-10",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4200200-12200-20110210"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2011-01-26",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 29 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214607-12200-20110126"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2011-01-25",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4202859-12200-20110125"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2011-01-23",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 23 desabrigados · 200 desalojados · 40 casas danificadas · 5 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214508-12200-20110123"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2011-01-22",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 4 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4205100-12200-20110122"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2011-01-22",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 150 desabrigados · 900 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4210852-12200-20110122"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2011-01-22",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 8 desabrigados · 50 desalojados · 50 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4217808-12200-20110122"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2011-01-11",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 13 desabrigados · 21 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4215307-12200-20110111"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2011-01-08",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 9 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4204194-12200-20110108"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2010-12-07",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 20 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4200309-12200-20101207"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2010-12-02",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4213708-12200-20101202"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2010-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4209508-12200-20100928"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2010-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214607-12200-20100928"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2010-04-27",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 20 desabrigados · 297 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214607-12200-20100427"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2010-04-27",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 147 desabrigados · 453 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-J-4214805-12200-20100427"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2010-04-26",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4200200-12200-20100426"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2010-04-25",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214102-12200-20100425"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2010-04-23",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209151-12200-20100423"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2010-04-22",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 104 desalojados · 20 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214003-12200-20100422"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2010-04-22",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 350 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214508-12200-20100422"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2010-04-22",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 12 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4215307-12200-20100422"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2010-03-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 350 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214508-12200-20100328"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2010-03-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 3 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4217808-12200-20100328"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2010-03-27",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4215307-12200-20100327"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2010-03-24",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 10 desalojados · 10 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4205100-12200-20100324"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2010-01-26",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214102-12200-20100126"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2010-01-21",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214508-12200-20100121"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2010-01-18",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4201802-12200-20100118"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2010-01-04",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4210852-12200-20100104"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2009-12-27",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4200309-12200-20091227"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2009-12-27",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4209508-12200-20091227"
+  },
+  {
+    "ibge": "4218608",
+    "data": "2009-10-16",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 262 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4218608-12200-20091016"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2009-09-29",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4206900-12200-20090929"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2009-09-29",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4212700-12200-20090929"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4201802-12200-20090928"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4201901-12200-20090928"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4204194-12200-20090928"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4208500-12200-20090928"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4209904-12200-20090928"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4213708-12200-20090928"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214003-12200-20090928"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214102-12200-20090928"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214607-12200-20090928"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214805-12200-20090928"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4215307-12200-20090928"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2009-09-28",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4217808-12200-20090928"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2009-09-18",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4210852-12200-20090918"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2009-09-16",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4200309-12200-20090916"
+  },
+  {
+    "ibge": "4200200",
+    "data": "2009-09-11",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4200200-12200-20090911"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2009-02-26",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214805-12200-20090226"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2009-02-04",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4215307-12200-20090204"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2009-01-01",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4217808-12200-20090101"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2008-11-27",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4213708-12100-20081127"
+  },
+  {
+    "ibge": "4214102",
+    "data": "2008-11-26",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214102-12200-20081126"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2008-11-24",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4205100-12200-20081124"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2008-11-24",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214805-12200-20081124"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2008-11-23",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 4 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214003-12200-20081123"
+  },
+  {
+    "ibge": "4207403",
+    "data": "2008-11-22",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 10 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4207403-12200-20081122"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2008-11-21",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 42 desalojados · 15 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4206900-12200-20081121"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2008-11-20",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4204194-12200-20081120"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2008-11-18",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209151-12100-20081118"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2008-11-10",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209904-12200-20081110"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2008-01-18",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 83 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4204194-12200-20080118"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2008-01-18",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4208500-12200-20080118"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2008-01-04",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4201901-12200-20080104"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2008-01-03",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 60 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4217808-12200-20080103"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2007-12-11",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4210852-12200-20071211"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2007-10-16",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4201901-12200-20071016"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2007-10-16",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 100 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4208500-12200-20071016"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2007-07-22",
+    "tipo": "Movimento de massa",
+    "descricao": "Registrado no S2iD · 15 desabrigados · 2 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214003-11321-20070722"
+  },
+  {
+    "ibge": "4215307",
+    "data": "2007-03-13",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 6 desalojados · 5 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4215307-12200-20070313"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2007-03-02",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4201901-12200-20070302"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2007-03-02",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 1 casa danificada",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4208500-12200-20070302"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2005-11-16",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 10 desabrigados · 5 desalojados · 3 casas danificadas · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4219200-12200-20051116"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2004-11-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214805-12200-20041128"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2004-10-26",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209151-12200-20041026"
+  },
+  {
+    "ibge": "4219358",
+    "data": "2004-10-24",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4219358-12200-20041024"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2003-12-12",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 5 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4212700-12200-20031212"
+  },
+  {
+    "ibge": "4201901",
+    "data": "2003-12-11",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4201901-12200-20031211"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2003-12-11",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 18 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4204194-12200-20031211"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2003-12-11",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 2150 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214003-12200-20031211"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2003-12-11",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4219200-12200-20031211"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2003-03-10",
+    "tipo": "Enxurrada",
+    "descricao": "Reconhecido pela União · 25 desabrigados · 162 desalojados · 74 casas danificadas · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214508-12200-20030310"
+  },
+  {
+    "ibge": "4202859",
+    "data": "2002-12-07",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 120 desabrigados · 30 desalojados · 82 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4202859-12100-20021207"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2002-12-02",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209151-12200-20021202"
+  },
+  {
+    "ibge": "4213708",
+    "data": "2002-11-29",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 450 desabrigados · 3 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4213708-12100-20021129"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2002-11-29",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 50 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214508-12200-20021129"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2002-11-29",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 31 desabrigados · 89 desalojados · 24 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214607-12200-20021129"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2002-11-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 257 desabrigados · 96 desalojados · 121 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4217808-12200-20021128"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2002-11-22",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 41 desalojados · 15 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214003-12100-20021122"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2002-11-21",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4205100-12200-20021121"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2002-11-21",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 16 desabrigados · 8 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214805-12200-20021121"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2002-11-21",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4219200-12200-20021121"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2002-11-21",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 40 desalojados · 10 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4219408-12200-20021121"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2002-10-22",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 75 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214508-12100-20021022"
+  },
+  {
+    "ibge": "4217808",
+    "data": "2001-10-02",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 825 desalojados · 304 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4217808-12100-20011002"
+  },
+  {
+    "ibge": "4200309",
+    "data": "2001-10-01",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 85 desabrigados · 182 desalojados · 60 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4200309-12100-20011001"
+  },
+  {
+    "ibge": "4205100",
+    "data": "2001-10-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4205100-12200-20011001"
+  },
+  {
+    "ibge": "4206900",
+    "data": "2001-10-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 34 desabrigados · 4 desalojados · 4 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4206900-12200-20011001"
+  },
+  {
+    "ibge": "4209151",
+    "data": "2001-10-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 4 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209151-12200-20011001"
+  },
+  {
+    "ibge": "4209508",
+    "data": "2001-10-01",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 120 desabrigados · 416 desalojados · 80 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209508-12100-20011001"
+  },
+  {
+    "ibge": "4209904",
+    "data": "2001-10-01",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 144 desabrigados · 95 desalojados · 3 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209904-12100-20011001"
+  },
+  {
+    "ibge": "4210852",
+    "data": "2001-10-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 40 desabrigados · 40 desalojados · 99 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4210852-12200-20011001"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2001-10-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 4 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4212700-12200-20011001"
+  },
+  {
+    "ibge": "4214003",
+    "data": "2001-10-01",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 2100 desabrigados · 525 casas danificadas · 2 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214003-12100-20011001"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2001-10-01",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4214508-12100-20011001"
+  },
+  {
+    "ibge": "4214607",
+    "data": "2001-10-01",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 40 desabrigados · 420 desalojados · 261 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214607-12100-20011001"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2001-10-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 1 morto · 2885 desabrigados · 840 casas danificadas · 91 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214805-12200-20011001"
+  },
+  {
+    "ibge": "4218608",
+    "data": "2001-10-01",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 120 desabrigados · 20 desalojados · 5 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4218608-12100-20011001"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2001-10-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4219200-12200-20011001"
+  },
+  {
+    "ibge": "4219408",
+    "data": "2001-10-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 51 desalojados · 9 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4219408-12200-20011001"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2001-09-30",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 158 desalojados · 60 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4208500-12200-20010930"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2001-09-04",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 21 desabrigados · 11 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214805-12200-20010904"
+  },
+  {
+    "ibge": "4212700",
+    "data": "2001-04-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 4 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4212700-12200-20010401"
+  },
+  {
+    "ibge": "4219200",
+    "data": "2001-03-24",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 53 desabrigados · 67 desalojados · 18 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4219200-12200-20010324"
+  },
+  {
+    "ibge": "4214805",
+    "data": "2001-02-12",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 13 desabrigados · 23 casas destruídas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214805-12200-20010212"
+  },
+  {
+    "ibge": "4214508",
+    "data": "2001-02-04",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 32 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214508-12200-20010204"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2001-01-15",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 46 desabrigados · 66 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4201802-12200-20010115"
+  },
+  {
+    "ibge": "4201802",
+    "data": "2000-01-14",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4201802-12200-20000114"
+  },
+  {
+    "ibge": "4204194",
+    "data": "2000-01-14",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4204194-12200-20000114"
+  },
+  {
+    "ibge": "4208500",
+    "data": "2000-01-14",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 12 desabrigados · 980 desalojados · 172 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4208500-12200-20000114"
+  },
+  {
+    "ibge": "4214508",
+    "data": "1999-07-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214508-12200-19990703"
+  },
+  {
+    "ibge": "4214607",
+    "data": "1999-07-03",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 18 desabrigados · 17 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214607-12100-19990703"
+  },
+  {
+    "ibge": "4214805",
+    "data": "1999-07-03",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 201 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214805-12100-19990703"
+  },
+  {
+    "ibge": "4205100",
+    "data": "1999-02-26",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 125 desalojados · 28 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4205100-12200-19990226"
+  },
+  {
+    "ibge": "4219408",
+    "data": "1999-02-26",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 7 desalojados · 8 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4219408-12200-19990226"
+  },
+  {
+    "ibge": "4208500",
+    "data": "1999-02-25",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 6 desabrigados · 64 desalojados · 13 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4208500-12200-19990225"
+  },
+  {
+    "ibge": "4214508",
+    "data": "1999-02-24",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 22 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214508-12200-19990224"
+  },
+  {
+    "ibge": "4209151",
+    "data": "1998-12-29",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4209151-12200-19981229"
+  },
+  {
+    "ibge": "4201901",
+    "data": "1998-09-14",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4201901-12200-19980914"
+  },
+  {
+    "ibge": "4214607",
+    "data": "1998-04-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 7 desabrigados · 24 desalojados · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214607-12200-19980428"
+  },
+  {
+    "ibge": "4214805",
+    "data": "1998-04-28",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 763 desalojados · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214805-12100-19980428"
+  },
+  {
+    "ibge": "4204194",
+    "data": "1998-02-09",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 3 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4204194-12200-19980209"
+  },
+  {
+    "ibge": "4217808",
+    "data": "1998-01-29",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4217808-12200-19980129"
+  },
+  {
+    "ibge": "4214003",
+    "data": "1998-01-02",
+    "tipo": "Alagamento",
+    "descricao": "Registrado no S2iD · 4 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214003-12300-19980102"
+  },
+  {
+    "ibge": "4209151",
+    "data": "1997-11-18",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4209151-12200-19971118"
+  },
+  {
+    "ibge": "4214607",
+    "data": "1997-11-05",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 2 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214607-12200-19971105"
+  },
+  {
+    "ibge": "4214805",
+    "data": "1997-10-11",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 362 desabrigados · 6 desalojados · 2 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4214805-12100-19971011"
+  },
+  {
+    "ibge": "4219358",
+    "data": "1997-09-12",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 14 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4219358-12200-19970912"
+  },
+  {
+    "ibge": "4204194",
+    "data": "1997-02-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4204194-12200-19970203"
+  },
+  {
+    "ibge": "4205100",
+    "data": "1997-02-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4205100-12200-19970203"
+  },
+  {
+    "ibge": "4207403",
+    "data": "1997-02-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4207403-12200-19970203"
+  },
+  {
+    "ibge": "4209904",
+    "data": "1997-02-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4209904-12200-19970203"
+  },
+  {
+    "ibge": "4214003",
+    "data": "1997-02-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214003-12200-19970203"
+  },
+  {
+    "ibge": "4214102",
+    "data": "1997-02-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4214102-12200-19970203"
+  },
+  {
+    "ibge": "4214607",
+    "data": "1997-02-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4214607-12200-19970203"
+  },
+  {
+    "ibge": "4208500",
+    "data": "1997-02-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4208500-12200-19970201"
+  },
+  {
+    "ibge": "4214805",
+    "data": "1997-02-01",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4214805-12100-19970201"
+  },
+  {
+    "ibge": "4200309",
+    "data": "1997-01-31",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 420 desabrigados · 6 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4200309-12200-19970131"
+  },
+  {
+    "ibge": "4201802",
+    "data": "1997-01-31",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 15 desalojados · 4 casas danificadas",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4201802-12200-19970131"
+  },
+  {
+    "ibge": "4201901",
+    "data": "1997-01-31",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 1 morto · 140 desabrigados · 39 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-A-4201901-12200-19970131"
+  },
+  {
+    "ibge": "4209508",
+    "data": "1997-01-31",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 69 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-R-4209508-12100-19970131"
+  },
+  {
+    "ibge": "4212700",
+    "data": "1997-01-31",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4212700-12200-19970131"
+  },
+  {
+    "ibge": "4214508",
+    "data": "1997-01-31",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214508-12200-19970131"
+  },
+  {
+    "ibge": "4219358",
+    "data": "1997-01-31",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 1 morto · 50 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-R-4219358-12200-19970131"
+  },
+  {
+    "ibge": "4215307",
+    "data": "1997-01-22",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4215307-12200-19970122"
+  },
+  {
+    "ibge": "4210852",
+    "data": "1996-02-27",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4210852-12200-19960227"
+  },
+  {
+    "ibge": "4215307",
+    "data": "1996-02-27",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4215307-12200-19960227"
+  },
+  {
+    "ibge": "4217808",
+    "data": "1996-01-19",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4217808-12100-19960119"
+  },
+  {
+    "ibge": "4200200",
+    "data": "1996-01-13",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4200200-12200-19960113"
+  },
+  {
+    "ibge": "4209151",
+    "data": "1995-12-02",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 15 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-R-4209151-12200-19951202"
+  },
+  {
+    "ibge": "4201802",
+    "data": "1995-02-13",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4201802-12200-19950213"
+  },
+  {
+    "ibge": "4201901",
+    "data": "1995-02-10",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4201901-12200-19950210"
+  },
+  {
+    "ibge": "4214805",
+    "data": "1995-02-01",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4214805-12200-19950201"
+  },
+  {
+    "ibge": "4207403",
+    "data": "1995-01-27",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4207403-12200-19950127"
+  },
+  {
+    "ibge": "4212700",
+    "data": "1995-01-16",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4212700-12200-19950116"
+  },
+  {
+    "ibge": "4209151",
+    "data": "1995-01-13",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4209151-12200-19950113"
+  },
+  {
+    "ibge": "4208500",
+    "data": "1995-01-12",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 284 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-R-4208500-12200-19950112"
+  },
+  {
+    "ibge": "4206900",
+    "data": "1995-01-09",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 19 desabrigados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-R-4206900-12200-19950109"
+  },
+  {
+    "ibge": "4214102",
+    "data": "1995-01-09",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 34 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-R-4214102-12200-19950109"
+  },
+  {
+    "ibge": "4219200",
+    "data": "1995-01-09",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · 5 casas danificadas · 1 casa destruída",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-R-4219200-12200-19950109"
+  },
+  {
+    "ibge": "4202859",
+    "data": "1994-03-29",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4202859-12200-19940329"
+  },
+  {
+    "ibge": "4214607",
+    "data": "1994-02-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4214607-12200-19940228"
+  },
+  {
+    "ibge": "4207403",
+    "data": "1993-12-28",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4207403-12200-19931228"
+  },
+  {
+    "ibge": "4200200",
+    "data": "1993-12-15",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4200200-12200-19931215"
+  },
+  {
+    "ibge": "4205100",
+    "data": "1992-06-08",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4205100-12100-19920608"
+  },
+  {
+    "ibge": "4209151",
+    "data": "1992-06-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4209151-12200-19920608"
+  },
+  {
+    "ibge": "4213708",
+    "data": "1992-06-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4213708-12200-19920608"
+  },
+  {
+    "ibge": "4215307",
+    "data": "1992-06-08",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4215307-12200-19920608"
+  },
+  {
+    "ibge": "4219358",
+    "data": "1992-05-30",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · 142 desalojados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-R-4219358-12100-19920530"
+  },
+  {
+    "ibge": "4207403",
+    "data": "1992-02-03",
+    "tipo": "Enxurrada",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-D-4207403-12200-19920203"
+  },
+  {
+    "ibge": "4201802",
+    "data": "1991-12-31",
+    "tipo": "Inundação",
+    "descricao": "Registrado no S2iD · sem danos humanos ou materiais registrados",
+    "fonte": "Atlas Digital de Desastres (MIDR/Sedec) · S2iD SC-P-4201802-12100-19911231"
+  }
+]
