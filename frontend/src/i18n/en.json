@@ -472,5 +472,7 @@
 "{N} outros eventos de chuva": "{N} other rain events",
 "1 outro evento de chuva": "1 other rain event",
 "{N} e {N} registrados desde {N}.": "{N} and {N} recorded since {N}.",
-"Fonte: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Só eventos ligados a chuva.": "Source: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Rain-related events only."
+"Fonte: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Só eventos ligados a chuva.": "Source: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Rain-related events only.",
+"Inclui eventos de chuva que não são deslizamento (enxurrada, inundação, alagamento, chuva intensa).": "Includes rain events that are not landslides (flash flood, river flood, urban flooding, heavy rain).",
+"Histórico de ocorrências e áreas de risco de {M}: ver em Áreas de risco": "Occurrence history and risk areas for {M}: see Risk areas"
 }

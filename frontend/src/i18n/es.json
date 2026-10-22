@@ -472,5 +472,7 @@
 "{N} outros eventos de chuva": "{N} otros eventos de lluvia",
 "1 outro evento de chuva": "1 otro evento de lluvia",
 "{N} e {N} registrados desde {N}.": "{N} y {N} registrados desde {N}.",
-"Fonte: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Só eventos ligados a chuva.": "Fuente: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Solo eventos relacionados con la lluvia."
+"Fonte: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Só eventos ligados a chuva.": "Fuente: Atlas Digital de Desastres (MIDR/Sedec), 1991–2025. Solo eventos relacionados con la lluvia.",
+"Inclui eventos de chuva que não são deslizamento (enxurrada, inundação, alagamento, chuva intensa).": "Incluye eventos de lluvia que no son deslizamientos (torrente, inundación, anegamiento, lluvia intensa).",
+"Histórico de ocorrências e áreas de risco de {M}: ver em Áreas de risco": "Historial de ocurrencias y áreas de riesgo de {M}: ver en Áreas de riesgo"
 }

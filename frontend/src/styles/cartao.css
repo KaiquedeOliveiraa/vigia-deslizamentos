@@ -1,0 +1,49 @@
+.card {
+  min-width: 0;
+  background: var(--surface-000);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--nav-900);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+
+.card .ch {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.card .ch > svg {
+  width: 20px;
+  height: 20px;
+  color: var(--ink-brand);
+}
+
+.card .ch h2 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--ink-brand);
+}
+
+.card .ch .tag {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 5px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-050);
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+}
+
+.card .sub {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
