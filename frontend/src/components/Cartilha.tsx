@@ -1,7 +1,7 @@
 import "../styles/cartilha.css";
 import { Backpack, Check, DoorOpen, Phone } from "lucide-react";
 import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
-import { EMERGENCIA, FASES, FONTES, MOCHILA, NAO_FACA, SECOES, SINAIS, type Ilustracao } from "../conteudo/cartilha";
+import { EMERGENCIA, FASES, MOCHILA, NAO_FACA, SECOES, SINAIS, type Ilustracao } from "../conteudo/cartilha";
 import { tradutor } from "../i18n";
 import { abaPorTecla, progressoMochila, secaoAtiva } from "../lib/cartilha";
 import type { Idioma } from "../lib/preferencias";
@@ -265,17 +265,7 @@ export default function Cartilha({ lang }: Props) {
         <BannerTelegram lang={lang} />
       </div>
 
-      <p className="fonte">
-        {t("Baseado nas cartilhas da")}{" "}
-        <a href={FONTES.rj} target="_blank" rel="noopener">
-          {t("Defesa Civil RJ")}
-        </a>{" "}
-        {t("e do")}{" "}
-        <a href={FONTES.sp} target="_blank" rel="noopener">
-          {t("SP Sempre Alerta")}
-        </a>
-        .
-      </p>
+      <p className="fonte">{t("Textos baseados nas fontes oficiais citadas em cada seção.")}</p>
     </div>
   );
 }
