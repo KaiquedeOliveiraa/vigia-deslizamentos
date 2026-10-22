@@ -82,6 +82,22 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
+/* Link para Áreas de risco (o histórico de ocorrências saiu desta tela): linha inteira, abaixo dos detalhes. */
+.ver-areas {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-000);
+  font-size: 14px;
+}
+
+.ver-areas a {
+  font-weight: 600;
+  color: var(--ink-brand);
+  text-decoration: underline;
+}
+
 .card.chuva {
   border-top-color: var(--rain);
 }

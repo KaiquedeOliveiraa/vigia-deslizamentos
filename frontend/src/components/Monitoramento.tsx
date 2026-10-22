@@ -6,9 +6,10 @@ import { emAlerta, infoClasse, type NumeroClasse } from "../lib/classes";
 import { carregar, estadoMunicipio, lerIndices, type Resultado } from "../lib/dados";
 import { formatarData, formatarIndice, formatarMm, formatarRazao } from "../lib/formato";
 import { mensagemSelecao, valoresDoDia } from "../lib/mapa";
-import { municipioInicial, resumo, variaveis, type Variaveis } from "../lib/monitoramento";
+import { resumo, variaveis, type Variaveis } from "../lib/monitoramento";
 import { MONITORADOS, NOMES } from "../lib/municipios";
 import type { Idioma } from "../lib/preferencias";
+import { municipioDaBusca } from "../lib/simulacao";
 import { rota } from "../lib/telas";
 import { textoCompartilhar } from "../lib/texto";
 import type { Indices } from "../lib/tipos";
@@ -36,7 +37,8 @@ export default function Monitoramento({ lang }: { lang: Idioma }) {
   useEffect(() => {
     carregar("indices.json", lerIndices).then((r) => {
       setCarga(r);
-      if (r.ok) setSelecionado(municipioInicial(r.dados));
+      // ?municipio= vem dos links de Áreas de risco ("Ver o índice de {M} em Monitoramento").
+      if (r.ok) setSelecionado(municipioDaBusca(r.dados, location.search));
     });
   }, []);
 

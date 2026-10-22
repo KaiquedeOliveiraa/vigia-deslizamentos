@@ -161,10 +161,10 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
 
           <div className="grid2 meio">
             <Detalhes t={t} municipio={destaque} gerado_em={indices.gerado_em} />
-            <p className="note">
-              <a href={`${rota("areas-de-risco", lang)}?municipio=${destaque.ibge}`}>{t("Histórico de ocorrências e áreas de risco de {M}: ver em Áreas de risco", { M: destaque.nome })}</a>
-            </p>
           </div>
+          <p className="ver-areas">
+            <a href={`${rota("areas-de-risco", lang)}?municipio=${destaque.ibge}`}>{t("Histórico de ocorrências e áreas de risco de {M}: ver em Áreas de risco", { M: destaque.nome })}</a>
+          </p>
         </>
       ) : (
         <>

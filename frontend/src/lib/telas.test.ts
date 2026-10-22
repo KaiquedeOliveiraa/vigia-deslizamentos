@@ -27,7 +27,7 @@ describe("TELAS", () => {
       "simulacao",
       "dados",
       "monitoramento-sc",
-      "estacoes",
+      "areas-de-risco",
       "cartilha",
       "contatos",
     ]);
