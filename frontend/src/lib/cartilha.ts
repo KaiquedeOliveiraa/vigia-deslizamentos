@@ -9,7 +9,7 @@ export interface ProgressoMochila {
   pronta: boolean;
 }
 
-/** "3 de 8" e a mensagem do cartão da mochila; `pct` é a largura da barra. */
+/** "3 de 11" e a mensagem do cartão da mochila; `pct` é a largura da barra. */
 export function progressoMochila(t: T, marcados: number, total: number): ProgressoMochila {
   const pronta = marcados === total;
   return {

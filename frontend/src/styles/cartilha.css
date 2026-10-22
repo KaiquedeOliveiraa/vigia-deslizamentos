@@ -54,6 +54,14 @@
   line-height: 40px;
 }
 
+.cart .sos b small {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 600;
+}
+
 .cart .sos span {
   font-size: 14px;
   font-weight: 600;
@@ -495,6 +503,24 @@
   background: linear-gradient(135deg, transparent 46%, var(--danger-ink) 46%, var(--danger-ink) 54%, transparent 54%);
 }
 
+.nao li small {
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 400;
+}
+
+.cart .sec > p.fontes-sec {
+  margin: -8px 0 16px 46px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--muted);
+}
+
+.fontes-sec a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 .cart .tgwrap {
   padding: 24px 32px 8px;
 }
@@ -516,6 +542,7 @@
   }
 
   .cart .sec > p,
+  .cart .sec > p.fontes-sec,
   .steps {
     margin-left: 0;
   }
@@ -532,6 +559,16 @@
 
   .cart .tabs {
     padding: 10px 16px;
+  }
+
+  .cart .sos {
+    padding: 12px 16px;
+    gap: 10px;
+  }
+
+  .cart .sos b {
+    font-size: 32px;
+    line-height: 34px;
   }
 
   .cart .hero h1 {

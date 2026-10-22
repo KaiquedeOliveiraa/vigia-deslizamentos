@@ -1,7 +1,7 @@
 import "../styles/cartilha.css";
 import { Backpack, Check, DoorOpen, Phone } from "lucide-react";
 import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
-import { EMERGENCIA, FASES, FONTES, MOCHILA, NAO_FACA, SECOES, SINAIS, type Ilustracao } from "../conteudo/cartilha";
+import { BOMBEIROS, EMERGENCIA, FASES, FONTES, MOCHILA, NAO_FACA, SECOES, SINAIS, type Ilustracao } from "../conteudo/cartilha";
 import { tradutor } from "../i18n";
 import { abaPorTecla, progressoMochila, secaoAtiva } from "../lib/cartilha";
 import type { Idioma } from "../lib/preferencias";
@@ -66,6 +66,8 @@ const LIMITE_SECAO = 70;
 // ponytail: tempo fixo para a rolagem suave do clique não trocar o destaque; usar `scrollend` quando o Safari tiver.
 const ROLAGEM_MS = 1000;
 
+const NUMEROS = { N: [EMERGENCIA, BOMBEIROS] };
+
 const semMovimento = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /** Cartilha (RF11): sinais de perigo, o que fazer, mochila e o que não fazer. */
@@ -114,6 +116,25 @@ export default function Cartilha({ lang }: Props) {
     abas.current[proxima]?.focus();
   };
 
+  const fontes = (i: number) => (
+    <p className="fontes-sec">
+      {t("Fonte:")}{" "}
+      {SECOES[i].fontes.map((k, j) => {
+        const { nome, url, ...resto } = FONTES[k];
+        return (
+          <span key={k}>
+            {j > 0 && ", "}
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              {t(nome)}
+              {"pdf" in resto && " (PDF)"}
+              <span className="sr-only"> {t("(abre em nova aba)")}</span>
+            </a>
+          </span>
+        );
+      })}
+    </p>
+  );
+
   const progresso = progressoMochila(t, mochila.size, MOCHILA.length);
   const faseAtual = FASES[fase];
 
@@ -123,11 +144,15 @@ export default function Cartilha({ lang }: Props) {
         <div>
           <div className="lbl">{t("Cartilha")}</div>
           <h1>{t("Deslizamento: como se proteger")}</h1>
+          <p>{t("Em perigo agora? Saia do local e ligue {N}.", { N: EMERGENCIA })}</p>
           <p>{t("Aprenda a ver os sinais e o que fazer. É rápido: toque nos cartões.")}</p>
         </div>
-        <a className="sos" href={rota("contatos", lang)}>
+        <a className="sos" href={rota("contatos", lang)} aria-label={t("Emergência: Defesa Civil {N}, Bombeiros {N} — ver contatos", NUMEROS)}>
           <Phone aria-hidden="true" />
-          <b>{EMERGENCIA}</b>
+          <b>
+            {EMERGENCIA}
+            <small>{t("Bombeiros {N}", { N: BOMBEIROS })}</small>
+          </b>
           <span>
             {t("Emergência?")}
             <br />
@@ -150,6 +175,7 @@ export default function Cartilha({ lang }: Props) {
           {t("Sinais de perigo")}
         </h2>
         <p>{t("Toque em cada cartão para ver o que fazer.")}</p>
+        {fontes(0)}
         <div className="flips">
           {SINAIS.map((s, i) => {
             const virado = virados.has(i);
@@ -165,7 +191,7 @@ export default function Cartilha({ lang }: Props) {
                 <span className="b" aria-hidden={!virado}>
                   <DoorOpen aria-hidden="true" />
                   <b>{t("Saia do local agora")}</b>
-                  <span>{t("Depois ligue {N}", { N: EMERGENCIA })}</span>
+                  <span>{t("Depois avise a Defesa Civil ({N}), os Bombeiros ({N}) e os vizinhos", NUMEROS)}</span>
                 </span>
               </button>
             );
@@ -179,6 +205,7 @@ export default function Cartilha({ lang }: Props) {
           {t("O que fazer")}
         </h2>
         <p>{t("Antes, durante e depois da chuva forte.")}</p>
+        {fontes(1)}
         <div className="steps" role="tablist" aria-label={t("Momento")}>
           {FASES.map((f, i) => (
             <button
@@ -220,6 +247,8 @@ export default function Cartilha({ lang }: Props) {
           {t("Monte sua mochila de emergência")}
         </h2>
         <p>{t("Toque no que você já tem separado.")}</p>
+        {fontes(2)}
+        <p className="fontes-sec">{t("Lista de referência da Defesa Civil do Paraná (não há lista nacional nem de SC).")}</p>
         <div className="kitwrap">
           <div className="kit">
             {MOCHILA.map(({ icone: Icone, texto }, i) => (
@@ -249,13 +278,15 @@ export default function Cartilha({ lang }: Props) {
           {t("Não faça")}
         </h2>
         <p>{t("Isso deixa a encosta mais perigosa.")}</p>
+        {fontes(3)}
         <ul className="nao">
-          {NAO_FACA.map(({ icone: Icone, texto }) => (
+          {NAO_FACA.map(({ icone: Icone, texto, detalhe }) => (
             <li key={texto}>
               <span className="ic" aria-hidden="true">
                 <Icone />
               </span>
               {t(texto)}
+              {detalhe && <small>{t(detalhe)}</small>}
             </li>
           ))}
         </ul>
@@ -265,17 +296,7 @@ export default function Cartilha({ lang }: Props) {
         <BannerTelegram lang={lang} />
       </div>
 
-      <p className="fonte">
-        {t("Baseado nas cartilhas da")}{" "}
-        <a href={FONTES.rj} target="_blank" rel="noopener">
-          {t("Defesa Civil RJ")}
-        </a>{" "}
-        {t("e do")}{" "}
-        <a href={FONTES.sp} target="_blank" rel="noopener">
-          {t("SP Sempre Alerta")}
-        </a>
-        .
-      </p>
+      <p className="fonte">{t("Textos baseados nas fontes oficiais citadas em cada seção.")}</p>
     </div>
   );
 }
