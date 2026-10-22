@@ -747,3 +747,19 @@
     letter-spacing: 0.02em;
   }
 }
+
+/* Setores do SGB: forma por grau (círculo = alto, losango = muito alto) além da cor (RN03). */
+.setor-marca { display: grid; place-items: center; }
+.setor-marca i { display: block; width: 14px; height: 14px; border: 2px solid var(--surface-000); box-shadow: 0 0 0 1px var(--ink); }
+.setor-marca.alto i { border-radius: 50%; background: var(--setor-alto); }
+.setor-marca.muito_alto i { transform: rotate(45deg); background: var(--setor-muito-alto); }
+.setor-marca.sel i { box-shadow: 0 0 0 3px var(--ink); }
+/* Contagem de setores do município: fundo neutro (conta altos e muito altos), contraste de pelo menos 4,5:1 nos dois temas. */
+.setor-conta-icone { display: grid; place-items: center; }
+.setor-conta { display: grid; place-items: center; min-width: 28px; height: 28px; padding: 0 6px; border-radius: 14px; background: var(--ink); color: var(--surface-000); font: 700 13px/1 var(--font-mono); border: 2px solid var(--surface-000); }
+.mapa .setor { stroke-width: 2; fill-opacity: 0.35; }
+.mapa .setor.alto { stroke: var(--setor-alto); fill: var(--setor-alto); }
+.mapa .setor.muito_alto { stroke: var(--setor-muito-alto); fill-opacity: 1; }
+/* O fill url(#hachura-setor) vai inline no elemento (como as hachuras das classes), não aqui. */
+.mapa .setor.sel { stroke-width: 4; }
+.hatch-setor { stroke: var(--setor-muito-alto); stroke-width: 2.2; }
