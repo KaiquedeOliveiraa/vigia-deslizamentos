@@ -51,6 +51,15 @@ function textoPessoas(t: T, setores: Setor[]): string {
   return ` · ${n === 1 ? t("1 pessoa nos setores mapeados") : t("{N} pessoas nos setores mapeados", { N: milhar(n) })}`;
 }
 
+/** "98 setores de risco geológico em 18 dos 27 municípios · 3.201 pessoas nos setores mapeados" (painel e anúncio). */
+function resumoRegiao(t: T, setores: Setor[]): string {
+  const r = resumo(setores);
+  const N = [String(r.setores), String(r.municipios), String(IBGES.size)];
+  return t("{N} setores de risco geológico em {N} dos {N} municípios", { N }) + textoPessoas(t, setores);
+}
+
+const semMovimento = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 const tipoGrau = (t: T, s: Setor) => `${t(ROTULO_TIPO[s.tipo])} · ${t(ROTULO_GRAU[s.grau])}`;
 
 /** Tela Áreas de risco: setores de risco geológico do SGB, ocorrências do município e a camada INMET opcional. */
@@ -65,6 +74,7 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
   const [longe, setLonge] = useState(true);
   const painel = useRef<HTMLElement>(null);
   const tituloPainel = useRef<HTMLHeadingElement>(null);
+  const erroCarga = useRef<HTMLParagraphElement>(null);
   const botoesSetor = useRef(new Map<string, HTMLButtonElement>());
 
   // Seleção inicial lida da URL: não anuncia, não move o foco nem rola (só normaliza a URL, sem valores inválidos).
@@ -73,7 +83,8 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
       setCarga(r);
       const inicial = lerSelecao(location.search, r.ok ? r.dados.setores : SEM_SETORES, IBGES);
       setSel(inicial);
-      history.replaceState(null, "", location.pathname + escreverSelecao(location.search, inicial) + location.hash);
+      // Na falha, a URL fica intacta: um ?setor= compartilhado volta a valer quando a carga der certo.
+      if (r.ok) history.replaceState(null, "", location.pathname + escreverSelecao(location.search, inicial) + location.hash);
     });
   }, []);
 
@@ -98,8 +109,9 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
     const celular = matchMedia("(max-width: 900px)").matches;
     requestAnimationFrame(() => {
       if (foco) return foco();
-      tituloPainel.current?.focus({ preventScroll: celular });
-      if (celular) painel.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+      // No erro sem município não há título: o foco vai para a mensagem de erro.
+      (tituloPainel.current ?? erroCarga.current)?.focus({ preventScroll: celular });
+      if (celular) painel.current?.scrollIntoView({ block: "start", behavior: semMovimento() ? "auto" : "smooth" });
     });
   }
 
@@ -109,7 +121,8 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
     const s = setores.find((x) => x.id === id);
     if (s) aplicar({ municipio: s.ibge, setor: s.id }, `${tipoGrau(t, s)}, ${nome(s.ibge)}`);
   };
-  const verRegiao = () => aplicar({ municipio: null, setor: null }, t("Ver toda a região"));
+  const verRegiao = () =>
+    aplicar({ municipio: null, setor: null }, carregou ? resumoRegiao(t, setores) : t("Não foi possível carregar os setores de risco."));
 
   async function alternarInmet() {
     if (inmet) return setInmet(false);
@@ -173,7 +186,7 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
       case "erro":
         return (
           <>
-            <p className="erro-carga" role="alert">
+            <p ref={erroCarga} tabIndex={-1} className="erro-carga" role="alert">
               {t("Não foi possível carregar os setores de risco.")}
             </p>
             {sel.municipio && (
@@ -191,10 +204,7 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
         return (
           <>
             {titulo(t("Risco geológico mapeado pelo SGB"))}
-            <p className="resumo-areas">
-              {t("{N} setores de risco geológico em {N} dos {N} municípios", { N: [String(r.setores), String(r.municipios), String(IBGES.size)] })}
-              {textoPessoas(t, setores)}
-            </p>
+            <p className="resumo-areas">{resumoRegiao(t, setores)}</p>
             {r.anoMin !== null && <p className="note">{t("Mapeamentos de {N} a {N}", { N: [String(r.anoMin), String(r.anoMax)] })}</p>}
             <ul className="lst lst-areas">
               {porMunicipio(setores).map(({ ibge, setores: lista }) => (
@@ -235,9 +245,10 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
                 <p className="resumo-areas">
                   {lista.length === 1
                     ? t("{M}: 1 setor", { M })
-                    : t("{M}: {N} setores ({N} risco muito alto, {N} alto)", { M, N: [String(r.setores), String(r.muitoAlto), String(r.alto)] })}
+                    : t("{M}: {N} setores ({N} risco geológico muito alto, {N} risco geológico alto)", { M, N: [String(r.setores), String(r.muitoAlto), String(r.alto)] })}
                   {textoPessoas(t, lista)}
                 </p>
+                {lang !== "pt" && <small className="original">{t("texto original do SGB, em português")}</small>}
                 <div className="lista-setores" tabIndex={0} role="region" aria-label={t("Setores de {M}", { M })}>
                   <ul className="lst lst-areas">
                     {lista.map((s) => (

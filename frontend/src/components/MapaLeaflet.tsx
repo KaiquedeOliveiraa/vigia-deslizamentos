@@ -285,6 +285,15 @@ export default function MapaLeaflet({
     };
   }, [mapa]);
 
+  // O Leaflet só remede o container no resize da janela; quando a página muda a altura do mapa
+  // (faixa de aviso que aparece depois), o tamanho antigo faria o fitBounds passar da borda.
+  useEffect(() => {
+    if (!mapa) return;
+    const observador = new ResizeObserver(() => mapa.invalidateSize());
+    observador.observe(mapa.getContainer());
+    return () => observador.disconnect();
+  }, [mapa]);
+
   // Fora do Neutro, as cores ficam translúcidas para o fundo aparecer (mapa.css › [data-fundo]).
   useEffect(() => {
     const c = mapa?.getContainer();
@@ -326,6 +335,14 @@ export default function MapaLeaflet({
     if (!mapa || !temSetores || !selecionado || setorSelecionado) return;
     const f = MONITORADOS.find((x) => x.feicao.properties.ibge === selecionado)?.feicao;
     if (f) mapa.fitBounds(limites([f]), { padding: [24, 24] });
+  }, [mapa, temSetores, selecionado, setorSelecionado]);
+
+  // Volta à região (tinha município ou setor e não tem mais): reenquadra a região. Nunca na abertura.
+  const tinhaSelecao = useRef(false);
+  useEffect(() => {
+    const tem = !!(selecionado || setorSelecionado);
+    if (mapa && temSetores && tinhaSelecao.current && !tem) mapa.fitBounds(LIMITES, { padding: [24, 24] });
+    tinhaSelecao.current = tem;
   }, [mapa, temSetores, selecionado, setorSelecionado]);
 
   // Setor selecionado: enquadra o setor, com zoom máximo limitado.

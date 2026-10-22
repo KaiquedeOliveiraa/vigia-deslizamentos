@@ -485,7 +485,6 @@
 "{N} setores de risco geológico em {N} dos {N} municípios": "{N} geological risk sectors in {N} of the {N} municipalities",
 "{N} pessoas nos setores mapeados": "{N} people in the mapped sectors",
 "1 pessoa nos setores mapeados": "1 person in the mapped sectors",
-"{M}: {N} setores ({N} risco muito alto, {N} alto)": "{M}: {N} sectors ({N} very high risk, {N} high)",
 "{M}: 1 setor": "{M}: 1 sector",
 "Mapeamentos de {N} a {N}": "Mapped between {N} and {N}",
 "Sem setores mapeados:": "No mapped sectors:",
@@ -513,5 +512,6 @@
 "{M}: 1 setor de risco geológico": "{M}: 1 geological risk sector",
 "{M}: {N} setores de risco geológico": "{M}: {N} geological risk sectors",
 "Fonte: Serviço Geológico do Brasil (SGB), setorização de riscos geológicos.": "Source: Geological Survey of Brazil (SGB), geological risk sectorization.",
-"Setores de {M}": "Sectors in {M}"
+"Setores de {M}": "Sectors in {M}",
+"{M}: {N} setores ({N} risco geológico muito alto, {N} risco geológico alto)": "{M}: {N} sectors ({N} very high geological risk, {N} high geological risk)"
 }
