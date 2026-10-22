@@ -1,8 +1,8 @@
 import "../styles/contatos.css";
-import { Bell, Copy, ExternalLink, Globe, Mail, MapPin, Phone, Route, User } from "lucide-react";
+import { Bell, Copy, ExternalLink, Globe, Mail, MapPin, MessageCircle, Phone, Route, User } from "lucide-react";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { tradutor } from "../i18n";
-import { filtrarContatos, hrefSite, hrefTelefone, urlComoChegar } from "../lib/contatos";
+import { filtrarContatos, hrefSite, hrefTelefone, hrefWhatsApp, urlComoChegar } from "../lib/contatos";
 import { carregar, lerContatos, type Resultado } from "../lib/dados";
 import type { Idioma } from "../lib/preferencias";
 import type { Contato } from "../lib/tipos";
@@ -112,96 +112,110 @@ export default function Contatos({ lang, municipios }: Props) {
       {!carga?.ok && <EstadoCarregamento t={t} falhou={!!carga} />}
 
       <div className="cgrid">
-        {contatos.map((c) => (
-          <article key={c.ibge} id={`cc-${c.ibge}`} className={filtro.esmaecidos.includes(c.ibge) ? "cc dim" : "cc"} aria-labelledby={`cc-t-${c.ibge}`}>
-            <h2 id={`cc-t-${c.ibge}`}>
-              {c.nome}
-              <span className="tag ok">{t("verificado")}</span>
-            </h2>
-            <dl>
-              <dt>
-                <User aria-hidden="true" />
-                <span className="sr-only">{t("Responsável")}</span>
-              </dt>
-              <dd>
-                {c.responsavel ?? <span className="pend-t">{t("Nome do coordenador(a) a confirmar")}</span>}
-                <small>{t("Coordenador(a) municipal de Defesa Civil")}</small>
-              </dd>
-              {c.telefone && (
-                <>
-                  <dt>
-                    <Phone aria-hidden="true" />
-                    <span className="sr-only">{t("Telefone")}</span>
-                  </dt>
-                  <dd>
-                    <a className="ph" href={hrefTelefone(c.telefone)}>
-                      {c.telefone}
-                    </a>
-                  </dd>
-                </>
-              )}
-              {c.email && (
-                <>
-                  <dt>
-                    <Mail aria-hidden="true" />
-                    <span className="sr-only">{t("E-mail")}</span>
-                  </dt>
-                  <dd>
-                    <a href={`mailto:${c.email}`}>{c.email}</a>
-                  </dd>
-                </>
-              )}
-              {c.endereco && (
-                <>
-                  <dt>
-                    <MapPin aria-hidden="true" />
-                    <span className="sr-only">{t("Endereço")}</span>
-                  </dt>
-                  <dd>{c.endereco}</dd>
-                </>
-              )}
-              {/* Com telefone, o botão do site dá lugar ao "Copiar telefone": o site fica na lista. */}
-              {c.telefone && c.site && (
-                <>
-                  <dt>
-                    <Globe aria-hidden="true" />
-                    <span className="sr-only">{t("Site da prefeitura")}</span>
-                  </dt>
-                  <dd>
-                    <a href={hrefSite(c.site)} target="_blank" rel="noopener" aria-label={t("Site da prefeitura de {M} (abre em nova aba)", { M: c.nome })}>
-                      {c.site}
-                    </a>
-                  </dd>
-                </>
-              )}
-            </dl>
-            <div className="acts">
-              <a
-                className="btn pri"
-                href={urlComoChegar(c)}
-                target="_blank"
-                rel="noopener"
-                aria-label={t("Como chegar à Defesa Civil de {M} no Google Maps (abre em nova aba)", { M: c.nome })}
-              >
-                <Route aria-hidden="true" />
-                {t("Como chegar")}
-              </a>
-              {c.telefone ? (
-                <button type="button" className="btn" aria-label={t("Copiar telefone da Defesa Civil de {M}", { M: c.nome })} onClick={() => copiar(c)}>
-                  <Copy aria-hidden="true" />
-                  {copiado === c.ibge ? t("Copiado") : t("Copiar telefone")}
-                </button>
-              ) : (
-                c.site && (
-                  <a className="btn" href={hrefSite(c.site)} target="_blank" rel="noopener" aria-label={t("Site da prefeitura de {M} (abre em nova aba)", { M: c.nome })}>
-                    <ExternalLink aria-hidden="true" />
-                    {t("Site da prefeitura")}
+        {contatos.map((c) => {
+          const whatsapp = c.telefone ? hrefWhatsApp(c.telefone) : null;
+          return (
+            <article key={c.ibge} id={`cc-${c.ibge}`} className={filtro.esmaecidos.includes(c.ibge) ? "cc dim" : "cc"} aria-labelledby={`cc-t-${c.ibge}`}>
+              <h2 id={`cc-t-${c.ibge}`}>
+                {c.nome}
+                <span className="tag ok">{t("verificado")}</span>
+              </h2>
+              <dl>
+                <dt>
+                  <User aria-hidden="true" />
+                  <span className="sr-only">{t("Responsável")}</span>
+                </dt>
+                <dd>
+                  {c.responsavel ?? <span className="pend-t">{t("Nome do coordenador(a) a confirmar")}</span>}
+                  <small>{t("Coordenador(a) municipal de Defesa Civil")}</small>
+                </dd>
+                {c.telefone && (
+                  <>
+                    <dt>
+                      <Phone aria-hidden="true" />
+                      <span className="sr-only">{t("Telefone")}</span>
+                    </dt>
+                    <dd>
+                      <a className="ph" href={hrefTelefone(c.telefone)}>
+                        {c.telefone}
+                      </a>
+                    </dd>
+                  </>
+                )}
+                {c.email && (
+                  <>
+                    <dt>
+                      <Mail aria-hidden="true" />
+                      <span className="sr-only">{t("E-mail")}</span>
+                    </dt>
+                    <dd>
+                      <a href={`mailto:${c.email}`}>{c.email}</a>
+                    </dd>
+                  </>
+                )}
+                {c.endereco && (
+                  <>
+                    <dt>
+                      <MapPin aria-hidden="true" />
+                      <span className="sr-only">{t("Endereço")}</span>
+                    </dt>
+                    <dd>{c.endereco}</dd>
+                  </>
+                )}
+                {/* Com telefone, o botão do site dá lugar ao WhatsApp (celular) ou ao "Copiar telefone" (fixo): o site fica na lista. */}
+                {c.telefone && c.site && (
+                  <>
+                    <dt>
+                      <Globe aria-hidden="true" />
+                      <span className="sr-only">{t("Site da prefeitura")}</span>
+                    </dt>
+                    <dd>
+                      <a href={hrefSite(c.site)} target="_blank" rel="noopener" aria-label={t("Site da prefeitura de {M} (abre em nova aba)", { M: c.nome })}>
+                        {c.site}
+                      </a>
+                    </dd>
+                  </>
+                )}
+              </dl>
+              <div className="acts">
+                <a
+                  className="btn pri"
+                  href={urlComoChegar(c)}
+                  target="_blank"
+                  rel="noopener"
+                  aria-label={t("Como chegar à Defesa Civil de {M} no Google Maps (abre em nova aba)", { M: c.nome })}
+                >
+                  <Route aria-hidden="true" />
+                  {t("Como chegar")}
+                </a>
+                {whatsapp ? (
+                  <a
+                    className="btn"
+                    href={whatsapp}
+                    target="_blank"
+                    rel="noopener"
+                    aria-label={t("Abrir WhatsApp da Defesa Civil de {M} (abre em nova aba)", { M: c.nome })}
+                  >
+                    <MessageCircle aria-hidden="true" />
+                    {t("Abrir WhatsApp")}
                   </a>
-                )
-              )}
-            </div>
-          </article>
-        ))}
+                ) : c.telefone ? (
+                  <button type="button" className="btn" aria-label={t("Copiar telefone da Defesa Civil de {M}", { M: c.nome })} onClick={() => copiar(c)}>
+                    <Copy aria-hidden="true" />
+                    {copiado === c.ibge ? t("Copiado") : t("Copiar telefone")}
+                  </button>
+                ) : (
+                  c.site && (
+                    <a className="btn" href={hrefSite(c.site)} target="_blank" rel="noopener" aria-label={t("Site da prefeitura de {M} (abre em nova aba)", { M: c.nome })}>
+                      <ExternalLink aria-hidden="true" />
+                      {t("Site da prefeitura")}
+                    </a>
+                  )
+                )}
+              </div>
+            </article>
+          );
+        })}
       </div>
 
       <p className="cnote">{t('"Como chegar" abre o Google Maps.')}</p>

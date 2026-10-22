@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import contatos from "../fixtures/contatos.exemplo.json";
 import { tradutor } from "../i18n";
 import { lerContatos } from "./dados";
-import { filtrarContatos, hrefSite, hrefTelefone, urlComoChegar } from "./contatos";
+import { filtrarContatos, hrefSite, hrefTelefone, hrefWhatsApp, urlComoChegar } from "./contatos";
 
 const pt = tradutor("pt");
 const verificados = (() => {
@@ -31,6 +31,15 @@ describe("links de telefone e site", () => {
     expect(hrefTelefone("(47) 98838-5645")).toBe("tel:+5547988385645");
     expect(hrefTelefone("(47) 3357-1234")).toBe("tel:+554733571234");
     expect(hrefTelefone("199")).toBe("tel:199");
+  });
+
+  it("WhatsApp só para celular com DDD", () => {
+    expect(hrefWhatsApp("(47) 98838-5645")).toBe("https://wa.me/5547988385645");
+    expect(hrefWhatsApp("+55 47 98838-5645")).toBe("https://wa.me/5547988385645");
+    expect(hrefWhatsApp("047 98838-5645")).toBe("https://wa.me/5547988385645");
+    expect(hrefWhatsApp("(47) 3258-0211")).toBeNull();
+    expect(hrefWhatsApp("98838-5645")).toBeNull();
+    expect(hrefWhatsApp("199")).toBeNull();
   });
 
   it("site sem esquema ganha https://", () => {

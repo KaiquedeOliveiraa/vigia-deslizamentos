@@ -14,6 +14,12 @@ export function hrefTelefone(telefone: string): string {
   return `tel:${digitos.length >= 10 ? `+55${digitos}` : digitos}`;
 }
 
+/** wa.me só para celular (DDD + 9 dígitos começando com 9, aceitando +55 ou 0 na frente): fixo comum não tem WhatsApp. */
+export function hrefWhatsApp(telefone: string): string | null {
+  const digitos = telefone.replace(/\D/g, "").replace(/^(?:55|0)(?=\d{11}$)/, "");
+  return /^[1-9]\d9\d{8}$/.test(digitos) ? `https://wa.me/55${digitos}` : null;
+}
+
 export const hrefSite = (site: string): string => (/^https?:\/\//.test(site) ? site : `https://${site}`);
 
 export interface Filtro {
