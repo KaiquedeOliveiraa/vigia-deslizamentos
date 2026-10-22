@@ -7,7 +7,7 @@ import { CLASSES, infoClasse, SEM_DADOS } from "../lib/classes";
 import { formatarIndice } from "../lib/formato";
 import { CAMADA_NEUTRA, classesDoRotulo, limites, posicoes, pontoInterno, rotulosDeLonge, rotuloAria, type Camada, type FeicaoMunicipio, type LatLon, type Valor } from "../lib/mapa";
 import { FEICOES } from "../lib/municipios";
-import type { GrauSetor } from "../lib/setores";
+import type { GrauSetor, Setor } from "../lib/setores";
 import Camadas from "./Camadas";
 import type { Pino, PropsMapa } from "./Mapa";
 import SeloClasse from "./SeloClasse";
@@ -16,6 +16,7 @@ const COM_POSICOES = FEICOES.map((feicao) => ({ feicao, pos: posicoes(feicao) })
 const MONITORADOS = COM_POSICOES.filter((x) => x.feicao.properties.monitorado);
 const VIZINHOS = COM_POSICOES.filter((x) => !x.feicao.properties.monitorado);
 const LIMITES = limites(FEICOES);
+const SEM_SETORES: Setor[] = [];
 const PONTO_INTERNO = new Map(MONITORADOS.map(({ feicao }) => [feicao.properties.ibge, pontoInterno(feicao)]));
 
 // Ícones em cache de módulo: o DOM dos marcadores não é recriado a cada render.
@@ -226,7 +227,7 @@ export default function MapaLeaflet({
   pinoSelecionado = null,
   onSelecionarPino,
   camadas = true,
-  setores = [],
+  setores = SEM_SETORES,
   setorSelecionado = null,
   onSelecionarSetor,
   setoresIndividuais = true,
@@ -305,7 +306,8 @@ export default function MapaLeaflet({
   }, [mapa, t, comPinos, rotuloMapa]);
 
   // Marcadores e polígonos de setor ficam fora do Tab e do leitor de tela (o caminho é a lista do painel).
-  // O município selecionado sobe ao topo do SVG (bringToFront) e cobriria os setores: eles voltam para cima.
+  // O município selecionado sobe ao topo do SVG (bringToFront) quando suas props mudam, e cobriria os setores:
+  // por isso roda a cada render (querySelectorAll barato, idempotente).
   useEffect(() => {
     if (!mapa) return;
     for (const el of mapa.getContainer().querySelectorAll(".leaflet-marker-icon.setor-conta-icone, .leaflet-marker-icon.setor-marca")) {
@@ -315,10 +317,9 @@ export default function MapaLeaflet({
     mapa.getPanes().overlayPane.querySelectorAll<SVGPathElement>("path.setor").forEach((el) => {
       el.setAttribute("aria-hidden", "true");
       el.setAttribute("tabindex", "-1");
-      if (el.classList.contains("muito_alto")) el.style.setProperty("fill", "url(#hachura-setor)");
       el.parentNode?.appendChild(el);
     });
-  }, [mapa, setores, setoresIndividuais, longeAtual, setorSelecionado, selecionado]);
+  });
 
   // Município selecionado (sem setor selecionado): enquadra o município.
   useEffect(() => {
@@ -331,6 +332,7 @@ export default function MapaLeaflet({
   useEffect(() => {
     const s = setoresRef.current.find((x) => x.id === setorSelecionado);
     if (mapa && s) mapa.fitBounds(polygon(s.aneis).getBounds(), { maxZoom: 16, padding: [32, 32] });
+  // temSetores: com a seleção vinda da URL, os setores chegam depois; reenquadra quando carregam.
   }, [mapa, setorSelecionado, temSetores]);
 
   return (
@@ -387,6 +389,7 @@ export default function MapaLeaflet({
                 key={`${s.id}${sel ? "-s" : ""}`}
                 positions={s.aneis}
                 className={`setor ${s.grau}${sel ? " sel" : ""}`}
+                pathOptions={s.grau === "muito_alto" ? { fillColor: "url(#hachura-setor)" } : undefined}
                 eventHandlers={{ click: () => onSelecionarSetor?.(s.id) }}
               />
             );
