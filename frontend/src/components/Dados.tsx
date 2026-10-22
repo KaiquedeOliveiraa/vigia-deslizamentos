@@ -52,6 +52,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
       const lido = lerPeriodo(location.search, r.dados.dia_alvo_d0);
       setPeriodo(lido.periodo);
       setAjustado(lido.ajustado);
+      if (lido.ajustado) history.replaceState(null, "", location.pathname + escreverPeriodo(location.search, lido.periodo) + location.hash);
     });
     carregar("historico.json", lerHistorico).then(setReal);
     carregar("historico_reconstruido.json", lerHistorico).then((r) => {
@@ -66,6 +67,12 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
     () => indicesOuNada?.municipios.map((m) => combinarHistorico(m, dia0, real?.ok ? real.dados : undefined, rec?.ok ? rec.dados : undefined)),
     [indicesOuNada, dia0, real, rec],
   );
+  const separados = useMemo(() => (indicesOuNada ? separarPorDados(indicesOuNada, nomes) : undefined), [indicesOuNada, nomes]);
+  // Mesma ordem de indices.municipios, só quem tem D0; referência estável para os gráficos.
+  const municipios = useMemo(() => {
+    const comD0 = new Set(separados?.comDados.map((m) => m.ibge));
+    return (combinados ?? []).filter((m) => comD0.has(m.ibge));
+  }, [combinados, separados]);
   const eixo = useMemo(() => (dia0 ? eixoDoPeriodo(periodo, dia0) : []), [periodo, dia0]);
 
   const mudar = (p: Periodo) => {
@@ -92,10 +99,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
     );
 
   const indices = carga.dados;
-  const { comDados, semDados } = separarPorDados(indices, nomes);
-  // separarPorDados decide quem tem D0; o histórico combinado vem de `combinados` (mesma ordem de indices.municipios).
-  const comD0 = new Set(comDados.map((m) => m.ibge));
-  const municipios = (combinados ?? []).filter((m) => comD0.has(m.ibge));
+  const semDados = separados?.semDados ?? [];
   const destaque = municipios.find((m) => m.ibge === ibge);
   const comHistorico = destaque ? diasComDadosDe(destaque, eixo) : eixo.length;
   const eixo7 = diasEixo(dia0, DIAS_TABELA);
@@ -105,7 +109,8 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
 
   // Um só aviso: falha de arquivo só importa se o eixo passa do histórico do indices.json.
   const primeiroDia = indices.municipios.find((m) => m.ibge === destaque?.ibge)?.historico[0]?.dia_alvo ?? dia0;
-  const alemDoIndices = eixo[0] < primeiroDia;
+  // O período de 7 dias não precisa dos arquivos longos: nunca avisa de falha deles.
+  const alemDoIndices = periodo.tipo !== 7 && eixo[0] < primeiroDia;
   const carregando = real === undefined || rec === undefined;
   let aviso: string | null = null;
   if (destaque && !(carregando && alemDoIndices)) {
@@ -162,11 +167,12 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
                 {t("Até")}
                 <input type="date" value={personalizado.ate} min={personalizado.de} max={limites.max} onChange={(e) => mudarData("ate", e.target.value)} />
               </label>
-              <p className="sr-only" aria-live="polite">
-                {t("Período: {N} a {N}", { N: [formatarData(personalizado.de), formatarData(personalizado.ate)] })}
-              </p>
             </div>
           )}
+          {/* Sempre montado: leitores de tela só anunciam mudanças em regiões que já existiam. */}
+          <p className="sr-only" aria-live="polite">
+            {personalizado && t("Período: {N} a {N}", { N: [formatarData(personalizado.de), formatarData(personalizado.ate)] })}
+          </p>
         </div>
       </div>
 

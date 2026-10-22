@@ -685,7 +685,7 @@
   margin-top: 10px;
 }
 
-.datas label {
+.dados .datas label {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -697,7 +697,7 @@
   color: var(--muted);
 }
 
-.datas input {
+.dados .datas input {
   min-height: 44px;
   max-width: 100%;
   padding: 0 12px;
