@@ -512,5 +512,16 @@
 "{M}: {N} setores de risco geológico": "{M}: {N} geological risk sectors",
 "Fonte: Serviço Geológico do Brasil (SGB), setorização de riscos geológicos.": "Source: Geological Survey of Brazil (SGB), geological risk sectorization.",
 "Setores de {M}": "Sectors in {M}",
-"{M}: {N} setores ({N} risco geológico muito alto, {N} risco geológico alto)": "{M}: {N} sectors ({N} very high geological risk, {N} high geological risk)"
+"{M}: {N} setores ({N} risco geológico muito alto, {N} risco geológico alto)": "{M}: {N} sectors ({N} very high geological risk, {N} high geological risk)",
+"Personalizado": "Custom",
+"De": "From",
+"Até": "To",
+"Período: {N} a {N}": "Period: {N} to {N}",
+"Mesmos dados do mapa, com a chuva acumulada e a evolução do índice de {N} a {N}.": "Same data as the map, with accumulated rain and the index trend from {N} to {N}.",
+"O período do link foi ajustado ao último ano disponível.": "The period in the link was adjusted to the last available year.",
+"Parte do histórico não carregou; esses dias aparecem vazios.": "Part of the history did not load; those days appear empty.",
+"estimativa reconstruída, tende a subestimar picos": "reconstructed estimate, tends to underestimate peaks",
+"início do sistema": "system start",
+"dias reconstruídos (estimativa)": "reconstructed days (estimate)",
+"Dias antes de {N}: estimativa reconstruída com chuva de reanálise (ERA5, Open-Meteo) e os parâmetros atuais, sem ensemble. A reanálise suaviza chuvas fortes e localizadas e tende a subestimar picos. Não é o que o sistema publicou na época nem dado oficial. Dias de alerta podem não aparecer.": "Days before {N}: estimate reconstructed with reanalysis rainfall (ERA5, Open-Meteo) and the current parameters, without an ensemble. Reanalysis smooths heavy, localized rain and tends to underestimate peaks. It is not what the system published at the time, nor official data. Alert days may not appear."
 }

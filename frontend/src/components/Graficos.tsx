@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import { useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import type { T } from "../i18n";
 import { infoClasse, LIMIAR_ALERTA } from "../lib/classes";
 import { formatarData, formatarIndice, formatarMm, formatarNumero, formatarVariacao } from "../lib/formato";
@@ -14,16 +14,27 @@ import {
   maxEvolucao,
   maxPluviometro,
   passoDaSeta,
+  rotulosEixo,
   serieMunicipio,
   variacoesDiarias,
   type Area,
 } from "../lib/graficos";
+import type { Idioma } from "../lib/preferencias";
 import { sentido } from "../lib/texto";
 import type { ChuvaAcum, Municipio } from "../lib/tipos";
 
 const AREA: Area = { largura: 760, altura: 300, esq: 44, dir: 16, topo: 18, base: 34 };
 const AREA_MINI: Area = { largura: 110, altura: 26, esq: 3, dir: 3, topo: 3, base: 3 };
 const CLASSE_SENTIDO = { subindo: "up", descendo: "dn", estável: "" } as const;
+
+/** Acima disto o gráfico não desenha um círculo por dia nem as marcas de mudança de classe. */
+const DIAS_DETALHE = 31;
+
+/** "out/25": mês abreviado no idioma (sem o ponto final de "oct.") e ano de 2 dígitos. */
+function mesAno(dia: string, lang: Idioma): string {
+  const mes = new Intl.DateTimeFormat(lang, { month: "short", timeZone: "UTC" }).format(new Date(`${dia}T00:00:00Z`)).replace(/\.$/, "");
+  return `${mes}/${dia.slice(2, 4)}`;
+}
 
 const pontos = (c: { x: number; y: number }[]) => c.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
 
@@ -33,33 +44,53 @@ interface PropsEvolucao {
   destaque: Municipio;
   /** Dias do eixo X, do mais antigo ao D0. */
   eixo: string[];
+  /** Primeiro dia publicado pelo sistema (depois dos reconstruídos), ou null sem histórico reconstruído. */
+  inicioReal: string | null;
+  lang: Idioma;
   aoSelecionar: (ibge: string) => void;
 }
 
 /** Evolução do índice (RF06): faixas das classes, linha de alerta, faixa mínimo–máximo dos demais municípios e o destaque.
  * Linha-guia com o valor do destaque e da faixa no dia apontado (mouse, ou ←/→ com o gráfico em foco). */
-export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsEvolucao) {
+export function Evolucao({ t, municipios, destaque, eixo, inicioReal, lang, aoSelecionar }: PropsEvolucao) {
   const painel = useRef<HTMLDivElement>(null);
-  const [foco, setFoco] = useState<number | null>(null);
+  const [focoBruto, setFoco] = useState<number | null>(null);
+  // O eixo pode encolher (troca de período) com o foco ainda no índice antigo.
+  const foco = focoBruto !== null && focoBruto < eixo.length ? focoBruto : null;
   const { ibge } = destaque;
-  const series = municipios.map((m) => ({ m, serie: serieMunicipio(m, eixo) }));
-  const max = maxEvolucao(series.flatMap((s) => s.serie.map((p) => p.indice)));
-  const coords = coordenadas(serieMunicipio(destaque, eixo), eixo, max, AREA);
-  const deltas = variacoesDiarias(coords.map((c) => c.ponto));
   const { esq, dir, largura, altura, topo, base } = AREA;
   const util = altura - topo - base;
+  // Séries, escala e faixa só mudam com municípios, destaque ou eixo (366 dias × 27 municípios): não refazer a cada foco.
+  const { max, coords, deltas, xs, faixas, faixa, trechos, recs } = useMemo(() => {
+    const max = maxEvolucao(municipios.flatMap((m) => serieMunicipio(m, eixo).map((p) => p.indice)));
+    const coords = coordenadas(serieMunicipio(destaque, eixo), eixo, max, AREA);
+    const xs = coordenadas(eixo.map((dia_alvo) => ({ dia_alvo, indice: 0 })), eixo, max, AREA).map((c) => c.x);
+    const faixa = faixaDosDemais(municipios, ibge, eixo);
+    // Trechos contínuos de dias: um polígono por trecho de faixa (contorno de cima, depois o de baixo de volta).
+    const trechos: number[][] = [];
+    faixa.forEach((f, i) => {
+      if (!f) return;
+      const ultimo = trechos.at(-1);
+      if (ultimo && ultimo.at(-1) === i - 1) ultimo.push(i);
+      else trechos.push([i]);
+    });
+    // Idem para os dias reconstruídos do destaque: [primeiro, último] índice no eixo.
+    const reconstruidos = new Set(coords.filter((c) => c.ponto.reconstruido).map((c) => c.ponto.dia_alvo));
+    const recs: [number, number][] = [];
+    eixo.forEach((dia, i) => {
+      if (!reconstruidos.has(dia)) return;
+      const ultimo = recs.at(-1);
+      if (ultimo && ultimo[1] === i - 1) ultimo[1] = i;
+      else recs.push([i, i]);
+    });
+    return { max, coords, deltas: variacoesDiarias(coords.map((c) => c.ponto)), xs, faixas: faixasClasse(max), faixa, trechos, recs };
+  }, [municipios, destaque, ibge, eixo]);
   const y = (v: number) => topo + util - escala(v, max, util);
-  const xs = coordenadas(eixo.map((dia_alvo) => ({ dia_alvo, indice: 0 })), eixo, max, AREA).map((c) => c.x);
-  const faixas = faixasClasse(max);
-  const faixa = faixaDosDemais(municipios, ibge, eixo);
-  // Trechos contínuos de dias com faixa: um polígono por trecho (contorno de cima, depois o de baixo de volta).
-  const trechos: number[][] = [];
-  faixa.forEach((f, i) => {
-    if (!f) return;
-    const ultimo = trechos.at(-1);
-    if (ultimo && ultimo.at(-1) === i - 1) ultimo.push(i);
-    else trechos.push([i]);
-  });
+  const detalhe = eixo.length <= DIAS_DETALHE;
+  const meio = xs.length > 1 ? (xs[1] - xs[0]) / 2 : 0;
+  const iInicio = inicioReal ? eixo.indexOf(inicioReal) : -1;
+  const xInicio = iInicio < 0 ? 0 : iInicio > 0 ? xs[iInicio] - meio : xs[0];
+  const rotulosX = useMemo(() => rotulosEixo(eixo, (dia) => mesAno(dia, lang)), [eixo, lang]);
   const rotulo = t("Evolução do índice de risco em {N} dias — {M}", { N: String(eixo.length), M: destaque.nome });
   const ultimo = coords.at(-1);
   const deltaUltimo = deltas.at(-1) ?? null;
@@ -79,6 +110,11 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
   }
 
   function tecladoGrafico(e: KeyboardEvent) {
+    if (e.key === "Home" || e.key === "End") {
+      e.preventDefault();
+      setFoco(e.key === "Home" ? 0 : eixo.length - 1);
+      return;
+    }
     const passo = passoDaSeta(e.key);
     if (!passo) return;
     e.preventDefault();
@@ -89,15 +125,8 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
   const iFoco = coords.findIndex((c) => c.ponto.dia_alvo === diaFoco);
   const pontoFoco = iFoco < 0 ? null : coords[iFoco].ponto;
   const deltaFoco = iFoco < 0 ? null : deltas[iFoco];
-  const leitura =
-    diaFoco === null
-      ? []
-      : series
-          .filter(({ m }) => m.ibge === ibge)
-          .flatMap(({ m, serie }) => {
-            const p = serie.find((q) => q.dia_alvo === diaFoco);
-            return p ? [{ m, p }] : [];
-          });
+  const leitura = pontoFoco ? [{ m: destaque, p: pontoFoco }] : [];
+  const ressalva = t("estimativa reconstruída, tende a subestimar picos");
 
   return (
     <div className="evo">
@@ -125,6 +154,10 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
           {faixas.map((f) => (
             <rect key={f.numero} className="band" x={esq} width={largura - esq - dir} y={y(f.ate)} height={y(f.de) - y(f.ate)} style={{ fill: `var(--c${f.numero})` }} />
           ))}
+          {recs.map(([a, b]) => {
+            const x0 = Math.max(esq, xs[a] - meio);
+            return <rect key={a} className="rec" x={x0} width={Math.min(largura - dir, xs[b] + meio) - x0} y={topo} height={util} />;
+          })}
           {marcasEvolucao(max).map((v) => (
             <g key={v}>
               <line className="grid" x1={esq} x2={largura - dir} y1={y(v)} y2={y(v)} />
@@ -137,11 +170,24 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
           <text className="alertal" x={largura - dir - 4} y={y(LIMIAR_ALERTA) - 6} textAnchor="end">
             {t("ALERTA {N}", { N: formatarIndice(LIMIAR_ALERTA) })}
           </text>
-          {eixo.map((dia, i) => (
-            <text key={dia} className={i === foco ? "ax on" : "ax"} x={xs[i]} y={altura - 10} textAnchor="middle">
-              {formatarData(dia, "dia")}
+          {iInicio >= 0 && (
+            <>
+              <line className="inicio" x1={xInicio} x2={xInicio} y1={topo} y2={y(0)} />
+              <text className="inicio-l" x={xInicio + (xInicio > largura * 0.7 ? -4 : 4)} y={topo + 10} textAnchor={xInicio > largura * 0.7 ? "end" : "start"}>
+                {t("início do sistema")}
+              </text>
+            </>
+          )}
+          {rotulosX.map(({ i, texto }) => (
+            <text key={i} className={i === foco ? "ax on" : "ax"} x={xs[i]} y={altura - 10} textAnchor="middle">
+              {texto}
             </text>
           ))}
+          {foco !== null && !rotulosX.some((r) => r.i === foco) && (
+            <text className="ax on" x={xs[foco]} y={altura - 10} textAnchor="middle">
+              {formatarData(eixo[foco], "dia")}
+            </text>
+          )}
           {trechos.map((tr) => (
             <polygon
               key={tr[0]}
@@ -154,8 +200,10 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
           {foco !== null && <line className="guia" x1={xs[foco]} x2={xs[foco]} y1={topo} y2={y(0)} />}
           {coords.map((c, i) => {
             const n = c.ponto.classe;
+            // Período longo: só o ponto em foco e o último levam círculo.
+            if (!detalhe && c.ponto.dia_alvo !== diaFoco && i !== coords.length - 1) return null;
             // Variação só existe quando o ponto anterior é o dia anterior.
-            const marca = deltas[i] === null ? null : marcaClasse(coords[i - 1].ponto.classe, n);
+            const marca = !detalhe || deltas[i] === null ? null : marcaClasse(coords[i - 1].ponto.classe, n);
             return (
               <g key={c.ponto.dia_alvo}>
                 <circle className={c.ponto.dia_alvo === diaFoco ? "pt on" : "pt"} cx={c.x} cy={c.y} r="5" style={{ fill: `var(--c${n})` }} />
@@ -191,7 +239,10 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
                   <span>
                     {m.nome}
                     {deltaFoco != null && <em className={`dl ${CLASSE_SENTIDO[sentido(deltaFoco)]}`}> {formatarVariacao(deltaFoco)}</em>}
-                    <small>{t(infoClasse(p.classe).nome)}</small>
+                    <small>
+                      {t(infoClasse(p.classe).nome)}
+                      {p.reconstruido && ` · ${ressalva}`}
+                    </small>
                   </span>
                 </li>
               ))}
@@ -210,7 +261,7 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
         </div>
         {/* Leitura do dia apontado para leitor de tela (←/→ com o gráfico em foco). */}
         <p className="sr-only" aria-live="polite">
-          {pontoFoco ? `${formatarData(pontoFoco.dia_alvo)} · ${t("{M}: índice {N}, classe {C}", { M: destaque.nome, N: formatarIndice(pontoFoco.indice), C: infoClasse(pontoFoco.classe).nome })}` : ""}
+          {pontoFoco ? `${formatarData(pontoFoco.dia_alvo)} · ${t("{M}: índice {N}, classe {C}", { M: destaque.nome, N: formatarIndice(pontoFoco.indice), C: infoClasse(pontoFoco.classe).nome })}${pontoFoco.reconstruido ? `. ${ressalva}` : ""}` : ""}
         </p>
         {/* Só o município em destaque: a faixa dos demais é visual (ver a legenda). */}
         {/* Dentro de uma div: <table> ignora a altura de 1px do sr-only. */}
@@ -229,7 +280,10 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
                 <tr key={ponto.dia_alvo}>
                   <td>{formatarData(ponto.dia_alvo)}</td>
                   <td>{formatarIndice(ponto.indice)}</td>
-                  <td>{t(infoClasse(ponto.classe).nome)}</td>
+                  <td>
+                    {t(infoClasse(ponto.classe).nome)}
+                    {ponto.reconstruido && `. ${ressalva}`}
+                  </td>
                 </tr>
               ))}
             </tbody>

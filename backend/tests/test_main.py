@@ -438,7 +438,7 @@ def test_ciclo_completo_em_arquivo_grava_o_banco_e_a_classe_notificada(
             coletar=lambda municipio, agora, http_, cache_rodadas=None: _dados_de_teste(
                 municipio.ibge
             ),
-            publicar=lambda conteudo, cfg, http_: True,
+            publicar=lambda conteudo, cfg, http_, caminho: True,
             comparar_com_inmet=lambda *_args, **_kwargs: None,
         )
 

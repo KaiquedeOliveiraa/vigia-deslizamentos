@@ -113,6 +113,13 @@
   gap: 5px;
 }
 
+.legend2 .amostra-rec {
+  width: 14px;
+  height: 10px;
+  background: var(--rec);
+  border-left: 1.5px solid var(--inicio);
+}
+
 .legend2 svg {
   width: 13px;
   height: 13px;
@@ -270,6 +277,29 @@
 .evo .ax.on {
   fill: var(--ink);
   font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--surface-000);
+  stroke-width: 3px;
+}
+
+/* Dias reconstruídos: fundo sombreado atrás da linha, e o primeiro dia real marcado por uma vertical sólida (a tracejada é do alerta). */
+.evo .rec {
+  fill: var(--rec);
+}
+
+.evo .inicio {
+  stroke: var(--inicio);
+  stroke-width: 1.5;
+}
+
+.evo .inicio-l {
+  font-size: 10.5px;
+  font-weight: 600;
+  fill: var(--inicio);
+  paint-order: stroke;
+  stroke: var(--surface-000);
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }
 
 /* Linha-guia e área de captura do ponteiro (maior que os pontos). */
@@ -674,5 +704,42 @@
 
   .pluv .v {
     font-size: 16px;
+  }
+}
+
+/* ---------- período personalizado ---------- */
+.dados .datas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.dados .datas label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dados .datas input {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-000);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+@media (max-width: 400px) {
+  .dados .datas {
+    flex-direction: column;
   }
 }

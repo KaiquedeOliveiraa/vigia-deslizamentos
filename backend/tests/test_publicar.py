@@ -9,6 +9,7 @@ os avisos do bot (contrato de dados, seção "Publicação").
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 import logging
 
@@ -16,7 +17,7 @@ import pytest
 import requests
 
 from app.config import Config
-from app.exportacao.publicar import CAMINHO_NO_REPOSITORIO, BRANCH, publicar
+from app.exportacao.publicar import CAMINHO_HISTORICO, CAMINHO_NO_REPOSITORIO, BRANCH, publicar, sha_do_blob
 
 TOKEN = "ghp_segredo_que_nunca_pode_aparecer_no_log"
 CONTEUDO = b'{"schema_version": 1}\n'
@@ -161,6 +162,20 @@ def test_conflito_409_le_o_sha_de_novo_e_tenta_uma_vez():
     assert puts[0][1]["json"]["sha"] == "sha_velho"
     assert puts[1][1]["json"]["sha"] == "sha_novo"
     assert len(_chamadas(http, "GET")) == 2
+
+
+def test_conflito_409_e_o_outro_ja_publicou_o_mesmo_conteudo_nao_reenvia():
+    # Depois do 409 o sha relido pode já ser o do nosso conteúdo: nada a enviar.
+    http = HttpFalso(
+        respostas_get=[
+            RespostaFalsa(200, {"sha": "sha_velho"}),
+            RespostaFalsa(200, {"sha": sha_do_blob(CONTEUDO)}),
+        ],
+        respostas_put=[RespostaFalsa(409, {})],
+    )
+
+    assert publicar(CONTEUDO, config_de_teste(), http) is True
+    assert len(_chamadas(http, "PUT")) == 1
 
 
 def test_conflito_409_duas_vezes_desiste_e_devolve_false():
@@ -308,3 +323,42 @@ def test_corpo_lista_na_leitura_devolve_false_sem_excecao(caplog):
 
     assert caplog.records
     assert _chamadas(http, "PUT") == []
+
+
+# --- caminho parametrizado e pulo quando nada mudou ---------------------------
+
+
+def test_caminho_historico_vai_na_url_e_na_mensagem_do_commit():
+    http = HttpFalso(
+        respostas_get=[RespostaFalsa(200, {"sha": "abc123"})],
+        respostas_put=[RespostaFalsa(200, {})],
+    )
+
+    assert publicar(b"x", config_de_teste(), http, caminho=CAMINHO_HISTORICO) is True
+
+    (url_get, _), = _chamadas(http, "GET")
+    (url_put, kwargs_put), = _chamadas(http, "PUT")
+    assert url_get.endswith("/contents/frontend/public/data/historico.json")
+    assert url_put.endswith("/contents/frontend/public/data/historico.json")
+    assert "historico.json" in kwargs_put["json"]["message"]
+
+
+def test_sha_igual_ao_do_conteudo_nao_envia_e_devolve_true(caplog):
+    sha = hashlib.sha1(b"blob 1\0x").hexdigest()
+    http = HttpFalso(respostas_get=[RespostaFalsa(200, {"sha": sha})], respostas_put=[])
+
+    with caplog.at_level(logging.INFO):
+        assert publicar(b"x", config_de_teste(), http, caminho=CAMINHO_HISTORICO) is True
+
+    assert _chamadas(http, "PUT") == []
+    assert "sem mudança" in caplog.text
+
+
+def test_sha_diferente_envia_normalmente():
+    http = HttpFalso(
+        respostas_get=[RespostaFalsa(200, {"sha": "outro"})],
+        respostas_put=[RespostaFalsa(200, {})],
+    )
+
+    assert publicar(b"x", config_de_teste(), http) is True
+    assert len(_chamadas(http, "PUT")) == 1

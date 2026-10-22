@@ -17,7 +17,7 @@ Ordem e tolerância a falhas:
    publica e não avisa. O último `indices.json` continua no ar (UC06/RNF04) e a
    última classe notificada de cada município fica intacta;
 4. gravação no banco, numa transação;
-5. exportação e publicação — falha aqui é registrada e **não** impede os avisos,
+5. exportação e publicação (primeiro o `historico.json`, depois o `indices.json`) — falha aqui é registrada e **não** impede os avisos,
    inclusive se vier como exceção em vez de `False`;
 6. comparação de conferência com o INMET, que só escreve no log;
 7. decisão dos avisos pela RN08;
@@ -39,12 +39,16 @@ from app.calculo.agregacao import Resultado, calcular
 from app.coleta import inmet, open_meteo
 from app.config import Config, Municipio
 from app.exportacao.bot_json import montar_bot_json
-from app.exportacao.exportar import montar_indices, serializar
+from app.exportacao.exportar import montar_historico, montar_indices, serializar, serializar_compacto
+from app.exportacao.publicar import CAMINHO_HISTORICO, CAMINHO_NO_REPOSITORIO
 from app.exportacao.publicar import publicar as publicar_indices
 from app.modelos import banco
 from app.modelos.tipos import DadosMunicipio
 
 _log = logging.getLogger(__name__)
+
+DIAS_HISTORICO_LONGO = 365
+FONTE_HISTORICO = "Calculado pelo VIGIA a cada execução (índice publicado do dia)"
 
 
 @dataclass(frozen=True)
@@ -151,7 +155,7 @@ def _publicar_indices(
     config: Config,
     http,
     gerado_em: datetime,
-    publicar: Callable[[bytes, Config, object], bool],
+    publicar: Callable[[bytes, Config, object, str], bool],
 ) -> bool:
     historicos = {
         item.ibge: banco.historico(
@@ -160,7 +164,32 @@ def _publicar_indices(
         for item in resultado.municipios
     }
     dados = montar_indices(resultado, municipios, historicos, gerado_em)
-    return publicar(serializar(dados), config, http)
+    return publicar(serializar(dados), config, http, CAMINHO_NO_REPOSITORIO)
+
+
+def _publicar_historico(
+    resultado: Resultado,
+    municipios: list[Municipio],
+    conexao: sqlite3.Connection,
+    config: Config,
+    http,
+    publicar: Callable[[bytes, Config, object, str], bool],
+) -> bool:
+    """Histórico de um ano de **todos** os municípios da configuração: quem falhou
+    nesta execução não some do arquivo (o que mudaria o conteúdo e geraria um
+    commit a mais)."""
+    historicos = {
+        m.ibge: banco.historico(
+            conexao, m.ibge, resultado.dia_alvo_d0, m.limiar_mm, dias=DIAS_HISTORICO_LONGO
+        )
+        for m in municipios
+    }
+    return publicar(
+        serializar_compacto(montar_historico(historicos, FONTE_HISTORICO)),
+        config,
+        http,
+        CAMINHO_HISTORICO,
+    )
 
 
 def _gravar_bot_json(
@@ -190,7 +219,7 @@ def executar_pipeline(
     *,
     relogio: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
     coletar: Callable[..., DadosMunicipio] = open_meteo.coletar,
-    publicar: Callable[[bytes, Config, object], bool] = publicar_indices,
+    publicar: Callable[[bytes, Config, object, str], bool] = publicar_indices,
     comparar_com_inmet: Callable[..., None] = inmet.registrar_comparacao_24h,
 ) -> Execucao:
     """Roda uma execução completa e devolve o que ela produziu.
@@ -221,6 +250,12 @@ def executar_pipeline(
     # invariante é daqui: entre a gravação e a decisão dos avisos, uma exceção
     # custaria o aviso de um município em alerta pelas próximas 6 h, em
     # silêncio. A guarda torna a invariante estrutural.
+    # Cada PUT é um commit (e um deploy): publicar o histórico primeiro faz o último deploy levar os dois.
+    try:
+        _publicar_historico(resultado, municipios, conexao, config, http, publicar)
+    except Exception:  # noqa: BLE001 — histórico nunca impede o índice nem os avisos
+        _log.exception("publicação do historico.json falhou com exceção; a execução segue")
+
     try:
         publicado = _publicar_indices(
             resultado, municipios, conexao, config, http, fim_da_execucao, publicar

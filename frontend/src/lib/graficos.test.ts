@@ -18,6 +18,7 @@ import {
   serieMunicipio,
   variacoesDiarias,
   faixaDosDemais,
+  rotulosEixo,
 } from "./graficos";
 
 const municipio = (
@@ -272,5 +273,35 @@ describe("faixaDosDemais", () => {
       mk("C", [["2026-10-01", 0.7]]),
     ];
     expect(faixaDosDemais(ms, "A", eixo)).toEqual([{ min: 0.2, max: 0.7 }, null]);
+  });
+});
+
+describe("períodos longos", () => {
+  const mes = (dia: string) => `M${dia.slice(5, 7)}`;
+
+  it("serieMunicipio preserva reconstruido: true e não cria a chave nos demais", () => {
+    const m = municipio("1", "A", { indice: 0.5, efr_mm: 0 }, [["2026-10-01", 0.3]]);
+    m.historico.push({ dia_alvo: "2026-10-02", indice: 0.4, classe: 1, reconstruido: true });
+    const serie = serieMunicipio(m, ["2026-10-01", "2026-10-02"]);
+    expect(serie[0]).not.toHaveProperty("reconstruido");
+    expect(serie[1].reconstruido).toBe(true);
+  });
+
+  it("rotulosEixo: 7 dias dá 7 rótulos dd/mm; 30 dias dá no máximo 10 e termina no último", () => {
+    const sete = rotulosEixo(diasEixo("2026-10-21", 7), mes);
+    expect(sete).toHaveLength(7);
+    expect(sete[6]).toEqual({ i: 6, texto: "21/10" });
+    const trinta = rotulosEixo(diasEixo("2026-10-21", 30), mes);
+    expect(trinta.length).toBeLessThanOrEqual(10);
+    expect(trinta.at(-1)?.i).toBe(29);
+  });
+
+  it("rotulosEixo: 366 dias dá um rótulo por mês, no dia 1; 1 dia dá 1 rótulo", () => {
+    const eixo = diasEixo("2026-10-21", 366);
+    const r = rotulosEixo(eixo, mes);
+    expect(r).toHaveLength(12);
+    expect(eixo[r[0].i]).toBe("2025-11-01");
+    expect(r[0].texto).toBe("M11");
+    expect(rotulosEixo(["2026-10-21"], mes)).toEqual([{ i: 0, texto: "21/10" }]);
   });
 });

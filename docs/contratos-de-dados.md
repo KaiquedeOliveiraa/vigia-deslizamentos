@@ -63,6 +63,52 @@ Para cada membro (rodada × modelo), calcula-se o subíndice em cada ponto do mu
 - Município em `municipios_sem_dados`: aparece como "sem dados", sem cor de classe.
 - `schema_version` desconhecido: o site mostra erro de carregamento em vez de dados parciais.
 
+## `frontend/public/data/historico.json`
+
+Histórico de um ano do índice de todos os municípios da configuração, publicado pelo pipeline antes do `indices.json`. Serialização compacta, sem indentação.
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `schema_version` | inteiro | Versão do formato (hoje 1) |
+| `fonte` | texto | Origem dos dados: "Calculado pelo VIGIA a cada execução (índice publicado do dia)" |
+| `municipios` | objeto | Código IBGE → item abaixo; município sem nenhum dia fica de fora; sem nenhum município é `{}` (válido) |
+
+**Item de `municipios`**
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `inicio` | data (UTC) | Primeiro dia-alvo com dado |
+| `indices` | lista | `indices[i]` é o índice do dia-alvo `inicio + i`, com 4 casas decimais; `null` é dia sem dado; a lista não termina em `null` |
+
+Vem de `banco.historico(..., dias=365)`: último cálculo de cada dia-alvo, no `limiar_mm` atual, D0 fora. Entram todos os municípios de `municipios.json`, inclusive os que falharam na execução.
+
+**Regras de leitura no site**
+
+- Arquivo inválido (`schema_version` desconhecido, campo faltando, `inicio` inválido, item que não seja número finito ou `null`): falha de carregamento do arquivo inteiro, nunca dados parciais.
+- A classe não vai no arquivo: o site a calcula pelo índice.
+- Sem data de geração, de propósito: o conteúdo só muda quando muda um dia, e a publicação é pulada se nada mudou.
+
+## `frontend/public/data/historico_reconstruido.json`
+
+Índice do último ano **reconstruído** com chuva de reanálise, para os dias anteriores ao primeiro cálculo real (15/10/2026). Gerado uma vez e versionado; não é publicado pelo pipeline. Mesmo formato do `historico.json` (serialização compacta, `schema_version` 1, sem data de geração), com dois campos a mais em cada município:
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `limiar_mm` | número | Limiar do município usado na reconstrução |
+| `mv_h` | número | Meia-vida da chuva (h) usada na reconstrução |
+
+Um teste falha se `limiar_mm`/`mv_h` divergirem de `config/municipios.json`: trocar o limiar exige regerar o arquivo (evita salto falso em 15/10).
+
+**O que a reconstrução é.** O índice publicado é a média ponderada de várias rodadas de **previsão** para o dia-alvo. O reconstruído usa uma única série de chuva de **reanálise** (ERA5, grade de ~31 km, Open-Meteo arquivo histórico) no lugar da previsão: é uma estimativa retroativa, sem ensemble e não validada. A reanálise suaviza chuvas intensas e localizadas, então **tende a subestimar picos**, justamente os dias de alerta. Não é o que o sistema publicou na época nem dado oficial. Dias de alerta podem não aparecer.
+
+**Como regerar** (precisa de rede, ~25 s, uma única requisição sem retentativa), a partir de `backend/`:
+
+```
+python -m scripts.gerar_historico_reconstruido [--fim 2026-10-14] [--dias 365]
+```
+
+O período vai de `--fim − (dias − 1)` até `--fim`. O índice do município em cada dia é o maior entre os seus pontos; hora ausente em um ponto tira o ponto daquele dia, e dia sem nenhum ponto completo vira `null` (nunca zero). O script falha sem gravar se a resposta não trouxer um item por ponto, se algum município ficar sem nenhum dia ou se mais de 5% dos dias de algum município forem `null`.
+
 ## `frontend/public/data/ocorrencias.json`
 
 Histórico de ocorrências, gerado por `backend/scripts/gerar_ocorrencias.py` a partir do Atlas Digital de Desastres (1991–2025), só com eventos ligados a chuva, e versionado. A raiz é uma lista de objetos:
@@ -178,7 +224,9 @@ Só o pipeline escreve nela, com o `GITHUB_TOKEN` do workflow, em um commit por 
 
 ## Publicação
 
-- Caminho: `frontend/public/data/indices.json`, no branch `main`.
+- Caminhos: `frontend/public/data/historico.json` (publicado primeiro) e `frontend/public/data/indices.json`, no branch `main`.
 - Token: o secret `TOKEN_DADOS`, um PAT *fine-grained* (`vigia_publicacao`) só deste repositório, com *Contents: Read and write* e data de expiração registrada.
 - Falha no commit: o erro é registrado e o pipeline continua; os avisos do bot não dependem da publicação.
 - Nenhum município calculado: a execução não publica; o `indices.json` anterior permanece e o aviso de dados desatualizados (12 h) cobre o caso.
+- Pulo por sha: se o sha do arquivo no repositório for igual ao do novo conteúdo, não há commit. O `indices.json` sempre muda (`gerado_em`); o `historico.json` só muda quando vira o dia, o que dá um commit extra por dia (e um deploy).
+- Falha ou exceção na publicação do `historico.json` é registrada e não impede o `indices.json` nem os avisos.

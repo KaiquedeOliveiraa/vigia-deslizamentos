@@ -18,7 +18,7 @@ const CAMPOS_OCORRENCIA = ["ibge", "data", "tipo", "descricao", "fonte"];
 const CAMPOS_ESTACAO = ["codigo", "nome", "ibge_referencia", "distancia_km", "lat", "lon"];
 const CAMPOS_CONTATO = ["ibge", "nome", "verificado"];
 
-const erro = (mensagem: string): Resultado<never> => ({ ok: false, erro: mensagem });
+export const erro = (mensagem: string): Resultado<never> => ({ ok: false, erro: mensagem });
 
 /** A tela usa a `classe` publicada (cor, nome, ícone): fora de 1–7 não há o que mostrar. */
 const classeValida = (c: unknown): boolean => Number.isInteger(c) && (c as number) >= 1 && (c as number) <= 7;

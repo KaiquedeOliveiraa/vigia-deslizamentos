@@ -1,7 +1,7 @@
-"""Publicação do `indices.json` por commit automático no repositório.
+"""Publicação dos arquivos de dados do site (`indices.json`, `historico.json`) por commit automático.
 
 Usa a API de conteúdo do GitHub: um `PUT` em
-`/repos/{dono}/{repo}/contents/frontend/public/data/indices.json` cria ou
+`/repos/{dono}/{repo}/contents/{caminho}` cria ou
 substitui o arquivo no branch `main`, e o commit dispara o deploy do site.
 Substituir exige o `sha` do blob atual, lido antes por um `GET`.
 
@@ -19,6 +19,7 @@ exceção de `requests` pode trazer a URL inteira (RNF06).
 from __future__ import annotations
 
 import base64
+import hashlib
 import logging
 
 import requests
@@ -26,6 +27,7 @@ import requests
 from app.config import Config
 
 CAMINHO_NO_REPOSITORIO = "frontend/public/data/indices.json"
+CAMINHO_HISTORICO = "frontend/public/data/historico.json"
 BRANCH = "main"
 URL_BASE = "https://api.github.com"
 TIMEOUT_S = 30
@@ -36,8 +38,13 @@ STATUS_DE_SUCESSO = (200, 201)
 _log = logging.getLogger(__name__)
 
 
-def _url(config: Config) -> str:
-    return f"{URL_BASE}/repos/{config.github_repo}/contents/{CAMINHO_NO_REPOSITORIO}"
+def _url(config: Config, caminho: str) -> str:
+    return f"{URL_BASE}/repos/{config.github_repo}/contents/{caminho}"
+
+
+def sha_do_blob(conteudo: bytes) -> str:
+    """Sha que o git (e a API de conteúdo) dá a um arquivo com estes bytes."""
+    return hashlib.sha1(b"blob %d\0" % len(conteudo) + conteudo).hexdigest()
 
 
 def _cabecalhos(config: Config) -> dict[str, str]:
@@ -52,7 +59,7 @@ class _FalhaDePublicacao(Exception):
     """Falha já descrita numa mensagem segura (sem token, sem corpo de resposta)."""
 
 
-def _ler_sha(config: Config, http) -> str | None:
+def _ler_sha(config: Config, http, caminho: str) -> str | None:
     """`sha` do blob atual, ou `None` se o arquivo ainda não existe (404).
 
     Qualquer outro status é falha: tratar 401 ou 403 como "não existe" faria o
@@ -61,7 +68,7 @@ def _ler_sha(config: Config, http) -> str | None:
     """
     try:
         resposta = http.get(
-            _url(config),
+            _url(config, caminho),
             headers=_cabecalhos(config),
             params={"ref": BRANCH},
             timeout=TIMEOUT_S,
@@ -98,9 +105,9 @@ def _ler_sha(config: Config, http) -> str | None:
     return corpo.get("sha")
 
 
-def _enviar(conteudo: bytes, config: Config, http, sha: str | None) -> int:
+def _enviar(conteudo: bytes, config: Config, http, sha: str | None, caminho: str) -> int:
     corpo = {
-        "message": "chore(dados): atualiza indices.json",
+        "message": f"chore(dados): atualiza {caminho.rsplit('/', 1)[-1]}",
         "content": base64.b64encode(conteudo).decode("ascii"),
         "branch": BRANCH,
     }
@@ -109,7 +116,7 @@ def _enviar(conteudo: bytes, config: Config, http, sha: str | None) -> int:
 
     try:
         resposta = http.put(
-            _url(config), headers=_cabecalhos(config), json=corpo, timeout=TIMEOUT_S
+            _url(config, caminho), headers=_cabecalhos(config), json=corpo, timeout=TIMEOUT_S
         )
     except requests.exceptions.RequestException as erro:
         raise _FalhaDePublicacao(
@@ -119,10 +126,12 @@ def _enviar(conteudo: bytes, config: Config, http, sha: str | None) -> int:
     return resposta.status_code
 
 
-def publicar(conteudo: bytes, config: Config, http) -> bool:
-    """Publica `conteudo` como `indices.json` no branch `main`. Devolve se deu certo.
+def publicar(
+    conteudo: bytes, config: Config, http, caminho: str = CAMINHO_NO_REPOSITORIO
+) -> bool:
+    """Publica `conteudo` em `caminho` no branch `main`. Devolve se deu certo.
 
-    Lê o `sha` atual, envia o `PUT` e, se a resposta for 409 (outra escrita
+    Lê o `sha` atual (se já for o do conteúdo, não envia nada), envia o `PUT` e, se a resposta for 409 (outra escrita
     entrou no meio), lê o `sha` de novo e tenta **uma** vez. Duas execuções
     simultâneas não podem virar laço de retentativa, então o segundo conflito
     desiste.
@@ -130,22 +139,28 @@ def publicar(conteudo: bytes, config: Config, http) -> bool:
     Nunca levanta exceção: qualquer falha é registrada e devolve `False`.
     """
     try:
-        sha = _ler_sha(config, http)
-        status = _enviar(conteudo, config, http, sha)
+        sha = _ler_sha(config, http, caminho)
+        if sha == sha_do_blob(conteudo):
+            _log.info("publicação de %s: sem mudança", caminho)
+            return True
+        status = _enviar(conteudo, config, http, sha, caminho)
 
         if status == 409:
             _log.warning(
                 "publicação de %s: conflito (409), relendo o sha e tentando de novo",
-                CAMINHO_NO_REPOSITORIO,
+                caminho,
             )
-            sha = _ler_sha(config, http)
-            status = _enviar(conteudo, config, http, sha)
+            sha = _ler_sha(config, http, caminho)
+            if sha == sha_do_blob(conteudo):
+                _log.info("publicação de %s: sem mudança", caminho)
+                return True
+            status = _enviar(conteudo, config, http, sha, caminho)
 
         if status not in STATUS_DE_SUCESSO:
             raise _FalhaDePublicacao(f"envio devolveu status {status}")
     except _FalhaDePublicacao as falha:
-        _log.error("publicação de %s falhou: %s", CAMINHO_NO_REPOSITORIO, falha)
+        _log.error("publicação de %s falhou: %s", caminho, falha)
         return False
 
-    _log.info("publicação de %s concluída (status %s)", CAMINHO_NO_REPOSITORIO, status)
+    _log.info("publicação de %s concluída (status %s)", caminho, status)
     return True

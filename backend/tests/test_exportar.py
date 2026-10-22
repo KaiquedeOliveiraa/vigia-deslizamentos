@@ -16,7 +16,7 @@ import pytest
 from app.calculo.agregacao import Resultado, ResultadoDia, ResultadoMunicipio
 from app.classificacao.probabilidades import Probabilidades
 from app.config import Municipio, Ponto
-from app.exportacao.exportar import montar_indices, serializar
+from app.exportacao.exportar import montar_historico, montar_indices, serializar, serializar_compacto
 from app.modelos.banco import ItemHistorico
 from tests.apoio_schema import carregar_schema, validador_estrito
 
@@ -284,3 +284,30 @@ def test_serializar_termina_com_quebra_de_linha():
     )
 
     assert conteudo.endswith(b"\n")
+
+
+# --- histórico compacto -------------------------------------------------------
+
+
+def _item_h(dia: str, indice: float, classe: int = 1) -> ItemHistorico:
+    return ItemHistorico(dia_alvo=date.fromisoformat(dia), indice=indice, classe=classe)
+
+
+def test_montar_historico_preenche_buracos_com_null_e_arredonda_4_casas():
+    dados = montar_historico(
+        {"4214805": [_item_h("2026-10-15", 0.123456), _item_h("2026-10-17", 1.0)], "4200200": []},
+        "fonte x",
+    )
+    assert dados == {
+        "schema_version": 1,
+        "fonte": "fonte x",
+        "municipios": {"4214805": {"inicio": "2026-10-15", "indices": [0.1235, None, 1.0]}},
+    }
+
+
+def test_montar_historico_sem_nenhum_municipio_e_valido():
+    assert montar_historico({}, "f")["municipios"] == {}
+
+
+def test_serializar_compacto_sem_espacos_com_acentos_e_quebra_final():
+    assert serializar_compacto({"a": [1, None], "n": "Getúlio"}) == '{"a":[1,null],"n":"Getúlio"}\n'.encode("utf-8")

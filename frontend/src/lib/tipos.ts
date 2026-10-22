@@ -23,6 +23,8 @@ export interface Dia extends IndiceClasse {
 }
 
 export interface HistoricoItem extends IndiceClasse {
+  /** estimativa reconstruída (historico_reconstruido.json) */
+  reconstruido?: true;
   dia_alvo: string;
 }
 

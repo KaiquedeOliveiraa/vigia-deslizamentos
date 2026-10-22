@@ -9,6 +9,8 @@
   --accent-hover: #d96a15;
   --on-accent: #1a0e03;
   --accent-ink: #9c4f08;
+  --rec: rgba(156,79,8,0.10);
+  --inicio: #9c4f08;
   --surface-000: #ffffff;
   --surface-050: #f5f8fb;
   --surface-100: #eef2f6;
@@ -93,6 +95,8 @@
     --accent-hover: #f28f45;
     --on-accent: #1a0e03;
     --accent-ink: #f5b27a;
+    --rec: rgba(245,178,122,0.14);
+    --inicio: #f5b27a;
     --surface-000: #132231;
     --surface-050: #1a2d40;
     --surface-100: #0c1824;
@@ -162,6 +166,8 @@
   --accent-hover: #f28f45;
   --on-accent: #1a0e03;
   --accent-ink: #f5b27a;
+  --rec: rgba(245,178,122,0.14);
+  --inicio: #f5b27a;
   --surface-000: #132231;
   --surface-050: #1a2d40;
   --surface-100: #0c1824;
