@@ -512,5 +512,12 @@
 "{M}: {N} setores de risco geológico": "{M}: {N} sectores de riesgo geológico",
 "Fonte: Serviço Geológico do Brasil (SGB), setorização de riscos geológicos.": "Fuente: Servicio Geológico de Brasil (SGB), sectorización de riesgos geológicos.",
 "Setores de {M}": "Sectores de {M}",
-"{M}: {N} setores ({N} risco geológico muito alto, {N} risco geológico alto)": "{M}: {N} sectores ({N} riesgo geológico muy alto, {N} riesgo geológico alto)"
+"{M}: {N} setores ({N} risco geológico muito alto, {N} risco geológico alto)": "{M}: {N} sectores ({N} riesgo geológico muy alto, {N} riesgo geológico alto)",
+"Personalizado": "Personalizado",
+"De": "Desde",
+"Até": "Hasta",
+"Período: {N} a {N}": "Período: {N} a {N}",
+"Mesmos dados do mapa, com a chuva acumulada e a evolução do índice de {N} a {N}.": "Los mismos datos del mapa, con la lluvia acumulada y la evolución del índice del {N} al {N}.",
+"O período do link foi ajustado ao último ano disponível.": "El período del enlace se ajustó al último año disponible.",
+"Parte do histórico não carregou; esses dias aparecem vazios.": "Parte del historial no se cargó; esos días aparecen vacíos."
 }

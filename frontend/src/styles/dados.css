@@ -676,3 +676,40 @@
     font-size: 16px;
   }
 }
+
+/* ---------- período personalizado ---------- */
+.dados .datas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.datas label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.datas input {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-000);
+  color: var(--ink);
+  font-size: 14px;
+}
+
+@media (max-width: 400px) {
+  .dados .datas {
+    flex-direction: column;
+  }
+}

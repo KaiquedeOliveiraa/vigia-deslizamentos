@@ -1,7 +1,7 @@
 import "../styles/cartao.css";
 import "../styles/dados.css";
 import { ArrowDown, ArrowRight, ArrowUp, Calculator, ChartLine, Droplet, MapIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { tradutor, type T } from "../i18n";
 import { emAlerta, infoClasse, LIMIAR_ALERTA } from "../lib/classes";
 import { carregar, lerIndices, separarPorDados, type NomeMunicipio, type Resultado } from "../lib/dados";
@@ -16,7 +16,9 @@ import {
   formatarVariacao,
 } from "../lib/formato";
 import { diasComDadosDe, diasEixo, etiquetaChuva, indicadores, serieMunicipio, variacoesDiarias } from "../lib/graficos";
+import { combinarHistorico, lerHistorico, type ArquivoHistorico } from "../lib/historico";
 import { municipioInicial, variaveis } from "../lib/monitoramento";
+import { ajustarPersonalizado, eixoDoPeriodo, escreverPeriodo, lerPeriodo, limitesPersonalizado, somarDias, type Periodo } from "../lib/periodo";
 import type { Idioma } from "../lib/preferencias";
 import { rota } from "../lib/telas";
 import { tendencia } from "../lib/texto";
@@ -26,9 +28,7 @@ import { Evolucao, Minigrafico, Pluviometro } from "./Graficos";
 import EstadoCarregamento from "./EstadoCarregamento";
 import SeloClasse from "./SeloClasse";
 
-/** Em ordem crescente no seletor; 7 dias é o padrão. */
-const PERIODOS = [5, 7, 15];
-const PERIODO_PADRAO = 7;
+const DIAS_TABELA = 7;
 const ICONE_TENDENCIA = { subindo: ArrowUp, descendo: ArrowDown, estável: ArrowRight };
 const CLASSE_TENDENCIA = { subindo: "up", descendo: "dn", estável: "" };
 
@@ -37,15 +37,50 @@ const d0 = (m: Municipio) => m.dias.find((d) => d.d === 0);
 export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly NomeMunicipio[] }) {
   const t = tradutor(lang);
   const [carga, setCarga] = useState<Resultado<Indices>>();
-  const [periodo, setPeriodo] = useState(PERIODO_PADRAO);
+  const [periodo, setPeriodo] = useState<Periodo>({ tipo: 7 });
+  const [ajustado, setAjustado] = useState(false);
   const [ibge, setIbge] = useState<string>();
+  // undefined = carregando.
+  const [real, setReal] = useState<Resultado<ArquivoHistorico>>();
+  const [rec, setRec] = useState<Resultado<ArquivoHistorico>>();
 
   useEffect(() => {
     carregar("indices.json", lerIndices).then((r) => {
       setCarga(r);
-      if (r.ok) setIbge(municipioInicial(r.dados));
+      if (!r.ok) return;
+      setIbge(municipioInicial(r.dados));
+      const lido = lerPeriodo(location.search, r.dados.dia_alvo_d0);
+      setPeriodo(lido.periodo);
+      setAjustado(lido.ajustado);
+    });
+    carregar("historico.json", lerHistorico).then(setReal);
+    carregar("historico_reconstruido.json", lerHistorico).then((r) => {
+      if (!r.ok) console.error(r.erro);
+      setRec(r);
     });
   }, []);
+
+  const indicesOuNada = carga?.ok ? carga.dados : undefined;
+  const dia0 = indicesOuNada?.dia_alvo_d0 ?? "";
+  const combinados = useMemo(
+    () => indicesOuNada?.municipios.map((m) => combinarHistorico(m, dia0, real?.ok ? real.dados : undefined, rec?.ok ? rec.dados : undefined)),
+    [indicesOuNada, dia0, real, rec],
+  );
+  const eixo = useMemo(() => (dia0 ? eixoDoPeriodo(periodo, dia0) : []), [periodo, dia0]);
+
+  const mudar = (p: Periodo) => {
+    setPeriodo(p);
+    setAjustado(false);
+    history.replaceState(null, "", location.pathname + escreverPeriodo(location.search, p) + location.hash);
+  };
+  const escolherPersonalizado = () => {
+    if (periodo.tipo !== "personalizado") mudar({ tipo: "personalizado", de: somarDias(dia0, -29), ate: dia0 });
+  };
+  const mudarData = (campo: "de" | "ate", valor: string) => {
+    if (periodo.tipo !== "personalizado") return;
+    const aj = ajustarPersonalizado(campo === "de" ? valor : periodo.de, campo === "ate" ? valor : periodo.ate, dia0);
+    if (aj) mudar({ tipo: "personalizado", de: aj.de, ate: aj.ate });
+  };
 
   const titulo = t("Como a região chegou até aqui");
   if (!carga?.ok)
@@ -57,11 +92,30 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
     );
 
   const indices = carga.dados;
-  const { comDados: municipios, semDados } = separarPorDados(indices, nomes);
+  const { comDados, semDados } = separarPorDados(indices, nomes);
+  // separarPorDados decide quem tem D0; o histórico combinado vem de `combinados` (mesma ordem de indices.municipios).
+  const comD0 = new Set(comDados.map((m) => m.ibge));
+  const municipios = (combinados ?? []).filter((m) => comD0.has(m.ibge));
   const destaque = municipios.find((m) => m.ibge === ibge);
-  const eixo = diasEixo(indices.dia_alvo_d0, periodo);
-  const comHistorico = destaque ? diasComDadosDe(destaque, eixo) : periodo;
+  const comHistorico = destaque ? diasComDadosDe(destaque, eixo) : eixo.length;
+  const eixo7 = diasEixo(dia0, DIAS_TABELA);
+  const limites = limitesPersonalizado(dia0);
+  const personalizado = periodo.tipo === "personalizado" ? periodo : null;
   const k = indicadores(indices);
+
+  // Um só aviso: falha de arquivo só importa se o eixo passa do histórico do indices.json.
+  const primeiroDia = indices.municipios.find((m) => m.ibge === destaque?.ibge)?.historico[0]?.dia_alvo ?? dia0;
+  const alemDoIndices = eixo[0] < primeiroDia;
+  const carregando = real === undefined || rec === undefined;
+  let aviso: string | null = null;
+  if (destaque && !(carregando && alemDoIndices)) {
+    if (alemDoIndices && (real?.ok === false || rec?.ok === false)) aviso = t("Parte do histórico não carregou; esses dias aparecem vazios.");
+    else if (comHistorico < eixo.length)
+      aviso =
+        comHistorico === 1
+          ? t("Por enquanto há histórico de 1 dia para {M}; os demais aparecem vazios.", { M: destaque.nome })
+          : t("Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.", { N: String(comHistorico), M: destaque.nome });
+  }
 
   const selecionar = (novo: string) => {
     setIbge(novo);
@@ -69,7 +123,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
     if (m) anunciar(t("Evolução do índice — {M}", { M: m.nome }));
   };
 
-  const tabela = <Tabela t={t} municipios={municipios} semDados={semDados} ibge={destaque?.ibge} eixo={eixo} aoSelecionar={selecionar} />;
+  const tabela = <Tabela t={t} municipios={municipios} semDados={semDados} ibge={destaque?.ibge} eixo7={eixo7} aoSelecionar={selecionar} />;
 
   return (
     <div className="dados">
@@ -77,21 +131,42 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
         <div>
           <span className="lbl">{t("Dados da análise · dia-alvo {N}", { N: formatarData(indices.dia_alvo_d0) })}</span>
           <h1>{titulo}</h1>
-          <p>{t("Mesmos dados do mapa, com a chuva acumulada e a evolução do índice nos últimos {N} dias.", { N: String(periodo) })}</p>
-          {destaque && comHistorico < periodo && (
-            <p>
-              {comHistorico === 1
-                ? t("Por enquanto há histórico de 1 dia para {M}; os demais aparecem vazios.", { M: destaque.nome })
-                : t("Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.", { N: String(comHistorico), M: destaque.nome })}
-            </p>
-          )}
+          <p>
+            {personalizado
+              ? t("Mesmos dados do mapa, com a chuva acumulada e a evolução do índice de {N} a {N}.", {
+                  N: [formatarData(personalizado.de), formatarData(personalizado.ate)],
+                })
+              : t("Mesmos dados do mapa, com a chuva acumulada e a evolução do índice nos últimos {N} dias.", { N: String(periodo.tipo) })}
+          </p>
+          {personalizado && ajustado && <p>{t("O período do link foi ajustado ao último ano disponível.")}</p>}
+          {aviso && <p>{aviso}</p>}
         </div>
-        <div className="seg" role="group" aria-label={t("Período")}>
-          {PERIODOS.map((p) => (
-            <button key={p} type="button" aria-pressed={p === periodo} onClick={() => setPeriodo(p)}>
-              {t("{N} dias", { N: String(p) })}
+        <div>
+          <div className="seg" role="group" aria-label={t("Período")}>
+            {([7, 30] as const).map((p) => (
+              <button key={p} type="button" aria-pressed={periodo.tipo === p} onClick={() => mudar({ tipo: p })}>
+                {t("{N} dias", { N: String(p) })}
+              </button>
+            ))}
+            <button type="button" aria-pressed={!!personalizado} onClick={escolherPersonalizado}>
+              {t("Personalizado")}
             </button>
-          ))}
+          </div>
+          {personalizado && (
+            <div className="datas">
+              <label>
+                {t("De")}
+                <input type="date" value={personalizado.de} min={limites.min} max={personalizado.ate} onChange={(e) => mudarData("de", e.target.value)} />
+              </label>
+              <label>
+                {t("Até")}
+                <input type="date" value={personalizado.ate} min={personalizado.de} max={limites.max} onChange={(e) => mudarData("ate", e.target.value)} />
+              </label>
+              <p className="sr-only" aria-live="polite">
+                {t("Período: {N} a {N}", { N: [formatarData(personalizado.de), formatarData(personalizado.ate)] })}
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -186,11 +261,11 @@ interface PropsTabela {
   municipios: Municipio[];
   semDados: NomeMunicipio[];
   ibge?: string;
-  eixo: string[];
+  eixo7: string[];
   aoSelecionar: (ibge: string) => void;
 }
 
-function Tabela({ t, municipios, semDados, ibge, eixo, aoSelecionar }: PropsTabela) {
+function Tabela({ t, municipios, semDados, ibge, eixo7, aoSelecionar }: PropsTabela) {
   return (
     <section className="card" aria-labelledby="tab-t">
       <div className="ch">
@@ -211,7 +286,7 @@ function Tabela({ t, municipios, semDados, ibge, eixo, aoSelecionar }: PropsTabe
               <th scope="col" className="n">
                 {t("Variação {N}", { N: "24h" })}
               </th>
-              <th scope="col">{t("Últimos {N} dias", { N: String(eixo.length) })}</th>
+              <th scope="col">{t("Últimos {N} dias", { N: String(eixo7.length) })}</th>
               <th scope="col" className="n">
                 {t("Chuva efetiva / limiar")}
               </th>
@@ -250,7 +325,7 @@ function Tabela({ t, municipios, semDados, ibge, eixo, aoSelecionar }: PropsTabe
                     </span>
                   </td>
                   <td>
-                    <Minigrafico municipio={m} eixo={eixo} />
+                    <Minigrafico municipio={m} eixo={eixo7} />
                   </td>
                   <td className="n">
                     <div className="ratio">
