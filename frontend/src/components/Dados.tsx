@@ -16,7 +16,7 @@ import {
   formatarVariacao,
 } from "../lib/formato";
 import { diasComDadosDe, diasEixo, etiquetaChuva, indicadores, serieMunicipio, variacoesDiarias } from "../lib/graficos";
-import { combinarHistorico, lerHistorico, type ArquivoHistorico } from "../lib/historico";
+import { combinarHistorico, lerHistorico, primeiroDiaReal, type ArquivoHistorico } from "../lib/historico";
 import { municipioInicial, variaveis } from "../lib/monitoramento";
 import { ajustarPersonalizado, eixoDoPeriodo, escreverPeriodo, lerPeriodo, limitesPersonalizado, somarDias, type Periodo } from "../lib/periodo";
 import type { Idioma } from "../lib/preferencias";
@@ -73,6 +73,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
     const comD0 = new Set(separados?.comDados.map((m) => m.ibge));
     return (combinados ?? []).filter((m) => comD0.has(m.ibge));
   }, [combinados, separados]);
+  const inicioReal = useMemo(() => primeiroDiaReal(rec?.ok ? rec.dados : undefined), [rec]);
   const eixo = useMemo(() => (dia0 ? eixoDoPeriodo(periodo, dia0) : []), [periodo, dia0]);
 
   const mudar = (p: Periodo) => {
@@ -102,6 +103,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
   const semDados = separados?.semDados ?? [];
   const destaque = municipios.find((m) => m.ibge === ibge);
   const comHistorico = destaque ? diasComDadosDe(destaque, eixo) : eixo.length;
+  const temReconstruido = destaque ? serieMunicipio(destaque, eixo).some((p) => p.reconstruido) : false;
   const eixo7 = diasEixo(dia0, DIAS_TABELA);
   const limites = limitesPersonalizado(dia0);
   const personalizado = periodo.tipo === "personalizado" ? periodo : null;
@@ -221,8 +223,15 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
                 </span>
                 <span>{t("↑/↓ mudança de classe")}</span>
                 <span>{t("faixa: mínimo e máximo dos demais municípios")}</span>
+                {temReconstruido && (
+                  <span>
+                    <i className="amostra-rec" />
+                    {t("dias reconstruídos (estimativa)")}
+                  </span>
+                )}
               </div>
-              <Evolucao t={t} municipios={municipios} destaque={destaque} eixo={eixo} aoSelecionar={selecionar} />
+              <Evolucao t={t} municipios={municipios} destaque={destaque} eixo={eixo} inicioReal={inicioReal} lang={lang} aoSelecionar={selecionar} />
+              {temReconstruido && <p className="sub">{t("Dias antes de {N}: estimativa reconstruída com chuva de reanálise (ERA5, Open-Meteo) e os parâmetros atuais, sem ensemble. A reanálise suaviza chuvas fortes e localizadas e tende a subestimar picos. Não é o que o sistema publicou na época nem dado oficial.", { N: formatarData(inicioReal ?? dia0) })}</p>}
               {semDados.length > 0 && (
                 <p className="sub">{t("Sem dados nesta execução: {M}.", { M: semDados.map((m) => m.nome).join(", ") })}</p>
               )}

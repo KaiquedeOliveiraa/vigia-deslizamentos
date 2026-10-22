@@ -519,5 +519,9 @@
 "Período: {N} a {N}": "Período: {N} a {N}",
 "Mesmos dados do mapa, com a chuva acumulada e a evolução do índice de {N} a {N}.": "Los mismos datos del mapa, con la lluvia acumulada y la evolución del índice del {N} al {N}.",
 "O período do link foi ajustado ao último ano disponível.": "El período del enlace se ajustó al último año disponible.",
-"Parte do histórico não carregou; esses dias aparecem vazios.": "Parte del historial no se cargó; esos días aparecen vacíos."
+"Parte do histórico não carregou; esses dias aparecem vazios.": "Parte del historial no se cargó; esos días aparecen vacíos.",
+"estimativa reconstruída, tende a subestimar picos": "estimación reconstruida, tiende a subestimar picos",
+"início do sistema": "inicio del sistema",
+"dias reconstruídos (estimativa)": "días reconstruidos (estimación)",
+"Dias antes de {N}: estimativa reconstruída com chuva de reanálise (ERA5, Open-Meteo) e os parâmetros atuais, sem ensemble. A reanálise suaviza chuvas fortes e localizadas e tende a subestimar picos. Não é o que o sistema publicou na época nem dado oficial.": "Días anteriores a {N}: estimación reconstruida con lluvia de reanálisis (ERA5, Open-Meteo) y los parámetros actuales, sin ensemble. El reanálisis suaviza las lluvias fuertes y localizadas y tiende a subestimar los picos. No es lo que el sistema publicó en su momento ni un dato oficial."
 }

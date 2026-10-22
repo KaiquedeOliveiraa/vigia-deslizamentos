@@ -113,6 +113,13 @@
   gap: 5px;
 }
 
+.legend2 .amostra-rec {
+  width: 14px;
+  height: 10px;
+  background: var(--rec);
+  border-left: 1.5px solid var(--inicio);
+}
+
 .legend2 svg {
   width: 13px;
   height: 13px;
@@ -270,6 +277,25 @@
 .evo .ax.on {
   fill: var(--ink);
   font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--surface-000);
+  stroke-width: 3px;
+}
+
+/* Dias reconstruídos: fundo sombreado atrás da linha, e o primeiro dia real marcado por uma vertical sólida (a tracejada é do alerta). */
+.evo .rec {
+  fill: var(--rec);
+}
+
+.evo .inicio {
+  stroke: var(--inicio);
+  stroke-width: 1.5;
+}
+
+.evo .inicio-l {
+  font-size: 10.5px;
+  font-weight: 600;
+  fill: var(--inicio);
 }
 
 /* Linha-guia e área de captura do ponteiro (maior que os pontos). */
