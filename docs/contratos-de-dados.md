@@ -88,6 +88,27 @@ Vem de `banco.historico(..., dias=365)`: último cálculo de cada dia-alvo, no `
 - A classe não vai no arquivo: o site a calcula pelo índice.
 - Sem data de geração, de propósito: o conteúdo só muda quando muda um dia, e a publicação é pulada se nada mudou.
 
+## `frontend/public/data/historico_reconstruido.json`
+
+Índice do último ano **reconstruído** com chuva de reanálise, para os dias anteriores ao primeiro cálculo real (15/10/2026). Gerado uma vez e versionado; não é publicado pelo pipeline. Mesmo formato do `historico.json` (serialização compacta, `schema_version` 1, sem data de geração), com dois campos a mais em cada município:
+
+| Campo | Tipo | Descrição |
+|---|---|---|
+| `limiar_mm` | número | Limiar do município usado na reconstrução |
+| `mv_h` | número | Meia-vida da chuva (h) usada na reconstrução |
+
+Um teste falha se `limiar_mm`/`mv_h` divergirem de `config/municipios.json`: trocar o limiar exige regerar o arquivo (evita salto falso em 15/10).
+
+**O que a reconstrução é.** O índice publicado é a média ponderada de várias rodadas de **previsão** para o dia-alvo. O reconstruído usa uma única série de chuva de **reanálise** (ERA5, grade de ~31 km, Open-Meteo arquivo histórico) no lugar da previsão: é uma estimativa retroativa, sem ensemble e não validada. A reanálise suaviza chuvas intensas e localizadas, então **tende a subestimar picos**, justamente os dias de alerta. Não é o que o sistema publicou na época nem dado oficial.
+
+**Como regerar** (precisa de rede, ~25 s, uma única requisição sem retentativa), a partir de `backend/`:
+
+```
+python -m scripts.gerar_historico_reconstruido [--fim 2026-10-14] [--dias 365]
+```
+
+O período vai de `--fim − (dias − 1)` até `--fim`. O índice do município em cada dia é o maior entre os seus pontos; hora ausente em um ponto tira o ponto daquele dia, e dia sem nenhum ponto completo vira `null` (nunca zero). O script falha sem gravar se a resposta não trouxer um item por ponto, se algum município ficar sem nenhum dia ou se mais de 5% dos dias de algum município forem `null`.
+
 ## `frontend/public/data/ocorrencias.json`
 
 Histórico de ocorrências, gerado por `backend/scripts/gerar_ocorrencias.py` a partir do Atlas Digital de Desastres (1991–2025), só com eventos ligados a chuva, e versionado. A raiz é uma lista de objetos:
