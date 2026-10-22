@@ -12,7 +12,7 @@ O site é o único consumidor deste arquivo, e o schema que ele usa está em
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from app.calculo.agregacao import Resultado, ResultadoDia, ResultadoMunicipio
 from app.config import Municipio
@@ -130,3 +130,34 @@ def serializar(dados: dict) -> bytes:
     "no newline at end of file" em toda publicação.
     """
     return (json.dumps(dados, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+
+
+SCHEMA_VERSION_HISTORICO = 1
+CASAS_HISTORICO = 4
+
+
+def montar_historico(historicos: dict[str, list[ItemHistorico]], fonte: str) -> dict:
+    """Formato compacto do `historico.json`/`historico_reconstruido.json`.
+
+    Um item por dia a partir do primeiro com dado (`inicio`), `None` nos dias
+    sem cálculo; município sem nenhum item fica de fora. Os itens chegam do
+    mais antigo para o mais recente (como `banco.historico` devolve).
+    """
+    municipios = {}
+    for ibge, itens in historicos.items():
+        if not itens:
+            continue
+        inicio = itens[0].dia_alvo
+        por_dia = {item.dia_alvo: item.indice for item in itens}
+        total = (itens[-1].dia_alvo - inicio).days + 1
+        indices = []
+        for i in range(total):
+            valor = por_dia.get(inicio + timedelta(days=i))
+            indices.append(None if valor is None else round(valor, CASAS_HISTORICO))
+        municipios[ibge] = {"inicio": inicio.isoformat(), "indices": indices}
+    return {"schema_version": SCHEMA_VERSION_HISTORICO, "fonte": fonte, "municipios": municipios}
+
+
+def serializar_compacto(dados: dict) -> bytes:
+    """Como `serializar`, sem indentação: o histórico de um ano caberia em ~130 KB indentado."""
+    return (json.dumps(dados, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")

@@ -9,6 +9,7 @@ os avisos do bot (contrato de dados, seção "Publicação").
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 import logging
 
@@ -16,7 +17,7 @@ import pytest
 import requests
 
 from app.config import Config
-from app.exportacao.publicar import CAMINHO_NO_REPOSITORIO, BRANCH, publicar
+from app.exportacao.publicar import CAMINHO_HISTORICO, CAMINHO_NO_REPOSITORIO, BRANCH, publicar
 
 TOKEN = "ghp_segredo_que_nunca_pode_aparecer_no_log"
 CONTEUDO = b'{"schema_version": 1}\n'
@@ -308,3 +309,42 @@ def test_corpo_lista_na_leitura_devolve_false_sem_excecao(caplog):
 
     assert caplog.records
     assert _chamadas(http, "PUT") == []
+
+
+# --- caminho parametrizado e pulo quando nada mudou ---------------------------
+
+
+def test_caminho_historico_vai_na_url_e_na_mensagem_do_commit():
+    http = HttpFalso(
+        respostas_get=[RespostaFalsa(200, {"sha": "abc123"})],
+        respostas_put=[RespostaFalsa(200, {})],
+    )
+
+    assert publicar(b"x", config_de_teste(), http, caminho=CAMINHO_HISTORICO) is True
+
+    (url_get, _), = _chamadas(http, "GET")
+    (url_put, kwargs_put), = _chamadas(http, "PUT")
+    assert url_get.endswith("/contents/frontend/public/data/historico.json")
+    assert url_put.endswith("/contents/frontend/public/data/historico.json")
+    assert "historico.json" in kwargs_put["json"]["message"]
+
+
+def test_sha_igual_ao_do_conteudo_nao_envia_e_devolve_true(caplog):
+    sha = hashlib.sha1(b"blob 1\0x").hexdigest()
+    http = HttpFalso(respostas_get=[RespostaFalsa(200, {"sha": sha})], respostas_put=[])
+
+    with caplog.at_level(logging.INFO):
+        assert publicar(b"x", config_de_teste(), http, caminho=CAMINHO_HISTORICO) is True
+
+    assert _chamadas(http, "PUT") == []
+    assert "sem mudança" in caplog.text
+
+
+def test_sha_diferente_envia_normalmente():
+    http = HttpFalso(
+        respostas_get=[RespostaFalsa(200, {"sha": "outro"})],
+        respostas_put=[RespostaFalsa(200, {})],
+    )
+
+    assert publicar(b"x", config_de_teste(), http) is True
+    assert len(_chamadas(http, "PUT")) == 1
