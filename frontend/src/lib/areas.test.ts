@@ -19,7 +19,7 @@ describe("estadoDoPainel", () => {
 describe("rotuloSetoresMunicipio", () => {
   const pt = tradutor("pt");
   it("zero, singular e plural", () => {
-    expect(rotuloSetoresMunicipio(pt, "Ibirama", 0)).toBe("Ibirama: nenhum setor mapeado pelo SGB");
+    expect(rotuloSetoresMunicipio(pt, "Ibirama", 0)).toBe("Ibirama: nenhum setor de deslizamento mapeado pelo SGB");
     expect(rotuloSetoresMunicipio(pt, "Ibirama", 1)).toBe("Ibirama: 1 setor de risco geológico");
     expect(rotuloSetoresMunicipio(pt, "Ibirama", 12)).toBe("Ibirama: 12 setores de risco geológico");
   });

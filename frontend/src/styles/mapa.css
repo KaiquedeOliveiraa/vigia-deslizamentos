@@ -762,4 +762,6 @@
 .mapa .setor.muito_alto { stroke: var(--setor-muito-alto); fill-opacity: 1; }
 /* O fill url(#hachura-setor) vai inline no elemento (como as hachuras das classes), não aqui. */
 .mapa .setor.sel { stroke-width: 4; }
+/* Nos fundos detalhados, o mesmo halo dos municípios separa o setor da imagem. */
+.mapa[data-fundo]:not([data-fundo="neutro"]) .setor { filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.9)); }
 .hatch-setor { stroke: var(--setor-muito-alto); stroke-width: 2.2; }

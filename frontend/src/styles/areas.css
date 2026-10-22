@@ -52,8 +52,9 @@
   overflow: visible;
 }
 
+/* --ink-brand: azul-escuro no claro, azul-claro no escuro; contrasta com o município nos dois temas. */
 .pin path {
-  fill: var(--nav-900);
+  fill: var(--ink-brand);
   stroke: var(--surface-000);
   stroke-width: 3;
 }
@@ -63,7 +64,7 @@
 }
 
 .pin:hover path {
-  fill: var(--nav-800);
+  opacity: 0.85;
 }
 
 .pin.sel path {
@@ -74,8 +75,9 @@
   outline: none;
 }
 
+/* --focus é igual ao --ink-brand no escuro: o foco usa o laranja de destaque. */
 .pin:focus-visible path {
-  stroke: var(--focus);
+  stroke: var(--accent);
   stroke-width: 5;
 }
 
