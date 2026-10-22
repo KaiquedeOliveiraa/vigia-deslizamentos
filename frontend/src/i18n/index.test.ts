@@ -24,9 +24,9 @@ describe("t", () => {
   });
 
   it("substitui os marcadores na ordem, em PT e em ES", () => {
-    const vars = { N: ["29/09/2026", "06:12"] };
-    expect(pt("dia-alvo {N} · atualizado {N}", vars)).toBe("dia-alvo 29/09/2026 · atualizado 06:12");
-    expect(es("dia-alvo {N} · atualizado {N}", vars)).toBe("día objetivo 29/09/2026 · actualizado 06:12");
+    const vars = { N: ["2011", "2024"] };
+    expect(pt("Mapeamentos de {N} a {N}", vars)).toBe("Mapeamentos de 2011 a 2024");
+    expect(es("Mapeamentos de {N} a {N}", vars)).toBe("Mapeos de 2011 a 2024");
   });
 
   it("{C} é traduzido; {M} e {N} não", () => {
