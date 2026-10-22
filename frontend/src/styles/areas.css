@@ -1,0 +1,404 @@
+/* Tela Áreas de risco (antiga Estações; protótipo: pages/est.css). */
+
+.areas {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  gap: 1px;
+  background: var(--line);
+}
+
+.areas .side.r {
+  width: 360px;
+  gap: 16px;
+}
+
+.areas .side .lbl {
+  margin: 0;
+}
+
+.areas .side .note {
+  margin: 6px 0 0;
+}
+
+.areas .mapa .mun:not(.sel) {
+  stroke: var(--line-strong);
+  stroke-width: 2.5px;
+}
+
+/* Mapa afastado (no enquadramento inicial ou mais longe, ver MapaLeaflet): os nomes se sobreporiam; voltam ao aproximar. */
+.areas .mapa.longe .leaflet-tooltip.mlabel {
+  display: none;
+}
+
+/* Nome escrito sobre o município em branco, sem a caixa do rótulo de risco. */
+.areas .mapa .leaflet-tooltip.mlabel {
+  background: none;
+  border: none;
+  box-shadow: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+  text-shadow: 0 0 3px var(--surface-000), 0 0 3px var(--surface-000), 0 0 3px var(--surface-000);
+}
+
+.pin {
+  cursor: pointer;
+}
+
+.pin svg {
+  display: block;
+  overflow: visible;
+}
+
+.pin path {
+  fill: var(--nav-900);
+  stroke: var(--surface-000);
+  stroke-width: 3;
+}
+
+.pin circle {
+  fill: var(--surface-000);
+}
+
+.pin:hover path {
+  fill: var(--nav-800);
+}
+
+.pin.sel path {
+  fill: var(--accent);
+}
+
+.pin:focus-visible {
+  outline: none;
+}
+
+.pin:focus-visible path {
+  stroke: var(--focus);
+  stroke-width: 5;
+}
+
+.mapa .leaflet-tooltip.balao {
+  min-width: 180px;
+  padding: 10px 12px;
+  background: var(--surface-000);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  pointer-events: none;
+}
+
+.mapa .leaflet-tooltip.balao::before {
+  border-top-color: var(--surface-000);
+}
+
+.balao b {
+  display: block;
+  font-size: 14px;
+  color: var(--ink-brand);
+}
+
+.balao span {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.balao .mono {
+  margin-top: 4px;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.lst {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lst button {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  align-items: start;
+  gap: 10px;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  padding: 10px 4px;
+  text-align: left;
+  color: var(--ink);
+  font-size: 13.5px;
+}
+
+.lst button:hover,
+.lst button.on {
+  background: var(--surface-050);
+}
+
+.lst small {
+  display: block;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.lst .mono {
+  font-size: 11px;
+}
+
+.lst svg {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: var(--ink-brand);
+}
+
+.lst button.on svg {
+  color: var(--accent);
+}
+
+/* Faixa de segurança fixa do painel (mesmo aviso de contatos.css › .aviso-mun). */
+.aviso-risco {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--alert-bg);
+  border: 1px solid var(--alert-line);
+  color: var(--ink);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.aviso-risco svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  color: var(--accent-ink);
+}
+
+.aviso-risco a {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.areas .titulo-painel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--ink-brand);
+}
+
+.areas .titulo-painel:focus {
+  outline: none;
+}
+
+.areas .titulo-painel:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.areas .resumo-areas {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.areas .erro-carga {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--alert-line);
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+/* Símbolo do grau fora do mapa (lista, título, legenda): mesmo desenho do marcador (mapa.css › .setor-marca). */
+.areas :is(.lst, .titulo-painel, .leg-areas) .setor-marca {
+  display: inline-grid;
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.areas :is(.lst, .leg-areas) .setor-conta {
+  display: inline-grid;
+  flex: none;
+  min-width: 26px;
+  height: 26px;
+  font-size: 12px;
+}
+
+.lst-areas button {
+  grid-template-columns: 28px 1fr;
+  align-items: center;
+}
+
+.lst-areas .setor-marca {
+  justify-self: center;
+}
+
+.lst-areas button[aria-pressed="true"] {
+  background: var(--surface-050);
+}
+
+/* No painel (flex em coluna com rolagem), um bloco com overflow encolheria até sumir: flex: none. */
+.lista-setores {
+  flex: none;
+  max-height: 22rem;
+  overflow-y: auto;
+  border-top: 1px solid var(--line);
+}
+
+.sem-setores {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.sem-setores summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.sem-setores p {
+  margin: 6px 0 0;
+}
+
+.campos-setor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+
+.campos-setor dt {
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.campos-setor dd {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.areas .original {
+  display: block;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.areas .side .btn {
+  align-self: flex-start;
+}
+
+/* Legenda própria da tela, no canto inferior esquerdo do mapa. */
+.leg-areas {
+  left: 16px;
+  bottom: 24px;
+  z-index: 4;
+  max-width: min(280px, calc(100% - 32px));
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: var(--ink);
+}
+
+.leg-areas .lbl {
+  margin: 0 0 6px;
+}
+
+.leg-areas ul {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.leg-areas li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.leg-areas .note {
+  margin: 6px 0 0;
+  color: var(--accent-ink);
+}
+
+.leg-areas .btn.inmet {
+  width: 100%;
+  min-height: 36px;
+}
+
+.leg-areas .btn.inmet[aria-pressed="true"] {
+  background: var(--ink-brand);
+  border-color: var(--ink-brand);
+  color: var(--surface-000);
+}
+
+@media (max-width: 900px) {
+  .areas {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .areas .mapwrap {
+    flex: none;
+    height: 62vh;
+    /* Cabe na área visível do conteúdo (container em estrutura.css): controles do mapa à vista. */
+    height: max(150px, min(62dvh, 100cqh));
+  }
+
+  .areas .side.r {
+    width: auto;
+  }
+
+  .areas .mapa .leaflet-tooltip.ctxl {
+    display: none;
+  }
+
+  .areas .mapa .leaflet-tooltip.mlabel {
+    font-size: 11px;
+  }
+
+  /* Legenda compacta: os itens em linha, para cobrir menos do mapa. */
+  .leg-areas {
+    left: 8px;
+    right: 8px;
+    bottom: 22px;
+    max-width: none;
+    padding: 8px 10px;
+    font-size: 11.5px;
+  }
+
+  .leg-areas .lbl {
+    margin-bottom: 4px;
+  }
+
+  .leg-areas ul {
+    flex-flow: row wrap;
+    gap: 4px 12px;
+    margin-bottom: 6px;
+  }
+
+  .leg-areas .btn.inmet {
+    min-height: 32px;
+    padding: 4px 10px;
+  }
+}

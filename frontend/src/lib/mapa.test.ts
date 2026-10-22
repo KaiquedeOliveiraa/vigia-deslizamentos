@@ -4,7 +4,7 @@ import exemplo from "../fixtures/indices.exemplo.json";
 import geojsonBruto from "../data/municipios.geojson?raw";
 import { FEICOES } from "./municipios";
 import type { Indices } from "./tipos";
-import { classesDoRotulo, destacar, limites, municipiosMonitorados, valoresDoDia, mensagemSelecao, passoDia, posicoes, rotuloAria, rotuloDia, rotulosDeLonge, type FeicaoMunicipio } from "./mapa";
+import { classesDoRotulo, destacar, limites, pontoInterno, municipiosMonitorados, valoresDoDia, mensagemSelecao, passoDia, posicoes, rotuloAria, rotuloDia, rotulosDeLonge, type FeicaoMunicipio } from "./mapa";
 
 const pt = tradutor("pt");
 const es = tradutor("es");
@@ -140,5 +140,14 @@ describe("rotulosDeLonge", () => {
     expect(rotulosDeLonge(9.5, 9.5)).toBe(true);
     expect(rotulosDeLonge(10.5, 9.5)).toBe(false);
     expect(rotulosDeLonge(9, 9.5)).toBe(true);
+  });
+});
+
+describe("pontoInterno", () => {
+  it("fica dentro de um polígono côncavo", () => {
+    const u = [[[0, 0], [3, 0], [3, 3], [2, 3], [2, 1], [1, 1], [1, 3], [0, 3], [0, 0]]];
+    const [lat, lon] = pontoInterno(feicao(true, u));
+    // dentro de uma das pernas do "U": x em (0,1) ou (2,3), y em (1,3), ou na base (y em (0,1))
+    expect((lon > 0 && lon < 1) || (lon > 2 && lon < 3) || (lat > 0 && lat < 1)).toBe(true);
   });
 });

@@ -78,62 +78,24 @@
   gap: 18px;
 }
 
-.grid2.meio {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+/* Link para Áreas de risco (o histórico de ocorrências saiu desta tela): linha inteira, abaixo dos detalhes. */
+.ver-areas {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface-000);
+  font-size: 14px;
 }
 
-.card {
-  min-width: 0;
-  background: var(--surface-000);
-  border: 1px solid var(--line);
-  border-top: 4px solid var(--nav-900);
-  border-radius: var(--radius-lg);
-  padding: 18px 20px;
+.ver-areas a {
+  font-weight: 600;
+  color: var(--ink-brand);
+  text-decoration: underline;
 }
 
 .card.chuva {
   border-top-color: var(--rain);
-}
-
-.card .ch {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 6px;
-}
-
-.card .ch > svg {
-  width: 20px;
-  height: 20px;
-  color: var(--ink-brand);
-}
-
-.card .ch h2 {
-  margin: 0;
-  font-size: 16px;
-  line-height: 22px;
-  color: var(--ink-brand);
-}
-
-.card .ch .tag {
-  margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 600;
-  padding: 5px 8px;
-  border-radius: var(--radius-pill);
-  background: var(--surface-050);
-  color: var(--ink-2);
-  border: 1px solid var(--line);
-}
-
-.card .sub {
-  font-size: 12.5px;
-  color: var(--muted);
-  margin: 0 0 6px;
 }
 
 .legend2 {
@@ -682,53 +644,12 @@
   font-weight: 600;
 }
 
-.ocs {
-  margin: 8px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.ocs li {
-  padding: 10px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.ocs-rol {
-  max-height: 28rem;
-  overflow-y: auto;
-}
-
-.ocs li.desl {
-  padding-left: 10px;
-  border-left: 3px solid var(--danger-ink);
-  background: var(--alert-bg);
-}
-
-.ocs li.desl .lbl {
-  color: var(--danger-ink);
-}
-
-.ocs .lbl svg {
-  width: 14px;
-  height: 14px;
-  margin-right: 4px;
-  vertical-align: -2px;
-}
-
-.ocs p {
-  margin: 4px 0;
-  font-size: 13px;
-  line-height: 19px;
-  color: var(--ink);
-}
-
 .dados .disc {
   margin: 0;
 }
 
 @media (max-width: 1100px) {
-  .grid2,
-  .grid2.meio {
+  .grid2 {
     grid-template-columns: minmax(0, 1fr);
   }
 }

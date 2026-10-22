@@ -1,0 +1,39 @@
+.ocs {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ocs li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.ocs-rol {
+  max-height: 28rem;
+  overflow-y: auto;
+}
+
+.ocs li.desl {
+  padding-left: 10px;
+  border-left: 3px solid var(--danger-ink);
+  background: var(--alert-bg);
+}
+
+.ocs li.desl .lbl {
+  color: var(--danger-ink);
+}
+
+.ocs .lbl svg {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+  vertical-align: -2px;
+}
+
+.ocs p {
+  margin: 4px 0;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--ink);
+}

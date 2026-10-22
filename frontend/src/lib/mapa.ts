@@ -48,6 +48,31 @@ export function valoresDoDia(indices: Indices, d: number): Record<string, Indice
 export const posicoes = (f: FeicaoMunicipio): LatLon[][] =>
   f.geometry.coordinates.map((anel) => anel.map(([lon, lat]) => [lat, lon]));
 
+/** Ponto dentro do município (marcador de contagem): centroide do anel externo ou, se cair fora, o meio do maior trecho interno da horizontal. */
+export function pontoInterno(feicao: FeicaoMunicipio): LatLon {
+  const anel = feicao.geometry.coordinates[0];
+  let a2 = 0, cx = 0, cy = 0;
+  for (let i = 0; i < anel.length - 1; i++) {
+    const [x1, y1] = anel[i], [x2, y2] = anel[i + 1];
+    const c = x1 * y2 - x2 * y1;
+    a2 += c; cx += (x1 + x2) * c; cy += (y1 + y2) * c;
+  }
+  const lat = cy / (3 * a2);
+  let lon = cx / (3 * a2);
+  const cortes: number[] = [];
+  for (let i = 0; i < anel.length - 1; i++) {
+    const [x1, y1] = anel[i], [x2, y2] = anel[i + 1];
+    if ((y1 > lat) !== (y2 > lat)) cortes.push(x1 + ((lat - y1) * (x2 - x1)) / (y2 - y1));
+  }
+  cortes.sort((p, q) => p - q);
+  if (cortes.filter((x) => x < lon).length % 2 === 0) {
+    let melhor = [cortes[0], cortes[1]];
+    for (let i = 0; i + 1 < cortes.length; i += 2) if (cortes[i + 1] - cortes[i] > melhor[1] - melhor[0]) melhor = [cortes[i], cortes[i + 1]];
+    lon = (melhor[0] + melhor[1]) / 2;
+  }
+  return [lat, lon];
+}
+
 /** [[sul, oeste], [norte, leste]] dos municípios monitorados e dos pontos `extras`, para enquadrar o mapa. */
 export function limites(feicoes: readonly FeicaoMunicipio[], extras: readonly LatLon[] = []): [LatLon, LatLon] {
   const pontos = [...feicoes.filter((f) => f.properties.monitorado).flatMap((f) => posicoes(f).flat()), ...extras];

@@ -13,7 +13,7 @@ export const TELAS: readonly Tela[] = [
   { rota: "simulacao", nome: "Simulação", curto: "Simular" },
   { rota: "dados", nome: "Dados da análise", curto: "Dados" },
   { rota: "monitoramento-sc", nome: "Monitoramento SC", curto: "SC" },
-  { rota: "estacoes", nome: "Estações", curto: "Estações" },
+  { rota: "areas-de-risco", nome: "Áreas de risco", curto: "Áreas" },
   { rota: "cartilha", nome: "Cartilha", curto: "Cartilha" },
   { rota: "contatos", nome: "Contatos", curto: "Contatos" },
 ];
