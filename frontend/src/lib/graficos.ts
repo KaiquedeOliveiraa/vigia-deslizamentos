@@ -1,5 +1,6 @@
 // Escalas e séries dos gráficos (pluviômetro, evolução do índice) e indicadores da tela de dados.
 import { CLASSES, emAlerta, infoClasse, type NumeroClasse } from "./classes";
+import { formatarData } from "./formato";
 import type { HistoricoItem, Indices, Municipio } from "./tipos";
 
 export interface Ponto {
@@ -50,8 +51,9 @@ export interface Coordenada<P extends Ponto = Ponto> {
 export function coordenadas<P extends Ponto>(serie: P[], eixo: string[], max: number, area: Area): Coordenada<P>[] {
   const passo = eixo.length > 1 ? (area.largura - area.esq - area.dir) / (eixo.length - 1) : 0;
   const util = area.altura - area.topo - area.base;
+  const posicao = new Map(eixo.map((dia, i) => [dia, i]));
   return serie.flatMap((ponto) => {
-    const i = eixo.indexOf(ponto.dia_alvo);
+    const i = posicao.get(ponto.dia_alvo) ?? -1;
     return i < 0 ? [] : [{ x: area.esq + i * passo, y: area.topo + util - escala(ponto.indice, max, util), ponto }];
   });
 }
@@ -85,9 +87,15 @@ const d0 = (m: Municipio) => m.dias.find((d) => d.d === 0);
 /** Pontos do historico e do D0 (com a classe publicada) cujos dias estão no `eixo` (diasEixo): falhas no historico não puxam dias mais antigos. */
 export function serieMunicipio(m: Municipio, eixo: readonly string[]): HistoricoItem[] {
   const atual = d0(m);
-  const pontos: HistoricoItem[] = m.historico.map(({ dia_alvo, indice, classe }) => ({ dia_alvo, indice, classe }));
+  const pontos: HistoricoItem[] = m.historico.map(({ dia_alvo, indice, classe, reconstruido }) => ({
+    dia_alvo,
+    indice,
+    classe,
+    ...(reconstruido && { reconstruido }),
+  }));
   if (atual) pontos.push({ dia_alvo: atual.dia_alvo, indice: atual.indice, classe: atual.classe });
-  return pontos.filter((p) => eixo.includes(p.dia_alvo));
+  const dias = new Set(eixo);
+  return pontos.filter((p) => dias.has(p.dia_alvo));
 }
 
 /** Dias do `eixo` com ponto no município: menor que o período quando o histórico dele ainda é curto. */
@@ -146,8 +154,25 @@ export const focoAposSeta = (foco: number | null, passo: number, dias: number): 
 /** Faixa dos demais municípios por dia do eixo (mín–máx de quem tem dado); `null` com menos de 2. */
 export function faixaDosDemais(municipios: Municipio[], destaque: string, eixo: readonly string[]): ({ min: number; max: number } | null)[] {
   const series = municipios.filter((m) => m.ibge !== destaque).map((m) => serieMunicipio(m, eixo));
+  const porDia = new Map<string, number[]>();
+  for (const s of series)
+    for (const p of s) {
+      const lista = porDia.get(p.dia_alvo) ?? [];
+      lista.push(p.indice);
+      porDia.set(p.dia_alvo, lista);
+    }
   return eixo.map((dia) => {
-    const valores = series.flatMap((s) => s.filter((p) => p.dia_alvo === dia).map((p) => p.indice));
+    const valores = porDia.get(dia) ?? [];
     return valores.length < 2 ? null : { min: Math.min(...valores), max: Math.max(...valores) };
   });
+}
+
+/** Rótulos do eixo X: até 31 dias, no máximo 10 `dd/mm` contados do último; acima, um por mês, no dia 1 (`mes`). */
+export function rotulosEixo(eixo: readonly string[], mes: (dia: string) => string): { i: number; texto: string }[] {
+  const n = eixo.length;
+  if (n > 31) return eixo.flatMap((dia, i) => (dia.endsWith("-01") ? [{ i, texto: mes(dia) }] : []));
+  const passo = Math.ceil(n / 10);
+  const rotulos: { i: number; texto: string }[] = [];
+  for (let i = n - 1; i >= 0; i -= passo) rotulos.unshift({ i, texto: formatarData(eixo[i], "dia") });
+  return rotulos;
 }

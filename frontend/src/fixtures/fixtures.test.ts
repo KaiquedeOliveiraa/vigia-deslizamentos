@@ -2,6 +2,7 @@ import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { describe, expect, it } from "vitest";
 import schema from "../../../docs/indices.schema.json";
+import { lerHistorico } from "../lib/historico";
 import { lerContatos, lerEstacoes, lerIndices, lerOcorrencias, type Resultado } from "../lib/dados";
 import indices from "./indices.exemplo.json";
 
@@ -20,6 +21,8 @@ describe("indices.exemplo.json", () => {
 const LEITORES: Record<string, (json: unknown) => Resultado<unknown>> = {
   "contatos.json": lerContatos,
   "estacoes.json": lerEstacoes,
+  "historico.json": lerHistorico,
+  "historico_reconstruido.json": lerHistorico,
   "indices.json": lerIndices,
   "ocorrencias.json": lerOcorrencias,
 };
