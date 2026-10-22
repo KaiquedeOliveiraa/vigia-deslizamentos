@@ -32,8 +32,6 @@ export interface PropsMapa {
   pinos?: Pino[];
   pinoSelecionado?: string | null;
   onSelecionarPino?: (id: string) => void;
-  /** Seletor de mapa de fundo no alto à direita (padrão: sim). */
-  camadas?: boolean;
   /** Setores do SGB (tela Áreas de risco). Sem a prop, nada muda nas outras telas. */
   setores?: Setor[];
   setorSelecionado?: string | null;

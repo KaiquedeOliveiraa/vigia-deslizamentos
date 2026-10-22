@@ -226,7 +226,6 @@ export default function MapaLeaflet({
   pinos = [],
   pinoSelecionado = null,
   onSelecionarPino,
-  camadas = true,
   setores = SEM_SETORES,
   setorSelecionado = null,
   onSelecionarSetor,
@@ -421,7 +420,7 @@ export default function MapaLeaflet({
           −
         </button>
       </div>
-      {camadas && <Camadas lang={lang} camada={fundo} aoMudar={setFundo} />}
+      <Camadas lang={lang} camada={fundo} aoMudar={setFundo} />
     </>
   );
 }

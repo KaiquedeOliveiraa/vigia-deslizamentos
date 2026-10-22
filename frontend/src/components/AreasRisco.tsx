@@ -363,7 +363,6 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
         onSelecionarPino={(id) => setPino((atual) => (atual === id ? null : id))}
         rotuloMapa={t("Mapa dos setores de risco geológico. Use a lista ao lado para percorrer os setores.")}
         rotuloMunicipio={rotuloMunicipio}
-        camadas={false}
       >
         <div className="float leg-areas" role="group" aria-labelledby="leg-areas-t">
           <p id="leg-areas-t" className="lbl">
@@ -388,9 +387,6 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
           <button type="button" className="btn inmet" aria-pressed={inmet} onClick={alternarInmet}>
             {t("Estações do INMET")}
           </button>
-          {inmet && !falhaInmet && (
-            <p className="note">{t("Fonte: cadastro de estações automáticas do INMET. A distância é medida até o centro do município mais próximo de cada estação.")}</p>
-          )}
           {falhaInmet && (
             <p className="note" role="alert">
               {t("Não foi possível carregar as estações do INMET.")}
