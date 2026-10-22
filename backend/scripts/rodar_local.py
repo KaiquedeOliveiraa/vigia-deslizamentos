@@ -2,7 +2,7 @@
 
 Lê o `backend/.env` (TELEGRAM_TOKEN e GITHUB_TOKEN_DADOS são exigidos pela configuração, mas aqui
 não são usados: qualquer valor serve), roda coleta → cálculo → gravação no SQLite → comparação com o
-INMET, e grava o `indices.json` em `frontend/public/data/` em vez de publicá-lo,
+INMET, e grava o `indices.json` e o `historico.json` em `frontend/public/data/` em vez de publicá-los,
 para o `npm run dev` do site ler. Os avisos decididos são só contados no log.
 
     .venv\\Scripts\\python -m scripts.rodar_local
@@ -19,7 +19,7 @@ from app.modelos import banco
 from app.pipeline import executar_pipeline
 
 BACKEND = Path(__file__).resolve().parent.parent
-DESTINO = BACKEND.parent / "frontend" / "public" / "data" / "indices.json"
+DESTINO_DADOS = BACKEND.parent / "frontend" / "public" / "data"
 
 
 def _ler_env(caminho: Path) -> dict[str, str]:
@@ -28,8 +28,8 @@ def _ler_env(caminho: Path) -> dict[str, str]:
     return {chave.strip(): valor.strip().strip("\"'") for chave, valor in pares}
 
 
-def _gravar(conteudo: bytes, _config, _http) -> bool:
-    DESTINO.write_bytes(conteudo)
+def _gravar(conteudo: bytes, _config, _http, caminho: str) -> bool:
+    (DESTINO_DADOS / Path(caminho).name).write_bytes(conteudo)
     return True
 
 
@@ -47,7 +47,7 @@ def main() -> None:
     finally:
         conexao.close()
         encerrar_log()
-    print(f"indices.json gravado em {DESTINO}" if execucao.publicado else "nada gravado")
+    print(f"indices.json e historico.json gravados em {DESTINO_DADOS}" if execucao.publicado else "nada gravado")
     print(f"avisos decididos (não enviados): {len(execucao.avisos)}")
 
 

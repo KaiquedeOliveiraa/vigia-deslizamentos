@@ -22,7 +22,7 @@ from app.bot.mensagens import numero_br
 from app.bot.regra_aviso import Aviso
 from app.coleta.open_meteo import ColetaError
 from app.config import Config, Municipio, Ponto
-from app.exportacao.publicar import CAMINHO_NO_REPOSITORIO
+from app.exportacao.publicar import CAMINHO_HISTORICO, CAMINHO_NO_REPOSITORIO
 from app.modelos import banco
 from app.modelos.tipos import DadosMunicipio, Membro
 from app.pipeline import Execucao, executar_pipeline
@@ -102,19 +102,28 @@ def coleta_falsa(por_ibge: dict[str, DadosMunicipio | Exception]):
 
 
 class PublicacaoFalsa:
-    """Dublê de `publicar`: guarda o conteúdo recebido e devolve o que for pedido."""
+    """Dublê de `publicar`: guarda `(caminho, conteudo)` de cada chamada e devolve o que for pedido."""
 
     def __init__(self, devolve: bool = True):
         self.devolve = devolve
-        self.conteudos: list[bytes] = []
+        self.chamadas: list[tuple[str, bytes]] = []
 
-    def __call__(self, conteudo: bytes, config: Config, http) -> bool:
-        self.conteudos.append(conteudo)
+    def __call__(self, conteudo: bytes, config: Config, http, caminho: str) -> bool:
+        self.chamadas.append((caminho, conteudo))
         return self.devolve
 
     @property
+    def conteudos(self) -> list[bytes]:
+        return [conteudo for _, conteudo in self.chamadas]
+
+    def json_de(self, caminho: str) -> dict:
+        (conteudo,) = [c for cam, c in self.chamadas if cam == caminho]
+        return json.loads(conteudo.decode("utf-8"))
+
+    @property
     def json_publicado(self) -> dict:
-        return json.loads(self.conteudos[-1].decode("utf-8"))
+        """O `indices.json` publicado."""
+        return self.json_de(CAMINHO_NO_REPOSITORIO)
 
 
 def conexao():
@@ -486,7 +495,9 @@ def test_ponta_a_ponta_com_banco_em_memoria_e_publicacao_real_simulada():
     )
 
     assert execucao.publicado is True
-    (url_put, kwargs_put), = http.puts
+    # Dois PUTs, o histórico primeiro; o `indices.json` é o último.
+    assert [CAMINHO_HISTORICO in url for url, _ in http.puts] == [True, False]
+    url_put, kwargs_put = http.puts[-1]
     assert CAMINHO_NO_REPOSITORIO in url_put
 
     import base64
@@ -577,7 +588,7 @@ def test_publicacao_que_levanta_excecao_nao_impede_os_avisos(caplog):
     # `publicar` promete nunca levantar, mas a promessa é de um módulo; aqui a
     # invariante é do pipeline. Se a publicação levantar, o aviso de um
     # município em alerta não pode ser perdido em silêncio por 6 h.
-    def publicar_que_explode(conteudo, config, http):
+    def publicar_que_explode(conteudo, config, http, caminho):
         raise RuntimeError("corpo inesperado na leitura do sha")
 
     conn = conexao()
@@ -662,3 +673,79 @@ def test_falha_ao_gravar_bot_json_nao_impede_os_avisos(tmp_path, caplog):
 
     assert [aviso.avisar for aviso in execucao.avisos] == [True]
     assert any("bot.json" in registro.getMessage() for registro in caplog.records)
+
+
+# --- historico.json -----------------------------------------------------------
+
+
+def _gravar_calculo(conn, ibge: str, dia_alvo: date, indice: float) -> None:
+    conn.execute(
+        "INSERT INTO indices (ibge, dia_alvo, calculado_em, indice, classe, efr_mm, "
+        "rtotal_mm, limiar_mm, n_membros, prob_pontuais, prob_esparsos, "
+        "prob_generalizados) VALUES (?, ?, ?, ?, 2, 0, 0, 100, 3, 0, 0, 0)",
+        (ibge, dia_alvo.isoformat(), f"{dia_alvo.isoformat()}T12:00:00Z", indice),
+    )
+    conn.commit()
+
+
+def test_publica_historico_antes_do_indices():
+    _, publicacao, _ = executar([IBIRAMA], {"4206900": dados("4206900", 120.0)})
+
+    assert [caminho for caminho, _ in publicacao.chamadas] == [
+        CAMINHO_HISTORICO,
+        CAMINHO_NO_REPOSITORIO,
+    ]
+
+
+def test_historico_inclui_municipio_sem_dados_nesta_execucao():
+    conn = conexao()
+    _gravar_calculo(conn, "4205100", D0 - timedelta(days=3), 0.5)
+
+    _, publicacao, _ = executar(
+        [IBIRAMA, DONA_EMMA],
+        {"4206900": dados("4206900", 120.0), "4205100": ColetaError("sem rede")},
+        conn=conn,
+    )
+
+    historico = publicacao.json_de(CAMINHO_HISTORICO)
+    assert historico["municipios"]["4205100"] == {"inicio": "2026-09-28", "indices": [0.5]}
+
+
+def test_falha_do_historico_nao_afeta_publicado_nem_avisos():
+    cenario = ([IBIRAMA], {"4206900": dados("4206900", 120.0)})
+    referencia, _, _ = executar(*cenario)
+    indices = []
+
+    def publicar(conteudo, config, http, caminho):
+        if caminho == CAMINHO_HISTORICO:
+            raise RuntimeError("falha no histórico")
+        indices.append(caminho)
+        return True
+
+    execucao = executar_pipeline(
+        AGORA,
+        cenario[0],
+        conexao(),
+        http=object(),
+        config=config_de_teste(),
+        relogio=lambda: FIM_DA_EXECUCAO,
+        coletar=coleta_falsa(cenario[1]),
+        publicar=publicar,
+    )
+
+    assert execucao.publicado is True
+    assert execucao.avisos == referencia.avisos
+    assert indices == [CAMINHO_NO_REPOSITORIO]
+
+
+def test_historico_publicado_usa_365_dias():
+    conn = conexao()
+    _gravar_calculo(conn, "4206900", D0 - timedelta(days=20), 0.4)
+    _gravar_calculo(conn, "4206900", D0 - timedelta(days=400), 0.9)
+
+    _, publicacao, _ = executar([IBIRAMA], {"4206900": dados("4206900", 120.0)}, conn=conn)
+
+    assert publicacao.json_de(CAMINHO_HISTORICO)["municipios"]["4206900"] == {
+        "inicio": (D0 - timedelta(days=20)).isoformat(),
+        "indices": [0.4],
+    }
