@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import ES from "../i18n/es.json";
+import EN from "../i18n/en.json";
 import { BOMBEIROS, EMERGENCIA, FASES, FONTES, MOCHILA, NAO_FACA, SECOES, SINAIS } from "./cartilha";
 
 describe("conteúdo da Cartilha", () => {
@@ -26,13 +27,13 @@ describe("conteúdo da Cartilha", () => {
     expect(FASES.map((f) => f.blocos.map((b) => b.texto))).toEqual([
       [
         "Plante grama e árvores pequenas na encosta",
-        "Leve a água da chuva e o esgoto para canaletas",
+        "Leve a água da chuva para canaletas e o esgoto para a rede de esgoto",
         "Viu sinais de risco? Peça vistoria à Defesa Civil",
         "Alerta por SMS: envie seu CEP para {N}; o alerta automático no celular dispensa cadastro",
         "Deixe a mochila pronta",
       ],
       [
-        "Casa em área de risco? Vá para a casa de parentes ou amigos em local seguro",
+        "Casa em área de risco? Vá já para a casa de parentes ou amigos em local seguro",
         "Viu sinais? Saia já e ligue {N} ou {N}",
         "Ajude crianças, idosos e pessoas com dificuldade de locomoção",
         "Siga só avisos oficiais e não repasse boatos",
@@ -55,7 +56,7 @@ describe("conteúdo da Cartilha", () => {
     expect(Object.keys(FONTES).filter((k) => !usadas.includes(k as (typeof usadas)[number]))).toEqual([]);
   });
 
-  it("toda frase tem tradução em es.json", () => {
+  it("toda frase tem tradução em es.json e en.json", () => {
     const frases = [
       ...SECOES.map((s) => s.rotulo),
       ...SINAIS.flatMap((s) => [s.titulo, s.detalhe]),
@@ -65,5 +66,6 @@ describe("conteúdo da Cartilha", () => {
       ...Object.values(FONTES).map((f) => f.nome),
     ];
     expect(frases.filter((f) => !(f in ES))).toEqual([]);
+    expect(frases.filter((f) => !(f in EN))).toEqual([]);
   });
 });

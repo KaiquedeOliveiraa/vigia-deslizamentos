@@ -40,8 +40,8 @@ Topo (hero): o primeiro parágrafo passa a ser "Em perigo agora? Saia do local e
 - Verso de cada cartão: "Saia do local agora" / "Depois avise a Defesa Civil ({N}), os Bombeiros ({N}) e os vizinhos" com `{N: ["199","193"]}` (MDR).
 
 **2. O que fazer** — fontes: SGB, MDR, MCOM, PR, SP.
-- Antes (5): Plante grama e árvores pequenas na encosta (SGB) · Leve a água da chuva e o esgoto para canaletas (SGB) · Viu sinais de risco? Peça vistoria à Defesa Civil (SGB) · Alerta por SMS: envie seu CEP para {N} (40199); o alerta automático no celular dispensa cadastro (MCOM) · Deixe a mochila pronta (PR).
-- Durante (5): Casa em área de risco? Vá para a casa de parentes ou amigos em local seguro (SGB) · Viu sinais? Saia já e ligue {N} ou {N} (199/193) (MDR) · Ajude crianças, idosos e pessoas com dificuldade de locomoção (MDR) · Siga só avisos oficiais e não repasse boatos (MDR) · Nunca atravesse rua com água ou lama de deslizamento fluindo (SP).
+- Antes (5): Plante grama e árvores pequenas na encosta (SGB) · Leve a água da chuva para canaletas e o esgoto para a rede de esgoto (SGB) · Viu sinais de risco? Peça vistoria à Defesa Civil (SGB) · Alerta por SMS: envie seu CEP para {N} (40199); o alerta automático no celular dispensa cadastro (MCOM) · Deixe a mochila pronta (PR).
+- Durante (5): Casa em área de risco? Vá já para a casa de parentes ou amigos em local seguro (SGB) · Viu sinais? Saia já e ligue {N} ou {N} (199/193) (MDR) · Ajude crianças, idosos e pessoas com dificuldade de locomoção (MDR) · Siga só avisos oficiais e não repasse boatos (MDR) · Nunca atravesse rua com água ou lama de deslizamento fluindo (SP).
 - Depois (2): Não entre na área atingida sem autorização (MDR) · Só volte para casa quando a Defesa Civil liberar (MDR).
 - Saem: "Fotografe os danos" (sem fonte), "Peça vistoria antes de voltar" (a fonte não diz isso), "Receba alertas (SMS 40199 ou Telegram)" (o Telegram do VIGIA não é canal oficial; continua só no `BannerTelegram`).
 

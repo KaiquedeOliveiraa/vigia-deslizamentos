@@ -94,7 +94,7 @@ export const FASES: readonly { id: IdFase; rotulo: string; blocos: readonly Bloc
     rotulo: "Antes",
     blocos: [
       { icone: Leaf, texto: "Plante grama e árvores pequenas na encosta" },
-      { icone: Waves, texto: "Leve a água da chuva e o esgoto para canaletas" },
+      { icone: Waves, texto: "Leve a água da chuva para canaletas e o esgoto para a rede de esgoto" },
       { icone: Search, texto: "Viu sinais de risco? Peça vistoria à Defesa Civil" },
       {
         icone: Smartphone,
@@ -108,7 +108,7 @@ export const FASES: readonly { id: IdFase; rotulo: string; blocos: readonly Bloc
     id: "durante",
     rotulo: "Durante",
     blocos: [
-      { icone: House, texto: "Casa em área de risco? Vá para a casa de parentes ou amigos em local seguro" },
+      { icone: House, texto: "Casa em área de risco? Vá já para a casa de parentes ou amigos em local seguro" },
       { icone: DoorOpen, texto: "Viu sinais? Saia já e ligue {N} ou {N}", vars: NUMEROS },
       { icone: Users, texto: "Ajude crianças, idosos e pessoas com dificuldade de locomoção" },
       { icone: Megaphone, texto: "Siga só avisos oficiais e não repasse boatos" },

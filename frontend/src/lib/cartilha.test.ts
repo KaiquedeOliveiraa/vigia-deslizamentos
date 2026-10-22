@@ -15,6 +15,7 @@ describe("mochila de emergência", () => {
     expect(progressoMochila(pt, 8, 8)).toEqual({ pct: 100, contagem: "8 de 8", mensagem: "Mochila pronta!", pronta: true });
     expect(progressoMochila(es, 8, 8).mensagem).toBe("¡Mochila lista!");
     expect(progressoMochila(es, 3, 8).mensagem).toBe("ítems en la mochila");
+    expect(progressoMochila(pt, 11, 11)).toEqual({ pct: 100, contagem: "11 de 11", mensagem: "Mochila pronta!", pronta: true });
   });
 });
 
