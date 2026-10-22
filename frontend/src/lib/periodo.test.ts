@@ -24,6 +24,11 @@ it("o eixo não depende do relógio (22h30 em Brasília já é 22/10 em UTC)", (
 
 it("limites e ajuste do personalizado", () => {
   expect(limitesPersonalizado(D0)).toEqual({ min: "2025-10-21", max: D0 });
+  expect(limitesPersonalizado("2028-02-29")).toEqual({ min: "2027-03-01", max: "2028-02-29" });
+  for (const d0 of ["2028-02-29", "2028-03-10", "2027-03-05"]) {
+    const { min, max } = limitesPersonalizado(d0);
+    expect(eixoDoPeriodo({ tipo: "personalizado", de: min, ate: max }, d0)).toHaveLength(366);
+  }
   expect(ajustarPersonalizado("2025-01-01", "2026-12-31", D0)).toEqual({ de: "2025-10-21", ate: D0, ajustado: true });
   expect(ajustarPersonalizado("2026-10-10", "2026-10-01", D0)).toEqual({ de: "2026-10-01", ate: "2026-10-10", ajustado: true });
   expect(ajustarPersonalizado("2026-10-01", "2026-10-10", D0)).toEqual({ de: "2026-10-01", ate: "2026-10-10", ajustado: false });

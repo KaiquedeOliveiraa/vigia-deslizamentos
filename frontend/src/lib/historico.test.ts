@@ -29,6 +29,8 @@ it("lê arquivo válido e recusa schema, campo, inicio e item inválidos", () =>
   expect(lerHistorico({ ...arq("2026-10-15", [0.1]), schema_version: 2 }).ok).toBe(false);
   expect(lerHistorico({ schema_version: 1, municipios: {} }).ok).toBe(false); // sem fonte
   expect(lerHistorico(arq("15/10/2026", [0.1])).ok).toBe(false);
+  expect(lerHistorico(arq("2026-02-30", [0.1])).ok).toBe(false);
+  expect(lerHistorico({ schema_version: 1, fonte: "f", municipios: [] }).ok).toBe(false);
   expect(lerHistorico(arq("2026-10-15", [Number.NaN])).ok).toBe(false);
   expect(lerHistorico(arq("2026-10-15", ["0.1" as unknown as number])).ok).toBe(false);
 });

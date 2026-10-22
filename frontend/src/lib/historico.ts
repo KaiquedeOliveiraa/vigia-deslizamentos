@@ -1,7 +1,7 @@
 // Histórico longo: historico.json (pipeline) e historico_reconstruido.json (estimativa), combinados com o indices.json.
 import { classe } from "./classes";
 import { erro, type Resultado } from "./dados";
-import { somarDias } from "./periodo";
+import { dataValida, somarDias } from "./periodo";
 import type { HistoricoItem, Municipio } from "./tipos";
 
 const SCHEMA_VERSION = 1;
@@ -11,14 +11,12 @@ export interface ArquivoHistorico {
   municipios: Record<string, { inicio: string; indices: (number | null)[] }>;
 }
 
-const dataValida = (v: unknown): boolean => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v));
-
 /** Campos extras (limiar_mm, mv_h do reconstruído) são aceitos e ignorados. */
 export function lerHistorico(json: unknown): Resultado<ArquivoHistorico> {
   const raiz = json as (Partial<ArquivoHistorico> & { schema_version?: unknown }) | null;
   if (raiz?.schema_version !== SCHEMA_VERSION) return erro(`historico: schema_version desconhecido (${String(raiz?.schema_version)})`);
   if (typeof raiz.fonte !== "string") return erro('historico: falta o campo "fonte"');
-  if (typeof raiz.municipios !== "object" || raiz.municipios === null) return erro('historico: falta o campo "municipios"');
+  if (typeof raiz.municipios !== "object" || raiz.municipios === null || Array.isArray(raiz.municipios)) return erro('historico: falta o campo "municipios"');
   for (const [ibge, m] of Object.entries(raiz.municipios)) {
     if (!dataValida(m?.inicio)) return erro(`historico: inicio inválido em ${ibge}`);
     if (!Array.isArray(m.indices) || m.indices.some((x) => x !== null && !(typeof x === "number" && Number.isFinite(x))))
