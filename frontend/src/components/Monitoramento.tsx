@@ -6,10 +6,9 @@ import { emAlerta, infoClasse, type NumeroClasse } from "../lib/classes";
 import { carregar, estadoMunicipio, lerIndices, type Resultado } from "../lib/dados";
 import { formatarData, formatarIndice, formatarMm, formatarRazao } from "../lib/formato";
 import { mensagemSelecao, valoresDoDia } from "../lib/mapa";
-import { resumo, variaveis, type Variaveis } from "../lib/monitoramento";
+import { resumo, selecaoDaBusca, variaveis, type Variaveis } from "../lib/monitoramento";
 import { MONITORADOS, NOMES } from "../lib/municipios";
 import type { Idioma } from "../lib/preferencias";
-import { municipioDaBusca } from "../lib/simulacao";
 import { rota } from "../lib/telas";
 import { textoCompartilhar } from "../lib/texto";
 import type { Indices } from "../lib/tipos";
@@ -38,7 +37,7 @@ export default function Monitoramento({ lang }: { lang: Idioma }) {
     carregar("indices.json", lerIndices).then((r) => {
       setCarga(r);
       // ?municipio= vem dos links de Áreas de risco ("Ver o índice de {M} em Monitoramento").
-      if (r.ok) setSelecionado(municipioDaBusca(r.dados, location.search));
+      if (r.ok) setSelecionado(selecaoDaBusca(r.dados, location.search, NOMES));
     });
   }, []);
 
@@ -58,6 +57,9 @@ export default function Monitoramento({ lang }: { lang: Idioma }) {
 
   const selecionar = (ibge: string) => {
     setSelecionado(ibge);
+    const q = new URLSearchParams(location.search);
+    q.set("municipio", ibge);
+    history.replaceState(null, "", `${location.pathname}?${q}${location.hash}`);
     anunciar(mensagemSelecao(t, nome(ibge), valores[ibge]));
   };
 

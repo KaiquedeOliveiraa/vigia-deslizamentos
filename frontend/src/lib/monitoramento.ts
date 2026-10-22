@@ -44,3 +44,9 @@ export function variaveis(m: Pick<Municipio, "limiar_mm">, dia: Pick<Dia, "efr_m
   const razao = dia.efr_mm / m.limiar_mm;
   return { efr_mm: dia.efr_mm, limiar_mm: m.limiar_mm, razao, barra: Math.min(100, razao * 100), n_membros: dia.n_membros };
 }
+
+/** `?municipio=<ibge>` se é um município conhecido (com ou sem índice); senão, o inicial. */
+export function selecaoDaBusca(indices: Indices, busca: string, conhecidos: ReadonlyMap<string, string>): string | undefined {
+  const ibge = new URLSearchParams(busca).get("municipio");
+  return ibge && conhecidos.has(ibge) ? ibge : municipioInicial(indices);
+}

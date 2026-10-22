@@ -317,7 +317,7 @@
   color: var(--ink);
 }
 
-.leg-areas h3 {
+.leg-areas .lbl {
   margin: 0 0 6px;
 }
 
@@ -387,7 +387,7 @@
     font-size: 11.5px;
   }
 
-  .leg-areas h3 {
+  .leg-areas .lbl {
     margin-bottom: 4px;
   }
 

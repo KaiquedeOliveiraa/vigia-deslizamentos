@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import exemplo from "../fixtures/indices.exemplo.json";
-import { municipioInicial, resumo, variaveis } from "./monitoramento";
+import { municipioInicial, resumo, selecaoDaBusca, variaveis } from "./monitoramento";
 import type { Indices } from "./tipos";
 
 const indices = exemplo as Indices;
@@ -34,5 +34,16 @@ describe("variaveis", () => {
 
   it("barra limitada a 100 %", () => {
     expect(variaveis({ limiar_mm: 50 }, { efr_mm: 80, n_membros: 20 }).barra).toBe(100);
+  });
+});
+
+describe("selecaoDaBusca", () => {
+  const conhecidos = new Map([["4214805", "Rio do Sul"]]);
+  it("mantém município conhecido, mesmo sem dados", () => {
+    expect(selecaoDaBusca(indices, "?municipio=4214805", conhecidos)).toBe("4214805");
+  });
+  it("desconhecido ou ausente: município inicial", () => {
+    expect(selecaoDaBusca(indices, "?municipio=1", conhecidos)).toBe("4214003");
+    expect(selecaoDaBusca(indices, "", conhecidos)).toBe("4214003");
   });
 });

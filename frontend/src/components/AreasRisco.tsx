@@ -277,9 +277,10 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
                     ))}
                   </ul>
                 </div>
-                {fonte}
               </>
             )}
+            {r.anoMin !== null && <p className="note">{t("Mapeamentos de {N} a {N}", { N: [String(r.anoMin), String(r.anoMax)] })}</p>}
+            {fonte}
             <Ocorrencias t={t} ibge={ibge} nome={M} />
             <a className="btn" href={`${rota("", lang)}?municipio=${ibge}`}>
               {t("Ver o índice de {M} em Monitoramento", { M })}
@@ -365,9 +366,9 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
         camadas={false}
       >
         <div className="float leg-areas" role="group" aria-labelledby="leg-areas-t">
-          <h3 id="leg-areas-t" className="lbl">
+          <p id="leg-areas-t" className="lbl">
             {t("Risco geológico mapeado pelo SGB")}
-          </h3>
+          </p>
           <ul>
             <li>
               <Marca grau="alto" />
@@ -387,6 +388,9 @@ export default function AreasRisco({ lang }: { lang: Idioma }) {
           <button type="button" className="btn inmet" aria-pressed={inmet} onClick={alternarInmet}>
             {t("Estações do INMET")}
           </button>
+          {inmet && !falhaInmet && (
+            <p className="note">{t("Fonte: cadastro de estações automáticas do INMET. A distância é medida até o centro do município mais próximo de cada estação.")}</p>
+          )}
           {falhaInmet && (
             <p className="note" role="alert">
               {t("Não foi possível carregar as estações do INMET.")}

@@ -193,7 +193,7 @@ O pipeline é executado de forma agendada, **a cada 6 horas**, após a disponibi
 |-------|--------------|------------------|
 | **[CPRM / GeoSGB](https://geosgb.cprm.gov.br/)** | Cartas de suscetibilidade a movimentos de massa | Camada informativa de suscetibilidade do terreno. Disponibilizado via WMS/WFS e shapefile — será baixado uma vez, convertido para GeoJSON e versionado, **sem integração automatizada**. |
 | **[Atlas Digital de Desastres](https://atlasdigital.mdr.gov.br/) (MIDR/Sedec, registros do S2iD)** | Histórico de ocorrências ligadas a chuva, 1991–2025 | Gerado por `backend/scripts/gerar_ocorrencias.py` e versionado; atualizar quando o Atlas publicar versão nova. |
-| **Serviço Geológico do Brasil (SGB)** | Setorização de riscos geológicos (setores de movimento de massa) | Gerado por `backend/scripts/gerar_setores_risco.py` e versionado; atualizar quando o SGB publicar mapeamento novo. |
+| **[Serviço Geológico do Brasil (SGB)](https://geoportal.sgb.gov.br/)** | Setorização de riscos geológicos (setores de movimento de massa) | Gerado por `backend/scripts/gerar_setores_risco.py` e versionado; atualizar quando o SGB publicar mapeamento novo. |
 
 ### Fontes fora do escopo do projeto
 
