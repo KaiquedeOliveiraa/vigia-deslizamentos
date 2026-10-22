@@ -16,7 +16,7 @@ export function estadoDoPainel(
 
 /** Nome acessível do município no mapa desta tela: nome e número de setores, sem índice. */
 export function rotuloSetoresMunicipio(t: T, M: string, n: number): string {
-  if (n === 0) return t("{M}: nenhum setor mapeado pelo SGB", { M });
+  if (n === 0) return t("{M}: nenhum setor de deslizamento mapeado pelo SGB", { M });
   if (n === 1) return t("{M}: 1 setor de risco geológico", { M });
   return t("{M}: {N} setores de risco geológico", { M, N: String(n) });
 }
