@@ -2,8 +2,8 @@
   {
     "ibge": "4200200",
     "nome": "Agrolândia",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.4541, "lon": -49.8242}],
     "microrregiao": {"codigo": "42014", "nome": "Ituporanga"}
@@ -11,8 +11,8 @@
   {
     "ibge": "4200309",
     "nome": "Agronômica",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.326, "lon": -49.7202}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -20,8 +20,8 @@
   {
     "ibge": "4201802",
     "nome": "Atalanta",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.4366, "lon": -49.7419}],
     "microrregiao": {"codigo": "42014", "nome": "Ituporanga"}
@@ -29,8 +29,8 @@
   {
     "ibge": "4201901",
     "nome": "Aurora",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.3287, "lon": -49.5899}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -38,8 +38,8 @@
   {
     "ibge": "4202859",
     "nome": "Braço do Trombudo",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.3677, "lon": -49.9028}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -47,8 +47,8 @@
   {
     "ibge": "4204194",
     "nome": "Chapadão do Lageado",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.5821, "lon": -49.5559}],
     "microrregiao": {"codigo": "42014", "nome": "Ituporanga"}
@@ -56,8 +56,8 @@
   {
     "ibge": "4205100",
     "nome": "Dona Emma",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -26.9887, "lon": -49.7781}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -65,8 +65,8 @@
   {
     "ibge": "4206900",
     "nome": "Ibirama",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.0181, "lon": -49.5286}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -74,8 +74,8 @@
   {
     "ibge": "4207403",
     "nome": "Imbuia",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.5024, "lon": -49.4062}],
     "microrregiao": {"codigo": "42014", "nome": "Ituporanga"}
@@ -83,8 +83,8 @@
   {
     "ibge": "4208500",
     "nome": "Ituporanga",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.4526, "lon": -49.539}],
     "microrregiao": {"codigo": "42014", "nome": "Ituporanga"}
@@ -92,8 +92,8 @@
   {
     "ibge": "4209151",
     "nome": "José Boiteux",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -26.8595, "lon": -49.6463}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -101,8 +101,8 @@
   {
     "ibge": "4209508",
     "nome": "Laurentino",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.2067, "lon": -49.733}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -110,8 +110,8 @@
   {
     "ibge": "4209904",
     "nome": "Lontras",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.1888, "lon": -49.5071}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -119,8 +119,8 @@
   {
     "ibge": "4210852",
     "nome": "Mirim Doce",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.1856, "lon": -50.1735}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -128,8 +128,8 @@
   {
     "ibge": "4212700",
     "nome": "Petrolândia",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.5451, "lon": -49.6824}],
     "microrregiao": {"codigo": "42014", "nome": "Ituporanga"}
@@ -137,8 +137,8 @@
   {
     "ibge": "4213708",
     "nome": "Pouso Redondo",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.2861, "lon": -49.977}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -146,8 +146,8 @@
   {
     "ibge": "4214003",
     "nome": "Presidente Getúlio",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.0626, "lon": -49.7144}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -155,8 +155,8 @@
   {
     "ibge": "4214102",
     "nome": "Presidente Nereu",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.2676, "lon": -49.3547}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -164,8 +164,8 @@
   {
     "ibge": "4214508",
     "nome": "Rio do Campo",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -26.8923, "lon": -50.1315}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -173,8 +173,8 @@
   {
     "ibge": "4214607",
     "nome": "Rio do Oeste",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.1583, "lon": -49.8407}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -182,8 +182,8 @@
   {
     "ibge": "4214805",
     "nome": "Rio do Sul",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.1951, "lon": -49.6293}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -191,8 +191,8 @@
   {
     "ibge": "4215307",
     "nome": "Salete",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -26.9691, "lon": -50.0102}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -200,8 +200,8 @@
   {
     "ibge": "4217808",
     "nome": "Taió",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.0783, "lon": -50.0921}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -209,8 +209,8 @@
   {
     "ibge": "4218608",
     "nome": "Trombudo Central",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.3112, "lon": -49.8105}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -218,8 +218,8 @@
   {
     "ibge": "4219200",
     "nome": "Vidal Ramos",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -27.3891, "lon": -49.3491}],
     "microrregiao": {"codigo": "42014", "nome": "Ituporanga"}
@@ -227,8 +227,8 @@
   {
     "ibge": "4219358",
     "nome": "Vitor Meireles",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -26.8264, "lon": -49.8452}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
@@ -236,8 +236,8 @@
   {
     "ibge": "4219408",
     "nome": "Witmarsum",
-    "limiar_mm": 150,
-    "fonte_limiar": "VIGIA, limiar provisório definido pela equipe (abaixo do hipotético de 250 mm do GeoRisk)",
+    "limiar_mm": 100,
+    "fonte_limiar": "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)",
     "mv_h": 24,
     "pontos": [{"lat": -26.9373, "lon": -49.8417}],
     "microrregiao": {"codigo": "42011", "nome": "Rio do Sul"}
