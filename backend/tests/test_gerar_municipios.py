@@ -11,6 +11,7 @@ import pytest
 from scripts.gerar_municipios import (
     COMMIT_MALHA,
     FONTE_LIMIAR_PROVISORIA,
+    LIMIAR_PROVISORIO_MM,
     centroide,
     chave_de_ordem,
     dentro,
@@ -90,7 +91,7 @@ def test_mescla_preserva_o_atual_e_acrescenta_o_novo():
     assert lontras == {
         "ibge": "4209003",
         "nome": "Lontras",
-        "limiar_mm": 150,
+        "limiar_mm": LIMIAR_PROVISORIO_MM,
         "fonte_limiar": FONTE_LIMIAR_PROVISORIA,
         "mv_h": 24,
         "pontos": [{"lat": -27.0, "lon": -49.5}],
@@ -150,7 +151,7 @@ def test_arquivo_versionado_tem_os_27_e_os_6_atuais_intactos():
         assert {k: v for k, v in por_ibge[ibge].items() if k != "microrregiao"} == {
             "ibge": ibge,
             "nome": nome,
-            "limiar_mm": 150,
+            "limiar_mm": LIMIAR_PROVISORIO_MM,
             "fonte_limiar": FONTE_LIMIAR_PROVISORIA,
             "mv_h": 24,
             "pontos": [{"lat": lat, "lon": lon}],

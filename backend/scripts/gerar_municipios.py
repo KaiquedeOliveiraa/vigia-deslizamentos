@@ -36,10 +36,10 @@ COMMIT_MALHA = "c39dfb040bfd466fe2a476bafed00749c5c42f16"
 URL_MALHA = f"https://raw.githubusercontent.com/tbrugz/geodata-br/{COMMIT_MALHA}/geojson/geojs-42-mun.json"
 
 FONTE_LIMIAR_PROVISORIA = (
-    "VIGIA, limiar provisório definido pela equipe "
-    "(abaixo do hipotético de 250 mm do GeoRisk)"
+    "VIGIA, limiar provisório de 100 mm definido pela equipe com base nos critérios "
+    "de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h)"
 )
-LIMIAR_PROVISORIO_MM = 150
+LIMIAR_PROVISORIO_MM = 100
 MV_H = 24
 TIMEOUT_S = 30
 
