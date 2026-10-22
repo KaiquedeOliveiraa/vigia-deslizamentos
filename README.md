@@ -162,6 +162,7 @@ Conforme o manual, essas probabilidades são **informação secundária** — o 
 - **A resolução da previsão meteorológica é maior que os municípios.** Os modelos globais operam em grades de aproximadamente 25 km — maior que a área de vários dos municípios atendidos. A previsão de chuva praticamente não varia dentro de um mesmo município, o que impede diferenciação intramunicipal a partir de dados de chuva.
 - **O sistema tem melhor desempenho para deslizamentos do tipo translacional raso**, conforme o manual.
 - **Horários em UTC.** O conceito de "dia-alvo" da metodologia é ancorado em UTC; a conversão para o horário de Brasília (UTC-3) precisa ser tratada explicitamente no cálculo e na exibição.
+- **Os dias anteriores ao início do sistema são estimativa.** Na tela Dados, os dias de 15/10/2025 a 14/10/2026 são reconstruídos com a chuva de reanálise ERA5 (Open-Meteo) e os parâmetros atuais, sem ensemble. O índice publicado na época não existe para esses dias, e a reconstrução não é dado oficial. A reanálise suaviza chuvas fortes e localizadas, então tende a subestimar picos, justamente os dias de alerta.
 
 ## Funcionamento
 
@@ -184,6 +185,7 @@ O pipeline é executado de forma agendada, **a cada 6 horas**, após a disponibi
 | Fonte | Tipo de dado | Papel no sistema |
 |-------|--------------|------------------|
 | **[Open-Meteo](https://open-meteo.com/)** | Previsão de precipitação e histórico horário | Fonte principal de previsão (`Rtotal`) e de chuva observada para compor a chuva efetiva antecedente. API REST gratuita, sem chave para uso não comercial. |
+| **[Open-Meteo](https://open-meteo.com/) — arquivo histórico (ERA5)** | Chuva horária de reanálise (ERA5) | Reconstrução dos dias anteriores ao início do sistema na tela Dados (`historico_reconstruido.json`), sempre marcada como estimativa. Consultado por script, sem entrar no cálculo do índice. |
 | **[INMET](https://portal.inmet.gov.br/)** — API de estações | Precipitação horária e diária por estação automática | Fonte de observação para comparação e validação da chuva antecedente na região. |
 | **[IBGE — Localidades e Malhas](https://servicodados.ibge.gov.br/api/docs/localidades)** | Código, limites municipais e hierarquia geográfica | Identificação dos municípios e polígonos em GeoJSON para o mapa. Consumido uma vez e versionado no repositório. |
 
@@ -308,7 +310,7 @@ O VIGIA atende a **população** dos 27 municípios e as **coordenadorias munici
 |---|---|---|
 | Monitoramento | `/` | Mapa colorido pela classe de risco, resumo "N de 6 em alerta", previsões D0–D3, busca, legenda e painel do município |
 | Simulação | `/simulacao` | Município, período e chuva informada; o mapa recolore e compara a situação atual com a simulada |
-| Dados da análise | `/dados` | Indicadores, evolução do índice em 7 dias, chuva acumulada e tabela por município |
+| Dados da análise | `/dados` | Indicadores, evolução do índice em 7 dias (padrão), 30 dias ou um período personalizado de até 1 ano, chuva acumulada e tabela por município (minigráfico dos últimos 7 dias) |
 | Monitoramento SC | `/monitoramento-sc` | Mapa oficial da Defesa Civil de SC incorporado, com link para o site |
 | Áreas de risco | `/areas-de-risco` | Setores de risco geológico do SGB e ocorrências por município; estações do INMET como camada opcional |
 | Cartilha | `/cartilha` | Sinais de perigo, o que fazer antes/durante/depois, mochila de emergência, "não faça" |
