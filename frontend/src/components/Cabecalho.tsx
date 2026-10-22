@@ -2,7 +2,7 @@ import { Globe, PersonStanding, TriangleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 import { atributoLang, tradutor } from "../i18n";
 import { carregar, desatualizado, lerIndices, type Resultado } from "../lib/dados";
-import { formatarData, formatarDataHora, formatarHora } from "../lib/formato";
+import { formatarData, formatarDataHora } from "../lib/formato";
 import { lerPreferencias, salvarPreferencias, type Idioma } from "../lib/preferencias";
 import { rota, rotaComEstado } from "../lib/telas";
 import type { Indices } from "../lib/tipos";
@@ -23,7 +23,7 @@ const IDIOMAS: [Idioma, string, string][] = [
 
 const REAVALIAR_MS = 60_000;
 
-/** Marca, região, Telegram, idioma, acessibilidade e o carimbo dia-alvo/atualização (RN11, RN12). */
+/** Marca, região, Telegram, idioma, acessibilidade e o carimbo dia-alvo (RN11, RN12). */
 export default function Cabecalho({ lang, tela }: Props) {
   const t = tradutor(lang);
   const [telegram, setTelegram] = useState(false);
@@ -94,9 +94,7 @@ export default function Cabecalho({ lang, tela }: Props) {
           {indices?.ok && (
             <>
               <span className="dot" aria-hidden="true" />
-              {t("dia-alvo {N} · atualizado {N}", {
-                N: [formatarData(indices.dados.dia_alvo_d0), formatarHora(indices.dados.gerado_em)],
-              })}
+              {t("dia-alvo {N}", { N: formatarData(indices.dados.dia_alvo_d0) })}
             </>
           )}
           {indices && !indices.ok && (
