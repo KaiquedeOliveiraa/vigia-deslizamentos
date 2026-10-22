@@ -32,6 +32,7 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 - ⚪ **Contatos:** o endereço de Ibirama foi corrigido (o antigo era de uma escola) e segue com `verificado: true` em `frontend/public/data/contatos.json`. Presidente Getúlio também passou a `verificado: true` com o telefone (47) 99754-0438, confirmado pelo time; faltam e-mail e endereço. Os outros quatro municípios têm dados preliminares, tirados de fontes oficiais, com `verificado: false`: falta confirmar por telefone com cada prefeitura (RN09), completar os campos `null` e trocar para `true`.
 - ⚪ **Atualizar ocorrências:** quando o Atlas publicar uma versão nova, trocar URL_ATLAS e rodar o gerar_ocorrencias.
+- ⚪ **Atualizar setores do SGB:** quando o SGB publicar mapeamento novo na região, rodar `gerar_setores_risco`.
 - ⚪ **README:** completar a citação da RADIAN ("autoria e ano a completar"); o repositório da UFSC exige VPN.
 - ~~⚪ **Fixture de exemplo**~~ **Resolvida:** `indices.exemplo.json` usa o limiar de 150 mm e a fonte nova, com índice e classe recalculados.
 

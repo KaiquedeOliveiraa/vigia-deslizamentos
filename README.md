@@ -193,6 +193,7 @@ O pipeline é executado de forma agendada, **a cada 6 horas**, após a disponibi
 |-------|--------------|------------------|
 | **[CPRM / GeoSGB](https://geosgb.cprm.gov.br/)** | Cartas de suscetibilidade a movimentos de massa | Camada informativa de suscetibilidade do terreno. Disponibilizado via WMS/WFS e shapefile — será baixado uma vez, convertido para GeoJSON e versionado, **sem integração automatizada**. |
 | **[Atlas Digital de Desastres](https://atlasdigital.mdr.gov.br/) (MIDR/Sedec, registros do S2iD)** | Histórico de ocorrências ligadas a chuva, 1991–2025 | Gerado por `backend/scripts/gerar_ocorrencias.py` e versionado; atualizar quando o Atlas publicar versão nova. |
+| **Serviço Geológico do Brasil (SGB)** | Setorização de riscos geológicos (setores de movimento de massa) | Gerado por `backend/scripts/gerar_setores_risco.py` e versionado; atualizar quando o SGB publicar mapeamento novo. |
 
 ### Fontes fora do escopo do projeto
 
@@ -238,7 +239,7 @@ A RADIAN divide um sistema de apoio à decisão para desastres naturais em duas 
 
 | Bloco RADIAN | No VIGIA |
 |---|---|
-| Sistema de Interface do Usuário | 7 telas, idiomas PT/ES, acessibilidade e contatos de emergência |
+| Sistema de Interface do Usuário | 7 telas, idiomas PT/ES/EN, acessibilidade e contatos de emergência |
 | Sistemas Cognitivos — Análise e Tomada de Decisão | Mapa de risco, painel do município, previsões D0–D3, simulação, dados da análise e cartilha (FAQ) |
 | Sistemas Cognitivos — Supervisão da Execução de Decisões | Geração e envio de alertas pelo Telegram |
 | Sistemas de Gerenciamento de Dados e Conhecimento | Banco SQLite (índices calculados e inscritos do bot), malhas IBGE e estações |
@@ -309,11 +310,11 @@ O VIGIA atende a **população** dos 27 municípios e as **coordenadorias munici
 | Simulação | `/simulacao` | Município, período e chuva informada; o mapa recolore e compara a situação atual com a simulada |
 | Dados da análise | `/dados` | Indicadores, evolução do índice em 7 dias, chuva acumulada e tabela por município |
 | Monitoramento SC | `/monitoramento-sc` | Mapa oficial da Defesa Civil de SC incorporado, com link para o site |
-| Estações | `/estacoes` | Localização das estações de monitoramento |
+| Áreas de risco | `/areas-de-risco` | Setores de risco geológico do SGB e ocorrências por município; estações do INMET como camada opcional |
 | Cartilha | `/cartilha` | Sinais de perigo, o que fazer antes/durante/depois, mochila de emergência, "não faça" |
 | Contatos | `/contatos` | Números de emergência e Defesa Civil de cada município |
 
-Em todas as telas: menu, seletor PT/ES, acessibilidade e "Alertas no Telegram".
+Em todas as telas: menu, seletor PT/ES/EN, acessibilidade e "Alertas no Telegram".
 
 ### Requisitos funcionais
 
@@ -326,11 +327,11 @@ Em todas as telas: menu, seletor PT/ES, acessibilidade e "Alertas no Telegram".
 **Simulação e análise**
 - **RF05** — Simular o índice a partir de município, período (24/48/72 h) e chuva em mm, para um município ou para toda a região, comparando a situação atual com a simulada.
 - **RF06** — Exibir a evolução do índice, a chuva acumulada (24–96 h) comparada ao limiar e uma tabela com a tendência de cada município.
-- **RF07** — Exibir probabilidades complementares, fontes e dados brutos com data da coleta, histórico de ocorrências e, se viável, a camada de suscetibilidade do CPRM (ainda sem tela no protótipo).
+- **RF07** — Exibir probabilidades complementares, fontes e dados brutos com data da coleta, e, se viável, a camada de suscetibilidade do CPRM (ainda sem tela no protótipo). O histórico de ocorrências fica em Áreas de risco.
 
 **Informação à população**
 - **RF08** — Incorporar o mapa oficial da Defesa Civil de SC; se o site bloquear, mostrar só o link.
-- **RF09** — Mostrar a localização das estações de monitoramento, com tipo, município e fonte.
+- **RF09** — Mostrar a localização das estações de monitoramento do INMET, com tipo, município e fonte, como camada opcional em Áreas de risco.
 - **RF10** — Apresentar a cartilha de autoproteção e os contatos de emergência e das Defesas Civis municipais.
 
 **Alertas e preferências**
@@ -375,7 +376,7 @@ Em todas as telas: menu, seletor PT/ES, acessibilidade e "Alertas no Telegram".
 - **Hospedagem do frontend:** GitHub Pages
 - **Hospedagem do backend:** GitHub Actions (pipeline) e Cloudflare Workers (bot)
 - **Arquitetura de referência:** RADIAN
-- **Idiomas:** Português e Espanhol
+- **Idiomas:** Português, Espanhol e Inglês
 - **Acessibilidade:** verificação com axe-core antes de cada publicação
 
 > **Sobre a escolha do backend:** o GitHub Pages serve apenas conteúdo estático, e o bot com inscrição por usuário exige um banco de inscritos e algo que responda ao Telegram a qualquer hora. A solução sem servidor próprio é o Worker, que responde por webhook e guarda os inscritos no D1, e o Actions, que roda o pipeline por agendamento. Python foi escolhido por concentrar as bibliotecas adequadas ao tipo de processamento da metodologia (séries horárias, decaimento exponencial, agregação de ensemble) e por ter a biblioteca de bot mais madura para o caso de uso.
