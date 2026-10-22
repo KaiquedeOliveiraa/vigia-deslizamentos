@@ -151,6 +151,9 @@ def publicar(
                 caminho,
             )
             sha = _ler_sha(config, http, caminho)
+            if sha == sha_do_blob(conteudo):
+                _log.info("publicação de %s: sem mudança", caminho)
+                return True
             status = _enviar(conteudo, config, http, sha, caminho)
 
         if status not in STATUS_DE_SUCESSO:

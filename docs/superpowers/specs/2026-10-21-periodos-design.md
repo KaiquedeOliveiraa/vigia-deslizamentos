@@ -18,7 +18,7 @@ A tela Dados deixa de oferecer 5 / 7 / 15 dias e passa a oferecer **7 dias** (pa
 
 O índice publicado é a média ponderada de várias rodadas de **previsão** para o dia-alvo. O reconstruído usa uma única série de chuva de **reanálise** (ERA5, grade de ~31 km) no lugar da previsão — é uma estimativa retroativa, sem ensemble e não validada. A reanálise suaviza chuvas intensas e localizadas, então **tende a subestimar picos**, justamente os dias de alerta. Por isso:
 
-- texto da nota na tela, sempre que o eixo tiver dia reconstruído: "Dias antes de {D}: estimativa reconstruída com chuva de reanálise (ERA5, Open-Meteo) e os parâmetros atuais, sem ensemble. A reanálise suaviza chuvas fortes e localizadas e tende a subestimar picos. Não é o que o sistema publicou na época nem dado oficial." (`{D}` = primeiro dia real, 15/10/2026);
+- texto da nota na tela, sempre que o eixo tiver dia reconstruído: "Dias antes de {D}: estimativa reconstruída com chuva de reanálise (ERA5, Open-Meteo) e os parâmetros atuais, sem ensemble. A reanálise suaviza chuvas fortes e localizadas e tende a subestimar picos. Não é o que o sistema publicou na época nem dado oficial. Dias de alerta podem não aparecer." (`{D}` = primeiro dia real, 15/10/2026);
 - a mesma ressalva, curta ("estimativa reconstruída, tende a subestimar picos"), na dica do dia em foco e na tabela para leitor de tela;
 - a ressalva entra também em `docs/contratos-de-dados.md` e em "Limitações conhecidas" do README.
 

@@ -16,9 +16,9 @@ import {
   formatarVariacao,
 } from "../lib/formato";
 import { diasComDadosDe, diasEixo, etiquetaChuva, indicadores, serieMunicipio, variacoesDiarias } from "../lib/graficos";
-import { combinarHistorico, lerHistorico, primeiroDiaReal, type ArquivoHistorico } from "../lib/historico";
+import { avisoHistorico, combinarHistorico, lerHistorico, primeiroDiaReal, type ArquivoHistorico } from "../lib/historico";
 import { municipioInicial, variaveis } from "../lib/monitoramento";
-import { ajustarPersonalizado, eixoDoPeriodo, escreverPeriodo, lerPeriodo, limitesPersonalizado, somarDias, type Periodo } from "../lib/periodo";
+import { ajustarPersonalizado, dataValida, eixoDoPeriodo, escreverPeriodo, lerPeriodo, limitesPersonalizado, somarDias, type Periodo } from "../lib/periodo";
 import type { Idioma } from "../lib/preferencias";
 import { rota } from "../lib/telas";
 import { tendencia } from "../lib/texto";
@@ -84,10 +84,20 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
   const escolherPersonalizado = () => {
     if (periodo.tipo !== "personalizado") mudar({ tipo: "personalizado", de: somarDias(dia0, -29), ate: dia0 });
   };
-  const mudarData = (campo: "de" | "ate", valor: string) => {
+  // Rascunho: digitar "0002-..." passa por anos intermediários; só aplica data completa dentro dos limites, ou ao sair do campo.
+  const [rascunho, setRascunho] = useState<{ de?: string; ate?: string }>({});
+  const aplicarData = (campo: "de" | "ate", valor: string) => {
+    setRascunho({});
     if (periodo.tipo !== "personalizado") return;
-    const aj = ajustarPersonalizado(campo === "de" ? valor : periodo.de, campo === "ate" ? valor : periodo.ate, dia0);
+    // De passar de Até (ou o contrário): o outro campo acompanha.
+    const de = campo === "de" ? valor : periodo.de;
+    const ate = campo === "ate" ? valor : periodo.ate;
+    const aj = ajustarPersonalizado(campo === "ate" && ate < de ? ate : de, campo === "de" && de > ate ? de : ate, dia0);
     if (aj) mudar({ tipo: "personalizado", de: aj.de, ate: aj.ate });
+  };
+  const digitarData = (campo: "de" | "ate", valor: string, min: string, max: string) => {
+    if (dataValida(valor) && valor >= min && valor <= max) aplicarData(campo, valor);
+    else setRascunho((r) => ({ ...r, [campo]: valor }));
   };
 
   const titulo = t("Como a região chegou até aqui");
@@ -109,20 +119,19 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
   const personalizado = periodo.tipo === "personalizado" ? periodo : null;
   const k = indicadores(indices);
 
-  // Um só aviso: falha de arquivo só importa se o eixo passa do histórico do indices.json.
+  // Um só aviso, só com lacuna real; falha de arquivo importa se o eixo passa do histórico do indices.json.
   const primeiroDia = indices.municipios.find((m) => m.ibge === destaque?.ibge)?.historico[0]?.dia_alvo ?? dia0;
-  // O período de 7 dias não precisa dos arquivos longos: nunca avisa de falha deles.
-  const alemDoIndices = periodo.tipo !== 7 && eixo[0] < primeiroDia;
-  const carregando = real === undefined || rec === undefined;
-  let aviso: string | null = null;
-  if (destaque && !(carregando && alemDoIndices)) {
-    if (alemDoIndices && (real?.ok === false || rec?.ok === false)) aviso = t("Parte do histórico não carregou; esses dias aparecem vazios.");
-    else if (comHistorico < eixo.length)
-      aviso =
-        comHistorico === 1
+  const av = destaque
+    ? avisoHistorico({ tipo: periodo.tipo, inicioEixo: eixo[0], primeiroDia, carregando: real === undefined || rec === undefined, falhou: real?.ok === false || rec?.ok === false, com: comHistorico, total: eixo.length })
+    : null;
+  const aviso =
+    av?.tipo === "falha"
+      ? t("Parte do histórico não carregou; esses dias aparecem vazios.")
+      : av && destaque
+        ? av.n === 1
           ? t("Por enquanto há histórico de 1 dia para {M}; os demais aparecem vazios.", { M: destaque.nome })
-          : t("Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.", { N: String(comHistorico), M: destaque.nome });
-  }
+          : t("Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.", { N: String(av.n), M: destaque.nome })
+        : null;
 
   const selecionar = (novo: string) => {
     setIbge(novo);
@@ -163,11 +172,27 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
             <div className="datas">
               <label>
                 {t("De")}
-                <input type="date" value={personalizado.de} min={limites.min} max={personalizado.ate} onChange={(e) => mudarData("de", e.target.value)} />
+                <input
+                  type="date"
+                  value={rascunho.de ?? personalizado.de}
+                  min={limites.min}
+                  max={personalizado.ate}
+                  onChange={(e) => digitarData("de", e.target.value, limites.min, personalizado.ate)}
+                  onBlur={(e) => rascunho.de !== undefined && aplicarData("de", e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && aplicarData("de", e.currentTarget.value)}
+                />
               </label>
               <label>
                 {t("Até")}
-                <input type="date" value={personalizado.ate} min={personalizado.de} max={limites.max} onChange={(e) => mudarData("ate", e.target.value)} />
+                <input
+                  type="date"
+                  value={rascunho.ate ?? personalizado.ate}
+                  min={personalizado.de}
+                  max={limites.max}
+                  onChange={(e) => digitarData("ate", e.target.value, personalizado.de, limites.max)}
+                  onBlur={(e) => rascunho.ate !== undefined && aplicarData("ate", e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && aplicarData("ate", e.currentTarget.value)}
+                />
               </label>
             </div>
           )}
@@ -231,7 +256,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
                 )}
               </div>
               <Evolucao t={t} municipios={municipios} destaque={destaque} eixo={eixo} inicioReal={inicioReal} lang={lang} aoSelecionar={selecionar} />
-              {temReconstruido && <p className="sub">{t("Dias antes de {N}: estimativa reconstruída com chuva de reanálise (ERA5, Open-Meteo) e os parâmetros atuais, sem ensemble. A reanálise suaviza chuvas fortes e localizadas e tende a subestimar picos. Não é o que o sistema publicou na época nem dado oficial.", { N: formatarData(inicioReal ?? dia0) })}</p>}
+              {temReconstruido && <p className="sub">{t("Dias antes de {N}: estimativa reconstruída com chuva de reanálise (ERA5, Open-Meteo) e os parâmetros atuais, sem ensemble. A reanálise suaviza chuvas fortes e localizadas e tende a subestimar picos. Não é o que o sistema publicou na época nem dado oficial. Dias de alerta podem não aparecer.", { N: formatarData(inicioReal ?? dia0) })}</p>}
               {semDados.length > 0 && (
                 <p className="sub">{t("Sem dados nesta execução: {M}.", { M: semDados.map((m) => m.nome).join(", ") })}</p>
               )}

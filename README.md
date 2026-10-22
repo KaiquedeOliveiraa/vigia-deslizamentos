@@ -162,7 +162,7 @@ Conforme o manual, essas probabilidades são **informação secundária** — o 
 - **A resolução da previsão meteorológica é maior que os municípios.** Os modelos globais operam em grades de aproximadamente 25 km — maior que a área de vários dos municípios atendidos. A previsão de chuva praticamente não varia dentro de um mesmo município, o que impede diferenciação intramunicipal a partir de dados de chuva.
 - **O sistema tem melhor desempenho para deslizamentos do tipo translacional raso**, conforme o manual.
 - **Horários em UTC.** O conceito de "dia-alvo" da metodologia é ancorado em UTC; a conversão para o horário de Brasília (UTC-3) precisa ser tratada explicitamente no cálculo e na exibição.
-- **Os dias anteriores ao início do sistema são estimativa.** Na tela Dados, os dias de 15/10/2025 a 14/10/2026 são reconstruídos com a chuva de reanálise ERA5 (Open-Meteo) e os parâmetros atuais, sem ensemble. O índice publicado na época não existe para esses dias, e a reconstrução não é dado oficial. A reanálise suaviza chuvas fortes e localizadas, então tende a subestimar picos, justamente os dias de alerta.
+- **Os dias anteriores ao início do sistema são estimativa.** Na tela Dados, os dias de 15/10/2025 a 14/10/2026 são reconstruídos com a chuva de reanálise ERA5 (Open-Meteo) e os parâmetros atuais, sem ensemble. O índice publicado na época não existe para esses dias, e a reconstrução não é dado oficial. A reanálise suaviza chuvas fortes e localizadas, então tende a subestimar picos, justamente os dias de alerta. Dias de alerta podem não aparecer.
 
 ## Funcionamento
 

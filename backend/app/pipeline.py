@@ -250,7 +250,7 @@ def executar_pipeline(
     # invariante é daqui: entre a gravação e a decisão dos avisos, uma exceção
     # custaria o aviso de um município em alerta pelas próximas 6 h, em
     # silêncio. A guarda torna a invariante estrutural.
-    # Primeiro o histórico: a última publicação dispara o deploy que já leva os dois.
+    # Cada PUT é um commit (e um deploy): publicar o histórico primeiro faz o último deploy levar os dois.
     try:
         _publicar_historico(resultado, municipios, conexao, config, http, publicar)
     except Exception:  # noqa: BLE001 — histórico nunca impede o índice nem os avisos

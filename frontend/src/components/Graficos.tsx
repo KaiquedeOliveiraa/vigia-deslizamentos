@@ -54,7 +54,9 @@ interface PropsEvolucao {
  * Linha-guia com o valor do destaque e da faixa no dia apontado (mouse, ou ←/→ com o gráfico em foco). */
 export function Evolucao({ t, municipios, destaque, eixo, inicioReal, lang, aoSelecionar }: PropsEvolucao) {
   const painel = useRef<HTMLDivElement>(null);
-  const [foco, setFoco] = useState<number | null>(null);
+  const [focoBruto, setFoco] = useState<number | null>(null);
+  // O eixo pode encolher (troca de período) com o foco ainda no índice antigo.
+  const foco = focoBruto !== null && focoBruto < eixo.length ? focoBruto : null;
   const { ibge } = destaque;
   const { esq, dir, largura, altura, topo, base } = AREA;
   const util = altura - topo - base;
@@ -152,6 +154,10 @@ export function Evolucao({ t, municipios, destaque, eixo, inicioReal, lang, aoSe
           {faixas.map((f) => (
             <rect key={f.numero} className="band" x={esq} width={largura - esq - dir} y={y(f.ate)} height={y(f.de) - y(f.ate)} style={{ fill: `var(--c${f.numero})` }} />
           ))}
+          {recs.map(([a, b]) => {
+            const x0 = Math.max(esq, xs[a] - meio);
+            return <rect key={a} className="rec" x={x0} width={Math.min(largura - dir, xs[b] + meio) - x0} y={topo} height={util} />;
+          })}
           {marcasEvolucao(max).map((v) => (
             <g key={v}>
               <line className="grid" x1={esq} x2={largura - dir} y1={y(v)} y2={y(v)} />
@@ -164,10 +170,6 @@ export function Evolucao({ t, municipios, destaque, eixo, inicioReal, lang, aoSe
           <text className="alertal" x={largura - dir - 4} y={y(LIMIAR_ALERTA) - 6} textAnchor="end">
             {t("ALERTA {N}", { N: formatarIndice(LIMIAR_ALERTA) })}
           </text>
-          {recs.map(([a, b]) => {
-            const x0 = Math.max(esq, xs[a] - meio);
-            return <rect key={a} className="rec" x={x0} width={Math.min(largura - dir, xs[b] + meio) - x0} y={topo} height={util} />;
-          })}
           {iInicio >= 0 && (
             <>
               <line className="inicio" x1={xInicio} x2={xInicio} y1={topo} y2={y(0)} />

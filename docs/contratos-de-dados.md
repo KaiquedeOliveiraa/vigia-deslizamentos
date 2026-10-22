@@ -99,7 +99,7 @@ Vem de `banco.historico(..., dias=365)`: último cálculo de cada dia-alvo, no `
 
 Um teste falha se `limiar_mm`/`mv_h` divergirem de `config/municipios.json`: trocar o limiar exige regerar o arquivo (evita salto falso em 15/10).
 
-**O que a reconstrução é.** O índice publicado é a média ponderada de várias rodadas de **previsão** para o dia-alvo. O reconstruído usa uma única série de chuva de **reanálise** (ERA5, grade de ~31 km, Open-Meteo arquivo histórico) no lugar da previsão: é uma estimativa retroativa, sem ensemble e não validada. A reanálise suaviza chuvas intensas e localizadas, então **tende a subestimar picos**, justamente os dias de alerta. Não é o que o sistema publicou na época nem dado oficial.
+**O que a reconstrução é.** O índice publicado é a média ponderada de várias rodadas de **previsão** para o dia-alvo. O reconstruído usa uma única série de chuva de **reanálise** (ERA5, grade de ~31 km, Open-Meteo arquivo histórico) no lugar da previsão: é uma estimativa retroativa, sem ensemble e não validada. A reanálise suaviza chuvas intensas e localizadas, então **tende a subestimar picos**, justamente os dias de alerta. Não é o que o sistema publicou na época nem dado oficial. Dias de alerta podem não aparecer.
 
 **Como regerar** (precisa de rede, ~25 s, uma única requisição sem retentativa), a partir de `backend/`:
 

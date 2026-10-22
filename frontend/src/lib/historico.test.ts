@@ -1,6 +1,6 @@
-import { expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { classe } from "./classes";
-import { combinarHistorico, lerHistorico, primeiroDiaReal, type ArquivoHistorico } from "./historico";
+import { avisoHistorico, combinarHistorico, lerHistorico, primeiroDiaReal, type ArquivoHistorico } from "./historico";
 import type { Municipio } from "./tipos";
 
 const arq = (inicio: string, indices: (number | null)[]) => ({ schema_version: 1, fonte: "f", municipios: { "4214805": { inicio, indices } } });
@@ -57,4 +57,13 @@ it("ignora valores nulos e municípios ausentes", () => {
 it("primeiroDiaReal é o dia seguinte ao último reconstruído", () => {
   expect(primeiroDiaReal(lerOk(arq("2026-10-12", [0.1, 0.2, 0.3])))).toBe("2026-10-15");
   expect(primeiroDiaReal(undefined)).toBeNull();
+});
+
+describe("avisoHistorico", () => {
+  const base = { tipo: 30 as const, inicioEixo: "2026-09-01", primeiroDia: "2026-10-15", carregando: false, falhou: true, com: 50, total: 50 };
+  it("sem lacuna não avisa, mesmo com arquivo que falhou", () => expect(avisoHistorico(base)).toBeNull());
+  it("lacuna real com falha no 30 dias: texto de falha", () => expect(avisoHistorico({ ...base, com: 10 })).toEqual({ tipo: "falha" }));
+  it("lacuna sem falha: texto de histórico curto", () => expect(avisoHistorico({ ...base, com: 10, falhou: false })).toEqual({ tipo: "curto", n: 10 }));
+  it("7 dias nunca diz falha", () => expect(avisoHistorico({ ...base, tipo: 7, inicioEixo: "2026-10-10", com: 3 })).toEqual({ tipo: "curto", n: 3 }));
+  it("carregando e além do indices: nada", () => expect(avisoHistorico({ ...base, com: 10, carregando: true })).toBeNull());
 });

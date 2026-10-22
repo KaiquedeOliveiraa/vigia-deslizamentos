@@ -523,5 +523,5 @@
 "estimativa reconstruída, tende a subestimar picos": "reconstructed estimate, tends to underestimate peaks",
 "início do sistema": "system start",
 "dias reconstruídos (estimativa)": "reconstructed days (estimate)",
-"Dias antes de {N}: estimativa reconstruída com chuva de reanálise (ERA5, Open-Meteo) e os parâmetros atuais, sem ensemble. A reanálise suaviza chuvas fortes e localizadas e tende a subestimar picos. Não é o que o sistema publicou na época nem dado oficial.": "Days before {N}: estimate reconstructed with reanalysis rainfall (ERA5, Open-Meteo) and the current parameters, without an ensemble. Reanalysis smooths heavy, localized rain and tends to underestimate peaks. It is not what the system published at the time, nor official data."
+"Dias antes de {N}: estimativa reconstruída com chuva de reanálise (ERA5, Open-Meteo) e os parâmetros atuais, sem ensemble. A reanálise suaviza chuvas fortes e localizadas e tende a subestimar picos. Não é o que o sistema publicou na época nem dado oficial. Dias de alerta podem não aparecer.": "Days before {N}: estimate reconstructed with reanalysis rainfall (ERA5, Open-Meteo) and the current parameters, without an ensemble. Reanalysis smooths heavy, localized rain and tends to underestimate peaks. It is not what the system published at the time, nor official data. Alert days may not appear."
 }

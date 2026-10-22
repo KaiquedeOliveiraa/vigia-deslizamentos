@@ -17,7 +17,7 @@ import pytest
 import requests
 
 from app.config import Config
-from app.exportacao.publicar import CAMINHO_HISTORICO, CAMINHO_NO_REPOSITORIO, BRANCH, publicar
+from app.exportacao.publicar import CAMINHO_HISTORICO, CAMINHO_NO_REPOSITORIO, BRANCH, publicar, sha_do_blob
 
 TOKEN = "ghp_segredo_que_nunca_pode_aparecer_no_log"
 CONTEUDO = b'{"schema_version": 1}\n'
@@ -162,6 +162,20 @@ def test_conflito_409_le_o_sha_de_novo_e_tenta_uma_vez():
     assert puts[0][1]["json"]["sha"] == "sha_velho"
     assert puts[1][1]["json"]["sha"] == "sha_novo"
     assert len(_chamadas(http, "GET")) == 2
+
+
+def test_conflito_409_e_o_outro_ja_publicou_o_mesmo_conteudo_nao_reenvia():
+    # Depois do 409 o sha relido pode já ser o do nosso conteúdo: nada a enviar.
+    http = HttpFalso(
+        respostas_get=[
+            RespostaFalsa(200, {"sha": "sha_velho"}),
+            RespostaFalsa(200, {"sha": sha_do_blob(CONTEUDO)}),
+        ],
+        respostas_put=[RespostaFalsa(409, {})],
+    )
+
+    assert publicar(CONTEUDO, config_de_teste(), http) is True
+    assert len(_chamadas(http, "PUT")) == 1
 
 
 def test_conflito_409_duas_vezes_desiste_e_devolve_false():

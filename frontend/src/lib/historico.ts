@@ -54,3 +54,12 @@ export function primeiroDiaReal(reconstruido?: ArquivoHistorico): string | null 
   }
   return ultimo && somarDias(ultimo, 1);
 }
+
+export type AvisoHistorico = { tipo: "falha" } | { tipo: "curto"; n: number } | null;
+
+/** Só há aviso com lacuna real (`com` < `total`). Falha de arquivo vira "falha" se o eixo passa do indices.json; o 7 dias nunca. */
+export function avisoHistorico(a: { tipo: 7 | 30 | "personalizado"; inicioEixo: string; primeiroDia: string; carregando: boolean; falhou: boolean; com: number; total: number }): AvisoHistorico {
+  const alem = a.tipo !== 7 && a.inicioEixo < a.primeiroDia;
+  if (a.com >= a.total || (a.carregando && alem)) return null;
+  return alem && a.falhou ? { tipo: "falha" } : { tipo: "curto", n: a.com };
+}
