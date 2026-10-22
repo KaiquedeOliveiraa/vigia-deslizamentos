@@ -5,8 +5,9 @@ import {
   escaparHtml,
   interpretarComando,
   normalizarNome,
-  textoDoStatus,
+  partesDoStatus,
 } from "./telegram";
+import { tecladoDoGrupo, tecladoInicial } from "./teclados";
 import type { BotJson, Env } from "./tipos";
 
 type Mensagem = { chat?: { id?: unknown }; text?: unknown };
@@ -57,13 +58,29 @@ async function tratarMensagem(
   const comando = interpretarComando(texto);
 
   if (comando === null) {
-    const nome = texto.trim();
-    if (nome === t.opcao_todos) {
+    const nome = normalizarNome(texto);
+    if (nome === normalizarNome(t.opcao_todos)) {
       await inscrever(env.DB, chatId, bot.municipios.map((m) => m.ibge), new Date());
       await enviarMensagem(env, chatId, t.inscricao_confirmada_todos, "remover");
       return;
     }
-    const municipio = bot.municipios.find((m) => m.nome === nome);
+    const grupos = bot.grupos ?? [];
+    const grupo = grupos.find((g) => normalizarNome(g.nome) === nome);
+    if (grupo) {
+      await enviarMensagem(env, chatId, grupo.escolha, { linhas: tecladoDoGrupo(bot, grupo) });
+      return;
+    }
+    const todosDoGrupo = grupos.find((g) => normalizarNome(g.opcao_todos) === nome);
+    if (todosDoGrupo) {
+      await inscrever(env.DB, chatId, todosDoGrupo.municipios, new Date());
+      await enviarMensagem(env, chatId, todosDoGrupo.confirmacao, "remover");
+      return;
+    }
+    if (grupos.length && t.opcao_voltar && nome === normalizarNome(t.opcao_voltar)) {
+      await enviarMensagem(env, chatId, t.boas_vindas_grupos ?? t.boas_vindas, "municipios", bot);
+      return;
+    }
+    const municipio = bot.municipios.find((m) => normalizarNome(m.nome) === nome);
     if (municipio) {
       await inscrever(env.DB, chatId, [municipio.ibge], new Date());
       await enviarMensagem(env, chatId, t.inscricao_confirmada[municipio.ibge] ?? "", "remover");
@@ -71,14 +88,13 @@ async function tratarMensagem(
     }
   } else if (comando.comando === "start") {
     const codigo = comando.args[0] ?? "";
-    const sugerido = Object.hasOwn(t.boas_vindas_sugerido, codigo)
-      ? t.boas_vindas_sugerido[codigo]
-      : undefined;
-    await enviarMensagem(env, chatId, sugerido ?? t.boas_vindas, "municipios", bot);
+    const sugerido = Object.hasOwn(t.boas_vindas_sugerido, codigo) ? t.boas_vindas_sugerido[codigo] : undefined;
+    const semSugerido = bot.grupos?.length ? (t.boas_vindas_grupos ?? t.boas_vindas) : t.boas_vindas;
+    await enviarMensagem(env, chatId, sugerido ?? semSugerido, { linhas: tecladoInicial(bot, sugerido ? codigo : undefined) });
     return;
   } else if (comando.comando === "status") {
     const ibges = await ibgesDoChat(env.DB, chatId);
-    await enviarMensagem(env, chatId, textoDoStatus(bot, ibges), "nenhum");
+    for (const parte of partesDoStatus(bot, ibges)) await enviarMensagem(env, chatId, parte, "nenhum");
     return;
   } else if (comando.comando === "parar") {
     await removerChat(env.DB, chatId);

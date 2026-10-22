@@ -234,6 +234,36 @@ CABECALHO_DO_STATUS = "<b>Situação dos seus municípios</b>"
 SEPARADOR_DO_STATUS = "\n\n"
 
 
+#: Botão que volta do teclado de uma região para o das regiões.
+OPCAO_VOLTAR = "Voltar"
+
+
+def rotulo_do_grupo(nome_micro: str) -> str:
+    """Botão da região. "Região de" evita colidir com o município homônimo (Rio do Sul)."""
+    return f"Região de {nome_micro}"
+
+
+def opcao_todos_do_grupo(nome_micro: str) -> str:
+    return f"Todos da {rotulo_do_grupo(nome_micro)}"
+
+
+def texto_escolha_do_grupo(nome_micro: str) -> str:
+    rotulo = html.escape(rotulo_do_grupo(nome_micro))
+    return (
+        f"Municípios da {rotulo}. Toque em um deles, em "
+        f"\"{html.escape(opcao_todos_do_grupo(nome_micro))}\" ou em \"{OPCAO_VOLTAR}\"."
+    )
+
+
+def texto_boas_vindas_grupos() -> str:
+    """`/start` sem município quando o teclado é por região."""
+    return (
+        "Olá! Escolha a sua região para ver os municípios, "
+        f"ou toque em \"{OPCAO_TODOS}\" para acompanhar todos.\n\n"
+        "Use /status para ver a situação e /parar para cancelar."
+    )
+
+
 def texto_boas_vindas(nome_sugerido: str | None) -> str:
     """Resposta do `/start`, em HTML. Com `nome_sugerido`, cita o município."""
     if nome_sugerido is None:
@@ -301,3 +331,42 @@ def texto_do_status(
     return SEPARADOR_DO_STATUS.join(
         [CABECALHO_DO_STATUS, *blocos, rodape_do_status(site_url)]
     )
+
+
+#: Limite do Telegram, em unidades UTF-16 (emoji conta 2).
+LIMITE_MENSAGEM_TELEGRAM = 4096
+
+
+def _tamanho(texto: str) -> int:
+    return len(texto.encode("utf-16-le")) // 2
+
+
+def partes_do_status(
+    situacoes: list[tuple[str, IndiceAtual | None]],
+    site_url: str,
+    limite: int = LIMITE_MENSAGEM_TELEGRAM,
+) -> list[str]:
+    """`texto_do_status` em mensagens de até `limite`, cortando só entre blocos.
+
+    Conta o HTML bruto, o que superestima (as tags somem no Telegram), ou seja,
+    é seguro. O cabeçalho vai na primeira parte e o rodapé na última.
+    """
+    if not situacoes:
+        return [TEXTO_SEM_INSCRICAO]
+    cabecalho = CABECALHO_DO_STATUS + SEPARADOR_DO_STATUS
+    rodape = SEPARADOR_DO_STATUS + rodape_do_status(site_url)
+    partes: list[str] = []
+    atual, vazia = cabecalho, True
+    for nome, situacao in situacoes:
+        bloco = bloco_do_status(nome, situacao)
+        if _tamanho(cabecalho + bloco + rodape) > limite:
+            raise ValueError(f"bloco de {nome!r} sozinho passa do limite de {limite}")
+        junto = atual + bloco if vazia else atual + SEPARADOR_DO_STATUS + bloco
+        if not vazia and _tamanho(junto) + _tamanho(rodape) > limite:
+            partes.append(atual)
+            atual = bloco
+        else:
+            atual = junto
+        vazia = False
+    partes.append(atual + rodape)
+    return partes

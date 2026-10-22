@@ -10,7 +10,6 @@ import BannerTelegram from "./BannerTelegram";
 
 interface Props {
   lang: Idioma;
-  municipios: readonly string[];
 }
 
 // Ilustrações de traço do protótipo (64×64): `s` traço da marca, `a` destaque, `g` grama, `m` lama.
@@ -70,7 +69,7 @@ const ROLAGEM_MS = 1000;
 const semMovimento = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /** Cartilha (RF11): sinais de perigo, o que fazer, mochila e o que não fazer. */
-export default function Cartilha({ lang, municipios }: Props) {
+export default function Cartilha({ lang }: Props) {
   const t = tradutor(lang);
   const [virados, setVirados] = useState<ReadonlySet<number>>(new Set());
   const [fase, setFase] = useState(0);
@@ -263,7 +262,7 @@ export default function Cartilha({ lang, municipios }: Props) {
       </section>
 
       <div className="tgwrap">
-        <BannerTelegram lang={lang} municipios={municipios} />
+        <BannerTelegram lang={lang} />
       </div>
 
       <p className="fonte">

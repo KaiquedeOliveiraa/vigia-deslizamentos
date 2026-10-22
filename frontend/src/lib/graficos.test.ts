@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Indices, Municipio } from "./tipos";
 import {
   coordenadas,
-  diasComDados,
+  diasComDadosDe,
   diasEixo,
   escala,
   etiquetaChuva,
@@ -17,7 +17,7 @@ import {
   passoDaSeta,
   serieMunicipio,
   variacoesDiarias,
-  vizinhoCiclico,
+  faixaDosDemais,
 } from "./graficos";
 
 const municipio = (
@@ -88,13 +88,10 @@ describe("marcaClasse", () => {
   });
 });
 
-describe("diasComDados", () => {
-  it("conta os dias do eixo com ponto em algum município", () => {
-    const curto = municipio("1", "A", { indice: 1, efr_mm: 0 }, [["2026-10-01", 0.5]]);
-    const outro = municipio("2", "B", { indice: 1, efr_mm: 0 }, [["2026-09-30", 0.5]]);
-    const indices = { municipios: [curto, outro] } as Indices;
-    expect(diasComDados(indices, diasEixo("2026-10-02", 7))).toBe(3);
-    expect(diasComDados({ municipios: [municipio("3", "C", { indice: 1, efr_mm: 0 }, historico15)] } as Indices, diasEixo("2026-10-02", 7))).toBe(7);
+describe("diasComDadosDe", () => {
+  it("diasComDadosDe conta só os dias do município", () => {
+    const m = { ibge: "A", nome: "A", historico: [{ dia_alvo: "2026-10-01", indice: 0.1, classe: 1 }], dias: [] } as unknown as Municipio;
+    expect(diasComDadosDe(m, ["2026-10-01", "2026-10-02"])).toBe(1);
   });
 });
 
@@ -262,10 +259,18 @@ describe("interação da Evolução", () => {
     expect(focoAposSeta(0, -1, 7)).toBe(0);
     expect(focoAposSeta(6, 1, 7)).toBe(6);
   });
+});
 
-  it("vizinhoCiclico: chips dão a volta nas pontas", () => {
-    expect(vizinhoCiclico(0, -1, 6)).toBe(5);
-    expect(vizinhoCiclico(5, 1, 6)).toBe(0);
-    expect(vizinhoCiclico(2, 1, 6)).toBe(3);
+describe("faixaDosDemais", () => {
+  it("mínimo e máximo por dia só com quem tem dado; menos de 2 vira null", () => {
+    const eixo = ["2026-10-01", "2026-10-02"];
+    const mk = (ibge: string, hist: [string, number][]) =>
+      ({ ibge, nome: ibge, historico: hist.map(([dia_alvo, indice]) => ({ dia_alvo, indice, classe: 1 })), dias: [] }) as unknown as Municipio;
+    const ms = [
+      mk("A", [["2026-10-01", 0.5], ["2026-10-02", 0.9]]),
+      mk("B", [["2026-10-01", 0.2], ["2026-10-02", 0.4]]),
+      mk("C", [["2026-10-01", 0.7]]),
+    ];
+    expect(faixaDosDemais(ms, "A", eixo)).toEqual([{ min: 0.2, max: 0.7 }, null]);
   });
 });

@@ -16,14 +16,19 @@ from datetime import datetime, timezone
 
 from app.bot.inscricao import OPCAO_TODOS
 from app.bot.mensagens import (
+    OPCAO_VOLTAR,
     CABECALHO_DO_STATUS,
     SEPARADOR_DO_STATUS,
     TEXTO_INSCRICOES_APAGADAS,
     TEXTO_OPCAO_DESCONHECIDA,
     TEXTO_SEM_INSCRICAO,
     bloco_do_status,
+    opcao_todos_do_grupo,
     rodape_do_status,
+    rotulo_do_grupo,
     texto_boas_vindas,
+    texto_boas_vindas_grupos,
+    texto_escolha_do_grupo,
     texto_inscricao_confirmada,
 )
 from app.bot.simulacao import (
@@ -69,6 +74,27 @@ def _simulacao_em_json(municipios: list[Municipio], site_url: str) -> dict:
     }
 
 
+def _grupos_em_json(municipios: list[Municipio]) -> list[dict] | None:
+    """Um grupo por microrregião, na ordem do código; `None` se faltar microrregião."""
+    if not municipios or any(m.microrregiao is None for m in municipios):
+        return None
+    codigos = sorted({m.microrregiao.codigo for m in municipios})
+    grupos = []
+    for codigo in codigos:
+        membros = [m for m in municipios if m.microrregiao.codigo == codigo]
+        nome = membros[0].microrregiao.nome
+        grupos.append(
+            {
+                "nome": rotulo_do_grupo(nome),
+                "municipios": [m.ibge for m in membros],
+                "opcao_todos": opcao_todos_do_grupo(nome),
+                "escolha": texto_escolha_do_grupo(nome),
+                "confirmacao": texto_inscricao_confirmada([m.nome for m in membros]),
+            }
+        )
+    return grupos
+
+
 def montar_bot_json(
     municipios: list[Municipio],
     atuais: dict[str, IndiceAtual | None],
@@ -84,7 +110,7 @@ def montar_bot_json(
     gerado_em_texto = _data_hora_utc("gerado_em", gerado_em)
     nomes = [municipio.nome for municipio in municipios]
 
-    return {
+    dados = {
         "schema_version": SCHEMA_VERSION_BOT_JSON,
         "gerado_em": gerado_em_texto,
         "municipios": [
@@ -120,3 +146,9 @@ def montar_bot_json(
         },
         "simulacao": _simulacao_em_json(municipios, site_url) if simulacao else None,
     }
+    grupos = _grupos_em_json(municipios)
+    if grupos is not None:
+        dados["grupos"] = grupos
+        dados["textos"]["opcao_voltar"] = OPCAO_VOLTAR
+        dados["textos"]["boas_vindas_grupos"] = texto_boas_vindas_grupos()
+    return dados

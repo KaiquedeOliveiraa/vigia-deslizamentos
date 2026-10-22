@@ -14,6 +14,7 @@ Parâmetros de cada município, versionados no repositório. Incluir um municíp
 | `fonte_limiar` | string | Origem do limiar (ex.: "GeoRisk, limiar hipotético padrão") |
 | `mv_h` | número | Meia-vida da água no solo, em horas. Padrão: 24 |
 | `pontos` | lista de `{lat, lon}` | Pontos de cálculo; no mínimo o centroide do município |
+| `microrregiao` | objeto, opcional | `{"codigo": 5 dígitos, "nome"}`: microrregião IBGE; agrupa o teclado do bot |
 
 ## `frontend/public/data/indices.json`
 
@@ -86,7 +87,7 @@ Estações automáticas do INMET na região, geradas uma vez por script (`backen
 | `distancia_km` | número | Distância entre a estação e o centroide desse município |
 | `lat`, `lon` | número | Coordenadas em graus decimais |
 
-**Por que `ibge_referencia` e não `ibge`.** Nenhuma estação automática do INMET fica dentro dos seis municípios: a mais próxima operante está a ~30 km, e a resposta do INMET não traz código IBGE nenhum, só nome livre e coordenadas. A associação é por proximidade do centroide. O campo tem nome próprio para não significar, aqui, algo diferente do que `ibge` significa em `indices.json` e em `municipios.json` — e `distancia_km` existe para que a distância real não possa ficar escondida.
+**Por que `ibge_referencia` e não `ibge`.** Só duas estações do INMET ficam dentro dos 27 municípios (A863 Ituporanga e A861 Rio do Campo); as outras ficam a dezenas de km do município mais próximo, e a resposta do INMET não traz código IBGE nenhum, só nome livre e coordenadas. A associação é por proximidade do centroide. O campo tem nome próprio para não significar, aqui, algo diferente do que `ibge` significa em `indices.json` e em `municipios.json` — e `distancia_km` existe para que a distância real não possa ficar escondida.
 
 **Regra de leitura no site:** a estação é regional, então o texto não pode afirmar que ela fica no município. Exibir a distância junto do nome (ex.: "ITAJAI, a 76 km de Ibirama") e usar `distancia_km` para filtrar o que vale mostrar. Essa é também a razão pela qual o raio de corte do script é generoso (100 km por padrão): o arquivo entrega o dado e a tela decide.
 
@@ -114,6 +115,7 @@ Textos prontos do bot, gerados pelo backend (`app/exportacao/bot_json.py`) a cad
 | `schema_version` | `1` |
 | `gerado_em` | `"YYYY-MM-DDTHH:MM:SSZ"` |
 | `municipios` | `[{"ibge", "nome"}]` na ordem da configuração |
+| `grupos` | opcional: `[{nome, municipios: [ibge], opcao_todos, escolha, confirmacao}]` por microrregião, na ordem do código. Sem ele, o Worker mostra um botão por município |
 | `textos.opcao_todos` | Rótulo da opção que inscreve em todos os municípios |
 | `textos.boas_vindas` | Resposta ao `/start` sem município |
 | `textos.boas_vindas_sugerido` | `{ibge: texto}`: `/start` já com um município sugerido |
@@ -121,6 +123,8 @@ Textos prontos do bot, gerados pelo backend (`app/exportacao/bot_json.py`) a cad
 | `textos.inscricao_confirmada_todos` | Confirmação de inscrição em todos, na ordem da configuração |
 | `textos.opcao_desconhecida` | Resposta a uma opção que não existe |
 | `textos.inscricoes_apagadas` | Resposta ao `/parar` |
+| `textos.opcao_voltar` | opcional: botão que volta às regiões |
+| `textos.boas_vindas_grupos` | opcional: /start sem município quando há grupos |
 | `status.cabecalho` | Início do `/status` |
 | `status.blocos` | `{ibge: bloco}`: situação atual de cada município |
 | `status.separador` | Entre blocos |
@@ -129,6 +133,8 @@ Textos prontos do bot, gerados pelo backend (`app/exportacao/bot_json.py`) a cad
 | `simulacao` | `null`, ou, com `VIGIA_SIMULACAO=1`, `{mensagens: {ibge: [...]}, fim, municipio_invalido, pausa_s}` para o `/simular` |
 
 O `/status` é montado como `cabecalho + separador.join(blocos dos municípios inscritos) + rodape`.
+
+Todo rótulo de botão (municípios, "Todos", grupos, "Todos da Região…", "Voltar") é único no arquivo: o Worker reconhece o botão pelo texto.
 
 ## Branch `estado`
 

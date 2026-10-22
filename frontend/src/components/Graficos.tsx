@@ -5,6 +5,7 @@ import { formatarData, formatarIndice, formatarMm, formatarNumero, formatarVaria
 import {
   coordenadas,
   escala,
+  faixaDosDemais,
   faixasClasse,
   focoAposSeta,
   indiceMaisProximo,
@@ -15,7 +16,6 @@ import {
   passoDaSeta,
   serieMunicipio,
   variacoesDiarias,
-  vizinhoCiclico,
   type Area,
 } from "../lib/graficos";
 import { sentido } from "../lib/texto";
@@ -36,10 +36,9 @@ interface PropsEvolucao {
   aoSelecionar: (ibge: string) => void;
 }
 
-/** Evolução do índice (RF06): faixas das classes, linha de alerta, demais municípios em cinza e o destaque.
- * Linha-guia com o valor de todos os municípios no dia apontado (mouse, ou ←/→ com o gráfico em foco). */
+/** Evolução do índice (RF06): faixas das classes, linha de alerta, faixa mínimo–máximo dos demais municípios e o destaque.
+ * Linha-guia com o valor do destaque e da faixa no dia apontado (mouse, ou ←/→ com o gráfico em foco). */
 export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsEvolucao) {
-  const chips = useRef<(HTMLButtonElement | null)[]>([]);
   const painel = useRef<HTMLDivElement>(null);
   const [foco, setFoco] = useState<number | null>(null);
   const { ibge } = destaque;
@@ -52,6 +51,15 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
   const y = (v: number) => topo + util - escala(v, max, util);
   const xs = coordenadas(eixo.map((dia_alvo) => ({ dia_alvo, indice: 0 })), eixo, max, AREA).map((c) => c.x);
   const faixas = faixasClasse(max);
+  const faixa = faixaDosDemais(municipios, ibge, eixo);
+  // Trechos contínuos de dias com faixa: um polígono por trecho (contorno de cima, depois o de baixo de volta).
+  const trechos: number[][] = [];
+  faixa.forEach((f, i) => {
+    if (!f) return;
+    const ultimo = trechos.at(-1);
+    if (ultimo && ultimo.at(-1) === i - 1) ultimo.push(i);
+    else trechos.push([i]);
+  });
   const rotulo = t("Evolução do índice de risco em {N} dias — {M}", { N: String(eixo.length), M: destaque.nome });
   const ultimo = coords.at(-1);
   const deltaUltimo = deltas.at(-1) ?? null;
@@ -62,15 +70,6 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
     const el = painel.current;
     if (el) el.scrollLeft = el.scrollWidth;
   }, [eixo.length]);
-
-  function teclado(e: KeyboardEvent, i: number) {
-    const passo = passoDaSeta(e.key);
-    if (!passo) return;
-    e.preventDefault();
-    const j = vizinhoCiclico(i, passo, municipios.length);
-    chips.current[j]?.focus();
-    aoSelecionar(municipios[j].ibge);
-  }
 
   // Dia mais próximo do ponteiro: o leitor mira uma data, não uma linha de 2px.
   function apontar(e: PointerEvent<SVGRectElement>) {
@@ -94,40 +93,29 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
     diaFoco === null
       ? []
       : series
+          .filter(({ m }) => m.ibge === ibge)
           .flatMap(({ m, serie }) => {
             const p = serie.find((q) => q.dia_alvo === diaFoco);
             return p ? [{ m, p }] : [];
-          })
-          .sort((a, b) => Number(b.m.ibge === ibge) - Number(a.m.ibge === ibge) || b.p.indice - a.p.indice);
+          });
 
   return (
     <div className="evo">
-      <div className="pick" role="tablist" aria-label={t("Município")}>
-        {municipios.map((m, i) => (
-          <button
-            key={m.ibge}
-            ref={(el) => {
-              chips.current[i] = el;
-            }}
-            type="button"
-            role="tab"
-            id={`evo-${m.ibge}`}
-            aria-selected={m.ibge === ibge}
-            aria-controls="evo-painel"
-            tabIndex={m.ibge === ibge ? 0 : -1}
-            onClick={() => aoSelecionar(m.ibge)}
-            onKeyDown={(e) => teclado(e, i)}
-          >
-            {m.nome}
-          </button>
-        ))}
-      </div>
+      <label className="pick">
+        <span className="sr-only">{t("Município")}</span>
+        <select value={ibge} onChange={(e) => aoSelecionar(e.target.value)}>
+          {municipios.map((m) => (
+            <option key={m.ibge} value={m.ibge}>
+              {m.nome}
+            </option>
+          ))}
+        </select>
+      </label>
       <div
         ref={painel}
         className="evo-svg"
-        id="evo-painel"
-        role="tabpanel"
-        aria-labelledby={`evo-${ibge}`}
+        role="group"
+        aria-label={rotulo}
         tabIndex={0}
         onKeyDown={tecladoGrafico}
         onBlur={() => setFoco(null)}
@@ -154,11 +142,13 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
               {formatarData(dia, "dia")}
             </text>
           ))}
-          {series
-            .filter((s) => s.m.ibge !== ibge)
-            .map((s) => (
-              <polyline key={s.m.ibge} className="other" points={pontos(coordenadas(s.serie, eixo, max, AREA))} />
-            ))}
+          {trechos.map((tr) => (
+            <polygon
+              key={tr[0]}
+              className="faixa"
+              points={[...tr.map((i) => `${xs[i]},${y(faixa[i]!.max)}`), ...[...tr].reverse().map((i) => `${xs[i]},${y(faixa[i]!.min)}`)].join(" ")}
+            />
+          ))}
           {area && <polygon className="area" points={area} />}
           <polyline className="main" points={pontos(coords)} />
           {foco !== null && <line className="guia" x1={xs[foco]} x2={xs[foco]} y1={topo} y2={y(0)} />}
@@ -192,26 +182,27 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
         {diaFoco !== null && foco !== null && (
           <div className={xs[foco] > largura * 0.6 ? "dica esq" : "dica"} style={{ left: `${(xs[foco] / largura) * 100}%` }}>
             <span className="lbl">{formatarData(diaFoco)}</span>
-            {leitura.length === 0 && <span className="vazio">{t("sem dados")}</span>}
+            {leitura.length === 0 && !(foco !== null && faixa[foco]) && <span className="vazio">{t("sem dados")}</span>}
             <ul>
-              {leitura.map(({ m, p }) =>
-                m.ibge === ibge ? (
-                  <li key={m.ibge} className="eu">
-                    <i aria-hidden="true" />
-                    <b className="num">{formatarIndice(p.indice)}</b>
-                    <span>
-                      {m.nome}
-                      {deltaFoco != null && <em className={`dl ${CLASSE_SENTIDO[sentido(deltaFoco)]}`}> {formatarVariacao(deltaFoco)}</em>}
-                      <small>{t(infoClasse(p.classe).nome)}</small>
-                    </span>
-                  </li>
-                ) : (
-                  <li key={m.ibge}>
-                    <i aria-hidden="true" />
-                    <b className="num">{formatarIndice(p.indice)}</b>
-                    <span>{m.nome}</span>
-                  </li>
-                ),
+              {leitura.map(({ m, p }) => (
+                <li key={m.ibge} className="eu">
+                  <i aria-hidden="true" />
+                  <b className="num">{formatarIndice(p.indice)}</b>
+                  <span>
+                    {m.nome}
+                    {deltaFoco != null && <em className={`dl ${CLASSE_SENTIDO[sentido(deltaFoco)]}`}> {formatarVariacao(deltaFoco)}</em>}
+                    <small>{t(infoClasse(p.classe).nome)}</small>
+                  </span>
+                </li>
+              ))}
+              {foco !== null && faixa[foco] && (
+                <li>
+                  <i aria-hidden="true" />
+                  <b className="num">
+                    {formatarIndice(faixa[foco]!.min)}–{formatarIndice(faixa[foco]!.max)}
+                  </b>
+                  <span>{t("demais municípios")}</span>
+                </li>
               )}
             </ul>
           </div>
@@ -221,6 +212,7 @@ export function Evolucao({ t, municipios, destaque, eixo, aoSelecionar }: PropsE
         <p className="sr-only" aria-live="polite">
           {pontoFoco ? `${formatarData(pontoFoco.dia_alvo)} · ${t("{M}: índice {N}, classe {C}", { M: destaque.nome, N: formatarIndice(pontoFoco.indice), C: infoClasse(pontoFoco.classe).nome })}` : ""}
         </p>
+        {/* Só o município em destaque: a faixa dos demais é visual (ver a legenda). */}
         {/* Dentro de uma div: <table> ignora a altura de 1px do sr-only. */}
         <div className="sr-only">
           <table>

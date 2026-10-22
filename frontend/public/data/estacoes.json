@@ -1,50 +1,82 @@
 [
   {
-    "codigo": "A868",
-    "nome": "ITAJAI",
-    "ibge_referencia": "4206900",
-    "lat": -26.95083333,
-    "lon": -48.76194444,
-    "distancia_km": 76.3
-  },
-  {
-    "codigo": "A870",
-    "nome": "RANCHO QUEIMADO",
-    "ibge_referencia": "4206900",
-    "lat": -27.6786111,
-    "lon": -49.04194444,
-    "distancia_km": 87.8
+    "codigo": "A865",
+    "nome": "LAGES",
+    "ibge_referencia": "4200200",
+    "lat": -27.80222222,
+    "lon": -50.33555555,
+    "distancia_km": 63.5
   },
   {
     "codigo": "A863",
     "nome": "ITUPORANGA",
-    "ibge_referencia": "4214003",
+    "ibge_referencia": "4201802",
     "lat": -27.41833332,
     "lon": -49.64694444,
-    "distancia_km": 40.1
+    "distancia_km": 9.6
   },
   {
-    "codigo": "A864",
-    "nome": "MAJOR VIEIRA",
-    "ibge_referencia": "4219358",
-    "lat": -26.3936111,
-    "lon": -50.36333333,
-    "distancia_km": 70.5
+    "codigo": "A845",
+    "nome": "BOM JARDIM DA SERRA - MORRO DA IGREJA",
+    "ibge_referencia": "4204194",
+    "lat": -28.12694443,
+    "lon": -49.47972221,
+    "distancia_km": 61.0
   },
   {
-    "codigo": "A861",
-    "nome": "RIO DO CAMPO",
-    "ibge_referencia": "4219408",
-    "lat": -26.93749999,
-    "lon": -50.14555555,
-    "distancia_km": 30.1
+    "codigo": "A870",
+    "nome": "RANCHO QUEIMADO",
+    "ibge_referencia": "4207403",
+    "lat": -27.6786111,
+    "lon": -49.04194444,
+    "distancia_km": 40.9
   },
   {
     "codigo": "A860",
     "nome": "CURITIBANOS",
-    "ibge_referencia": "4219408",
+    "ibge_referencia": "4210852",
     "lat": -27.2886111,
     "lon": -50.60416666,
-    "distancia_km": 85.0
+    "distancia_km": 44.1
+  },
+  {
+    "codigo": "A815",
+    "nome": "SAO JOAQUIM",
+    "ibge_referencia": "4212700",
+    "lat": -28.27555554,
+    "lon": -49.93472221,
+    "distancia_km": 84.9
+  },
+  {
+    "codigo": "A868",
+    "nome": "ITAJAI",
+    "ibge_referencia": "4214102",
+    "lat": -26.95083333,
+    "lon": -48.76194444,
+    "distancia_km": 68.4
+  },
+  {
+    "codigo": "A861",
+    "nome": "RIO DO CAMPO",
+    "ibge_referencia": "4214508",
+    "lat": -26.93749999,
+    "lon": -50.14555555,
+    "distancia_km": 5.2
+  },
+  {
+    "codigo": "A864",
+    "nome": "MAJOR VIEIRA",
+    "ibge_referencia": "4214508",
+    "lat": -26.3936111,
+    "lon": -50.36333333,
+    "distancia_km": 60.0
+  },
+  {
+    "codigo": "A806",
+    "nome": "FLORIANOPOLIS",
+    "ibge_referencia": "4219200",
+    "lat": -27.6025,
+    "lon": -48.61999999,
+    "distancia_km": 75.7
   }
 ]

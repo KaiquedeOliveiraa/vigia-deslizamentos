@@ -179,28 +179,18 @@
 
 /* ---------- evolução ---------- */
 .evo .pick {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  display: block;
   margin-bottom: 10px;
 }
 
-.evo .pick button {
+.evo .pick select {
+  min-height: 44px;
+  padding: 0 12px;
   border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
   background: var(--surface-000);
-  border-radius: var(--radius-pill);
-  padding: 5px 11px;
-  font-size: 12px;
-  color: var(--ink-2);
-}
-
-/* ink-brand = nav-900 no tema claro; no escuro dá contraste ao chip sobre o cartão. */
-.evo .pick button[aria-selected="true"] {
-  background: var(--nav-900);
-  border-color: var(--ink-brand);
-  box-shadow: 0 0 0 1px var(--ink-brand);
-  color: var(--on-nav);
-  font-weight: 600;
+  color: var(--ink);
+  font-size: 14px;
 }
 
 /* relative: a tabela sr-only do gráfico fica presa aqui; sem isso ela se posicionava pela página e criava uma 2ª rolagem. */
@@ -252,11 +242,10 @@
   fill: var(--accent-ink);
 }
 
-.evo .other {
-  fill: none;
-  stroke: var(--muted);
-  stroke-width: 1.25;
-  opacity: 0.35;
+.evo .faixa {
+  fill: var(--muted);
+  opacity: 0.18;
+  stroke: none;
 }
 
 .evo .area {
@@ -713,12 +702,6 @@
 
 .dados .disc {
   margin: 0;
-}
-
-@media (pointer: coarse) {
-  .evo .pick button {
-    min-height: 44px;
-  }
 }
 
 @media (max-width: 1100px) {

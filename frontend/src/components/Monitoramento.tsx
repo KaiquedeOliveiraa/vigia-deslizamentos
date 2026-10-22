@@ -22,7 +22,6 @@ import Mapa, { type MapaApi } from "./Mapa";
 import Previsoes, { FaixaPrevisao } from "./Previsoes";
 import SeloClasse from "./SeloClasse";
 
-const LISTA_NOMES = MONITORADOS.map((m) => m.nome);
 const TOAST_MS = 2200;
 
 export default function Monitoramento({ lang }: { lang: Idioma }) {
@@ -106,7 +105,7 @@ export default function Monitoramento({ lang }: { lang: Idioma }) {
           aoTelegram={() => setTelegram(true)}
         />
       )}
-      <JanelaTelegram lang={lang} aberto={telegram} aoFechar={() => setTelegram(false)} municipios={LISTA_NOMES} ibge={selecionado} />
+      <JanelaTelegram lang={lang} aberto={telegram} aoFechar={() => setTelegram(false)} ibge={selecionado} />
     </div>
   );
 }

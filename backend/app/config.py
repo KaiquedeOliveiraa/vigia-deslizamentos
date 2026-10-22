@@ -55,6 +55,14 @@ class Ponto:
 
 
 @dataclass(frozen=True)
+class Microrregiao:
+    """Microrregião IBGE do município: agrupa o teclado do bot (opcional no JSON)."""
+
+    codigo: str
+    nome: str
+
+
+@dataclass(frozen=True)
 class Municipio:
     """Parâmetros de um município, lidos de `backend/config/municipios.json`."""
 
@@ -64,6 +72,7 @@ class Municipio:
     fonte_limiar: str
     mv_h: float
     pontos: tuple[Ponto, ...]
+    microrregiao: Microrregiao | None = None
 
 
 @dataclass(frozen=True)
@@ -139,6 +148,19 @@ def _municipio_a_partir_de(item: dict, indice: int, ibges_vistos: set[str]) -> M
         for indice_ponto, ponto_bruto in enumerate(pontos_brutos)
     )
 
+    microrregiao = None
+    if "microrregiao" in item:
+        bruta = item["microrregiao"]
+        codigo = bruta.get("codigo") if isinstance(bruta, dict) else None
+        nome_micro = bruta.get("nome") if isinstance(bruta, dict) else None
+        if not (isinstance(codigo, str) and len(codigo) == 5 and codigo.isdigit()
+                and isinstance(nome_micro, str) and nome_micro.strip()):
+            raise ConfiguracaoInvalidaError(
+                f"município '{ibge}': 'microrregiao' deve ser "
+                f"{{codigo: 5 dígitos, nome}}, recebido: {bruta!r}"
+            )
+        microrregiao = Microrregiao(codigo=codigo, nome=nome_micro)
+
     return Municipio(
         ibge=ibge,
         nome=item["nome"],
@@ -146,6 +168,7 @@ def _municipio_a_partir_de(item: dict, indice: int, ibges_vistos: set[str]) -> M
         fonte_limiar=item["fonte_limiar"],
         mv_h=mv_h,
         pontos=pontos,
+        microrregiao=microrregiao,
     )
 
 

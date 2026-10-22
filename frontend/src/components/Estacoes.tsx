@@ -53,7 +53,7 @@ export default function Estacoes({ lang }: { lang: Idioma }) {
           </h2>
           <p className="note">
             {t(
-              "Estações automáticas do INMET mais próximas dos municípios monitorados. Nenhuma fica dentro deles: cada uma mostra a distância até o município de referência. Toque num pin ou na lista para localizar.",
+              "Estações automáticas do INMET na região e em volta dela. Cada uma mostra a distância até o centro do município de referência; algumas ficam dentro dos municípios monitorados. Toque num pin ou na lista para localizar.",
             )}
           </p>
         </div>

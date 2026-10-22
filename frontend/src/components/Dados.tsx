@@ -14,7 +14,7 @@ import {
   formatarPercentual,
   formatarVariacao,
 } from "../lib/formato";
-import { diasComDados, diasEixo, etiquetaChuva, indicadores, serieMunicipio, variacoesDiarias } from "../lib/graficos";
+import { diasComDadosDe, diasEixo, etiquetaChuva, indicadores, serieMunicipio, variacoesDiarias } from "../lib/graficos";
 import { municipioInicial, variaveis } from "../lib/monitoramento";
 import type { Idioma } from "../lib/preferencias";
 import { tendencia } from "../lib/texto";
@@ -60,7 +60,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
   const { comDados: municipios, semDados } = separarPorDados(indices, nomes);
   const destaque = municipios.find((m) => m.ibge === ibge);
   const eixo = diasEixo(indices.dia_alvo_d0, periodo);
-  const comHistorico = diasComDados(indices, eixo);
+  const comHistorico = destaque ? diasComDadosDe(destaque, eixo) : periodo;
   const k = indicadores(indices);
 
   const selecionar = (novo: string) => {
@@ -78,7 +78,13 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
           <span className="lbl">{t("Dados da análise · dia-alvo {N}", { N: formatarData(indices.dia_alvo_d0) })}</span>
           <h1>{titulo}</h1>
           <p>{t("Mesmos dados do mapa, com a chuva acumulada e a evolução do índice nos últimos {N} dias.", { N: String(periodo) })}</p>
-          {comHistorico < periodo && <p>{t("Por enquanto há histórico de {N} dias; os demais aparecem vazios.", { N: String(comHistorico) })}</p>}
+          {destaque && comHistorico < periodo && (
+            <p>
+              {comHistorico === 1
+                ? t("Por enquanto há histórico de 1 dia para {M}; os demais aparecem vazios.", { M: destaque.nome })
+                : t("Por enquanto há histórico de {N} dias para {M}; os demais aparecem vazios.", { N: String(comHistorico), M: destaque.nome })}
+            </p>
+          )}
         </div>
         <div className="seg" role="group" aria-label={t("Período")}>
           {PERIODOS.map((p) => (
@@ -121,7 +127,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
                 <span className="tag">{t("diário · {N}", { N: formatarHora(indices.gerado_em) })}</span>
               </div>
               <p className="sub">
-                {t("Pontos coloridos pela classe do dia. Linhas cinzas: demais municípios. Acima da linha tracejada o município está em alerta.")}
+                {t("Pontos coloridos pela classe do dia. Faixa cinza: mínimo e máximo dos demais municípios. Acima da linha tracejada o município está em alerta.")}
               </p>
               <div className="legend2" aria-hidden="true">
                 <span className="trend up">
@@ -133,6 +139,7 @@ export default function Dados({ lang, nomes }: { lang: Idioma; nomes: readonly N
                   {t("descendo")}
                 </span>
                 <span>{t("↑/↓ mudança de classe")}</span>
+                <span>{t("faixa: mínimo e máximo dos demais municípios")}</span>
               </div>
               <Evolucao t={t} municipios={municipios} destaque={destaque} eixo={eixo} aoSelecionar={selecionar} />
               {semDados.length > 0 && (

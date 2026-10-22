@@ -38,3 +38,20 @@ export function botJsonDeTeste(): BotJson {
     },
   };
 }
+
+export function botJsonComGrupos(): BotJson {
+  const bot = botJsonDeTeste();
+  bot.municipios.push({ ibge: "4208500", nome: "Ituporanga" }, { ibge: "4212700", nome: "Petrolândia" });
+  bot.textos.inscricao_confirmada["4208500"] = "Inscrito em Ituporanga.";
+  bot.textos.inscricao_confirmada["4212700"] = "Inscrito em Petrolândia.";
+  bot.status.blocos["4212700"] = "Petrolândia: baixo";
+  bot.textos.boas_vindas_sugerido["4208500"] = "Bem-vindo ao VIGIA. Quer Ituporanga?";
+  bot.status.blocos["4208500"] = "Ituporanga: baixo";
+  bot.textos.opcao_voltar = "Voltar";
+  bot.textos.boas_vindas_grupos = "Escolha a região.";
+  bot.grupos = [
+    { nome: "Região de Rio do Sul", municipios: ["4208203", "4128104"], opcao_todos: "Todos da Região de Rio do Sul", escolha: "Municípios de Rio do Sul.", confirmacao: "Inscrito na região de Rio do Sul." },
+    { nome: "Região de Ituporanga", municipios: ["4208500", "4212700"], opcao_todos: "Todos da Região de Ituporanga", escolha: "Municípios de Ituporanga.", confirmacao: "Inscrito na região de Ituporanga." },
+  ];
+  return bot;
+}

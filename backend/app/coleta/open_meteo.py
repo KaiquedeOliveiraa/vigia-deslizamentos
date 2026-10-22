@@ -318,7 +318,7 @@ def coletar(
     `cache_rodadas` é um dicionário `modelo -> rodada` compartilhado por uma
     execução do pipeline: o horário de inicialização de um modelo é o mesmo para
     todos os municípios, então consultar o `meta.json` por município gastaria
-    três chamadas a mais em cada um (18 por execução com os seis municípios) para
+    três chamadas a mais em cada um (81 por execução com os 27 municípios) para
     obter o mesmo valor. Sem o parâmetro, cada coleta consulta por conta própria
     — nenhuma coleta depende de estado global.
     """

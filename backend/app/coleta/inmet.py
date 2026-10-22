@@ -12,8 +12,9 @@ módulo:
    `"CHAVE INVÁLIDA!"`. Sem `INMET_TOKEN` no ambiente, a comparação é pulada com
    o motivo registrado — o `estacoes.json`, que não precisa de token, segue
    sendo gerado.
-2. **Nenhuma estação fica dentro dos seis municípios**: a mais próxima operante
-   está a ~61 km, e a resposta de `/estacoes/T` não traz código IBGE nenhum. A
+2. **Quase nenhuma estação fica dentro de um município**: só A863 Ituporanga e
+   A861 Rio do Campo ficam dentro dos 27; as outras estão a dezenas de km do
+   município mais próximo, e a resposta de `/estacoes/T` não traz código IBGE nenhum. A
    associação é, portanto, por **proximidade** do centroide, dentro de um raio de
    corte — a estação é de *referência regional*, não "do município". É por isso
    que o campo se chama `ibge_referencia` (não `ibge`) e que `distancia_km` vai
@@ -45,7 +46,7 @@ TIMEOUT_S = 30
 
 #: Raio máximo entre o centroide do município e a estação de referência.
 #: Generoso de propósito: com um raio que exigisse a estação *dentro* do
-#: município, os seis ficariam sem comparação nenhuma (`ensemble.md` §8
+#: município, quase todos ficariam sem comparação (`ensemble.md` §8
 #: recomenda 80–100 km). Quem lê o número vê a distância real no campo
 #: `distancia_km`.
 RAIO_DE_CORTE_KM = 100.0

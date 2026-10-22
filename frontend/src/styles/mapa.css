@@ -101,6 +101,12 @@
   text-shadow: 0 0 3px #000, 0 0 2px #000;
 }
 
+/* De longe (enquadramento inicial, ver MapaLeaflet) os 27 nomes se sobrepõem: ficam o selecionado e os em alerta. */
+.mapa.longe .leaflet-tooltip.mlabel:not(.sel):not(.alerta),
+.mapa.longe .leaflet-tooltip.ctxl {
+  display: none;
+}
+
 /* Rótulos: tooltips permanentes do Leaflet no centro de cada polígono */
 .mapa .leaflet-tooltip.mlabel {
   display: flex;

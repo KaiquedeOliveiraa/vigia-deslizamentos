@@ -399,6 +399,8 @@ soma `misfire_grace_time=3600` (1 h) de folga adicional sobre esses horários.
 
 ### Achado adicional: nenhuma estação fica dentro dos seis municípios
 
+**Atualização (27 municípios):** com o Alto Vale inteiro (Rio do Sul e Ituporanga), duas estações passam a ficar dentro da região: A863 Ituporanga (Ituporanga, a 9,6 km do centroide) e A861 Rio do Campo (Rio do Campo, a 5,2 km). As demais ficam a dezenas de km do município mais próximo. A análise abaixo vale para os seis municípios originais.
+
 **Correção (rodada de revisão 1):** as distâncias da versão anterior vinham
 de uma aproximação equiretangular ingênua (`hypot(Δlat, Δlon) × 111 km`), que
 não corrige a longitude pelo cosseno da latitude — a ~27° de latitude sul
@@ -424,7 +426,7 @@ README já atribui ao INMET ("comparação e validação... na região", não po
 município), mas significa, na prática, que a condicional "quando houver
 estação no município" da Tarefa 12 dificilmente será satisfeita de forma
 literal — recomenda-se um raio de corte generoso (ex.: 80–100 km) ou aceitar
-que a comparação fica desabilitada para os seis municípios até que a rede de
+que a comparação fica desabilitada para os seis municípios (análise original, com 6 municípios) até que a rede de
 estações mude. Evidência: `evidencia-tarefa-0/inmet_estacoes_T.json` (mesmo
 arquivo, filtrado por `SG_ESTADO == "SC"`, com haversine correto).
 
@@ -453,7 +455,9 @@ coordenadas).
 **Volume por execução** = `pontos_total × (modelos + 1)`
 (`+1` é a chamada de `antecedente`, que não depende de modelo).
 
-Com 6 municípios e até 3 pontos cada (centróide + 2 adicionais — o contrato
+**Atualização (27 municípios, 1 ponto):** 27 × 4 = 108 chamadas, mais 3 `meta.json`, dá 111 por execução, 444 por dia e cerca de 13.300 por mês. Tudo dentro dos limites (600 por minuto, 10.000 por dia e 300.000 por mês).
+
+A conta original, com 6 municípios e até 3 pontos cada (centróide + 2 adicionais — o contrato
 de `municipios.json` exige só "no mínimo o centróide"; 3 é um teto
 conservador para a extensão territorial destes municípios pequenos):
 
@@ -467,7 +471,7 @@ início de uma execução ≪ 5.000/hora e ≪ 600/min; 8.640/mês ≪ 300.000/m
 **Mesmo no cenário pessimista de cobrança (1 chamada por ponto, sem
 agrupamento), a folga é de mais de 30× em todos os limites.** Não há
 necessidade de reduzir nenhum parâmetro (pontos, modelos ou execuções/dia)
-para caber no plano gratuito, na escala atual do projeto (6 municípios). Se o
+para caber no plano gratuito, na escala original do projeto (6 municípios; com 27, ver acima). Se o
 projeto crescer a dezenas de municípios ou dezenas de pontos por município, o
 agrupamento de coordenadas numa única chamada (demonstrado em
 `evidencia-tarefa-0/multi_coord_test.json`) é o parâmetro a usar para conter o

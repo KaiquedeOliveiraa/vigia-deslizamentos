@@ -90,9 +90,8 @@ export function serieMunicipio(m: Municipio, eixo: readonly string[]): Historico
   return pontos.filter((p) => eixo.includes(p.dia_alvo));
 }
 
-/** Dias do `eixo` com ponto em algum município: menor que o período quando o histórico ainda é curto. */
-export const diasComDados = (indices: Indices, eixo: readonly string[]): number =>
-  new Set(indices.municipios.flatMap((m) => serieMunicipio(m, eixo).map((p) => p.dia_alvo))).size;
+/** Dias do `eixo` com ponto no município: menor que o período quando o histórico dele ainda é curto. */
+export const diasComDadosDe = (m: Municipio, eixo: readonly string[]): number => serieMunicipio(m, eixo).length;
 
 /** Variação de cada ponto para o anterior, só quando o anterior é o dia anterior (senão `null`), como `tendencia`. */
 export const variacoesDiarias = (serie: readonly Ponto[]): (number | null)[] =>
@@ -144,5 +143,11 @@ export const indiceMaisProximo = (xs: readonly number[], x: number): number =>
 export const focoAposSeta = (foco: number | null, passo: number, dias: number): number =>
   foco === null ? dias - 1 : Math.min(Math.max(foco + passo, 0), dias - 1);
 
-/** Chip vizinho nas setas, dando a volta nas pontas. */
-export const vizinhoCiclico = (i: number, passo: number, total: number): number => (i + passo + total) % total;
+/** Faixa dos demais municípios por dia do eixo (mín–máx de quem tem dado); `null` com menos de 2. */
+export function faixaDosDemais(municipios: Municipio[], destaque: string, eixo: readonly string[]): ({ min: number; max: number } | null)[] {
+  const series = municipios.filter((m) => m.ibge !== destaque).map((m) => serieMunicipio(m, eixo));
+  return eixo.map((dia) => {
+    const valores = series.flatMap((s) => s.filter((p) => p.dia_alvo === dia).map((p) => p.indice));
+    return valores.length < 2 ? null : { min: Math.min(...valores), max: Math.max(...valores) };
+  });
+}

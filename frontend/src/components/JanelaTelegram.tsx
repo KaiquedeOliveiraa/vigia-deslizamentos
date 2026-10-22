@@ -11,8 +11,6 @@ interface Props {
   lang: Idioma;
   aberto: boolean;
   aoFechar: () => void;
-  /** Nomes dos municípios monitorados, para a prévia do teclado do bot. */
-  municipios: readonly string[];
   /** Aberta do painel de um município: o link leva `?start=<ibge>`. */
   ibge?: string;
 }
@@ -23,7 +21,7 @@ export const DiscoTelegram = () => (
   </span>
 );
 
-export default function JanelaTelegram({ lang, aberto, aoFechar, municipios, ibge }: Props) {
+export default function JanelaTelegram({ lang, aberto, aoFechar, ibge }: Props) {
   const t = tradutor(lang);
   const bot = botTelegram();
   const [copiado, setCopiado] = useState(false);
@@ -89,9 +87,8 @@ export default function JanelaTelegram({ lang, aberto, aoFechar, municipios, ibg
             <span className="t">{formatarHora(new Date().toISOString())}</span>
           </div>
           <div className="tgm-kb">
-            {municipios.map((m) => (
-              <span key={m}>{m}</span>
-            ))}
+            <span>{t("Região de Rio do Sul")}</span>
+            <span>{t("Região de Ituporanga")}</span>
             <span className="all">{t("Todos")}</span>
           </div>
         </div>

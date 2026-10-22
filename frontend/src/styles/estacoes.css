@@ -31,7 +31,7 @@
   opacity: 1;
 }
 
-/* Mapa afastado (zoom < 8,5, ver MapaLeaflet): os nomes se sobreporiam; voltam ao aproximar. */
+/* Mapa afastado (no enquadramento inicial ou mais longe, ver MapaLeaflet): os nomes se sobreporiam; voltam ao aproximar. */
 .est .mapa.longe .leaflet-tooltip.mlabel {
   display: none;
 }

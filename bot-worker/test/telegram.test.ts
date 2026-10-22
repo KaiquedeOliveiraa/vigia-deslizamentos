@@ -4,9 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TEXTO_INDISPONIVEL } from "../src/bot-json";
 import worker from "../src/index";
 import { ibgesDoChat, inscrever, listarTodos } from "../src/inscritos";
-import { escaparHtml, interpretarComando, normalizarNome } from "../src/telegram";
+import { escaparHtml, interpretarComando, normalizarNome, partesDoStatus, textoDoStatus } from "../src/telegram";
 import type { BotJson } from "../src/tipos";
-import { botJsonDeTeste } from "./apoio";
+import { botJsonComGrupos, botJsonDeTeste } from "./apoio";
+import fixtureReal from "./fixtures/bot.exemplo.json";
 
 const CHAT = 777;
 const GRUPO = -1001234567890;
@@ -267,5 +268,128 @@ describe("POST /telegram", () => {
     expect(JSON.stringify(erro.mock.calls)).toContain("TimeoutError");
     expect(JSON.stringify(erro.mock.calls)).not.toContain("424242");
     expect(JSON.stringify(erro.mock.calls)).not.toContain(env.TELEGRAM_TOKEN);
+  });
+});
+
+const teclado = (linhas: string[][]) => ({
+  keyboard: linhas.map((l) => l.map((text) => ({ text }))),
+  resize_keyboard: true,
+  one_time_keyboard: true,
+});
+
+describe("com grupos", () => {
+  beforeEach(() => {
+    botJson = botJsonComGrupos();
+  });
+
+  it("/start mostra as regiões e Todos", async () => {
+    await enviar(mensagem("/start"));
+    expect(envios[0]!.text).toBe("Escolha a região.");
+    expect(envios[0]!.reply_markup).toEqual(teclado([["Região de Rio do Sul"], ["Região de Ituporanga"], ["Todos"]]));
+  });
+
+  it("/start com sugerido põe o município na primeira linha", async () => {
+    await enviar(mensagem("/start 4208500"));
+    expect(envios[0]!.text).toBe("Bem-vindo ao VIGIA. Quer Ituporanga?");
+    expect(envios[0]!.reply_markup).toEqual(
+      teclado([["Ituporanga"], ["Região de Rio do Sul"], ["Região de Ituporanga"], ["Todos"]]),
+    );
+  });
+
+  it("região mostra os municípios em duas colunas, Todos da região e Voltar", async () => {
+    await enviar(mensagem("Região de Rio do Sul"));
+    expect(envios[0]!.text).toBe("Municípios de Rio do Sul.");
+    expect(envios[0]!.reply_markup).toEqual(
+      teclado([["Ibirama", "Witmarsum"], ["Todos da Região de Rio do Sul"], ["Voltar"]]),
+    );
+    expect(await ibgesDoChat(env.DB, CHAT)).toEqual([]);
+  });
+
+  it("Todos da região inscreve só nela", async () => {
+    await enviar(mensagem("Todos da Região de Rio do Sul"));
+    expect(envios[0]!.text).toBe("Inscrito na região de Rio do Sul.");
+    expect((await ibgesDoChat(env.DB, CHAT)).sort()).toEqual(["4128104", "4208203"]);
+  });
+
+  it("Todos inscreve em todos", async () => {
+    await enviar(mensagem("Todos"));
+    expect((await ibgesDoChat(env.DB, CHAT)).sort()).toEqual(["4128104", "4208203", "4208500", "4212700"]);
+  });
+
+  it("Voltar e opção desconhecida mostram as regiões", async () => {
+    await enviar(mensagem("Voltar"));
+    await enviar(mensagem("qualquer coisa"));
+    for (const e of envios) {
+      expect(e.reply_markup).toEqual(teclado([["Região de Rio do Sul"], ["Região de Ituporanga"], ["Todos"]]));
+    }
+  });
+
+  it("nome digitado sem acento e em minúsculas inscreve", async () => {
+    await enviar(mensagem("  PETROLANDIA "));
+    expect(await ibgesDoChat(env.DB, CHAT)).toEqual(["4212700"]);
+  });
+
+  it("inscrito antigo continua com os seus", async () => {
+    await inscrever(env.DB, CHAT, ["4208203"], new Date());
+    await enviar(mensagem("/status"));
+    expect(envios[0]!.text).toContain("Ibirama: baixo");
+    expect(envios[0]!.text).not.toContain("Ituporanga");
+  });
+});
+
+it("sem grupos, um botão de região antigo cai em opcao_desconhecida sem inscrever", async () => {
+  await enviar(mensagem("Região de Rio do Sul"));
+  expect(envios[0]!.text).toBe("Não entendi.");
+  expect(envios[0]!.reply_markup).toEqual(TECLADO_MUNICIPIOS);
+  expect(await ibgesDoChat(env.DB, CHAT)).toEqual([]);
+});
+
+it("partesDoStatus corta só entre blocos e respeita o limite", () => {
+  const bot = botJsonDeTeste();
+  const ibges: string[] = [];
+  for (let i = 0; i < 27; i++) {
+    const ibge = String(4200000 + i);
+    bot.municipios.push({ ibge, nome: `M${i}` });
+    bot.status.blocos[ibge] = `Bloco ${i} ${"x".repeat(40)}`;
+    ibges.push(ibge);
+  }
+  const partes = partesDoStatus(bot, ibges, 200);
+  expect(partes.length).toBeGreaterThan(1);
+  expect(partes.every((p) => p.length <= 200)).toBe(true);
+  expect(partes[0]!.startsWith(bot.status.cabecalho)).toBe(true);
+  expect(partes.at(-1)!.endsWith(bot.status.rodape)).toBe(true);
+  for (let i = 0; i < 27; i++) expect(partes.join("")).toContain(`Bloco ${i} `);
+});
+
+it("partesDoStatus com uma parte é igual ao textoDoStatus", () => {
+  const bot = botJsonDeTeste();
+  const ibges = bot.municipios.map((m) => m.ibge);
+  expect(partesDoStatus(bot, ibges)).toEqual([textoDoStatus(bot, ibges)]);
+});
+
+it("partesDoStatus: bloco sozinho maior que o limite é erro", () => {
+  const bot = botJsonDeTeste();
+  expect(() => partesDoStatus(bot, [bot.municipios[0]!.ibge], 10)).toThrow(/bloco/);
+});
+
+describe("fixture real (gerada pelo backend com os 27)", () => {
+  const real = fixtureReal as unknown as BotJson;
+
+  it("/status de quem assina os 27: partes de até 4096 e nenhum bloco cortado", () => {
+    const ibges = real.municipios.map((m) => m.ibge);
+    const partes = partesDoStatus(real, ibges);
+    expect(partes.every((p) => p.length <= 4096)).toBe(true);
+    const juntas = partes.join("");
+    for (const ibge of ibges) expect(juntas).toContain(real.status.blocos[ibge]!);
+  });
+
+  it("rótulos de botão únicos pela normalizarNome do Worker", () => {
+    const rotulos = [
+      ...real.municipios.map((m) => m.nome),
+      real.textos.opcao_todos,
+      real.textos.opcao_voltar ?? "",
+      ...(real.grupos ?? []).flatMap((g) => [g.nome, g.opcao_todos]),
+    ].map(normalizarNome);
+    expect(new Set(rotulos).size).toBe(rotulos.length);
   });
 });

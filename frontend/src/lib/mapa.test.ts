@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { tradutor } from "../i18n";
 import exemplo from "../fixtures/indices.exemplo.json";
+import geojsonBruto from "../data/municipios.geojson?raw";
 import { FEICOES } from "./municipios";
 import type { Indices } from "./tipos";
-import { destacar, limites, municipiosMonitorados, valoresDoDia, mensagemSelecao, passoDia, posicoes, rotuloAria, rotuloDia, type FeicaoMunicipio } from "./mapa";
+import { classesDoRotulo, destacar, limites, municipiosMonitorados, valoresDoDia, mensagemSelecao, passoDia, posicoes, rotuloAria, rotuloDia, rotulosDeLonge, type FeicaoMunicipio } from "./mapa";
 
 const pt = tradutor("pt");
 const es = tradutor("es");
@@ -59,14 +60,19 @@ describe("posicoes e limites", () => {
     expect(limites(fs, [[-26.4, -50.4], [-27.0, -48.8]])).toEqual([[-27.3, -50.4], [-26.4, -48.8]]);
   });
 
-  it("os 6 municípios monitorados do GeoJSON ficam no Alto Vale", () => {
+  it("os 27 municípios monitorados do GeoJSON enquadram o Alto Vale", () => {
     const fs = FEICOES;
-    expect(fs.filter((f) => f.properties.monitorado)).toHaveLength(6);
+    expect(fs.filter((f) => f.properties.monitorado)).toHaveLength(27);
     const [[s, o], [n, l]] = limites(fs);
-    expect(s).toBeGreaterThan(-27.4);
-    expect(n).toBeLessThan(-26.5);
-    expect(o).toBeGreaterThan(-50.2);
-    expect(l).toBeLessThan(-49.2);
+    expect(s).toBeCloseTo(-27.66, 1);
+    expect(o).toBeCloseTo(-50.35, 1);
+    expect(l).toBeCloseTo(-49.19, 1);
+    expect(n).toBeLessThan(-26.4);
+  });
+
+  it("o GeoJSON não passa de 150 KB e só tem Polygon", () => {
+    expect(geojsonBruto.length).toBeLessThan(150_000);
+    expect(FEICOES.every((f) => (f as { geometry: { type: string } }).geometry.type === "Polygon")).toBe(true);
   });
 });
 
@@ -114,8 +120,25 @@ describe("municipiosMonitorados", () => {
   it("só os monitorados, em ordem alfabética", () => {
     const fs = FEICOES;
     const lista = municipiosMonitorados(fs);
-    expect(lista).toHaveLength(6);
-    expect(lista[0]).toEqual({ ibge: "4205100", nome: "Dona Emma" });
+    expect(lista).toHaveLength(27);
+    expect(lista[0]).toEqual({ ibge: "4200200", nome: "Agrolândia" });
     expect(lista.map((m) => m.nome)).toEqual([...lista.map((m) => m.nome)].sort((a, b) => a.localeCompare(b, "pt-BR")));
+  });
+});
+
+describe("classesDoRotulo", () => {
+  it("selecionado e alerta (índice ≥ 1)", () => {
+    expect(classesDoRotulo(true, { indice: 0.2, classe: 1 })).toEqual({ sel: true, alerta: false });
+    expect(classesDoRotulo(false, { indice: 1.0, classe: 4 })).toEqual({ sel: false, alerta: true });
+    expect(classesDoRotulo(false, null)).toEqual({ sel: false, alerta: false });
+    expect(classesDoRotulo(false, undefined)).toEqual({ sel: false, alerta: false });
+  });
+});
+
+describe("rotulosDeLonge", () => {
+  it("longe até 1 passo acima do enquadramento inicial", () => {
+    expect(rotulosDeLonge(9.5, 9.5)).toBe(true);
+    expect(rotulosDeLonge(10.5, 9.5)).toBe(false);
+    expect(rotulosDeLonge(9, 9.5)).toBe(true);
   });
 });

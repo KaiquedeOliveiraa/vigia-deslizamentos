@@ -11,9 +11,9 @@ apoio do site.
 Não exige token: a rota `/estacoes/T` é aberta. O que exige token é a chuva
 horária, usada só na comparação de conferência (`app/coleta/inmet.py`).
 
-**Por que o campo se chama `ibge_referencia`:** nenhuma estação automática do
-INMET fica dentro dos seis municípios do projeto — a mais próxima operante está
-a ~30 km — e a resposta do INMET não traz código IBGE nenhum
+**Por que o campo se chama `ibge_referencia`:** quase nenhuma estação automática do
+INMET fica dentro de um dos 27 municípios do projeto (só A863 Ituporanga e A861
+Rio do Campo ficam) e a resposta do INMET não traz código IBGE nenhum
 (`docs/decisoes/ensemble.md` §8). O código gravado é o do município **mais
 próximo** dentro do raio de corte, e `distancia_km` registra a distância real. É
 uma estação de referência regional, que é o papel que o README atribui ao INMET
