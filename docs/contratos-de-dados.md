@@ -183,7 +183,7 @@ Contatos da Defesa Civil de cada município, levantados com as prefeituras e ver
 
 ## `bot.json`
 
-Textos prontos do bot, gerados pelo backend (`app/exportacao/bot_json.py`) a cada execução com algum município calculado e lidos pelo Cloudflare Worker em `https://raw.githubusercontent.com/KaiquedeOliveiraa/vigia-deslizamentos/estado/bot.json`. O Worker não escreve texto do domínio: só repassa estes. Todos os textos são HTML do Telegram (`parse_mode: "HTML"`). Um `schema_version` desconhecido faz o Worker responder que o bot está indisponível.
+Textos prontos do bot, gerados pelo backend (`app/exportacao/bot_json.py`) a cada execução com algum município calculado e lidos pelo Cloudflare Worker em `https://raw.githubusercontent.com/vigia-defesa-civil/vigia-deslizamentos/estado/bot.json`. O Worker não escreve texto do domínio: só repassa estes. Todos os textos são HTML do Telegram (`parse_mode: "HTML"`). Um `schema_version` desconhecido faz o Worker responder que o bot está indisponível.
 
 | Campo | Conteúdo |
 |---|---|

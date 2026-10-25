@@ -285,7 +285,7 @@ o processo em execução contínua.
 ```bash
 # código
 sudo install -d -o vigia -g vigia /opt/vigia
-sudo -u vigia git clone https://github.com/KaiquedeOliveiraa/vigia-deslizamentos /opt/vigia
+sudo -u vigia git clone https://github.com/vigia-defesa-civil/vigia-deslizamentos /opt/vigia
 cd /opt/vigia/backend
 sudo -u vigia python -m venv .venv
 sudo -u vigia .venv/bin/pip install -e .
