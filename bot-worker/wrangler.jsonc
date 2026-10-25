@@ -11,6 +11,6 @@
     }
   ],
   "vars": {
-    "BOT_JSON_URL": "https://raw.githubusercontent.com/KaiquedeOliveiraa/vigia-deslizamentos/estado/bot.json"
+    "BOT_JSON_URL": "https://raw.githubusercontent.com/vigia-defesa-civil/vigia-deslizamentos/estado/bot.json"
   }
 }

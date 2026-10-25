@@ -1,6 +1,6 @@
 [Unit]
 Description=VIGIA Deslizamentos — bot do Telegram e pipeline do índice de risco
-Documentation=https://github.com/KaiquedeOliveiraa/vigia-deslizamentos
+Documentation=https://github.com/vigia-defesa-civil/vigia-deslizamentos
 # O serviço só fala com APIs externas; sem rede ele sobe, falha a coleta e
 # registra o erro — por isso `After`, e não `Requires`.
 After=network-online.target

@@ -2,7 +2,7 @@ import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 
 export default defineConfig({
-  site: "https://kaiquedeoliveiraa.github.io",
+  site: "https://vigia-defesa-civil.github.io",
   base: "/vigia-deslizamentos",
   integrations: [react()],
   // Antiga tela Estações: o destino leva o base (sem ele o Astro gera um link que dá 404 no GitHub Pages).

@@ -27,7 +27,7 @@ def config_de_teste() -> Config:
     return Config(
         telegram_token="telegram:nao-usado-aqui",
         github_token_dados=TOKEN,
-        github_repo="KaiquedeOliveiraa/vigia-deslizamentos",
+        github_repo="vigia-defesa-civil/vigia-deslizamentos",
         site_url="https://exemplo.org",
         db_path=":memory:",
         log_path="vigia.log",
@@ -92,7 +92,7 @@ def test_arquivo_existente_envia_o_sha_lido_na_leitura():
 
     (url_put, kwargs_put), = _chamadas(http, "PUT")
     assert url_put == (
-        "https://api.github.com/repos/KaiquedeOliveiraa/vigia-deslizamentos/"
+        "https://api.github.com/repos/vigia-defesa-civil/vigia-deslizamentos/"
         f"contents/{CAMINHO_NO_REPOSITORIO}"
     )
     assert kwargs_put["json"]["sha"] == "abc123"
