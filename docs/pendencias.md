@@ -23,7 +23,7 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 ## Metodologia e calibração
 
-- 🔴 **Validar o limiar provisório de 150 mm.** Foi reduzido de 250 mm para a simulação mostrar mudança de classe, mas ele muda o índice real (≈ +67%) e a frequência de avisos do bot. A equipe decidiu mantê-lo e confirmar o valor com o responsável técnico antes do deploy.
+- 🔴 **Validar o limiar provisório de 100 mm.** Foi de 250 mm (hipotético do GeoRisk) para 150 mm e, em 22/10/2026, para 100 mm, com base nos critérios de deslizamento da Defesa Civil de Blumenau (alerta a partir de 100 mm em 24 h). Muda o índice real (2,5× o de 250 mm) e a frequência de avisos do bot. Confirmar com o responsável técnico antes do deploy; o Cemaden não publica os limiares municipais.
 - 🔴 **Validar os pesos fixos do ensemble** ([ensemble.md §5](decisoes/ensemble.md)), que não são calibrados.
 - ~~⚪ **Bancos já existentes**~~ **Resolvida:** `banco.historico()` converte cada cálculo para o limiar atual (`indice × limiar_gravado / limiar_mm`, classe recalculada), sem alterar o banco. Vale para qualquer troca futura de limiar; troca de `mv_h` não é coberta.
 - ⚪ **Atraso de disponibilização dos modelos** foi medido uma vez só. Acompanhar por alguns dias e ajustar os horários do agendador se preciso.
@@ -34,7 +34,7 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 - ⚪ **Atualizar ocorrências:** quando o Atlas publicar uma versão nova, trocar URL_ATLAS e rodar o gerar_ocorrencias.
 - ⚪ **Atualizar setores do SGB:** quando o SGB publicar mapeamento novo na região, rodar `gerar_setores_risco`.
 - ⚪ **README:** completar a citação da RADIAN ("autoria e ano a completar"); o repositório da UFSC exige VPN.
-- ~~⚪ **Fixture de exemplo**~~ **Resolvida:** `indices.exemplo.json` usa o limiar de 150 mm e a fonte nova, com índice e classe recalculados.
+- ~~⚪ **Fixture de exemplo**~~ **Resolvida:** `indices.exemplo.json` é um exemplo independente da configuração, com limiar de 150 mm e índice e classe coerentes com ele.
 
 ## Frontend
 
@@ -60,7 +60,7 @@ Legenda: 🔴 bloqueia o deploy · 🟡 bloqueia só uma funcionalidade · ⚪ n
 
 ## Ampliação para os 27 municípios
 
-- ⚪ **Limiar dos 27 municípios:** todos com 150 mm provisório; validar com o time, por município ou por região.
+- ⚪ **Limiar dos 27 municípios:** todos com 100 mm provisório; validar com o time, por município ou por região.
 - ⚪ **Contatos dos 21 municípios novos:** levantar e confirmar com cada prefeitura (RN09).
 - ⚪ **Prazo total de coleta:** com o Open-Meteo degradado, 111 chamadas × até 92 s podem passar do `timeout-minutes: 60`; limitar o tempo total da coleta e marcar os restantes como sem dados.
 - ⚪ **Avisos agrupados por chat:** se quem segue os 27 receber mensagens demais num evento regional, juntar os avisos de uma execução numa só mensagem.
